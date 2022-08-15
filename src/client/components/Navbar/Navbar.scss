@@ -1,8 +1,7 @@
-.zeroWidth {
+.navbar-zero-height {
     max-height: none;
     overflow-y: visible;
-    position: fixed;
+    position: fixed !important;
     width: 100%;
     z-index: 1;
-    background-color: transparent !important;
 }

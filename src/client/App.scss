@@ -1,1 +1,19 @@
+$primary: #1d4ed8;
+
 @import '../../node_modules/bootstrap/scss/bootstrap.scss';
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+body {
+	font-family: 'Roboto', sans-serif;
+}
+
+/* From: https://gomakethings.com/how-to-break-an-image-out-of-its-parent-container-with-css/ */
+.full-width {
+	left: 50%;
+	margin-left: -50vw;
+	margin-right: -50vw;
+	max-width: 100vw;
+	position: relative;
+	right: 50%;
+	width: 100vw;
+}

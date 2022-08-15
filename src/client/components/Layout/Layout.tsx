@@ -1,17 +1,17 @@
 import React from 'react';
 import { ReactNode } from 'react';
 import { Container } from 'react-bootstrap';
-import Navbar from './Navbar';
+import Navbar from '../Navbar/Navbar';
 
 interface Props {
     children?: ReactNode
-	zeroWidthNavbar?: boolean
+	zeroHeightNavbar?: boolean
 }
 
-export default function Layout({ children, zeroWidthNavbar }: Props) {
+export default function Layout({ children, zeroHeightNavbar }: Props) {
 	return (
 		<>
-			<Navbar zeroWidth={zeroWidthNavbar}/>
+			<Navbar zeroHeight={zeroHeightNavbar}/>
 			<Container>
 				{children}
 			</Container>

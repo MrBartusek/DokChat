@@ -3,16 +3,22 @@ import { Button, Container, Nav, Navbar as BsNavbar } from 'react-bootstrap';
 import './Navbar.scss';
 
 interface Props {
-	zeroWidth?: boolean;
+	zeroHeight?: boolean;
 }
 
-function Navbar({zeroWidth} : Props) {
+function Navbar({zeroHeight} : Props) {
 	return (
-		<BsNavbar bg="primary" variant="dark">
+		<BsNavbar
+			bg={zeroHeight ? 'transparent' : 'primary'}
+			variant="dark"
+			className={zeroHeight ? 'navbar-zero-height' : ''}
+		>
 			<Container>
 				<BsNavbar.Brand href=".">Chat App</BsNavbar.Brand>
 				<Nav className="me-auto">
-
+					<Nav.Link>Home</Nav.Link>
+					<Nav.Link>Login</Nav.Link>
+					<Nav.Link>Register</Nav.Link>
 				</Nav>
 				<BsNavbar.Collapse className="justify-content-end">
 					<BsNavbar.Text>
