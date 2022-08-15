@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Button } from 'react-bootstrap';
 import Header from '../components/Header/Header';
-import Layout from '../components/layout/Layout';
+import Layout from '../components/Layout/Layout';
 import { UserContext } from '../UserContext';
 
 export function Home() {
