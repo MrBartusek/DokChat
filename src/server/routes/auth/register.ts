@@ -8,21 +8,21 @@ import db from '../../db';
 import Validate from '../../utils/validate';
 import sql from 'sql-template-strings';
 import * as bcrypt from 'bcrypt';
-import JWTManager from '../../utils/JWTManager';
+import JWT from '../../utils/jwt';
 
 const router = express.Router();
 const snowflakeGenerator = new Snowflake({
 	custom_epoch: 1640991600000,
 	instance_id: 0
 });
-const jwtManager = new JWTManager();
+const jwtManager = new JWT();
 
 router.post('/register', async (req, res, next) => {
 	const username: string = req.body.username;
 	const password: string = req.body.password;
 	const email: string = req.body.email;
 
-	if(!validFromBody(username, password, email)) {
+	if(!username || !password || !email) {
 		return new ApiResponse(res).userError('Invalid form body');
 	}
 	const parametersResult = validParameters(username, password, email);
@@ -42,7 +42,7 @@ router.post('/register', async (req, res, next) => {
 
 	await db.query(sql`
 		INSERT INTO users 
-			(id, username, tag, email, passwordHash)
+			(id, username, tag, email, password_Hash)
 		VALUES (
 			$1, $2, $3, $4, $5
 		);
@@ -65,14 +65,6 @@ router.post('/register', async (req, res, next) => {
 	};
 	new ApiResponse(res).success(result);
 });
-
-function validFromBody(username: string, password: string, email: string): boolean {
-	return (
-		username.trim().length > 0 &&
-		password.trim().length > 0 &&
-		email.trim().length > 0
-	);
-}
 
 function validParameters(username: string, password: string, email: string): true | string {
 	const usernameValid = Validate.username(username);
@@ -102,7 +94,7 @@ async function generateTag(username: string): Promise<string> {
 	const takenTags = query.rows.map(u => u.tag);
 	let tag: string | undefined = undefined;
 	while(tag == undefined) {
-		const newTag = Math.floor(Math.random() * (9999 + 1));
+		const newTag = Math.floor(Math.random() * 9999) + 1;
 		if(!takenTags.includes(newTag)) {
 			tag = newTag.toString().padStart(4, '0');
 		}

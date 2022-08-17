@@ -1,36 +1,41 @@
 import * as express from 'express';
-import * as jose from 'jose';
-import { Snowflake } from 'nodejs-snowflake';
 import { UserLoginResponse } from '../../../types/endpoints';
-import { UserJWTData } from '../../../types/jwt';
 import { ApiResponse } from '../../apiResponse';
+import db from '../../db';
+import JWT from '../../utils/jwt';
+import sql from 'sql-template-strings';
+import * as bcrypt from 'bcrypt';
 
 const router = express.Router();
-const snowflakeGenerator = new Snowflake({
-	custom_epoch: 1640991600000,
-	instance_id: 0
-});
+const jwtManager = new JWT();
 
-router.get('/login', async (req, res, next) => {
-	const userData: UserJWTData = {
-		id: snowflakeGenerator.getUniqueID().toString(),
-		username: 'MrBartusek',
-		tag: '2115',
-		email: 'bartusekcraft@gmail.com'
-	};
+router.post('/login', async (req, res, next) => {
+	const email: string = req.body.email;
+	const password: string = req.body.password;
 
-	const key = new Uint8Array([1]);
-	const token = await new jose.SignJWT(userData)
-		.setProtectedHeader({ alg: 'HS256' })
-		.setIssuedAt()
-		.setExpirationTime('2h')
-		.sign(key);
+	if(!email || !password) {
+		return new ApiResponse(res).userError('Invalid form body');
+	}
 
-	const response: UserLoginResponse = {
-		email: 'test',
+	const query = await db.query(sql`SELECT id, username, tag, email, password_hash FROM users WHERE email=$1`, [email]);
+	if(query.rowCount == 0) return new ApiResponse(res).userError('Invalid credentials');
+	const user = query.rows[0];
+	const passwordValid = await bcrypt.compare(password, user.password_hash);
+	if(!passwordValid) return new ApiResponse(res).userError('Invalid credentials');
+
+	const token = await jwtManager.generateJWT({
+		id: user.id,
+		username: user.username,
+		tag: user.tag,
+		email: user.email
+	});
+	const result: UserLoginResponse = {
+		email: user.email,
 		token: token
 	};
-	new ApiResponse(res).success(response);
+	new ApiResponse(res).success(result);
+
+	return;
 });
 
 export default router;

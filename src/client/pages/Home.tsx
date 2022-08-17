@@ -15,7 +15,7 @@ export function Home() {
 			const userData = jose.decodeJwt(data.token) as any;
 			setUser({
 				isAuthenticated: false,
-				snowflake: null!,
+				id: null!,
 				username: userData.username,
 				tag: null!,
 				email: null!,

@@ -8,7 +8,7 @@ export interface User extends UserJWTData {
 
 export const defaultUser: User = {
 	isAuthenticated: false,
-	snowflake: null!,
+	id: null!,
 	username: null!,
 	tag: null!,
 	email: null!,
