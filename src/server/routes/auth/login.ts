@@ -18,10 +18,10 @@ router.post('/login', async (req, res, next) => {
 	}
 
 	const query = await db.query(sql`SELECT id, username, tag, email, password_hash FROM users WHERE email=$1`, [email]);
-	if(query.rowCount == 0) return new ApiResponse(res).userError('Invalid credentials');
+	if(query.rowCount == 0) return new ApiResponse(res).userError('Provided email and password are not valid');
 	const user = query.rows[0];
 	const passwordValid = await bcrypt.compare(password, user.password_hash);
-	if(!passwordValid) return new ApiResponse(res).userError('Invalid credentials');
+	if(!passwordValid) return new ApiResponse(res).userError('Provided email and password are not valid');
 
 	const token = await jwtManager.generateJWT({
 		id: user.id,

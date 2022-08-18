@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Container, Button, Image } from 'react-bootstrap';
 import './Header.scss';
-
 import { BsCloudArrowDown, BsGlobe } from 'react-icons/bs';
+import { Link } from 'react-router-dom';
+import { UserContext } from '../../UserContext';
 
 function Header() {
+	const [ user ] = useContext(UserContext);
+
 	return (
 		<div className='full-width font-header '>
 			<Container
@@ -22,9 +25,11 @@ function Header() {
 				</p>
 
 				<div className='d-flex justify-content-center gap-3'>
-					<Button variant='light' size='lg' className='mt-3'>
+					<Link to={user.isAuthenticated ? '/chat' : '/login'}>
+						<Button variant='light' size='lg' className='mt-3'>
 						Open DokChat in your browser
-					</Button>
+						</Button>
+					</Link>
 					<Button variant='dark' size='lg' className='mt-3 d-flex align-items-center'>
 						<BsCloudArrowDown className='me-2' /> Download
 					</Button>

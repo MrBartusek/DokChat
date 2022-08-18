@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Image, Row } from 'react-bootstrap';
 import Layout from '../components/Layout/Layout';
-import LoginForm from '../components/LoginForm/Login';
+import LoginForm from '../components/LoginForm/LoginForm';
 
 export function Login() {
 	return (
@@ -10,7 +10,7 @@ export function Login() {
 				<Col className='d-flex justify-content-center' style={{'height': 500}}>
 					<Image src="./img/undraw_login.svg" />
 				</Col>
-				<Col>
+				<Col className='px-5'>
 					<LoginForm />
 				</Col>
 			</Row>

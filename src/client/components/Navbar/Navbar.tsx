@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Container, Nav, Navbar as BsNavbar } from 'react-bootstrap';
 import './Navbar.scss';
 import { BsFillChatSquareTextFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../../UserContext';
 
 interface Props {
 	zeroHeight?: boolean;
 }
 
 function Navbar({zeroHeight} : Props) {
+	const [ user ] = useContext(UserContext);
+
 	return (
 		<BsNavbar
 			bg={zeroHeight ? 'transparent' : 'primary'}
@@ -20,7 +23,7 @@ function Navbar({zeroHeight} : Props) {
 					as={Link}
 					to='/'
 					style={{'width': 140}}
-					className='fw-bold d-flex justify-content-end align-items-center'
+					className='fw-bold d-flex justify-content-start align-items-center'
 				>
 					<BsFillChatSquareTextFill className='me-2'/>
 					DokChat
@@ -29,15 +32,17 @@ function Navbar({zeroHeight} : Props) {
 					<Nav>
 						<Nav.Link as={Link} to='/'>Download</Nav.Link>
 						<Nav.Link as={Link} to='/'>Features</Nav.Link>
-						<Nav.Link as={Link} to='/login'>Log in</Nav.Link>
 						<Nav.Link as={Link} to='/about'>About</Nav.Link>
+						<Nav.Link href='https://github.com/MrBartusek/DokChat/issues' target='_blank'>Support</Nav.Link>
 						<Nav.Link href='https://github.com/MrBartusek/DokChat' target='_blank'>Github</Nav.Link>
 					</Nav>
 				</BsNavbar.Collapse>
 				<BsNavbar.Text style={{'width': 140}} className='d-flex justify-content-end'>
-					<Button variant="light">
-						Open DokChat
-					</Button>
+					<Link to={user.isAuthenticated ? '/chat' : '/login'}>
+						<Button variant="light" >
+							{user.isAuthenticated ? 'Open DokChat' : 'Log in'}
+						</Button>
+					</Link>
 				</BsNavbar.Text>
 			</Container>
 		</BsNavbar>
