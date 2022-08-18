@@ -1,16 +1,35 @@
 import React from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Button, Image } from 'react-bootstrap';
 import './Header.scss';
+
+import { BsCloudArrowDown, BsGlobe } from 'react-icons/bs';
 
 function Header() {
 	return (
 		<div className='full-width font-header '>
 			<Container
-				className='text-center text-white w-75'
-				style={{'paddingTop': 'calc(70px + 3rem)', 'paddingBottom': '3rem'}}
+				className='text-center text-white'
+				style={{
+					'paddingTop': 'calc(70px + 4rem)',
+					'paddingBottom': '6rem',
+					'maxWidth': 700
+				}}
 			>
-				<h1 className='display-4'>Easily Connect with anyone</h1>
-				<p className='lead'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia, praesentium. Exercitationem, tempora. Natus, beatae saepe? Possimus magnam quia, voluptatem non, velit quod reprehenderit dicta eos cumque voluptates obcaecati omnis quaerat.</p>
+				<h1 className='display-4'>Connect with anyone</h1>
+				<p className='lead py-3'>
+					DokChat allows you to instantly message everyone who you care about. Share your tag anywhere and
+					accept messages from new people. Create private groups and stay in touch with your friends.
+				</p>
+
+				<div className='d-flex justify-content-center gap-3'>
+					<Button variant='light' size='lg' className='mt-3'>
+						Open DokChat in your browser
+					</Button>
+					<Button variant='dark' size='lg' className='mt-3 d-flex align-items-center'>
+						<BsCloudArrowDown className='me-2' /> Download
+					</Button>
+				</div>
+
 			</Container>
 		</div>
 	);

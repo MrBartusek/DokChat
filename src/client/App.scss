@@ -1,7 +1,7 @@
-$primary: #1d4ed8;
+$primary: #0061f2;
 
 @import '../../node_modules/bootstrap/scss/bootstrap.scss';
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
 
 body {
 	font-family: 'Roboto', sans-serif;
@@ -16,4 +16,16 @@ body {
 	position: relative;
 	right: 50%;
 	width: 100vw;
+}
+
+.btn {
+	border-radius: 9999px;
+}
+
+.fw-bold {
+    font-weight: 500 !important;
+}
+
+.btn-lg, .btn-group-lg > .btn {
+	padding: 16px 32px;
 }

@@ -1,7 +1,11 @@
 import React from 'react';
+import Layout from '../components/Layout/Layout';
 
 export function Login() {
 	return (
-		<h2>Login</h2>
+		<Layout>
+			<h2>Login</h2>
+		</Layout>
+
 	);
 }
