@@ -90,12 +90,12 @@ function LoginForm() {
 					console.log(resp.data.token);
 				}
 				else {
-					setError('Failed to log in you at this time. Please try again later.');
+					setError('Failed to log you in you at this time. Please try again later.');
 					setLoading(false);
 				}
 			})
 			.catch(() => {
-				setError('Failed to log in you at this time. Please try again later.');
+				setError('Failed to log you in you at this time. Please try again later.');
 				setLoading(false);
 			});
 
