@@ -19,7 +19,7 @@ export function Chat() {
 
 	);
 
-	function handleClick(e) {
+	function handleClick(e: any) {
 		setLoading(true);
 		setTimeout(() => {
 			window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
