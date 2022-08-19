@@ -16,8 +16,8 @@ export default class Validate {
 	}
 
 	static password(password: string): string | true {
-		if(password.length < 8) {
-			return 'Password needs to be at least 8 characters long';
+		if(password.length < 2) {
+			return 'Password needs to be at least 2 characters long';
 		}
 		else if(password.length > 32) {
 			return 'Password cannot exceed 32 charters';
