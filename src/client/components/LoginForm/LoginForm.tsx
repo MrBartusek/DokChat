@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { Alert, Button, Form } from 'react-bootstrap';
 import { BsFillChatSquareTextFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
@@ -7,6 +7,7 @@ import axios, { AxiosError } from 'axios';
 import { useForm } from '../../hooks/useForm';
 import { EndpointResponse, UserLoginResponse } from '../../../types/endpoints';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../UserContext';
 
 function LoginForm() {
 	const [loading, setLoading] = useState(false);
@@ -14,6 +15,7 @@ function LoginForm() {
 	const [error, setError] = useState<string | null>(null);
 	const formRef = useRef<HTMLFormElement>(null!);
 	const navigate = useNavigate();
+	const [user, setUser] = useContext(UserContext);
 
 	return (
 		<>
@@ -86,8 +88,8 @@ function LoginForm() {
 					setLoading(false);
 				}
 				else if(resp.error === false) {
-					//navigate('/chat');
-					console.log(resp.data.token);
+					setUser(resp.data.token);
+					navigate('/chat');
 				}
 				else {
 					setError('Failed to log you in you at this time. Please try again later.');

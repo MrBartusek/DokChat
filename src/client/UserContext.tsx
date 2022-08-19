@@ -2,18 +2,7 @@ import { createContext } from 'react';
 import { UserJWTData } from '../types/jwt';
 
 export interface User extends UserJWTData {
-    isAuthenticated: boolean,
-    logout: void
+    isAuthenticated: boolean
 }
 
-export const defaultUser: User = {
-	isAuthenticated: false,
-	id: null!,
-	username: null!,
-	tag: null!,
-	email: null!,
-	logout: null!
-};
-
-export const UserContext = createContext<[User, React.Dispatch<React.SetStateAction<User>>]>(null as any);
-
+export const UserContext = createContext<[User, React.Dispatch<string>, React.Dispatch<void>]>(null as any);
