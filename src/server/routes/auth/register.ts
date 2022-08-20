@@ -9,6 +9,7 @@ import Validate from '../../utils/validate';
 import sql from 'sql-template-strings';
 import * as bcrypt from 'bcrypt';
 import JWT from '../../utils/jwt';
+import allowedMethods from '../../middlewares/allowedMethods';
 
 const router = express.Router();
 const snowflakeGenerator = new Snowflake({
@@ -17,7 +18,7 @@ const snowflakeGenerator = new Snowflake({
 });
 const jwtManager = new JWT();
 
-router.post('/register', async (req, res, next) => {
+router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 	const username: string = req.body.username;
 	const password: string = req.body.password;
 	const email: string = req.body.email;

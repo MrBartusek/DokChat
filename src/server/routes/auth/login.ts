@@ -5,11 +5,12 @@ import db from '../../db';
 import JWT from '../../utils/jwt';
 import sql from 'sql-template-strings';
 import * as bcrypt from 'bcrypt';
+import allowedMethods from '../../middlewares/allowedMethods';
 
 const router = express.Router();
 const jwtManager = new JWT();
 
-router.post('/login', async (req, res, next) => {
+router.all('/login', allowedMethods('POST'), async (req, res, next) => {
 	const email: string = req.body.email;
 	const password: string = req.body.password;
 

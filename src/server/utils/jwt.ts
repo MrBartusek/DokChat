@@ -7,7 +7,7 @@ export default class JWT {
 		const token = await new jose.SignJWT(userData)
 			.setProtectedHeader({ alg: 'HS256' })
 			.setIssuedAt()
-			.setExpirationTime('2h')
+			.setExpirationTime('7d')
 			.sign(key);
 		return token;
 	}

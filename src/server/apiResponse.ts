@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 export class ApiResponse {
 	constructor(
@@ -27,5 +27,13 @@ export class ApiResponse {
 
 	public userError(message: string) {
 		return this.error(400, message);
+	}
+
+	public methodNotAllowed(req: Request) {
+		return this.error(405, `${req.method} is not supported for this resource.`);
+	}
+
+	public notFound() {
+		return this.error(404, 'Not found');
 	}
 }

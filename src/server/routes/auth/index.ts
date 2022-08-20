@@ -1,4 +1,5 @@
 import * as express from 'express';
+import { ApiResponse } from '../../apiResponse';
 import loginRoute from './login';
 import registerRoute from './register';
 
