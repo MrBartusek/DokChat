@@ -2,19 +2,23 @@ import { Response } from 'express';
 import * as jose from 'jose';
 import { UserJWTData } from '../../types/jwt';
 import { ApiResponse } from '../apiResponse';
+import * as DateFns from 'date-fns';
+import { UserLoginResponse } from '../../types/endpoints';
 
 const TOKEN_SECRET = '123k1mdio1u2312j1p2oi4k1i2e1io2j';
 const REFRESH_TOKEN_SECRET = '123k1mdio1u23qweqweq12j1p2oi4k1i2e1io2j';
 
 export default class AuthManager {
-	public static async sendAuthorizationResponse(res: Response, userData: UserJWTData, passwordHash: string) {
+	public static async sendAuthorizationResponse(res: Response, userData: UserJWTData, passwordHash: string, rememberMe?: boolean) {
 		const refreshToken = await this.generateRefreshToken(userData.id, passwordHash);
 		const token = await this.generateJWT(userData);
 		res.cookie('refreshToken', refreshToken, {
 			httpOnly: true,
-			sameSite: 'strict'
+			sameSite: 'strict',
+			expires: (rememberMe ? DateFns.addDays(new Date(), 30) : undefined)
 		});
-		new ApiResponse(res).success({token: token });
+		const response: UserLoginResponse = {email: userData.email, token: token };
+		new ApiResponse(res).success(response);
 	}
 
 	private static async generateJWT(userData: UserJWTData) {

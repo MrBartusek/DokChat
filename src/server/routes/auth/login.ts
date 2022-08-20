@@ -15,8 +15,13 @@ const INVALID_CREDENTIALS = 'INVALID_CREDENTIALS';
 router.all('/login', allowedMethods('POST'), async (req, res, next) => {
 	const email: string = req.body.email;
 	const password: string = req.body.password;
+	const rememberMe: string = req.body.rememberMe;
 
-	if(!email || !password) {
+	if(
+		typeof email !== 'string' ||
+		typeof password !== 'string' ||
+		typeof rememberMe !== 'boolean'
+	) {
 		return new ApiResponse(res).badRequest('Invalid form body');
 	}
 

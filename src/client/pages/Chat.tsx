@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import InteractiveButton from '../components/InteractiveButton/InteractiveButton';
 import Layout from '../components/Layout/Layout';
-import { useUser } from '../hooks/useUser';
+import { UserContext } from '../UserContext';
 
 export function Chat() {
-	const [user] = useUser();
+	const [user] = useContext(UserContext);
 	const [loading, setLoading] = useState(false);
 
 	return (

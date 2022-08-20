@@ -4,11 +4,11 @@ import { About } from './pages/About';
 import { Login } from './pages/Login';
 import { Home } from './pages/Home';
 import { User, UserContext } from './UserContext';
-import { useUser } from './hooks/useUser';
 import { Chat } from './pages/Chat';
+import { useUpdatingUser } from './hooks/useUpdatingUser';
 
 function App() {
-	const [user, setUser, removeUser] = useUser();
+	const [user, setUser, removeUser] = useUpdatingUser();
 
 	return (
 		<UserContext.Provider value={[user, setUser, removeUser]}>

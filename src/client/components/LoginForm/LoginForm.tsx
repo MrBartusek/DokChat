@@ -11,7 +11,7 @@ import { UserContext } from '../../UserContext';
 
 function LoginForm() {
 	const [loading, setLoading] = useState(false);
-	const [values, handleChange] = useForm({ email: '', password: '' });
+	const [values, handleChange] = useForm({ email: '', password: '', rememberMe: false });
 	const [error, setError] = useState<string | null>(null);
 	const formRef = useRef<HTMLFormElement>(null!);
 	const navigate = useNavigate();
@@ -53,7 +53,14 @@ function LoginForm() {
 					</Form.Text>
 				</Form.Group>
 				<Form.Group className="mb-3" controlId="formBasicCheckbox">
-					<Form.Check type="checkbox" label="Remember me" disabled={loading} />
+					<Form.Check
+						type="checkbox"
+						label="Remember me"
+						name='rememberMe'
+						disabled={loading}
+						checked={values.rememberMe}
+						onChange={handleChange}
+					/>
 				</Form.Group>
 				<div className='d-grid'>
 					<InteractiveButton
@@ -77,10 +84,9 @@ function LoginForm() {
 			return formRef.current.reportValidity();
 		}
 		setLoading(true);
-		await axios.post('/api/auth/login', {
-			email: values.email,
-			password: values.password
-		}, { validateStatus: () => true })
+		await axios.post('/api/auth/login',
+			values, // Backend request body should exactly match this hook
+			{ validateStatus: () => true })
 			.then((r: any) => {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
 				if(resp.error === true) {
