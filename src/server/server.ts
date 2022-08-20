@@ -3,6 +3,7 @@ import apiRouter from './routes';
 import * as path from 'path';
 import { initializeDB } from './db/initalize';
 import * as morgan from 'morgan';
+import * as cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(morgan('tiny'));
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use('/api', apiRouter);
 

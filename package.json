@@ -45,6 +45,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "@types/cookie-parser": "^1.4.3",
     "@types/morgan": "^1.9.3",
     "@types/pg": "^8.6.5",
     "@typescript-eslint/eslint-plugin": "^5.33.0",

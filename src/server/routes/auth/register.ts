@@ -8,8 +8,9 @@ import db from '../../db';
 import Validate from '../../utils/validate';
 import sql from 'sql-template-strings';
 import * as bcrypt from 'bcrypt';
-import JWT from '../../utils/jwt';
+import JWT from '../../managers/authManager';
 import allowedMethods from '../../middlewares/allowedMethods';
+import AuthManager from '../../managers/authManager';
 
 const router = express.Router();
 const snowflakeGenerator = new Snowflake({
@@ -43,28 +44,18 @@ router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 
 	await db.query(sql`
 		INSERT INTO users 
-			(id, username, tag, email, password_Hash)
+			(id, username, tag, email, password_hash)
 		VALUES (
 			$1, $2, $3, $4, $5
 		);
-		`, [
-		snowflake,
-		username,
-		tag,
-		email,
-		hash
-	]);
-	const token = await jwtManager.generateJWT({
+		`, [ snowflake, username, tag, email, hash]);
+	const jwtData = {
 		id: snowflake,
 		username: username,
 		tag: tag,
 		email: email
-	});
-	const result: UserLoginResponse = {
-		email: email,
-		token: token
 	};
-	new ApiResponse(res).success(result);
+	AuthManager.sendAuthorizationResponse(res, jwtData, hash);
 });
 
 function validParameters(username: string, password: string, email: string): true | string {
