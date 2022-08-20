@@ -25,17 +25,17 @@ router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 	const email: string = req.body.email;
 
 	if(!username || !password || !email) {
-		return new ApiResponse(res).userError('Invalid form body');
+		return new ApiResponse(res).badRequest('Invalid form body');
 	}
 	const parametersResult = validParameters(username, password, email);
 	if(parametersResult !== true) {
-		return new ApiResponse(res).userError(parametersResult);
+		return new ApiResponse(res).badRequest(parametersResult);
 	}
 	if(await emailTaken(email)) {
-		return new ApiResponse(res).userError('This email is already taken');
+		return new ApiResponse(res).badRequest('This email is already taken');
 	}
 	if((await usersWithUsernameCount(username)) >= 9999) {
-		return new ApiResponse(res).userError('Too many users have this username');
+		return new ApiResponse(res).badRequest('Too many users have this username');
 	}
 
 	const hash = await bcrypt.hash(password, 12);

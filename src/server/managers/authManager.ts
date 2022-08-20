@@ -34,4 +34,17 @@ export default class AuthManager {
 			.sign(Buffer.from(REFRESH_TOKEN_SECRET + passwordHash));
 		return token;
 	}
+
+	public static decodeRefreshToken(jwt: string): string | undefined {
+		const data = jose.decodeJwt(jwt);
+		return data.id as string;
+	}
+
+	public static async verifyRefreshToken(jwt: string, passwordHash: string): Promise<string> {
+		return jose.jwtVerify(jwt, Buffer.from(REFRESH_TOKEN_SECRET + passwordHash))
+			.then((data) => {
+				if(!data.payload.id) return Promise.reject('Invalid JWT');
+				return data.payload.id as string;
+			});
+	}
 }

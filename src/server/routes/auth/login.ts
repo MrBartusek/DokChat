@@ -2,7 +2,6 @@ import * as express from 'express';
 import { UserLoginResponse } from '../../../types/endpoints';
 import { ApiResponse } from '../../apiResponse';
 import db from '../../db';
-import JWT from '../../managers/authManager';
 import sql from 'sql-template-strings';
 import * as bcrypt from 'bcrypt';
 import allowedMethods from '../../middlewares/allowedMethods';
@@ -10,7 +9,6 @@ import { UserJWTData } from '../../../types/jwt';
 import AuthManager from '../../managers/authManager';
 
 const router = express.Router();
-const jwtManager = new JWT();
 
 const INVALID_CREDENTIALS = 'INVALID_CREDENTIALS';
 
@@ -19,7 +17,7 @@ router.all('/login', allowedMethods('POST'), async (req, res, next) => {
 	const password: string = req.body.password;
 
 	if(!email || !password) {
-		return new ApiResponse(res).userError('Invalid form body');
+		return new ApiResponse(res).badRequest('Invalid form body');
 	}
 
 	authenticateUser(email, password)
@@ -28,7 +26,7 @@ router.all('/login', allowedMethods('POST'), async (req, res, next) => {
 		})
 		.catch((reason) => {
 			if(reason == INVALID_CREDENTIALS) {
-				return new ApiResponse(res).userError('Provided email and password are not valid');
+				return new ApiResponse(res).badRequest('Provided email and password are not valid');
 			}
 			throw reason;
 		});

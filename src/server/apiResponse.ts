@@ -25,8 +25,8 @@ export class ApiResponse {
 		return this.respond(true, status, message);
 	}
 
-	public userError(message: string) {
-		return this.error(400, message);
+	public badRequest(message?: string) {
+		return this.error(400, message || 'Bad Request');
 	}
 
 	public methodNotAllowed(req: Request) {
@@ -35,5 +35,9 @@ export class ApiResponse {
 
 	public notFound() {
 		return this.error(404, 'Not found');
+	}
+
+	public unauthorized() {
+		return this.error(403, 'Unauthorized');
 	}
 }
