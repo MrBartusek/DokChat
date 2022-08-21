@@ -6,6 +6,7 @@ import { Home } from './pages/Home';
 import { User, UserContext } from './UserContext';
 import { Chat } from './pages/Chat';
 import { useUpdatingUser } from './hooks/useUpdatingUser';
+import { Register } from './pages/Register';
 
 function App() {
 	const [user, setUser, removeUser] = useUpdatingUser();
@@ -19,6 +20,11 @@ function App() {
 					<Route path="/login" element={
 						<PublicOnlyRoute>
 							<Login />
+						</PublicOnlyRoute>
+					} />
+					<Route path="/register" element={
+						<PublicOnlyRoute>
+							<Register />
 						</PublicOnlyRoute>
 					} />
 					<Route path="/chat" element={

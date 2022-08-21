@@ -8,9 +8,10 @@ export function useForm<T>(initialValues: T): [T, React.Dispatch<any>] {
 	return [
 		values,
 		e => {
+			const isCheckbox = e.target.type == 'checkbox';
 			setValues({
 				...values,
-				[e.target.name]: e.target.value
+				[e.target.name]: isCheckbox ? e.target.checked : e.target.value
 			});
 		}
 	];

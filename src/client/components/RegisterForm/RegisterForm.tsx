@@ -9,9 +9,9 @@ import { EndpointResponse, UserLoginResponse } from '../../../types/endpoints';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../UserContext';
 
-function LoginForm() {
+function RegisterForm() {
 	const [loading, setLoading] = useState(false);
-	const [values, handleChange] = useForm({ email: '', password: '', rememberMe: false });
+	const [values, handleChange] = useForm({ email: '', username: '', password: '', confirmPassword: '', terms: false });
 	const [error, setError] = useState<string | null>(null);
 	const formRef = useRef<HTMLFormElement>(null!);
 	const navigate = useNavigate();
@@ -19,10 +19,10 @@ function LoginForm() {
 
 	return (
 		<>
-			<LoginTitle />
+			<RegisterTitle />
 			{error && <Alert variant='danger'>{error}</Alert>}
 			<Form ref={formRef}>
-				<Form.Group className="mb-3" controlId="formBasicEmail">
+				<Form.Group className="mb-3" controlId="formEmail">
 					<Form.Label>Email address</Form.Label>
 					<Form.Control
 						type="email"
@@ -34,7 +34,19 @@ function LoginForm() {
 					/>
 				</Form.Group>
 
-				<Form.Group className="mb-3" controlId="formBasicPassword">
+				<Form.Group className="mb-3" controlId="formUsername">
+					<Form.Label>Username</Form.Label>
+					<Form.Control
+						type="text"
+						name="username"
+						required
+						disabled={loading}
+						value={values.username}
+						onChange={handleChange}
+					/>
+				</Form.Group>
+
+				<Form.Group className="mb-3" controlId="formPassword">
 					<Form.Label>Password</Form.Label>
 					<Form.Control
 						type="password"
@@ -44,20 +56,36 @@ function LoginForm() {
 						value={values.password}
 						onChange={handleChange}
 					/>
-					<Form.Text className="text-muted">
-						<Link to='/forgot-password' className='link-secondary text-decoration-none'>
-							Forgot password?
-						</Link>
-					</Form.Text>
+				</Form.Group>
+
+				<Form.Group className="mb-3" controlId="formConfirmPassword">
+					<Form.Label>Confirm Password</Form.Label>
+					<Form.Control
+						type="password"
+						name="confirmPassword"
+						required
+						disabled={loading}
+						value={values.confirmPassword}
+						onChange={(e) => {
+							handleChange(e);
+							if(values.password != e.target.value) {
+								e.target.setCustomValidity('The password confirmation does not match');
+							}
+							else {
+								e.target.setCustomValidity('');
+							}
+						}}
+					/>
 				</Form.Group>
 				<Form.Group className="mb-3" controlId="formBasicCheckbox">
 					<Form.Check
 						type="checkbox"
-						label="Remember me"
-						name='rememberMe'
+						label="Akceptuje Polityke Pawła Kukiza"
+						name='terms'
 						disabled={loading}
-						checked={values.rememberMe}
+						checked={values.terms}
 						onChange={handleChange}
+						required
 					/>
 				</Form.Group>
 				<div className='d-grid'>
@@ -82,8 +110,12 @@ function LoginForm() {
 			return formRef.current.reportValidity();
 		}
 		setLoading(true);
-		await axios.post('/api/auth/login',
-			values, // Backend request body should exactly match this hook
+		await axios.post('/api/auth/register',
+			{
+				email: values.email,
+				username: values.username,
+				password: values.password
+			},
 			{ validateStatus: () => true })
 			.then((r: any) => {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
@@ -108,10 +140,10 @@ function LoginForm() {
 	}
 }
 
-function LoginTitle() {
+function RegisterTitle() {
 	return (
 		<h2 className='d-flex justify-content-center flex-row fw-normal gap-1 mb-5'>
-			<span>Login to</span>
+			<span>Register to</span>
 			<span className='fw-bold'>
 				<BsFillChatSquareTextFill className='mx-2'/>
                 DokChat
@@ -120,4 +152,4 @@ function LoginTitle() {
 	);
 }
 
-export default LoginForm;
+export default RegisterForm;
