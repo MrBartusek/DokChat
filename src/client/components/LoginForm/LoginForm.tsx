@@ -121,7 +121,7 @@ function LoginForm() {
 function LoginTitle() {
 	return (
 		<h2 className='d-flex justify-content-center flex-row fw-normal gap-1 mb-5'>
-			<span>Login to</span>
+			<span>Log in to</span>
 			<span className='fw-bold'>
 				<BsFillChatSquareTextFill className='mx-2'/>
                 DokChat
