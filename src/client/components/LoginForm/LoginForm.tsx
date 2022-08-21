@@ -71,6 +71,16 @@ function LoginForm() {
 						Log in
 					</InteractiveButton>
 				</div>
+				<div className='d-flex justify-content-center mt-3'>
+					<Form.Text className="text-muted">
+						<span>
+						New user? {' '}
+						</span>
+						<Link to='/register' className='link-secondary'>
+						Sign up
+						</Link>
+					</Form.Text>
+				</div>
 			</Form>
 		</>
 	);

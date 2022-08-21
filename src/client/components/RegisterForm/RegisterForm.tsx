@@ -80,7 +80,7 @@ function RegisterForm() {
 				<Form.Group className="mb-3" controlId="formBasicCheckbox">
 					<Form.Check
 						type="checkbox"
-						label="Akceptuje Polityke Pawła Kukiza"
+						label="Akceptuję Polityke Pawła Kukiza"
 						name='terms'
 						disabled={loading}
 						checked={values.terms}
@@ -98,6 +98,16 @@ function RegisterForm() {
 					>
 						Log in
 					</InteractiveButton>
+				</div>
+				<div className='d-flex justify-content-center mt-3'>
+					<Form.Text className="text-muted">
+						<span>
+						Already have account? {' '}
+						</span>
+						<Link to='/login' className='link-secondary'>
+						Log in
+						</Link>
+					</Form.Text>
 				</div>
 			</Form>
 		</>
