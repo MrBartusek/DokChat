@@ -18,7 +18,7 @@ function Conversation() {
 	return (
 		<Row style={{height: 65}} className='p-2 flex-row'>
 			<Col xs='auto'>
-				<Image roundedCircle src='/img/avatars/0.png' className='h-100' />
+				<Image roundedCircle src={`/img/avatars/${Math.floor(Math.random() * (4 - 0 + 1) + 0)}.png`} className='h-100' />
 			</Col>
 			<Col xs='9' className='d-flex justify-content-center flex-column py-0 px-1'>
 				<div className='fw-bold'>MrBartusek#2137</div>

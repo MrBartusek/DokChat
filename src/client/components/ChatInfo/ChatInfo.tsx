@@ -6,7 +6,7 @@ function ChatInfo() {
 	return (
 		<Row style={{height: 55}} className='p-2 border-bottom border-separator'>
 			<Col xs='auto'>
-				<Image roundedCircle src='/img/avatars/0.png' className='h-100' />
+				<Image roundedCircle src={`/img/avatars/${Math.floor(Math.random() * (4 - 0 + 1) + 0)}.png`} className='h-100' />
 			</Col>
 			<Col className='d-flex justify-content-left p-0 align-items-center'>
 				<span className='fw-bold'>
