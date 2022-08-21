@@ -1,28 +1,29 @@
 import React, { useContext, useState } from 'react';
-import { Container } from 'react-bootstrap';
+import { Col, Container, Row, Stack } from 'react-bootstrap';
+import ChatInfo from '../components/ChatInfo/ChatInfo';
+import MessagesWindow from '../components/MessagesWindow/MessagesWindow';
+import ConversationList from '../components/ConversationList/ConversationList';
 import InteractiveButton from '../components/InteractiveButton/InteractiveButton';
 import Layout from '../components/Layout/Layout';
+import UserInfo from '../components/UserInfo/UserInfo';
 import { UserContext } from '../UserContext';
 
 export function Chat() {
 	const [user] = useContext(UserContext);
-	const [loading, setLoading] = useState(false);
 
 	return (
-		<Layout>
-			<h2>Hello {user.username}#{user.tag}</h2>
-
-			<InteractiveButton onClick={handleClick} loading={loading}>
-				Log out
-			</InteractiveButton>
-		</Layout>
+		<Container fluid style={{'height': '100vh'}}>
+			<Row className='h-100'>
+				<Col style={{'flex': '0 0 360px', 'width': '360px'}} className='border-separator border-end'>
+					<UserInfo />
+					<ConversationList />
+				</Col>
+				<Col>
+					<ChatInfo />
+					<MessagesWindow />
+				</Col>
+			</Row>
+		</Container>
 
 	);
-
-	function handleClick(e: any) {
-		setLoading(true);
-		setTimeout(() => {
-			window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-		}, 2000);
-	}
 }

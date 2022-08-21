@@ -4,6 +4,7 @@ import db from '../../db';
 import sql from 'sql-template-strings';
 import allowedMethods from '../../middlewares/allowedMethods';
 import AuthManager from '../../managers/authManager';
+import * as DateFns from 'date-fns';
 
 const router = express.Router();
 
@@ -30,7 +31,11 @@ router.all('/refresh', allowedMethods('POST'), async (req, res, next) => {
 
 	// Verify token and respond
 	await AuthManager.verifyRefreshToken(refreshToken, user.password_hash)
-		.then(() => {
+		.then(async () => {
+			// Update last seen
+			const timestamp = DateFns.getUnixTime(new Date());
+			await db.query(sql`UPDATE users SET last_seen=$1 WHERE id=$2`, [timestamp, userId]);
+
 			AuthManager.sendAuthorizationResponse(res, jwtData, user.password_hash);
 		})
 		.catch((error) => {

@@ -11,6 +11,7 @@ import * as bcrypt from 'bcrypt';
 import JWT from '../../managers/authManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import AuthManager from '../../managers/authManager';
+import * as DateFns from 'date-fns';
 
 const router = express.Router();
 const snowflakeGenerator = new Snowflake({
@@ -42,13 +43,14 @@ router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 	const tag = await generateTag(username);
 	const snowflake = snowflakeGenerator.getUniqueID().toString();
 
+	const timestamp = DateFns.getUnixTime(new Date());
 	await db.query(sql`
 		INSERT INTO users 
-			(id, username, tag, email, password_hash)
+			(id, username, tag, email, password_hash, joined, last_seen)
 		VALUES (
-			$1, $2, $3, $4, $5
+			$1, $2, $3, $4, $5, $6, $7
 		);
-		`, [ snowflake, username, tag, email, hash]);
+		`, [ snowflake, username, tag, email, hash, timestamp, timestamp]);
 	const jwtData = {
 		id: snowflake,
 		username: username,

@@ -6,6 +6,9 @@ $primary: #0061f2;
 body {
 	font-family: 'Roboto', sans-serif;
 }
+* { 
+	box-sizing: border-box
+}
 
 /* From: https://gomakethings.com/how-to-break-an-image-out-of-its-parent-container-with-css/ */
 .full-width {
@@ -32,4 +35,8 @@ body {
 
 .btn {
 	padding: 0.4rem 1.1rem;
+}
+
+.border-separator {
+	border-color: rgba(0, 0, 0, 0.1);
 }
