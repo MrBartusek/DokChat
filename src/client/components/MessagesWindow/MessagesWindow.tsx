@@ -5,10 +5,10 @@ function MessagesWindow() {
 	return (
 		<Row className='d-flex flex-grow-1'>
 			<Stack style={{'flexDirection': 'column-reverse'}} className='gap-1'>
-				<Message message='dokchat' avatar='/img/avatars/1.png' />
-				<Message message='me when' />
-				<Message message='dokchat' isAuthor />
-				<Message message='me when' isAuthor />
+				<Message message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate vitae veritatis saepe ipsam laudantium a, tempore beatae incidunt? Quisquam consequuntur voluptatem enim officia commodi laudantium harum nostrum eius neque repellat.' avatar='/img/avatars/1.png' />
+				<Message message='Lorem ipsum dolor' />
+				<Message message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate vitae veritatis saepe ipsam laudantium a, tempore beatae incidunt? Quisquam consequuntur voluptatem enim officia commodi laudantium harum nostrum eius neque repellat.' isAuthor />
+				<Message message='Lorem ipsum dolor' isAuthor />
 			</Stack>
 		</Row>
 	);
@@ -26,8 +26,8 @@ function Message({message, avatar, isAuthor}: MessageProps) {
 			<MessageAvatar avatar={avatar} leaveSpace={!isAuthor} />
 			<Col
 				xs='auto'
-				style={{'padding': '8px 12px', 'maxWidth': '70%'}}
-				className={`rounded-4 ${isAuthor ? 'bg-primary text-light' : 'bg-gray-200'}`}
+				style={{'padding': '8px 12px', 'maxWidth': 'min(700px, 80%)', 'borderRadius': '1.2rem'}}
+				className={`${isAuthor ? 'bg-primary text-light' : 'bg-gray-200'}`}
 			>
 				{message}
 			</Col>
