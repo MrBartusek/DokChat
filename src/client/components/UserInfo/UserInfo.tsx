@@ -1,6 +1,7 @@
 import React from 'react';
 import { Col, Row, Image } from 'react-bootstrap';
 import { BsGear } from 'react-icons/bs';
+import IconButton from '../IconButton/IconButton';
 
 function UserInfo() {
 	return (
@@ -14,7 +15,7 @@ function UserInfo() {
 				</span>
 			</Col>
 			<Col xs='auto' className='d-flex align-items-center'>
-				<BsGear size={20} />
+				<IconButton icon={BsGear} />
 			</Col>
 		</Row>
 	);

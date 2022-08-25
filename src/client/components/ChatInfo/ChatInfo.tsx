@@ -1,6 +1,7 @@
 import React from 'react';
 import { Col, Row, Image } from 'react-bootstrap';
 import { BsPersonPlusFill } from 'react-icons/bs';
+import IconButton from '../IconButton/IconButton';
 
 function ChatInfo() {
 	return (
@@ -14,7 +15,7 @@ function ChatInfo() {
 				</span>
 			</Col>
 			<Col xs='auto' className='d-flex align-items-center'>
-				<BsPersonPlusFill size={20} color='var(--bs-primary)'/>
+				<IconButton icon={BsPersonPlusFill} variant='primary' />
 			</Col>
 		</Row>
 	);

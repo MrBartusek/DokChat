@@ -22,6 +22,9 @@
 */
 (function () {
 
+	// This line is custom for DokChat
+	if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') return;
+
 	var headers = { 'Etag': 1, 'Last-Modified': 1, 'Content-Length': 1, 'Content-Type': 1 },
 		resources = {},
 		pendingRequests = {},
