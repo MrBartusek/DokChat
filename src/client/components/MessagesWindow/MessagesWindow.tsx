@@ -4,11 +4,15 @@ import { Col, Row, Stack, Image } from 'react-bootstrap';
 function MessagesWindow() {
 	return (
 		<Row className='d-flex flex-grow-1'>
-			<Stack style={{'flexDirection': 'column-reverse'}} className='gap-1'>
-				<Message message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate vitae veritatis saepe ipsam laudantium a, tempore beatae incidunt? Quisquam consequuntur voluptatem enim officia commodi laudantium harum nostrum eius neque repellat.' avatar='/img/avatars/1.png' />
-				<Message message='Lorem ipsum dolor' />
-				<Message message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate vitae veritatis saepe ipsam laudantium a, tempore beatae incidunt? Quisquam consequuntur voluptatem enim officia commodi laudantium harum nostrum eius neque repellat.' isAuthor />
-				<Message message='Lorem ipsum dolor' isAuthor />
+			<Stack className='gap-3 flex-column-reverse'>
+				<Stack className='gap-1 flex-grow-0 flex-column-reverse'>
+					<Message message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate vitae veritatis saepe ipsam laudantium a, tempore beatae incidunt? Quisquam consequuntur voluptatem enim officia commodi laudantium harum nostrum eius neque repellat.' avatar='/img/avatars/1.png' />
+					<Message message='Lorem ipsum dolor' />
+				</Stack>
+				<Stack className='gap-1 flex-grow-0 flex-column-reverse'>
+					<Message message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate vitae veritatis saepe ipsam laudantium a, tempore beatae incidunt? Quisquam consequuntur voluptatem enim officia commodi laudantium harum nostrum eius neque repellat.' isAuthor />
+					<Message message='Lorem ipsum dolor' isAuthor />
+				</Stack>
 			</Stack>
 		</Row>
 	);
