@@ -7,15 +7,15 @@ import IconButton from '../IconButton/IconButton';
 
 function MessageBar() {
 	return (
-		<Row className='d-flex py-3 px-1'>
-			<Col className='d-flex flex-grow-0 justify-content-center align-items-center gap-3 px-3'>
-				<IconButton icon={BsImage} size={20} variant='primary'/>
-				<IconButton icon={AiOutlineGif} size={20} variant='primary'/>
+		<Row className='d-flex py-3 px-1 align-items-center'>
+			<Col className='d-flex flex-grow-0 justify-content-center align-items-center px-1 gap-1'>
+				<IconButton icon={BsImage} size={34} variant='primary'/>
+				<IconButton icon={AiOutlineGif} size={34} variant='primary'/>
 			</Col>
-			<Col className='ps-0'>
+			<Col className='p-0'>
 				<Form className='mb-0'>
 					<div
-						className='form-control rounded-pill d-flex flex-row'
+						className='form-control rounded-pill d-flex flex-row gap-1 pe-1'
 						style={{'height': 34}}
 						tabIndex={0}
 						onFocus={(e) => (e.target.firstElementChild as HTMLElement).focus()}
@@ -30,14 +30,14 @@ function MessageBar() {
 							onBlur={(e) => e.target.parentElement?.classList.remove('focus') }
 						/>
 						<div className='d-flex align-items-center'>
-							<IconButton icon={BsEmojiSmileFill} size={17} variant='primary'/>
+							<IconButton icon={BsEmojiSmileFill} size={32} variant='primary'/>
 						</div>
 					</div>
 
 				</Form>
 			</Col>
-			<Col className='d-flex flex-grow-0 justify-content-center align-items-center ps-0'>
-				<IconButton icon={MdSend} size={20} variant='primary'/>
+			<Col className='d-flex flex-grow-0 justify-content-center align-items-center ps-1'>
+				<IconButton icon={MdSend} size={34} variant='primary'/>
 			</Col>
 		</Row>
 	);

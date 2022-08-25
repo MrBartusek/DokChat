@@ -1,0 +1,13 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+.iconButton {
+    padding: 8px;
+    border-radius: 50em;
+    cursor: pointer;
+}
+
+.iconButton:hover {
+    background-color: $gray-200;
+}

@@ -5,7 +5,7 @@ import IconButton from '../IconButton/IconButton';
 
 function ChatInfo() {
 	return (
-		<Row style={{height: 55}} className='p-2 border-bottom border-separator'>
+		<Row style={{height: 55, gap: 12}} className='p-2 border-bottom border-separator'>
 			<Col xs='auto'>
 				<Image roundedCircle src={`/img/avatars/${Math.floor(Math.random() * (4 - 0 + 1) + 0)}.png`} className='h-100' />
 			</Col>
