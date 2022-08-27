@@ -46,7 +46,7 @@ router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 	const timestamp = DateFns.getUnixTime(new Date());
 	await db.query(sql`
 		INSERT INTO users 
-			(id, username, tag, email, password_hash, joined, last_seen)
+			(id, username, tag, email, password_hash, created_at, last_seen)
 		VALUES (
 			$1, $2, $3, $4, $5, $6, $7
 		);

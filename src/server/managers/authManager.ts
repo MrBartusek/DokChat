@@ -51,4 +51,11 @@ export default class AuthManager {
 				return data.payload.id as string;
 			});
 	}
+
+	public static async verifyJWT(jwt: string): Promise<UserJWTData> {
+		return jose.jwtVerify(jwt, Buffer.from(TOKEN_SECRET))
+			.then((data) => {
+				return data.payload as UserJWTData;
+			});
+	}
 }
