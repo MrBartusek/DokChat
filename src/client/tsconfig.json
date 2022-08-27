@@ -1,4 +1,5 @@
 {
+    "extends": "../../tsconfig.json",
     "compilerOptions": {
       "outDir": "./public/js/",
       "noImplicitAny": true,
@@ -12,9 +13,6 @@
       ]
     },
     "include": [
-        "src/client/**/*"
+        "."
     ],
-    "exclude": [
-        "node_modules"
-    ]
   }
