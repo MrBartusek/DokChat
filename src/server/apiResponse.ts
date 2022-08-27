@@ -38,6 +38,10 @@ export class ApiResponse {
 	}
 
 	public unauthorized() {
-		return this.error(403, 'Unauthorized');
+		return this.error(401, 'Unauthorized');
+	}
+
+	public forbidden() {
+		return this.error(403, 'Forbidden');
 	}
 }
