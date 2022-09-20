@@ -37,8 +37,8 @@ export class ApiResponse {
 		return this.error(404, 'Not found');
 	}
 
-	public unauthorized() {
-		return this.error(401, 'Unauthorized');
+	public unauthorized(message?: string) {
+		return this.error(401, message || 'Unauthorized');
 	}
 
 	public forbidden() {

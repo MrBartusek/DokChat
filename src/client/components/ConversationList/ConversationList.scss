@@ -1,0 +1,11 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+.conversation {
+    cursor: pointer;
+}
+
+.conversation:hover {
+    background-color: $gray-200;
+}

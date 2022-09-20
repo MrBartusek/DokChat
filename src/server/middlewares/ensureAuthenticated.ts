@@ -5,7 +5,7 @@ import AuthManager from '../managers/authManager';
 const ensureAuthenticated = () => async (req: Request, res: Response, next: NextFunction) => {
 	let token: string | undefined = req.headers.authorization;
 	if(!token) {
-		return new ApiResponse(res).unauthorized();
+		return new ApiResponse(res).unauthorized('No token provided');
 	}
 	if(!token.startsWith('Bearer ')) {
 		return new ApiResponse(res).badRequest();

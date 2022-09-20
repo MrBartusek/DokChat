@@ -34,9 +34,11 @@ export function initializeDB() {
         );
 
         CREATE TABLE IF NOT EXISTS participants (
+            id varchar NOT NULL,
             user_id varchar REFERENCES users,
             conversation_id varchar REFERENCES conversations,
-            created_at bigint NOT NULL
+            created_at bigint NOT NULL,
+            PRIMARY KEY (id)
         );
     `);
 }

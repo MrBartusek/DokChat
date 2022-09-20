@@ -1,11 +1,10 @@
 import * as express from 'express';
-import { ChatListResponse, UserLoginResponse } from '../../../types/endpoints';
+import { ChatListResponse, MessageListResponse, UserLoginResponse } from '../../../types/endpoints';
 import { ApiResponse } from '../../apiResponse';
 import db from '../../db';
 import sql from 'sql-template-strings';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
-import AvatarManager from '../../managers/avatarManager';
 import Utils from '../../utils';
 
 const router = express.Router();
@@ -13,7 +12,7 @@ const router = express.Router();
 router.all('/list', allowedMethods('GET'), ensureAuthenticated(), async (req, res, next) => {
 	const page = req.query.page || 0;
 	const query = await db.query(sql`
-        SELECT 
+        SELECT
             participants.conversation_id,
             conversation.title,
             last_message.content as message,
@@ -44,36 +43,44 @@ router.all('/list', allowedMethods('GET'), ensureAuthenticated(), async (req, re
 
 	const chats = await Promise.all(query.rows.map(async (row) => {
 		let avatar: string | null = '';
+		let title = row.title;
 		const participantsQuery = await db.query(sql`
-            SELECT user_id, tag FROM participants
-            JOIN users ON id = user_id
+            SELECT user_id, username, tag FROM participants
+            JOIN users ON users.id = user_id
             WHERE conversation_id = $1;
         `, [ row.conversation_id]);
-		if(participantsQuery.rowCount == 1) {
-			// Only one person in conversation
-			const user = participantsQuery.rows[0];
-			avatar = Utils.avatar.userUrl(req, user.user_id);
-		}
-		else if(participantsQuery.rowCount == 2) {
-			// DM conversation
-			const user = participantsQuery.rows.find(u => u.user_id != req.auth.id);
-			avatar = Utils.avatar.userUrl(req, user.user_id);
+
+		// Format avatar and conversation title
+		if(participantsQuery.rowCount < 3) {
+			// DM
+			let user: any;
+			if(participantsQuery.rowCount == 1) {
+				user = participantsQuery.rows[0];
+			}
+			else {
+				user = participantsQuery.rows.find(u => u.user_id != req.auth.id);
+			}
+
+			avatar = Utils.avatarUrl(req, user.user_id);
+			title = `${user.username}#${user.tag}`;
 		}
 		else {
 			// Group
-			avatar = Utils.avatar.userUrl(req, row.conversation_id);
+			avatar = Utils.avatarUrl(req, row.conversation_id);
+			title = title || participantsQuery.rows.map(u => u.username).join(', ').substring(0, 32);
 		}
+
 		return {
 			id: row.conversation_id,
-			title: row.title,
+			title: title,
 			avatar: avatar,
-			last_message: {
+			lastMessage: row.message ? {
 				content: row.message,
 				author: row.message_author
-			}
+			}: null
 		};
 	}));
-	const result: ChatListResponse = { chats: chats };
+	const result: ChatListResponse = chats;
 	new ApiResponse(res).success(result);
 });
 

@@ -10,24 +10,24 @@ export interface UserLoginResponse {
     token: string
 }
 
-export interface ChatListResponse {
-    chats: {
-        id: string,
-        title: string,
-        avatar: string,
-        last_message: {
-            content: string,
-            author: string
-        }
-    }[]
+export interface Chat {
+    id: string,
+    title: string,
+    avatar: string,
+    lastMessage?: {
+        content: string,
+        author: string
+    }
 }
 
-export interface MessageListResponse {
-    messages: {
-        id: string,
-        author: string,
-        content: string,
-        avatar: string,
-        timestamp: string,
-    }[]
+export type ChatListResponse = Chat[]
+
+export interface Message {
+    id: string,
+    author: string,
+    content: string,
+    avatar: string,
+    timestamp: string
 }
+
+export type MessageListResponse = Message[];
