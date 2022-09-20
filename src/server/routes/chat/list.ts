@@ -51,16 +51,16 @@ router.all('/list', allowedMethods('GET'), ensureAuthenticated(), async (req, re
 		if(participantsQuery.rowCount == 1) {
 			// Only one person in conversation
 			const user = participantsQuery.rows[0];
-			avatar = Utils.apiUrl(req) + `avatar?user=${user.user_id}`;
+			avatar = Utils.avatar.userUrl(req, user.user_id);
 		}
 		else if(participantsQuery.rowCount == 2) {
 			// DM conversation
 			const user = participantsQuery.rows.find(u => u.user_id != req.auth.id);
-			avatar = Utils.apiUrl(req) + `avatar?user=${user.user_id}`;
+			avatar = Utils.avatar.userUrl(req, user.user_id);
 		}
 		else {
 			// Group
-			avatar = Utils.apiUrl(req) + `avatar?group=${row.conversation_id}`;
+			avatar = Utils.avatar.userUrl(req, row.conversation_id);
 		}
 		return {
 			id: row.conversation_id,
