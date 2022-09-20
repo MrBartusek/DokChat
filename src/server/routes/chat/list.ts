@@ -41,6 +41,7 @@ router.all('/list', allowedMethods('GET'), ensureAuthenticated(), async (req, re
             participants.user_id = $1
         LIMIT 25 OFFSET $2;
     `, [req.auth.id, page]);
+
 	const chats = await Promise.all(query.rows.map(async (row) => {
 		let avatar: string | null = '';
 		const participantsQuery = await db.query(sql`
