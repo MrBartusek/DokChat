@@ -5,7 +5,6 @@ import db from '../../db';
 import sql from 'sql-template-strings';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
-import AvatarManager from '../../managers/avatarManager';
 import Utils from '../../utils';
 
 const router = express.Router();
@@ -46,10 +45,10 @@ router.all('/messages', allowedMethods('GET'), ensureAuthenticated(), async (req
 			author: row.author_id,
 			content: row.content,
 			timestamp: row.created_at,
-			avatar: Utils.apiUrl(req) + `avatar?user=${row.author_id}`
+			avatar: Utils.avatarUrl(req, row.author_id)
 		};
 	});
-	const result: MessageListResponse = { messages: messages };
+	const result: MessageListResponse = messages;
 	new ApiResponse(res).success(result);
 });
 

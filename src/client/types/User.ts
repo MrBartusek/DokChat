@@ -67,4 +67,9 @@ export class User {
 			'Authorization': `Bearer ${this.token}`
 		};
 	}
+
+	public get avatarUrl(): string {
+		if(!this.isAuthenticated) throw new Error('User is not authenticated');
+		return `/api/avatar?id=${this.id}`;
+	}
 }
