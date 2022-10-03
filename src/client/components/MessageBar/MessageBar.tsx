@@ -72,6 +72,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 
 	function handleSend(e: any) {
 		e.preventDefault();
+		if(values.content.length < 1) return;
 		sendMessage({
 			chat: currentChat,
 			content: values.content
