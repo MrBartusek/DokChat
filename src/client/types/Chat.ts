@@ -1,13 +1,4 @@
-export interface MessageAuthor {
-	id: string,
-	username: string,
-	avatar: string
-}
-
-export interface Message {
-    author: MessageAuthor,
-	content: string
-}
+import { Message } from '../../types/endpoints';
 
 export interface LastMessage {
 	author: string,
@@ -40,7 +31,7 @@ export class Chat {
 		return this;
 	}
 
-	public addMessage(msg: Message) {
+	public addMessage(msg: Message): Chat {
 		// If chat is uninitialized save only a partial message
 		// since it doesn't accept a regular message list
 		if(this.isInitialized) {
@@ -52,21 +43,22 @@ export class Chat {
 				content: msg.content
 			};
 		}
-
+		return this;
 	}
 
 	get messages(): Message[]{
-		if(this.isInitialized) throw new Error('Cannot read messages of uninitialized chat');
+		if(!this.isInitialized) throw new Error('Cannot read messages of uninitialized chat');
 		return this._messages as Message[];
 	}
 
-	get lastMessage(): LastMessage {
+	get lastMessage(): LastMessage | null {
 		if(!this.isInitialized) {
 			return this._messages as LastMessage;
 		}
 		else {
 			const msgs = (this._messages as Message[]);
 			const lastMsg = msgs[msgs.length - 1];
+			if(!lastMsg) return null;
 			return  {
 				author: lastMsg.author.username,
 				content: lastMsg.content

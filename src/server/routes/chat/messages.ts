@@ -42,7 +42,11 @@ router.all('/messages', allowedMethods('GET'), ensureAuthenticated(), async (req
 	const messages = query.rows.map((row) => {
 		return {
 			id: row.id,
-			author: row.author_id,
+			author: {
+				id: row.author_id,
+				username: 'xxx',
+				avatar: Utils.avatarUrl(req, row.author_id)
+			},
 			content: row.content,
 			timestamp: row.created_at,
 			avatar: Utils.avatarUrl(req, row.author_id)

@@ -22,11 +22,16 @@ export interface Chat {
 
 export type ChatListResponse = Chat[]
 
+export interface MessageAuthor {
+	id: string,
+	username: string,
+	avatar: string
+}
+
 export interface Message {
     id: string,
-    author: string,
+    author: MessageAuthor,
     content: string,
-    avatar: string,
     timestamp: string
 }
 

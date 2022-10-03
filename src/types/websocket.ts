@@ -19,6 +19,7 @@ export interface ServerMessage {
         username: string,
         avatar: string
     },
+    timestamp: string
 }
 
 export interface ClientMessage {

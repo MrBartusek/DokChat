@@ -6,7 +6,7 @@ import { UserContext } from '../context/UserContext';
 
 type useFetchState<T> = { res?: T, loading: boolean};
 
-export function useFetch<T>(url: string, useAuth = false): useFetchState<T> {
+export function useFetch<T>(url: string | null, useAuth = false): useFetchState<T> {
 	const isCurrent = useRef(true);
 	const [state, setState] = useState<useFetchState<T>>({ res: undefined, loading: true });
 	const [user] = useContext(UserContext);
@@ -22,6 +22,9 @@ export function useFetch<T>(url: string, useAuth = false): useFetchState<T> {
 		if(useAuth) headers = user.getAuthHeader();
 
 		setState(state => ({ res: state.res, loading: true }));
+		// Keep fetcher loading when no url is provided
+		if(url == null) return;
+
 		axios.get(url, {
 			baseURL: 'api',
 			headers: headers

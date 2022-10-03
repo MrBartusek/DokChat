@@ -1,5 +1,6 @@
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ChatListResponse, EndpointResponse } from '../../types/endpoints';
+import ChatList from '../components/ChatList/ChatList';
 import { UserContext } from '../context/UserContext';
 import { Chat } from '../types/chat';
 import { useFetch } from './useFetch';
@@ -7,9 +8,14 @@ import { useWebsocketType } from './useWebsocket';
 
 /**
  * This hook is a manger for receiving, caching and sending messages
- * @return [loading, chats, sendMessage]
+ * @return [loading, chats, sendMessage, setChatList]
  */
-export function useMessageManager(ws: useWebsocketType): [boolean, Chat[], React.Dispatch<{chat: Chat, content: string}>] {
+export function useMessageManager(ws: useWebsocketType): [
+	boolean, // loading
+	Chat[], // chats
+	React.Dispatch<{chat: Chat, content: string}>, // sendMessage
+	React.Dispatch<Chat[]> // setChatList
+	] {
 	const [loading, setLoading] = useState(true);
 	const [user] = useContext(UserContext);
 
@@ -51,7 +57,9 @@ export function useMessageManager(ws: useWebsocketType): [boolean, Chat[], React
 			else {
 				chat.addMessage({
 					content: msg.content,
-					author: msg.author
+					author: msg.author,
+					id: msg.messageId,
+					timestamp: msg.timestamp
 				});
 			}
 			setChatList(chatList);
@@ -72,17 +80,21 @@ export function useMessageManager(ws: useWebsocketType): [boolean, Chat[], React
 			});
 
 			// Add this message to local cache
-			const chat = chatList.find((c) => c.id == data.chat.id);
-			if(!chat) return;
-			chat.addMessage({
+			const chats = [...chatList];
+			const chatId = chats.findIndex((c) => c.id == data.chat.id);
+			if(chatId == -1) return;
+			chats[chatId].addMessage({
+				id: '0',
 				author: {
 					id: user.id,
 					username: user.username,
 					avatar: user.avatarUrl
 				},
-				content: data.content
+				content: data.content,
+				timestamp: Date.now().toString()
 			});
-			setChatList(chatList);
-		}
+			setChatList(chats);
+		},
+		setChatList
 	];
 }

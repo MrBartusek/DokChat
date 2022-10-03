@@ -1,19 +1,53 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Col, Row, Stack, Image } from 'react-bootstrap';
+import { EndpointResponse, MessageListResponse } from '../../../types/endpoints';
+import { MessageManagerContext } from '../../context/MessageManagerContext';
+import { useFetch } from '../../hooks/useFetch';
+import { Chat } from '../../types/chat';
+import LoadingWrapper from '../LoadingWrapper/LoadingWrapper';
 
-function MessagesWindow() {
+export interface MessagesWindowProps {
+	currentChat?: Chat
+}
+
+function MessagesWindow({ currentChat }: MessagesWindowProps) {
+	const [isLoadingManager, chats, sendMessage, setChatList] = useContext(MessageManagerContext);
+
+	const [fetchUrl, setFetchUrl] = useState<string | null>(null);
+	const messagesFetch = useFetch<EndpointResponse<MessageListResponse>>(fetchUrl, true);
+
+	/**
+	 * Fetch chat messages if window is targeting not initialized chat
+	 */
+	useEffect(() => {
+		if(!currentChat) return;
+		if(currentChat.isInitialized) return;
+		setFetchUrl(`/chat/messages?chat=${currentChat.id}`);
+	}, [currentChat]);
+
+	/**
+	 * Load fetched data
+	 */
+	useEffect(() => {
+		if(!messagesFetch.res) return;
+		const chatId = chats.findIndex(c => c.id == currentChat.id);
+		const chatsCopy = [...chats];
+		chatsCopy[chatId] = chatsCopy[chatId].addMessagesList(messagesFetch.res.data);
+		setChatList(chatsCopy);
+	}, [messagesFetch]);
+
+	const isLoadingMessages = (!currentChat || isLoadingManager || !currentChat.isInitialized || messagesFetch.loading);
 	return (
 		<Row className='d-flex flex-grow-1'>
-			<Stack className='gap-3 flex-column-reverse'>
-				<Stack className='gap-1 flex-grow-0 flex-column-reverse'>
-					<Message message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate vitae veritatis saepe ipsam laudantium a, tempore beatae incidunt? Quisquam consequuntur voluptatem enim officia commodi laudantium harum nostrum eius neque repellat.' avatar='/img/avatars/1.png' />
-					<Message message='Lorem ipsum dolor' />
+			<LoadingWrapper isLoading={isLoadingMessages}>
+				<Stack className='gap-3 flex-column-reverse'>
+					<Stack className='gap-1 flex-grow-0 flex-column-reverse'>
+						{!isLoadingMessages && currentChat.messages.reverse().map((msg) => (
+							<Message key={msg.id} message={msg.content} isAuthor />
+						))}
+					</Stack>
 				</Stack>
-				<Stack className='gap-1 flex-grow-0 flex-column-reverse'>
-					<Message message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate vitae veritatis saepe ipsam laudantium a, tempore beatae incidunt? Quisquam consequuntur voluptatem enim officia commodi laudantium harum nostrum eius neque repellat.' isAuthor />
-					<Message message='Lorem ipsum dolor' isAuthor />
-				</Stack>
-			</Stack>
+			</LoadingWrapper>
 		</Row>
 	);
 }

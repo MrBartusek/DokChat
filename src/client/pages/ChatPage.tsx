@@ -12,15 +12,18 @@ import { Chat } from '../types/chat';
 
 export function ChatPage() {
 	const ws = useWebsocket();
-	const [isLoading, chats, sendMessage] = useMessageManager(ws);
+	const [isLoading, chats, sendMessage, setChatList] = useMessageManager(ws);
 	const [currentChat, setCurrentChat] = useState<Chat>(null);
 
+	/**
+	 * Set initial chat window
+	 */
 	useEffect(() => {
 		if(!isLoading) setCurrentChat(chats[0]);
 	}, [isLoading]);
 
 	return (
-		<MessageManagerContext.Provider value={[isLoading, chats, sendMessage]}>
+		<MessageManagerContext.Provider value={[isLoading, chats, sendMessage, setChatList]}>
 			<Container fluid style={{'height': '100vh', 'maxHeight': '100vh', 'overflow': 'hidden'}}>
 				<Row className='h-100'>
 					<Col style={{'flex': '0 0 360px', 'width': '360px'}} className='border-separator border-end'>
@@ -29,7 +32,7 @@ export function ChatPage() {
 					</Col>
 					<Col className='d-flex align-items-stretch flex-column mh-100'>
 						<ChatInfo />
-						<MessagesWindow />
+						<MessagesWindow currentChat={currentChat} />
 						<MessageBar currentChat={currentChat} />
 					</Col>
 				</Row>

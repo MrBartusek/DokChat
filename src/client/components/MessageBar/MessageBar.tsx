@@ -17,6 +17,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 	const [isLoading, chats, sendMessage] = useContext(MessageManagerContext);
 	const [values, handleChange, clearValues] = useForm({ content: '' });
 	const [isEnabled, setEnabled] = useState(false);
+	const inputRef = useRef<HTMLInputElement>();
 
 	useEffect(() => {
 		setEnabled(currentChat && values.content.length > 0 && !isLoading);
@@ -29,7 +30,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 				<IconButton icon={AiOutlineGif} size={34} variant='primary'/>
 			</Col>
 			<Col className='p-0'>
-				<Form className='mb-0'>
+				<Form className='mb-0' onSubmit={handleSend}>
 					<div
 						className='form-control rounded-pill d-flex flex-row gap-1 pe-1'
 						style={{'height': 34}}
@@ -45,6 +46,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 							style={{'height': 34}}
 							autoComplete='off'
 
+							ref={inputRef}
 							value={values.content}
 							onChange={handleChange}
 							onFocus={(e) => e.target.parentElement?.classList.add('focus') }
@@ -68,12 +70,14 @@ function MessageBar({ currentChat }: MessageBarProps) {
 		</Row>
 	);
 
-	function handleSend() {
+	function handleSend(e: any) {
+		e.preventDefault();
 		sendMessage({
 			chat: currentChat,
 			content: values.content
 		});
 		clearValues();
+		inputRef.current.focus();
 	}
 
 }
