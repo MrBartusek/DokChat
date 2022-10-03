@@ -3,7 +3,7 @@ import { Container, Button, Image } from 'react-bootstrap';
 import './Header.scss';
 import { BsCloudArrowDown, BsGlobe } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../../UserContext';
+import { UserContext } from '../../context/UserContext';
 
 function Header() {
 	const [ user ] = useContext(UserContext);

@@ -6,8 +6,19 @@
     padding: 8px;
     border-radius: 50em;
     cursor: pointer;
+    border: 0;
+    margin: 0;
+    background: none;
+}
+
+.iconButton svg {
+    transition: color 0.5s ease;
 }
 
 .iconButton:hover {
     background-color: $gray-200;
+}
+
+.iconButton.enabled:active {
+    background-color: $gray-300;
 }

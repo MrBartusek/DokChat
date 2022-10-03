@@ -33,6 +33,8 @@
     "react-router-dom": "^6.3.0",
     "sass": "^1.41.1",
     "sass-loader": "^12.1.0",
+    "socket.io": "^4.5.2",
+    "socket.io-client": "^4.5.2",
     "sql-template-strings": "^2.2.2",
     "style-loader": "^3.2.1",
     "ts-loader": "^9.3.1",

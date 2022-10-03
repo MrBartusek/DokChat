@@ -1,12 +1,12 @@
 import  React, {useContext, useMemo, useState} from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { About } from './pages/About';
-import { Login } from './pages/Login';
-import { Home } from './pages/Home';
-import { User, UserContext } from './UserContext';
-import { Chat } from './pages/Chat';
+import { AboutPage } from './pages/AboutPage';
+import { LoginPage } from './pages/LoginPage';
+import { HomePage } from './pages/HomePage';
+import { UserContext } from './context/UserContext';
+import { ChatPage } from './pages/ChatPage';
 import { useUpdatingUser } from './hooks/useUpdatingUser';
-import { Register } from './pages/Register';
+import { RegisterPage } from './pages/RegisterPage';
 
 function App() {
 	const [user, setUser, removeUser] = useUpdatingUser();
@@ -15,21 +15,21 @@ function App() {
 		<UserContext.Provider value={[user, setUser, removeUser]}>
 			<BrowserRouter>
 				<Routes>
-					<Route path="/" element={<Home />} />
-					<Route path="/about" element={<About />} />
+					<Route path="/" element={<HomePage />} />
+					<Route path="/about" element={<AboutPage />} />
 					<Route path="/login" element={
 						<PublicOnlyRoute>
-							<Login />
+							<LoginPage />
 						</PublicOnlyRoute>
 					} />
 					<Route path="/register" element={
 						<PublicOnlyRoute>
-							<Register />
+							<RegisterPage />
 						</PublicOnlyRoute>
 					} />
 					<Route path="/chat" element={
 						<PrivateRoute>
-							<Chat />
+							<ChatPage />
 						</PrivateRoute>
 					} />
 

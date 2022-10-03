@@ -14,7 +14,7 @@ router.all('/list', allowedMethods('GET'), ensureAuthenticated(), async (req, re
 	const query = await db.query(sql`
         SELECT
             participants.conversation_id,
-            conversation.title,
+            conversation.name,
             last_message.content as message,
             last_message_author.username as message_author
         FROM participants
@@ -26,7 +26,7 @@ router.all('/list', allowedMethods('GET'), ensureAuthenticated(), async (req, re
         ) AS last_message ON true
         -- Join conversation
         LEFT JOIN LATERAL (
-            SELECT conversations.id, conversations.title FROM conversations
+            SELECT conversations.id, conversations.name FROM conversations
             WHERE conversations.id = participants.conversation_id
             LIMIT 1
         ) AS conversation ON true
@@ -43,14 +43,14 @@ router.all('/list', allowedMethods('GET'), ensureAuthenticated(), async (req, re
 
 	const chats = await Promise.all(query.rows.map(async (row) => {
 		let avatar: string | null = '';
-		let title = row.title;
+		let name = row.name;
 		const participantsQuery = await db.query(sql`
             SELECT user_id, username, tag FROM participants
             JOIN users ON users.id = user_id
             WHERE conversation_id = $1;
         `, [ row.conversation_id]);
 
-		// Format avatar and conversation title
+		// Format avatar and conversation name
 		if(participantsQuery.rowCount < 3) {
 			// DM
 			let user: any;
@@ -62,17 +62,17 @@ router.all('/list', allowedMethods('GET'), ensureAuthenticated(), async (req, re
 			}
 
 			avatar = Utils.avatarUrl(req, user.user_id);
-			title = `${user.username}#${user.tag}`;
+			name = `${user.username}#${user.tag}`;
 		}
 		else {
 			// Group
 			avatar = Utils.avatarUrl(req, row.conversation_id);
-			title = title || participantsQuery.rows.map(u => u.username).join(', ').substring(0, 32);
+			name = name || participantsQuery.rows.map(u => u.username).join(', ').substring(0, 32);
 		}
 
 		return {
 			id: row.conversation_id,
-			title: title,
+			name: name,
 			avatar: avatar,
 			lastMessage: row.message ? {
 				content: row.message,

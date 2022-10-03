@@ -7,7 +7,7 @@ import axios, { AxiosError } from 'axios';
 import { useForm } from '../../hooks/useForm';
 import { EndpointResponse, UserLoginResponse } from '../../../types/endpoints';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../../UserContext';
+import { UserContext } from '../../context/UserContext';
 
 function RegisterForm() {
 	const [loading, setLoading] = useState(false);

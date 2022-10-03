@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function About() {
+export function AboutPage() {
 	return (
 		<h2>About</h2>
 	);

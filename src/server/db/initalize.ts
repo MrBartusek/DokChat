@@ -17,7 +17,7 @@ export function initializeDB() {
 
         CREATE TABLE IF NOT EXISTS conversations (
             id varchar NOT NULL,
-            title varchar(32),
+            name varchar(32),
             avatar varchar(255),
             creator_id varchar REFERENCES users,
             created_at bigint NOT NULL,

@@ -12,7 +12,7 @@ export interface UserLoginResponse {
 
 export interface Chat {
     id: string,
-    title: string,
+    name: string,
     avatar: string,
     lastMessage?: {
         content: string,

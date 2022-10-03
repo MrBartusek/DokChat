@@ -2,7 +2,7 @@
 
 import axios, { AxiosRequestHeaders } from 'axios';
 import { useEffect, useState, useRef, useContext } from 'react';
-import { UserContext } from '../UserContext';
+import { UserContext } from '../context/UserContext';
 
 type useFetchState<T> = { res?: T, loading: boolean};
 

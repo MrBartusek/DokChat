@@ -3,7 +3,7 @@ import { Button, Container, Nav, Navbar as BsNavbar } from 'react-bootstrap';
 import './Navbar.scss';
 import { BsFillChatSquareTextFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../../UserContext';
+import { UserContext } from '../../context/UserContext';
 
 interface Props {
 	zeroHeight?: boolean;

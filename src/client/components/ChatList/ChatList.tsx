@@ -1,22 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Col, Row, Stack, Image } from 'react-bootstrap';
 import { ChatListResponse, EndpointResponse } from '../../../types/endpoints';
+import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { useFetch } from '../../hooks/useFetch';
 import LoadingWrapper from '../LoadingWrapper/LoadingWrapper';
-import './ConversationList.scss';
+import './ChatList.scss';
 
-function ConversationList() {
-	const chatList = useFetch<EndpointResponse<ChatListResponse>>('chat/list', true);
+function ChatList() {
+	const [isLoading, chats, sendMessage] = useContext(MessageManagerContext);
 
 	return (
 		<Row className='h-100'>
-			<LoadingWrapper loading={chatList.loading}>
+			<LoadingWrapper isLoading={isLoading}>
 				<Stack gap={1} className="align-items-center py-1">
-					{chatList.res?.data.map((chat) => (
+					{chats.map((chat) => (
 						<Conversation
 							key={chat.id}
 							avatar={chat.avatar}
-							name={chat.title}
+							name={chat.name}
 							lastMessage={chat.lastMessage}
 						/>
 					))}
@@ -56,4 +57,4 @@ function Conversation(props: ConversationProps) {
 	);
 }
 
-export default ConversationList;
+export default ChatList;

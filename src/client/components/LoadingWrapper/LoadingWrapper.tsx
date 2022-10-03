@@ -4,10 +4,10 @@ import { Spinner } from 'react-bootstrap';
 
 interface Props {
     children?: ReactNode
-	loading?: boolean
+	isLoading?: boolean
 }
 
-export default function LoadingWrapper({ children, loading }: Props) {
+export default function LoadingWrapper({ children, isLoading: loading }: Props) {
 	const spinner = (
 		<Spinner
 			animation="border"

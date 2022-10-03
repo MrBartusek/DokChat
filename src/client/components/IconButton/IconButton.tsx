@@ -8,21 +8,29 @@ import './IconButton.scss';
 interface Props {
 	icon: IconType,
 	size?: number,
-	variant?: Variant
+	variant?: Variant,
+	onClick?: React.MouseEventHandler<HTMLButtonElement>,
+	disabled?: boolean,
 }
 
-function IconButton({icon, size, variant}: Props) {
+function IconButton({icon, size, variant, onClick, disabled}: Props) {
+	if(disabled) onClick = undefined;
+
 	const iconEl = React.createElement(
 		icon,
 		{
 			size: (size || 38) - 16,
-			color: variant ? `var(--bs-${variant})` : 'inherit'
+			color: variant ? `var(--bs-${disabled ? 'secondary' : variant})` : 'inherit'
 		}
 	);
 	return (
-		<div className='iconButton'>
+		<button
+			className={`iconButton ${disabled ? 'disabled' : 'enabled'}`}
+			onClick={onClick}
+			disabled={disabled}
+		>
 			{iconEl}
-		</div>
+		</button>
 	);
 }
 export default IconButton;
