@@ -45,6 +45,11 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 						{!isLoadingMessages && currentChat.messages.reverse().map((msg) => (
 							<Message key={msg.id} message={msg.content} isAuthor />
 						))}
+						{!isLoadingMessages && currentChat.messages.length == 0 &&
+							<span className='text-muted text-center mb-2'>
+								Send anything to start the conversation
+							</span>
+						}
 					</Stack>
 				</Stack>
 			</LoadingWrapper>
