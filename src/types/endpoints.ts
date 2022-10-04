@@ -14,10 +14,7 @@ export interface Chat {
     id: string,
     name: string,
     avatar: string,
-    lastMessage?: {
-        content: string,
-        author: string
-    }
+    lastMessage?: LastMessage
 }
 
 export type ChatListResponse = Chat[]
@@ -26,6 +23,11 @@ export interface MessageAuthor {
 	id: string,
 	username: string,
 	avatar: string
+}
+
+export interface LastMessage {
+	author: string,
+	content: string,
 }
 
 export interface Message {

@@ -6,54 +6,73 @@ import sql from 'sql-template-strings';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 import Utils from '../../utils';
+import { QueryResult } from 'pg';
+import { Request } from 'express-serve-static-core';
 
 const router = express.Router();
 
 router.all('/messages', allowedMethods('GET'), ensureAuthenticated(), async (req, res, next) => {
-	// Check request
-	const page = req.query.page || 0;
+	const page = req.query.page as any as number || 0;
 	const conversationId = req.query.chat;
-	if(typeof conversationId != 'string') {
-		return new ApiResponse(res).badRequest('Missing conversationId');
-	}
+	if(typeof conversationId != 'string') return new ApiResponse(res).badRequest();
+	if(isNaN(page)) return new ApiResponse(res).badRequest();
 
-	// Check chat access
-	const permissionsQuery = await db.query(sql`
-        SELECT EXISTS(SELECT 1 FROM participants WHERE user_id = $1 AND conversation_id=$2)
-    `, [req.auth.id, conversationId]);
-	if(permissionsQuery.rows[0].exists !== true) {
+	if(!hasChatAccess(req, conversationId)) {
 		return new ApiResponse(res).forbidden();
 	}
 
-	const query = await db.query(sql`
-        SELECT
-            id
-            content,
-            author_id,
-            created_at
-        FROM
-            messages
-        WHERE
-            conversation_id = $1
-        ORDER BY 
-            created_at DESC
-        LIMIT 25 OFFSET $2;
-    `, [req.auth.id, page]);
-	const messages = query.rows.map((row) => {
+	const messagesQuery = await queryMessages(req, page);
+	const messages = messagesQuery.rows.map((msg) => {
 		return {
-			id: row.id,
+			id: msg.id,
 			author: {
-				id: row.author_id,
-				username: 'xxx',
-				avatar: Utils.avatarUrl(req, row.author_id)
+				id: msg.authorId,
+				username: msg.authorUsername,
+				avatar: Utils.avatarUrl(req, msg.authorId)
 			},
-			content: row.content,
-			timestamp: row.created_at,
-			avatar: Utils.avatarUrl(req, row.author_id)
+			content: msg.content,
+			timestamp: msg.createdAt,
+			avatar: Utils.avatarUrl(req, msg.authorId)
 		};
 	});
 	const result: MessageListResponse = messages;
 	new ApiResponse(res).success(result);
 });
+
+async function hasChatAccess(req: express.Request, chatId: string) {
+	const permissionsQuery = await db.query(sql`
+        SELECT EXISTS(SELECT 1 FROM participants WHERE user_id = $1 AND conversation_id=$2)
+    `, [req.auth.id, chatId]);
+	return permissionsQuery.rows[0].exists;
+}
+
+type MessagesQuery = QueryResult<{
+	id: string,
+	content: string,
+	authorId: string,
+	authorUsername: string,
+	createdAt: string
+}>
+async function queryMessages(req: Request, page: number): Promise<MessagesQuery> {
+	return db.query(sql`
+		SELECT
+			id
+			content,
+			author_id as "authorId",
+			username as "authorUsername",
+			created_at as "createdAt"
+		FROM messages
+		LEFT JOIN LATERAL (
+            SELECT username FROM users
+            WHERE id = author_id
+            LIMIT 1
+        ) AS author ON true
+		WHERE
+			conversation_id = $1
+		ORDER BY 
+			created_at DESC
+		LIMIT 25 OFFSET $2;
+	`, [req.auth.id, page]);
+}
 
 export default router;

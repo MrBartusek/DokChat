@@ -1,9 +1,4 @@
-import { Message } from '../../types/endpoints';
-
-export interface LastMessage {
-	author: string,
-	content: string,
-}
+import { LastMessage, Message } from '../../types/endpoints';
 
 export class Chat {
 	/**
