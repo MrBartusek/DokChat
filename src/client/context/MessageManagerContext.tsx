@@ -1,9 +1,9 @@
 import { createContext } from 'react';
-import { Chat } from '../types/chat';
+import { LocalChat } from '../types/chat';
 
 export const MessageManagerContext = createContext<[
     boolean,
-    Chat[],
-    React.Dispatch<{chat: Chat, content: string}>,
-    React.Dispatch<Chat[]>
+    LocalChat[],
+    React.Dispatch<{chat: LocalChat, content: string}>,
+    React.Dispatch<LocalChat[]>
 ]>(null as any);

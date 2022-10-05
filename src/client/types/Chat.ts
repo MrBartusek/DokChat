@@ -1,6 +1,22 @@
 import { LastMessage, Message } from '../../types/endpoints';
+import * as DateFns from 'date-fns';
 
-export class Chat {
+/**
+ * Local client version of message with additional properties
+ * for handling sending lifecycle
+ */
+export interface LocalMessage extends Message {
+	/**
+	 * Is this message still in transit to server
+	 */
+	isPending?: boolean;
+}
+
+/**
+ * Local client version of chat object that handles initialization
+ * and adding messages
+ */
+export class LocalChat {
 	/**
 	 * Is this chat initialized?
 	 *
@@ -8,7 +24,8 @@ export class Chat {
 	 * relay on last message and don't have a message list
 	 */
 	public isInitialized: boolean;
-	private _messages: Message[] | LastMessage;
+	private _messages: LocalMessage[] | LastMessage;
+	private lastPendingIndex = 0;
 
 	constructor(
         public id: string,
@@ -20,13 +37,25 @@ export class Chat {
 		this._messages = lastMessage || [];
 	}
 
-	public addMessagesList(messages: Message[]): Chat {
+	/**
+	 * Load messages list from API
+	 */
+	public addMessagesList(messages: Message[]): LocalChat {
 		this._messages = messages;
 		this.isInitialized = true;
 		return this;
 	}
 
-	public addMessage(msg: Message): Chat {
+	/**
+	 * Add singular message to the chat
+	 * @returns the message id, randomly generated if message is pending
+	 */
+	public addMessage(msg: LocalMessage): string {
+		if(msg.isPending) {
+			if(!this.isInitialized) throw new Error('Cannot send fresh message to uninitialized chat');
+			msg.id = `PENDING-${this.id}-${this.lastPendingIndex}`;
+			this.lastPendingIndex;
+		}
 		// If chat is uninitialized save only a partial message
 		// since it doesn't accept a regular message list
 		if(this.isInitialized) {
@@ -38,12 +67,28 @@ export class Chat {
 				content: msg.content
 			};
 		}
-		return this;
+		return msg.id;
 	}
 
-	get messages(): Message[]{
+	/**
+	 * Mark message with PENDING- id as accepted
+	 */
+	public ackMessage(pendingId: string, newId: string, timestamp: string): LocalMessage {
+		if(!pendingId.startsWith('PENDING-')) throw new Error('Provided message id is not pending id');
+		const msg = this.messages.find(m => m.id == pendingId);
+		if(!msg) throw new Error(`Message with id ${pendingId} was not found`);
+
+		msg.isPending = false;
+		msg.id = newId;
+		msg.timestamp = timestamp;
+
+		return msg;
+	}
+
+	get messages(): LocalMessage[]{
 		if(!this.isInitialized) throw new Error('Cannot read messages of uninitialized chat');
-		return this._messages as Message[];
+		const msgs = this._messages as LocalMessage[];
+		return msgs.sort((a, b) => Number(b.timestamp) - Number(a.timestamp));
 	}
 
 	get lastMessage(): LastMessage | null {

@@ -1,27 +1,36 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
-import { ClientToServerEvents, ServerToClientEvents } from '../../types/websocket';
+import { ClientToServerEvents, DokChatSocket, ServerToClientEvents } from '../../types/websocket';
+import { UserContext } from '../context/UserContext';
 
 export type useWebsocketType = { isConnected?: boolean, socket: Socket<ServerToClientEvents, ClientToServerEvents>};
 
-const socket = io();
+let socket: Socket = null;
 
 export function useWebsocket(): useWebsocketType {
-	const [isConnected, setIsConnected] = useState(socket.connected);
+	const [isConnected, setIsConnected] = useState(false);
+	const [user] = useContext(UserContext);
+	if(!socket) {
+		socket = io({
+			extraHeaders: user.getAuthHeader()
+		});
+	}
 
 	useEffect(() => {
 		socket.on('connect', () => {
 			setIsConnected(true);
 		});
-
 		socket.on('disconnect', () => {
 			setIsConnected(false);
+		});
+		socket.on('connect_error', (err) => {
+			console.error(`Websocket connection error: ${err.message}`);
 		});
 		return () => {
 			socket.off('connect');
 			socket.off('disconnect');
-			socket.off('pong');
+			socket.off('connect_error');
 		};
 	}, []);
 

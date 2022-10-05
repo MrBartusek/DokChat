@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { ChatListResponse, EndpointResponse } from '../../types/endpoints';
+import { EventAcknowledgement } from '../../types/websocket';
 import ChatList from '../components/ChatList/ChatList';
 import { UserContext } from '../context/UserContext';
-import { Chat } from '../types/chat';
+import { LocalChat } from '../types/chat';
 import { useFetch } from './useFetch';
 import { useWebsocketType } from './useWebsocket';
+import * as DateFns from 'date-fns';
 
 /**
  * This hook is a manger for receiving, caching and sending messages
@@ -12,15 +14,15 @@ import { useWebsocketType } from './useWebsocket';
  */
 export function useMessageManager(ws: useWebsocketType): [
 	boolean, // loading
-	Chat[], // chats
-	React.Dispatch<{chat: Chat, content: string}>, // sendMessage
-	React.Dispatch<Chat[]> // setChatList
+	LocalChat[], // chats
+	React.Dispatch<{chat: LocalChat, content: string}>, // sendMessage
+	React.Dispatch<LocalChat[]> // setChatList
 	] {
 	const [loading, setLoading] = useState(true);
 	const [user] = useContext(UserContext);
 
 	const initialChatList = useFetch<EndpointResponse<ChatListResponse>>('chat/list', true);
-	const [chatList, setChatList] = useState<Chat[]>([]);
+	const [chatList, setChatList] = useState<LocalChat[]>([]);
 
 	/**
      * Load initial chat list and cache it
@@ -30,7 +32,7 @@ export function useMessageManager(ws: useWebsocketType): [
 		const rawChats = initialChatList.res.data;
 		setChatList(
 			rawChats.map((chat) => (
-				new Chat(
+				new LocalChat(
 					chat.id,
 					chat.name,
 					chat.avatar,
@@ -48,7 +50,7 @@ export function useMessageManager(ws: useWebsocketType): [
 		ws.socket.on('message', (msg) => {
 			const chat = chatList.find((c) => c.id == msg.chat.id);
 			if(!chat) {
-				chatList.push(new Chat(
+				chatList.push(new LocalChat(
 					msg.chat.id,
 					msg.chat.name,
 					msg.chat.avatar
@@ -69,31 +71,43 @@ export function useMessageManager(ws: useWebsocketType): [
 		};
 	});
 
+	function ackMessage(chat: LocalChat, pendingId: string, newId: string, timestamp: string) {
+		const chats = [...chatList];
+		const chatId = chats.findIndex((c) => c.id == chat.id);
+		if(chatId == -1) return;
+		chats[chatId].ackMessage(pendingId, newId, timestamp);
+		setChatList(chats);
+	}
+
 	return [
 		loading,
 		chatList,
-		(data: {chat: Chat, content: string}) => {
-			// Send message to WS
-			ws.socket.send('message', {
-				chatId: data.chat.id,
-				content: data.content
-			});
-
+		(data: {chat: LocalChat, content: string}) => {
 			// Add this message to local cache
 			const chats = [...chatList];
 			const chatId = chats.findIndex((c) => c.id == data.chat.id);
 			if(chatId == -1) return;
-			chats[chatId].addMessage({
-				id: '0',
+			const pendingMessageId = chats[chatId].addMessage({
+				id: '0', // This will be auto-generated
+				isPending: true,
 				author: {
 					id: user.id,
 					username: user.username,
 					avatar: user.avatarUrl
 				},
 				content: data.content,
-				timestamp: Date.now().toString()
+				timestamp: DateFns.getUnixTime(new Date()).toString()
 			});
 			setChatList(chats);
+
+			// Send message to WS
+			ws.socket.emit('message', {
+				chatId: data.chat.id,
+				content: data.content
+			}, (response) => {
+				if(response.error) return;
+				ackMessage(data.chat, pendingMessageId, response.data.id, response.data.timestamp);
+			});
 		},
 		setChatList
 	];

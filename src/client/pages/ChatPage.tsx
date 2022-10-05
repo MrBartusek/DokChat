@@ -8,12 +8,12 @@ import MessageBar from '../components/MessageBar/MessageBar';
 import { useWebsocket } from '../hooks/useWebsocket';
 import { useMessageManager } from '../hooks/useMessageManager';
 import { MessageManagerContext } from '../context/MessageManagerContext';
-import { Chat } from '../types/chat';
+import { LocalChat } from '../types/chat';
 
 export function ChatPage() {
 	const ws = useWebsocket();
 	const [isLoading, chats, sendMessage, setChatList] = useMessageManager(ws);
-	const [currentChat, setCurrentChat] = useState<Chat>(null);
+	const [currentChat, setCurrentChat] = useState<LocalChat>(null);
 
 	/**
 	 * Set initial chat window

@@ -61,7 +61,7 @@ export class User {
 		return this.isAuthenticated && this.expired;
 	}
 
-	public getAuthHeader(): AxiosRequestHeaders {
+	public getAuthHeader(): { [header: string]: string; } {
 		if(this.ready) throw new Error('User is not ready');
 		return {
 			'Authorization': `Bearer ${this.token}`

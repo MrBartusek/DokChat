@@ -1,7 +1,7 @@
 export interface EndpointResponse<T> {
     error: boolean,
     status: number,
-    message: string,
+    message?: string,
     data: T;
 }
 

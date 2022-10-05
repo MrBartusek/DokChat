@@ -1,17 +1,23 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Col, Row, Stack, Image } from 'react-bootstrap';
+import { BsCheckCircle, BsCheckCircleFill, BsCircle } from 'react-icons/bs';
 import { EndpointResponse, MessageListResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { useFetch } from '../../hooks/useFetch';
-import { Chat } from '../../types/chat';
+import { LocalChat, LocalMessage } from '../../types/chat';
 import LoadingWrapper from '../LoadingWrapper/LoadingWrapper';
+import * as DateFns from 'date-fns';
+import { UserContext } from '../../context/UserContext';
+import './MessagesWindow.scss';
 
 export interface MessagesWindowProps {
-	currentChat?: Chat
+	currentChat?: LocalChat
 }
 
 function MessagesWindow({ currentChat }: MessagesWindowProps) {
 	const [isLoadingManager, chats, sendMessage, setChatList] = useContext(MessageManagerContext);
+	const [ user ] = useContext(UserContext);
+	const messageWindowRef = useRef<HTMLDivElement>();
 
 	const [fetchUrl, setFetchUrl] = useState<string | null>(null);
 	const messagesFetch = useFetch<EndpointResponse<MessageListResponse>>(fetchUrl, true);
@@ -25,6 +31,10 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 		setFetchUrl(`/chat/messages?chat=${currentChat.id}`);
 	}, [currentChat]);
 
+	useLayoutEffect(() => {
+		messageWindowRef.current.scrollTo(0, 99999);
+	}, [chats]);
+
 	/**
 	 * Load fetched data
 	 */
@@ -37,20 +47,44 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 	}, [messagesFetch]);
 
 	const isLoadingMessages = (!currentChat || isLoadingManager || !currentChat.isInitialized || messagesFetch.loading);
+	const messagesGroups: LocalMessage[][] = [];
+	if(!isLoadingMessages) {
+		for (let i = 0; i < currentChat.messages.length; i++) {
+			const lastMsg = i > 0 ? currentChat.messages[i - 1] : null;
+			const msg = currentChat.messages[i];
+
+			const authorChange = lastMsg && lastMsg.author.id != msg.author.id;
+			const pushToNewStack = authorChange || !lastMsg;
+			const offset = +pushToNewStack - 1; // true = 1 false = 0
+			if(Array.isArray(messagesGroups[messagesGroups.length + offset])) {
+				messagesGroups[messagesGroups.length + offset].push(msg);
+			}
+			else {
+				messagesGroups[messagesGroups.length + offset] = [msg];
+			}
+			console.log(messagesGroups);
+		}
+	}
 	return (
-		<Row className='d-flex flex-grow-1'>
+		<Row className='d-flex flex-grow-1 overflow-auto' ref={messageWindowRef}>
 			<LoadingWrapper isLoading={isLoadingMessages}>
 				<Stack className='gap-3 flex-column-reverse'>
-					<Stack className='gap-1 flex-grow-0 flex-column-reverse'>
-						{!isLoadingMessages && currentChat.messages.reverse().map((msg) => (
-							<Message key={msg.id} message={msg.content} isAuthor />
-						))}
-						{!isLoadingMessages && currentChat.messages.length == 0 &&
+					{messagesGroups.map((group, a) => (
+						<Stack className='gap-1 flex-grow-0 flex-column-reverse' key={a}>
+							{group.map((msg, i, arr) => (
+								<Message
+									key={msg.id}
+									message={msg}
+									isAuthor={user.id == msg.author.id}
+									isLastStackMessage={i == 0}/>
+							))}
+						</Stack>
+					))}
+					{!isLoadingMessages && currentChat.messages.length == 0 &&
 							<span className='text-muted text-center mb-2'>
 								Send anything to start the conversation
 							</span>
-						}
-					</Stack>
+					}
 				</Stack>
 			</LoadingWrapper>
 		</Row>
@@ -58,21 +92,28 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 }
 
 interface MessageProps {
-	message: string,
-	avatar?: string,
+	message: LocalMessage,
 	isAuthor?: boolean
+	isLastStackMessage?: boolean
 }
 
-function Message({message, avatar, isAuthor}: MessageProps) {
+function Message({message, isAuthor, isLastStackMessage}: MessageProps) {
 	return (
 		<Row className={`w-100 ${isAuthor ? 'flex-row-reverse' : 'flex-row'}`}>
-			<MessageAvatar avatar={avatar} leaveSpace={!isAuthor} />
+			{/* Show indicator only on last message of stack but keep pending indicator on every message */}
+			{((isAuthor && isLastStackMessage) || (isAuthor && message.isPending))
+				? <MessageStatus isPending={message.isPending} />
+				: (isAuthor && <span className='p-0' style={{width: '18px'}}></span>)}
+			{/* Show avatar only on last message of stack when user is not author */}
+			{(!isAuthor && isLastStackMessage)
+				? <MessageAvatar avatar={message.author.avatar} />
+				: (!isAuthor && <span className='p-0' style={{width: '56px'}}></span>)}
 			<Col
 				xs='auto'
-				style={{'padding': '8px 12px', 'maxWidth': 'min(700px, 80%)', 'borderRadius': '1.2rem'}}
-				className={`${isAuthor ? 'bg-primary text-light' : 'bg-gray-200'}`}
+				style={{'opacity': message.isPending ? '80%' : '100%'}}
+				className={`message ${isAuthor ? 'bg-primary text-light' : 'bg-gray-200'}`}
 			>
-				{message}
+				{message.content}
 			</Col>
 		</Row>
 	);
@@ -80,11 +121,9 @@ function Message({message, avatar, isAuthor}: MessageProps) {
 
 interface MessageAvatarProps {
 	avatar?: string
-	leaveSpace?: boolean
 }
 
-function MessageAvatar({avatar, leaveSpace}: MessageAvatarProps) {
-	if(!avatar && !leaveSpace) return (<></>);
+function MessageAvatar({avatar}: MessageAvatarProps) {
 	return (
 		<Col xs='auto' className='d-flex align-items-end'>
 			{avatar ? (
@@ -92,6 +131,24 @@ function MessageAvatar({avatar, leaveSpace}: MessageAvatarProps) {
 			) : (
 				<div style={{height: 32, width: 32}}></div>
 			)}
+		</Col>
+	);
+}
+
+interface MessageStatusProps {
+	isPending?: boolean
+}
+
+function MessageStatus({isPending}: MessageStatusProps) {
+	const iconEl = React.createElement(
+		isPending ? BsCheckCircle : BsCheckCircleFill, {
+			size: 14,
+			color: 'var(--bs-primary'
+		}
+	);
+	return (
+		<Col xs='auto' className='d-flex align-items-end pe-0 ps-1'>
+			{iconEl}
 		</Col>
 	);
 }

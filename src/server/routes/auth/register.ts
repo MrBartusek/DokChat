@@ -12,13 +12,9 @@ import JWT from '../../managers/authManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import AuthManager from '../../managers/authManager';
 import * as DateFns from 'date-fns';
+import { snowflakeGenerator } from '../../utils/snowflakeGenerator';
 
 const router = express.Router();
-const snowflakeGenerator = new Snowflake({
-	custom_epoch: 1640991600000,
-	instance_id: 0
-});
-const jwtManager = new JWT();
 
 router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 	const username: string = req.body.username;

@@ -2,7 +2,8 @@ import { Request, Response } from 'express';
 
 export class ApiResponse {
 	constructor(
-        private resp: Response
+        private resp: Response | object,
+		private next?: (error?: any) => any
 	) {}
 
 	public respond(error: boolean, status: number, message: string, data?: object): Response {
@@ -14,7 +15,12 @@ export class ApiResponse {
 		if(data) {
 			result.data = data;
 		}
-		return this.resp.status(status).json(result).end();
+		const isWebsocket = (this.resp as any).status == undefined;
+		if(!isWebsocket) {
+			return (this.resp as Response).status(status).json(result).end();
+		}
+		if(typeof this.next !== 'function') return;
+		this.next(result);
 	}
 
 	public success(data?: object): Response {

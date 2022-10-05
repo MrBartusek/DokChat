@@ -8,6 +8,7 @@ import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 import Utils from '../../utils';
 import { QueryResult } from 'pg';
 import { Request } from 'express-serve-static-core';
+import PermissionManager from '../../managers/permissionManager';
 
 const router = express.Router();
 
@@ -17,11 +18,11 @@ router.all('/messages', allowedMethods('GET'), ensureAuthenticated(), async (req
 	if(typeof conversationId != 'string') return new ApiResponse(res).badRequest();
 	if(isNaN(page)) return new ApiResponse(res).badRequest();
 
-	if(!hasChatAccess(req, conversationId)) {
+	if(!PermissionManager.hasChatAccess(req, conversationId)) {
 		return new ApiResponse(res).forbidden();
 	}
 
-	const messagesQuery = await queryMessages(req, page);
+	const messagesQuery = await queryMessages(req, conversationId, page);
 	const messages = messagesQuery.rows.map((msg) => {
 		return {
 			id: msg.id,
@@ -39,13 +40,6 @@ router.all('/messages', allowedMethods('GET'), ensureAuthenticated(), async (req
 	new ApiResponse(res).success(result);
 });
 
-async function hasChatAccess(req: express.Request, chatId: string) {
-	const permissionsQuery = await db.query(sql`
-        SELECT EXISTS(SELECT 1 FROM participants WHERE user_id = $1 AND conversation_id=$2)
-    `, [req.auth.id, chatId]);
-	return permissionsQuery.rows[0].exists;
-}
-
 type MessagesQuery = QueryResult<{
 	id: string,
 	content: string,
@@ -53,26 +47,22 @@ type MessagesQuery = QueryResult<{
 	authorUsername: string,
 	createdAt: string
 }>
-async function queryMessages(req: Request, page: number): Promise<MessagesQuery> {
+async function queryMessages(req: Request, conversationId: string, page: number): Promise<MessagesQuery> {
 	return db.query(sql`
 		SELECT
-			id
-			content,
-			author_id as "authorId",
-			username as "authorUsername",
-			created_at as "createdAt"
+			messages.id,
+			messages.content,
+			messages.author_id as "authorId",
+			users.username as "authorUsername",
+			messages.created_at as "createdAt"
 		FROM messages
-		LEFT JOIN LATERAL (
-            SELECT username FROM users
-            WHERE id = author_id
-            LIMIT 1
-        ) AS author ON true
+		INNER JOIN users ON users.id = messages.author_id
 		WHERE
 			conversation_id = $1
 		ORDER BY 
-			created_at DESC
+			messages.created_at DESC
 		LIMIT 25 OFFSET $2;
-	`, [req.auth.id, page]);
+	`, [conversationId, page]);
 }
 
 export default router;

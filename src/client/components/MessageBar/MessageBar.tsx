@@ -7,10 +7,10 @@ import IconButton from '../IconButton/IconButton';
 import io from 'socket.io-client';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { useForm } from '../../hooks/useForm';
-import { Chat } from '../../types/chat';
+import { LocalChat } from '../../types/chat';
 
 export interface MessageBarProps {
-	currentChat?: Chat
+	currentChat?: LocalChat
 }
 
 function MessageBar({ currentChat }: MessageBarProps) {
