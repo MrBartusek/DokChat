@@ -4,7 +4,7 @@ import { BsCheckCircle, BsCheckCircleFill, BsCircle } from 'react-icons/bs';
 import { EndpointResponse, MessageListResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { useFetch } from '../../hooks/useFetch';
-import { LocalChat, LocalMessage } from '../../types/chat';
+import { LocalChat, LocalMessage } from '../../types/Chat';
 import LoadingWrapper from '../LoadingWrapper/LoadingWrapper';
 import * as DateFns from 'date-fns';
 import { UserContext } from '../../context/UserContext';

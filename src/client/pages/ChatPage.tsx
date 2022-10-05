@@ -8,7 +8,7 @@ import MessageBar from '../components/MessageBar/MessageBar';
 import { useWebsocket } from '../hooks/useWebsocket';
 import { useMessageManager } from '../hooks/useMessageManager';
 import { MessageManagerContext } from '../context/MessageManagerContext';
-import { LocalChat } from '../types/chat';
+import { LocalChat } from '../types/Chat';
 
 export function ChatPage() {
 	const ws = useWebsocket();

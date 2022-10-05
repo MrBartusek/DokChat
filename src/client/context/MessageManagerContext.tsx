@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { LocalChat } from '../types/chat';
+import { LocalChat } from '../types/Chat';
 
 export const MessageManagerContext = createContext<[
     boolean,

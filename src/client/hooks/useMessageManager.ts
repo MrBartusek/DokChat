@@ -1,9 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { ChatListResponse, EndpointResponse } from '../../types/endpoints';
-import { EventAcknowledgement } from '../../types/websocket';
-import ChatList from '../components/ChatList/ChatList';
 import { UserContext } from '../context/UserContext';
-import { LocalChat } from '../types/chat';
+import { LocalChat } from '../types/Chat';
 import { useFetch } from './useFetch';
 import { useWebsocketType } from './useWebsocket';
 import * as DateFns from 'date-fns';
