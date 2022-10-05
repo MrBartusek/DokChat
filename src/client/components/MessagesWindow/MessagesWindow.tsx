@@ -66,9 +66,9 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 		}
 	}
 	return (
-		<Row className='d-flex flex-grow-1 overflow-auto' ref={messageWindowRef}>
+		<Row className='d-flex flex-grow-1' ref={messageWindowRef} style={{overflowY: 'scroll'}}>
 			<LoadingWrapper isLoading={isLoadingMessages}>
-				<Stack className='gap-3 flex-column-reverse'>
+				<Stack className='pt-3 gap-2 flex-column-reverse'>
 					{messagesGroups.map((group, a) => (
 						<Stack className='gap-1 flex-grow-0 flex-column-reverse' key={a}>
 							{group.map((msg, i, arr) => (
@@ -110,7 +110,7 @@ function Message({message, isAuthor, isLastStackMessage}: MessageProps) {
 				: (!isAuthor && <span className='p-0' style={{width: '56px'}}></span>)}
 			<Col
 				xs='auto'
-				style={{'opacity': message.isPending ? '80%' : '100%'}}
+				style={{'opacity': message.isPending ? '50%' : '100%'}}
 				className={`message ${isAuthor ? 'bg-primary text-light' : 'bg-gray-200'}`}
 			>
 				{message.content}
