@@ -31,7 +31,7 @@ export function ChatPage() {
 						<ChatList />
 					</Col>
 					<Col className='d-flex align-items-stretch flex-column mh-100'>
-						<ChatInfo />
+						<ChatInfo currentChat={currentChat} />
 						<MessagesWindow currentChat={currentChat} />
 						<MessageBar currentChat={currentChat} />
 					</Col>
