@@ -24,12 +24,12 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 
 		let participantsIds = await ChatManager.listParticipantsUserIds(msg.chatId);
 		participantsIds = participantsIds.filter(p => p != socket.auth.id);
-		const chatInfo = await ChatManager.chatInfo(msg.chatId);
+		const chatInfo = await ChatManager.chatInfo(socket.handshake, msg.chatId);
 		const serverMsg: ServerMessage = {
 			messageId: id,
 			content: msg.content,
 			chat: {
-				id: msg.chatId,
+				id: chatInfo.id,
 				name: chatInfo.name,
 				avatar: chatInfo.avatar
 			},
