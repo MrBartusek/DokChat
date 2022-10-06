@@ -1,8 +1,8 @@
 import db from './index';
 import sql from 'sql-template-strings';
 
-export function initializeDB() {
-	db.query(sql`
+export async function initializeDB() {
+	await db.query(sql`
         CREATE TABLE IF NOT EXISTS users (
             id varchar NOT NULL,
             password_hash varchar NOT NULL,
@@ -41,4 +41,27 @@ export function initializeDB() {
             PRIMARY KEY (id)
         );
     `);
+	await db.query(sql`
+        INSERT INTO users
+            (id, password_hash, username, tag, email, last_seen, created_at)
+        VALUES
+            (
+                0,
+                'x',
+                'DokChat',
+                '2115',
+                'dokchat-admin@dokurno.dev',
+                '0',
+                '0'
+            );
+
+        INSERT INTO conversations
+            (id, creator_id, created_at)
+        VALUES ( 0, 0, 0);
+        
+        INSERT INTO participants
+			(id, user_id, conversation_id, created_at)
+		VALUES
+			(0, 0, 0, 0)
+        `).catch(() => console.error('Initial insert error'));
 }
