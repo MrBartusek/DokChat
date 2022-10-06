@@ -8,7 +8,7 @@ import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 import Utils from '../../utils';
 import { QueryResult } from 'pg';
 import { Request } from 'express-serve-static-core';
-import PermissionManager from '../../managers/permissionManager';
+import ChatManager from '../../managers/chatManager';
 
 const router = express.Router();
 
@@ -18,7 +18,7 @@ router.all('/messages', allowedMethods('GET'), ensureAuthenticated(), async (req
 	if(typeof conversationId != 'string') return new ApiResponse(res).badRequest();
 	if(isNaN(page)) return new ApiResponse(res).badRequest();
 
-	if(!PermissionManager.hasChatAccess(req.auth, conversationId)) {
+	if(!ChatManager.hasChatAccess(req.auth, conversationId)) {
 		return new ApiResponse(res).forbidden();
 	}
 

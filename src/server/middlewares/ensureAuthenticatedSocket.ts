@@ -16,6 +16,7 @@ const ensureAuthenticatedSocket = () => async (socket: Socket, next: NextFunctio
 	return AuthManager.verifyJWT(token)
 		.then((data) => {
 			socket.auth = data;
+			socket.join(socket.auth.id);
 			return next();
 		})
 		.catch(() => {

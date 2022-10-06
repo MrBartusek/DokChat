@@ -1,4 +1,4 @@
-import { LastMessage, Message } from '../../types/endpoints';
+import { LastMessage, Message } from '../../types/common';
 import * as DateFns from 'date-fns';
 
 /**

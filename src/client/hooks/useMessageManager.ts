@@ -46,9 +46,10 @@ export function useMessageManager(ws: useWebsocketType): [
 	 */
 	useEffect(() => {
 		ws.socket.on('message', (msg) => {
-			const chat = chatList.find((c) => c.id == msg.chat.id);
+			const chats = [...chatList];
+			const chat = chats.find((c) => c.id == msg.chat.id);
 			if(!chat) {
-				chatList.push(new LocalChat(
+				chats.push(new LocalChat(
 					msg.chat.id,
 					msg.chat.name,
 					msg.chat.avatar
@@ -61,8 +62,10 @@ export function useMessageManager(ws: useWebsocketType): [
 					id: msg.messageId,
 					timestamp: msg.timestamp
 				});
+				chat.avatar = msg.chat.avatar;
+				chat.name = msg.chat.name;
 			}
-			setChatList(chatList);
+			setChatList(chats);
 		});
 		return () => {
 			ws.socket.off('message');
