@@ -97,7 +97,7 @@ export class LocalChat {
 		}
 		else {
 			const msgs = (this._messages as Message[]);
-			const lastMsg = msgs[msgs.length - 1];
+			const lastMsg = msgs[0];
 			if(!lastMsg) return null;
 			return  {
 				author: lastMsg.author.username,

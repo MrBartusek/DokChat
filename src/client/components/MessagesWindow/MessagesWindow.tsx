@@ -62,7 +62,6 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 			else {
 				messagesGroups[messagesGroups.length + offset] = [msg];
 			}
-			console.log(messagesGroups);
 		}
 	}
 	return (

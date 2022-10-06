@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
+import { Socket } from 'socket.io';
 
 export class ApiResponse {
 	constructor(
-        private resp: Response | object,
+        private resp: Response | Socket,
 		private next?: (error?: any) => any
 	) {}
 

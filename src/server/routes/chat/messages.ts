@@ -18,7 +18,7 @@ router.all('/messages', allowedMethods('GET'), ensureAuthenticated(), async (req
 	if(typeof conversationId != 'string') return new ApiResponse(res).badRequest();
 	if(isNaN(page)) return new ApiResponse(res).badRequest();
 
-	if(!PermissionManager.hasChatAccess(req, conversationId)) {
+	if(!PermissionManager.hasChatAccess(req.auth, conversationId)) {
 		return new ApiResponse(res).forbidden();
 	}
 

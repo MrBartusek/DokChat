@@ -6,16 +6,22 @@ import { UserContext } from '../context/UserContext';
 
 export type useWebsocketType = { isConnected?: boolean, socket: Socket<ServerToClientEvents, ClientToServerEvents>};
 
-let socket: Socket = null;
+let socket: Socket = io({ autoConnect: false });
 
 export function useWebsocket(): useWebsocketType {
 	const [isConnected, setIsConnected] = useState(false);
 	const [user] = useContext(UserContext);
-	if(!socket) {
+
+	useEffect(() => {
 		socket = io({
-			extraHeaders: user.getAuthHeader()
+			transportOptions: {
+				polling: {
+					extraHeaders: user.getAuthHeader()
+				}
+			},
+			autoConnect: true
 		});
-	}
+	}, [user]);
 
 	useEffect(() => {
 		socket.on('connect', () => {

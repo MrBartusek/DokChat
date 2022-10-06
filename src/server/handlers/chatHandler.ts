@@ -10,9 +10,8 @@ import * as DateFns from 'date-fns';
 
 export default function registerMessageHandler(io: DokChatServer, socket: DokChatSocket) {
 	socket.on('message', async (message, callback) => {
-		const req = socket.request as Request;
 		// Check chat access
-		if(!PermissionManager.hasChatAccess(req, message.chatId)) {
+		if(!PermissionManager.hasChatAccess(socket.auth, message.chatId)) {
 			return new ApiResponse({} as any, callback).forbidden();
 		}
 
@@ -25,7 +24,7 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 			VALUES (
 				$1, $2, $3, $4, $5
 			);
-			`, [ id, message.chatId, req.auth.id, message.content, timestamp]);
+			`, [ id, message.chatId, socket.auth.id, message.content, timestamp]);
 
 		new ApiResponse({} as any, callback).success({
 			id: id,

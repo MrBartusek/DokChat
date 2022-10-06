@@ -9,9 +9,7 @@ import * as http from 'http';
 import { DokChatSocket } from '../types/websocket';
 import ensureAuthenticated from './middlewares/ensureAuthenticated';
 import registerMessageHandler from './handlers/chatHandler';
-
-// Convert express middleware to socket.io one
-const wrap = (middleware: any) => (socket: DokChatSocket, next: any) => middleware(socket.request, {}, next);
+import ensureAuthenticatedSocket from './middlewares/ensureAuthenticatedSocket';
 
 // Initialize database
 initializeDB();
@@ -35,7 +33,7 @@ app.get('*', (req,res) =>{
 });
 
 // Setup websocket
-io.use(wrap(ensureAuthenticated()));
+io.use(ensureAuthenticatedSocket());
 io.on('connection', (socket) => {
 	registerMessageHandler(io, socket);
 });
