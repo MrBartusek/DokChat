@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Col, Row, Image } from 'react-bootstrap';
-import { BsGear } from 'react-icons/bs';
+import { BsPencilSquare, BsPlusCircle, BsPlusSquare } from 'react-icons/bs';
 import { UserContext } from '../../context/UserContext';
 import IconButton from '../IconButton/IconButton';
 
@@ -18,7 +18,7 @@ function UserInfo() {
 				</span>
 			</Col>
 			<Col xs='auto' className='d-flex align-items-center'>
-				<IconButton icon={BsGear} />
+				<IconButton icon={BsPlusCircle} />
 			</Col>
 		</Row>
 	);

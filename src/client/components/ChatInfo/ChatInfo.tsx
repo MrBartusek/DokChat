@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Col, Row, Image } from 'react-bootstrap';
-import { BsPersonPlusFill } from 'react-icons/bs';
+import { BsPersonPlusFill, BsThreeDots } from 'react-icons/bs';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { LocalChat } from '../../types/Chat';
 import IconButton from '../IconButton/IconButton';
@@ -26,6 +26,7 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 				</Col>
 				<Col xs='auto' className='d-flex align-items-center'>
 					<IconButton icon={BsPersonPlusFill} variant='primary' />
+					<IconButton icon={BsThreeDots} variant='primary' />
 				</Col>
 			</LoadingWrapper>
 		</Row>
