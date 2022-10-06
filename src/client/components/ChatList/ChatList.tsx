@@ -4,23 +4,29 @@ import { ChatListResponse, EndpointResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
 import { useFetch } from '../../hooks/useFetch';
+import { LocalChat } from '../../types/Chat';
 import LoadingWrapper from '../LoadingWrapper/LoadingWrapper';
 import './ChatList.scss';
 
-function ChatList() {
+export interface ChatListProps {
+	currentChat?: LocalChat
+}
+
+function ChatList({ currentChat }: ChatListProps) {
 	const [isLoading, chats, sendMessage] = useContext(MessageManagerContext);
 	const [user] = useContext(UserContext);
 
 	return (
 		<Row className='h-100'>
 			<LoadingWrapper isLoading={isLoading}>
-				<Col className="align-items-center py-1">
+				<Col className="d-flex justify-content-center py-1 px-2">
 					{chats.map((chat) => (
 						<Conversation
 							key={chat.id}
 							avatar={chat.avatar}
 							name={chat.name}
 							lastMessage={chat.lastMessage}
+							isCurrent={currentChat && chat.id == currentChat.id}
 						/>
 					))}
 				</Col>
@@ -35,12 +41,16 @@ interface ConversationProps {
 	lastMessage: {
 		content: string,
 		author: string
-	}
+	},
+	isCurrent?: boolean
 }
 
 function Conversation(props: ConversationProps) {
 	return (
-		<Row className='conversation p-1 flex-row rounded-3 w-100 flex-nowrap' style={{height: 65}}>
+		<Row
+			className={`conversation flex-row rounded-3 w-100 flex-nowrap ${props.isCurrent ? 'current' : ''}`}
+			style={{height: 65}}
+		>
 			<Col xs='auto' className="d-flex align-items-center">
 				<Image roundedCircle src={props.avatar} style={{height: '48px'}} />
 			</Col>

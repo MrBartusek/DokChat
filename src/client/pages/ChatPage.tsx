@@ -28,7 +28,7 @@ export function ChatPage() {
 				<Row className='h-100'>
 					<Col style={{'flex': '0 0 360px', 'width': '360px'}} className='border-separator border-end'>
 						<UserInfo />
-						<ChatList />
+						<ChatList currentChat={currentChat} />
 					</Col>
 					<Col className='d-flex align-items-stretch flex-column mh-100'>
 						<ChatInfo currentChat={currentChat} />

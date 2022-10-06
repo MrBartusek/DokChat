@@ -13,6 +13,7 @@ export interface MessageAuthor {
 	id: string,
 	username: string,
 	avatar: string
+    tag: string,
 }
 
 export interface LastMessage {

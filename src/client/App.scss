@@ -52,3 +52,8 @@ body {
 .bg-gray-200 {
     background-color: $gray-200;
 }
+
+.tooltip {
+	// For some reason this doesn't work with $variable
+	--bs-tooltip-bg: var(--bs-gray-900);
+}

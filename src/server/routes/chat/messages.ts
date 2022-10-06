@@ -29,7 +29,8 @@ router.all('/messages', allowedMethods('GET'), ensureAuthenticated(), async (req
 			author: {
 				id: msg.authorId,
 				username: msg.authorUsername,
-				avatar: Utils.avatarUrl(req, msg.authorId)
+				avatar: Utils.avatarUrl(req, msg.authorId),
+				tag: msg.authorTag
 			},
 			content: msg.content,
 			timestamp: msg.createdAt,
@@ -45,6 +46,7 @@ type MessagesQuery = QueryResult<{
 	content: string,
 	authorId: string,
 	authorUsername: string,
+	authorTag: string,
 	createdAt: string
 }>
 async function queryMessages(req: Request, conversationId: string, page: number): Promise<MessagesQuery> {
@@ -54,6 +56,7 @@ async function queryMessages(req: Request, conversationId: string, page: number)
 			messages.content,
 			messages.author_id as "authorId",
 			users.username as "authorUsername",
+			users.tag as "authorTag",
 			messages.created_at as "createdAt"
 		FROM messages
 		INNER JOIN users ON users.id = messages.author_id

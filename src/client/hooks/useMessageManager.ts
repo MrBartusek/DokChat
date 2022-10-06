@@ -94,7 +94,8 @@ export function useMessageManager(ws: useWebsocketType): [
 				author: {
 					id: user.id,
 					username: user.username,
-					avatar: user.avatarUrl
+					avatar: user.avatarUrl,
+					tag: user.tag
 				},
 				content: data.content,
 				timestamp: DateFns.getUnixTime(new Date()).toString()

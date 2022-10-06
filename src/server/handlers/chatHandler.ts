@@ -36,7 +36,8 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 			author: {
 				id: socket.auth.id,
 				username: socket.auth.username,
-				avatar: Utils.avatarUrl(socket.handshake, socket.auth.id)
+				avatar: Utils.avatarUrl(socket.handshake, socket.auth.id),
+				tag: socket.auth.tag
 			},
 			timestamp: timestamp.toString()
 		};

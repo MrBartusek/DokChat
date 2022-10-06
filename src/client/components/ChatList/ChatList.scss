@@ -9,3 +9,7 @@
 .conversation:hover {
     background-color: $gray-200;
 }
+
+.conversation.current {
+    background-color: $gray-100;
+}

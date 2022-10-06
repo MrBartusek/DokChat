@@ -23,7 +23,8 @@ export interface ServerMessage {
     author: {
         id: string,
         username: string,
-        avatar: string
+        avatar: string,
+        tag: string
     },
     timestamp: string
 }

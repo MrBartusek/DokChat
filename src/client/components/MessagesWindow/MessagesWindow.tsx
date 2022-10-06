@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Col, Row, Stack, Image } from 'react-bootstrap';
+import { Col, Row, Stack, Image, Tooltip, TooltipProps, OverlayTrigger } from 'react-bootstrap';
 import { BsCheckCircle, BsCheckCircleFill, BsCircle } from 'react-icons/bs';
 import { EndpointResponse, MessageListResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
@@ -97,6 +97,12 @@ interface MessageProps {
 }
 
 function Message({message, isAuthor, isLastStackMessage}: MessageProps) {
+	const timeTooltip = (props: TooltipProps) => (
+		<Tooltip id="button-tooltip"  {...props}>
+			{DateFns.format(DateFns.fromUnixTime(Number(message.timestamp)), 'HH:mm')}
+		</Tooltip>
+	);
+
 	return (
 		<Row className={`w-100 ${isAuthor ? 'flex-row-reverse' : 'flex-row'}`}>
 			{/* Show indicator only on last message of stack but keep pending indicator on every message */}
@@ -107,14 +113,21 @@ function Message({message, isAuthor, isLastStackMessage}: MessageProps) {
 			{(!isAuthor && isLastStackMessage)
 				? <MessageAvatar avatar={message.author.avatar} />
 				: (!isAuthor && <span className='p-0' style={{width: '56px'}}></span>)}
-			<Col
-				xs='auto'
-				style={{'opacity': message.isPending ? '50%' : '100%'}}
-				className={`message ${isAuthor ? 'bg-primary text-light' : 'bg-gray-200'}`}
+			<OverlayTrigger
+				placement={isAuthor ? 'left' : 'right'}
+				overlay={timeTooltip}
+				delay={{show: 500, hide: 0}}
 			>
-				{message.content}
-			</Col>
+				<Col
+					xs='auto'
+					style={{'opacity': message.isPending ? '50%' : '100%'}}
+					className={`message ${isAuthor ? 'bg-primary text-light' : 'bg-gray-200'}`}
+				>
+					{message.content}
+				</Col>
+			</OverlayTrigger>
 		</Row>
+
 	);
 }
 
