@@ -121,7 +121,7 @@ function Message({message, isAuthor, isLastStackMessage}: MessageProps) {
 				<Col
 					xs='auto'
 					style={{'opacity': message.isPending ? '50%' : '100%'}}
-					className={`message ${isAuthor ? 'bg-primary text-light' : 'bg-gray-200'}`}
+					className={`message text-break ${isAuthor ? 'bg-primary text-light' : 'bg-gray-200'}`}
 				>
 					{message.content}
 				</Col>
