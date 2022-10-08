@@ -32,7 +32,7 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 	}, [currentChat]);
 
 	useLayoutEffect(() => {
-		messageWindowRef.current.scrollTo(0, 99999);
+		messageWindowRef.current.scrollTo(0, messageWindowRef.current.clientHeight + 100);
 	}, [chats]);
 
 	/**
