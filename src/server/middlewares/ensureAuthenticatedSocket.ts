@@ -4,7 +4,7 @@ import { ApiResponse } from '../apiResponse';
 import AuthManager from '../managers/authManager';
 
 const ensureAuthenticatedSocket = () => async (socket: Socket, next: NextFunction) => {
-	let token: string | undefined = socket.handshake.headers.authorization;
+	let token: string | undefined = socket.handshake.auth['Authorization'];
 	if(!token) {
 		return new ApiResponse(socket, next).unauthorized('No token provided');
 	}

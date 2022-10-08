@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { Socket } from 'socket.io';
+import { SocketError } from '../types/error';
 
 export class ApiResponse {
 	constructor(
@@ -8,10 +9,11 @@ export class ApiResponse {
 	) {}
 
 	public respond(error: boolean, status: number, message: string, data?: object): Response {
-		const result: any = {
+		const result = {
 			error: error,
 			status: status,
-			message: message
+			message: message,
+			data: undefined
 		};
 		if(data) {
 			result.data = data;
@@ -20,8 +22,14 @@ export class ApiResponse {
 		if(!isWebsocket) {
 			return (this.resp as Response).status(status).json(result).end();
 		}
-		if(typeof this.next !== 'function') return;
-		this.next(result);
+		else {
+			if(typeof this.next !== 'function') return;
+			if(result.error) {
+				return this.next(new SocketError(result.status, result.message));
+			}
+			this.next(result);
+		}
+
 	}
 
 	public success(data?: object): Response {
@@ -52,3 +60,4 @@ export class ApiResponse {
 		return this.error(403, 'Forbidden');
 	}
 }
+

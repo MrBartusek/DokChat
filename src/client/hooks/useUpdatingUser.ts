@@ -53,7 +53,7 @@ export function useUpdatingUser(): [User, React.Dispatch<string>, React.Dispatch
 				console.log(`Updated JWT to ${user.email} from server`);
 			}).catch(() => {
 				// If past tries to refresh user failed, just log out the user
-				if(user.expireIn < 15) {
+				if(user.isAuthenticated && user.expireIn < 15) {
 					removeUser();
 				}
 			});

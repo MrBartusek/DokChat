@@ -14,11 +14,7 @@ export function useWebsocket(): useWebsocketType {
 
 	useEffect(() => {
 		socket = io({
-			transportOptions: {
-				polling: {
-					extraHeaders: user.getAuthHeader()
-				}
-			},
+			auth: user.getAuthHeader(),
 			autoConnect: true
 		});
 	}, [user]);
