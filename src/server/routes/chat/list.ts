@@ -17,7 +17,8 @@ router.all('/list', allowedMethods('GET'), ensureAuthenticated(), async (req, re
 
 	const chatsQuery = await queryChats(req, page);
 	const chats = await Promise.all(chatsQuery.rows.map(async (chat) => {
-		const [avatar, chatName] = await ChatManager.generateAvatarAndName(req, chat.conversationId, chat.name, chat.avatar);
+		const participant = await ChatManager.listParticipants(req, chat.conversationId);
+		const [avatar, chatName] = await ChatManager.generateAvatarAndName(req, chat.conversationId, participant, chat.name, chat.avatar);
 
 		return {
 			id: chat.conversationId,
