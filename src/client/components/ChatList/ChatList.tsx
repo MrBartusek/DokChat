@@ -59,7 +59,7 @@ function Conversation(props: ConversationProps) {
 				className='d-flex justify-content-center flex-column py-0 px-1'
 				style={{maxWidth: '250px'}}
 			>
-				<div className='fw-bold'>
+				<div className='fw-bol text-truncated'>
 					{props.name}
 				</div>
 				<div className='text-muted text-truncate' style={{fontSize: '0.85em'}}>
