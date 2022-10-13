@@ -16,7 +16,7 @@ export interface MessagesWindowProps {
 
 function MessagesWindow({ currentChat }: MessagesWindowProps) {
 	const [isLoadingManager, chats, sendMessage, setChatList] = useContext(MessageManagerContext);
-	const [ user ] = useContext(UserContext);
+	const [ isUserLoading, user ] = useContext(UserContext);
 	const messageWindowRef = useRef<HTMLDivElement>();
 
 	const [fetchUrl, setFetchUrl] = useState<string | null>(null);

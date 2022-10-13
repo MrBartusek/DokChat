@@ -9,7 +9,7 @@ type useFetchState<T> = { res?: T, loading: boolean};
 export function useFetch<T>(url: string | null, useAuth = false): useFetchState<T> {
 	const isCurrent = useRef(true);
 	const [state, setState] = useState<useFetchState<T>>({ res: undefined, loading: true });
-	const [user] = useContext(UserContext);
+	const [isUserLoading, user] = useContext(UserContext);
 
 	useEffect(() => {
 		return () => {
@@ -19,7 +19,10 @@ export function useFetch<T>(url: string | null, useAuth = false): useFetchState<
 
 	useEffect(() => {
 		let headers: AxiosRequestHeaders = {};
-		if(useAuth) headers = user.getAuthHeader();
+		if(useAuth) {
+			if(isUserLoading) return;
+			headers = user.getAuthHeader();
+		}
 
 		setState(state => ({ res: state.res, loading: true }));
 		// Keep fetcher loading when no url is provided
@@ -34,7 +37,7 @@ export function useFetch<T>(url: string | null, useAuth = false): useFetchState<
 					setState({ res: res.data, loading: false });
 				}
 			});
-	}, [url, setState]);
+	}, [url, setState, isUserLoading]);
 
 	return state;
 }

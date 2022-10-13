@@ -7,27 +7,28 @@ import { UserContext } from './context/UserContext';
 import { ChatPage } from './pages/ChatPage';
 import { useUpdatingUser } from './hooks/useUpdatingUser';
 import { RegisterPage } from './pages/RegisterPage';
+import Dialog from './components/Dialog/Dialog';
 
 function App() {
-	const [user, setUser, removeUser] = useUpdatingUser();
+	const [isUserLoading, user, setUser, removeUser] = useUpdatingUser();
 
 	return (
-		<UserContext.Provider value={[user, setUser, removeUser]}>
+		<UserContext.Provider value={[isUserLoading, user, setUser, removeUser]}>
 			<BrowserRouter>
 				<Routes>
 					<Route path="/" element={<HomePage />} />
-					<Route path="/about" element={<AboutPage />} />
-					<Route path="/login" element={
+					<Route path="about" element={<AboutPage />} />
+					<Route path="login" element={
 						<PublicOnlyRoute>
 							<LoginPage />
 						</PublicOnlyRoute>
 					} />
-					<Route path="/register" element={
+					<Route path="register" element={
 						<PublicOnlyRoute>
 							<RegisterPage />
 						</PublicOnlyRoute>
 					} />
-					<Route path="/chat" element={
+					<Route path="chat" element={
 						<PrivateRoute>
 							<ChatPage />
 						</PrivateRoute>
@@ -44,12 +45,14 @@ interface SpecialRouteProps {
 }
 
 const PrivateRoute = ({ children }: SpecialRouteProps) => {
-	const [ user ] = useContext(UserContext);
+	const [ isUserLoading, user ] = useContext(UserContext);
+	if(isUserLoading) return <></>;
 	return user.isAuthenticated ? children : <Navigate to="/login" />;
 };
 
 const PublicOnlyRoute = ({ children }: SpecialRouteProps) => {
-	const [ user ] = useContext(UserContext);
+	const [ isUserLoading, user ] = useContext(UserContext);
+	if(isUserLoading) return <></>;
 	return !user.isAuthenticated ? children : <Navigate to="/chat" />;
 };
 

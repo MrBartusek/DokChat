@@ -12,7 +12,8 @@ import { User } from '../types/User';
  * This is more advanced version of useUser hook
  * that have token refreshing built-in
  */
-export function useUpdatingUser(): [User, React.Dispatch<string>, React.Dispatch<void>] {
+export function useUpdatingUser(): [boolean, User, React.Dispatch<string>, React.Dispatch<void>] {
+	const [isLoading, setLoading] = useState(true);
 	const [user, setUser, removeUser] = useUser();
 	const [cookies] = useCookies(['token']);
 
@@ -27,6 +28,7 @@ export function useUpdatingUser(): [User, React.Dispatch<string>, React.Dispatch
 				setUser(cookies.token);
 			}
 		}
+		setLoading(false);
 		(async () => await refreshToken())();
 	}, []);
 
@@ -59,5 +61,5 @@ export function useUpdatingUser(): [User, React.Dispatch<string>, React.Dispatch
 			});
 	}
 
-	return [user, setUser, removeUser];
+	return [isLoading, user, setUser, removeUser];
 }

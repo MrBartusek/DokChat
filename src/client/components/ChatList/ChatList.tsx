@@ -14,7 +14,7 @@ export interface ChatListProps {
 
 function ChatList({ currentChat }: ChatListProps) {
 	const [isLoading, chats, sendMessage] = useContext(MessageManagerContext);
-	const [user] = useContext(UserContext);
+	const [ isUserLoading, user ] = useContext(UserContext);
 
 	return (
 		<Row className='h-100'>
