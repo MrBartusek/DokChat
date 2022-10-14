@@ -3,15 +3,9 @@ import { Spinner } from 'react-bootstrap';
 import { BsFillChatSquareTextFill } from 'react-icons/bs';
 import './MainLoading.scss';
 
-export interface MainLoadingProps {
-	hide?: boolean;
-}
-
-export default function MainLoading({ hide }: MainLoadingProps) {
+export default function MainLoading() {
 	return (
-		<div
-			className={`mainLoading ${hide ? 'opacity-0' : 'opacity-1'}`}
-		>
+		<div className='mainLoading'>
 			<div
 				className='d-flex justify-content-center align-items-center flex-column h-100'
 			>
