@@ -1,28 +1,20 @@
 # DokChat
 
-DokChat is fully fledged messaging application. The goal of this project is to learn about as many
-as possible web technologies.
+DokChat is fully fledged instant messaging application. It supports users authentication, groups, attachment, GIFs, emojis.
+Frontend is made with React and Typescript. Backend runs on Express, Typescript and Postgres. Live communication is made with Socket.io.
+Whole thing is hosted on AWS (EC2, S3, SES).
 
-## Tech stack
+## Database Design
 
-- React
-- Rest API
-- Typescript (front and back)
-- Node.js
-- Express
-- Postgres
-- Amazon AWS (EC2, S3, SES)
-- Socket.io
+Database design is loosely based on [yoosuf/Messenger](https://github.com/yoosuf/Messenger). You can see the
+visualization on [DB Desinger](https://dbdesigner.page.link/E5jWkh17kMUprBzP6) or directly in
+[db/initalize.ts](./src/server/db/initalize.ts).
 
 ## Features
 
-- Custom authentication system with JWT refresh and access tokens
-Project Goals
-- Users identity handled by usernames, tags and snowflakes. Something like Discord
-
-- Full fledged chat application (maybe voice?)
-- React frontend with bootstrap packed by webpack
-- Express Backend
-- Custom user and login system with JWT and snowflakes
-- Communication with Socket.io
-- Tenor and emoji support
+[x] User authentication with JWT refresh and access tokens
+[x] Users identity handled by usernames, tags and snowflakes. Something like Discord
+[x] Instant Messaging
+[ ] Gif Support
+[ ] Emoji Support
+[ ] Attachments
