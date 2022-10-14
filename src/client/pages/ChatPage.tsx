@@ -26,7 +26,7 @@ export function ChatPage() {
 		if(!isLoadingManager) setCurrentChat(chats[0]);
 	}, [ isLoadingManager ]);
 
-	const isLoading = (isLoadingManager || !currentChat || !documentReady);
+	const isLoading = (isLoadingManager || !currentChat || (!documentReady && location.hostname !== 'localhost'));
 	if(isLoading) return (<MainLoading />);
 
 	// ADD FUCKING CHAT TYPES TO CHATS (SELF, DM, GROUP)
