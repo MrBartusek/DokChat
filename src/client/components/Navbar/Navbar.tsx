@@ -10,7 +10,7 @@ interface Props {
 }
 
 function Navbar({zeroHeight} : Props) {
-	const [ isUserLoading, user ] = useContext(UserContext);
+	const [  user ] = useContext(UserContext);
 
 	return (
 		<BsNavbar

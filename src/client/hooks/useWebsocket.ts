@@ -10,15 +10,14 @@ let socket: Socket = io({ autoConnect: false });
 
 export function useWebsocket(): useWebsocketType {
 	const [isConnected, setIsConnected] = useState(false);
-	const [isUserLoading, user] = useContext(UserContext);
+	const [ user ] = useContext(UserContext);
 
 	useEffect(() => {
-		if(isUserLoading) return;
 		socket = io({
 			auth: user.getAuthHeader(),
 			autoConnect: true
 		});
-	}, [isUserLoading, user]);
+	}, [user]);
 
 	useEffect(() => {
 		socket.on('connect', () => {

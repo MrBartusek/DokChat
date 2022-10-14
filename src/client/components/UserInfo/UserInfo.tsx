@@ -5,7 +5,7 @@ import { UserContext } from '../../context/UserContext';
 import IconButton from '../IconButton/IconButton';
 
 function UserInfo() {
-	const [isUserLoading, user] = useContext(UserContext);
+	const [ user] = useContext(UserContext);
 
 	return (
 		<Row style={{height: 55}} className='p-2 border-bottom border-separator'>

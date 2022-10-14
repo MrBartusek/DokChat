@@ -5,7 +5,7 @@ import { EndpointResponse, MessageListResponse } from '../../../types/endpoints'
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { useFetch } from '../../hooks/useFetch';
 import { LocalChat, LocalMessage } from '../../types/Chat';
-import LoadingWrapper from '../LoadingWrapper/LoadingWrapper';
+import SimpleLoading from '../SimpleLoadng/SimpleLoading';
 import * as DateFns from 'date-fns';
 import { UserContext } from '../../context/UserContext';
 import './MessagesWindow.scss';
@@ -15,11 +15,10 @@ export interface MessagesWindowProps {
 }
 
 function MessagesWindow({ currentChat }: MessagesWindowProps) {
-	const [isLoadingManager, chats, sendMessage, setChatList] = useContext(MessageManagerContext);
-	const [ isUserLoading, user ] = useContext(UserContext);
+	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
+	const [ user ] = useContext(UserContext);
 	const messageWindowRef = useRef<HTMLDivElement>();
-
-	const [fetchUrl, setFetchUrl] = useState<string | null>(null);
+	const [ fetchUrl, setFetchUrl ] = useState<string | null>(null);
 	const messagesFetch = useFetch<EndpointResponse<MessageListResponse>>(fetchUrl, true);
 
 	/**
@@ -29,12 +28,12 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 		if(!currentChat) return;
 		if(currentChat.isInitialized) return;
 		setFetchUrl(`/chat/messages?chat=${currentChat.id}`);
-	}, [currentChat]);
+	}, [ currentChat ]);
 
 	useLayoutEffect(() => {
-		console.log(messageWindowRef.current.clientHeight);
+		if(!messageWindowRef.current) return;
 		messageWindowRef.current.scrollTo(0, messageWindowRef.current.scrollHeight);
-	}, [chats]);
+	}, [ chats, messageWindowRef ]);
 
 	/**
 	 * Load fetched data
@@ -42,53 +41,57 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 	useEffect(() => {
 		if(!messagesFetch.res) return;
 		const chatId = chats.findIndex(c => c.id == currentChat.id);
-		const chatsCopy = [...chats];
+		const chatsCopy = [ ...chats ];
 		chatsCopy[chatId] = chatsCopy[chatId].addMessagesList(messagesFetch.res.data);
 		setChatList(chatsCopy);
-	}, [messagesFetch]);
+	}, [ messagesFetch ]);
 
-	const isLoadingMessages = (!currentChat || isLoadingManager || !currentChat.isInitialized || messagesFetch.loading);
-	const messagesGroups: LocalMessage[][] = [];
-	if(!isLoadingMessages) {
-		for (let i = 0; i < currentChat.messages.length; i++) {
-			const lastMsg = i > 0 ? currentChat.messages[i - 1] : null;
-			const msg = currentChat.messages[i];
+	if(!currentChat.isInitialized || messagesFetch.loading) return (<SimpleLoading />);
 
-			const authorChange = lastMsg && lastMsg.author.id != msg.author.id;
-			const pushToNewStack = authorChange || !lastMsg;
-			const offset = +pushToNewStack - 1; // true = 1 false = 0
-			if(Array.isArray(messagesGroups[messagesGroups.length + offset])) {
-				messagesGroups[messagesGroups.length + offset].push(msg);
-			}
-			else {
-				messagesGroups[messagesGroups.length + offset] = [msg];
-			}
-		}
-	}
+	const messagesGroups = groupMessages(currentChat);
+	const noMessagesInfo = (
+		<span className='text-muted text-center mb-2'>
+			Send anything to start the chat
+		</span>
+	);
 	return (
 		<Row className='d-flex flex-grow-1' ref={messageWindowRef} style={{overflowY: 'scroll'}}>
-			<LoadingWrapper isLoading={isLoadingMessages}>
-				<Stack className='pt-3 gap-2 flex-column-reverse'>
-					{messagesGroups.map((group, a) => (
-						<Stack className='gap-1 flex-grow-0 flex-column-reverse' key={a}>
-							{group.map((msg, i, arr) => (
-								<Message
-									key={msg.id}
-									message={msg}
-									isAuthor={user.id == msg.author.id}
-									isLastStackMessage={i == 0}/>
-							))}
-						</Stack>
-					))}
-					{!isLoadingMessages && currentChat.messages.length == 0 &&
-							<span className='text-muted text-center mb-2'>
-								Send anything to start the chat
-							</span>
-					}
-				</Stack>
-			</LoadingWrapper>
+			<Stack className='pt-3 gap-2 flex-column-reverse'>
+				{messagesGroups.map((group, a) => (
+					<Stack className='gap-1 flex-grow-0 flex-column-reverse' key={a}>
+						{group.map((msg, i ) => (
+							<Message
+								key={msg.id}
+								message={msg}
+								isAuthor={user.id == msg.author.id}
+								isLastStackMessage={i == 0}
+							/>
+						))}
+					</Stack>
+				))}
+				{currentChat.messages.length == 0 && noMessagesInfo}
+			</Stack>
 		</Row>
 	);
+}
+
+function groupMessages(chat: LocalChat): LocalMessage[][] {
+	const messagesGroups: LocalMessage[][] = [];
+	for (let i = 0; i < chat.messages.length; i++) {
+		const lastMsg = i > 0 ? chat.messages[i - 1] : null;
+		const msg = chat.messages[i];
+
+		const authorChange = lastMsg && lastMsg.author.id != msg.author.id;
+		const pushToNewStack = authorChange || !lastMsg;
+		const offset = +pushToNewStack - 1; // true = 1 false = 0
+		if(Array.isArray(messagesGroups[messagesGroups.length + offset])) {
+			messagesGroups[messagesGroups.length + offset].push(msg);
+		}
+		else {
+			messagesGroups[messagesGroups.length + offset] = [ msg ];
+		}
+	}
+	return messagesGroups;
 }
 
 interface MessageProps {

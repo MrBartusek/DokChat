@@ -8,8 +8,8 @@ type useFetchState<T> = { res?: T, loading: boolean};
 
 export function useFetch<T>(url: string | null, useAuth = false): useFetchState<T> {
 	const isCurrent = useRef(true);
-	const [state, setState] = useState<useFetchState<T>>({ res: undefined, loading: true });
-	const [isUserLoading, user] = useContext(UserContext);
+	const [ state, setState ] = useState<useFetchState<T>>({ res: undefined, loading: true });
+	const [ user ] = useContext(UserContext);
 
 	useEffect(() => {
 		return () => {
@@ -20,7 +20,6 @@ export function useFetch<T>(url: string | null, useAuth = false): useFetchState<
 	useEffect(() => {
 		let headers: AxiosRequestHeaders = {};
 		if(useAuth) {
-			if(isUserLoading) return;
 			headers = user.getAuthHeader();
 		}
 
@@ -37,7 +36,7 @@ export function useFetch<T>(url: string | null, useAuth = false): useFetchState<
 					setState({ res: res.data, loading: false });
 				}
 			});
-	}, [url, setState, isUserLoading]);
+	}, [ url, setState ]);
 
 	return state;
 }

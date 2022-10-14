@@ -5,32 +5,30 @@ import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
 import { useFetch } from '../../hooks/useFetch';
 import { LocalChat } from '../../types/Chat';
-import LoadingWrapper from '../LoadingWrapper/LoadingWrapper';
+import SimpleLoading from '../SimpleLoadng/SimpleLoading';
 import './ChatList.scss';
 
 export interface ChatListProps {
-	currentChat?: LocalChat
+	currentChat: LocalChat
 }
 
 function ChatList({ currentChat }: ChatListProps) {
-	const [isLoading, chats, sendMessage] = useContext(MessageManagerContext);
-	const [ isUserLoading, user ] = useContext(UserContext);
+	const [ chats, sendMessage ] = useContext(MessageManagerContext);
+	const [ user ] = useContext(UserContext);
 
 	return (
 		<Row className='h-100'>
-			<LoadingWrapper isLoading={isLoading}>
-				<Col className="d-flex justify-content-center py-1 px-2">
-					{chats.map((chat) => (
-						<Chat
-							key={chat.id}
-							avatar={chat.avatar}
-							name={chat.name}
-							lastMessage={chat.lastMessage}
-							isCurrent={currentChat && chat.id == currentChat.id}
-						/>
-					))}
-				</Col>
-			</LoadingWrapper>
+			<Col className="d-flex justify-content-center py-1 px-2">
+				{chats.map((chat) => (
+					<Chat
+						key={chat.id}
+						avatar={chat.avatar}
+						name={chat.name}
+						lastMessage={chat.lastMessage}
+						isCurrent={chat.id == currentChat.id}
+					/>
+				))}
+			</Col>
 		</Row>
 	);
 }

@@ -10,18 +10,18 @@ import { useForm } from '../../hooks/useForm';
 import { LocalChat } from '../../types/Chat';
 
 export interface MessageBarProps {
-	currentChat?: LocalChat
+	currentChat: LocalChat
 }
 
 function MessageBar({ currentChat }: MessageBarProps) {
-	const [isLoading, chats, sendMessage] = useContext(MessageManagerContext);
+	const [chats, sendMessage] = useContext(MessageManagerContext);
 	const [values, handleChange, clearValues] = useForm({ content: '' });
 	const [isEnabled, setEnabled] = useState(false);
 	const inputRef = useRef<HTMLInputElement>();
 
 	useEffect(() => {
-		setEnabled(currentChat && values.content.length > 0 && !isLoading);
-	}, [values, isLoading]);
+		setEnabled(values.content.length > 0);
+	}, [values]);
 
 	return (
 		<Row className='d-flex py-3 px-1 align-items-center'>

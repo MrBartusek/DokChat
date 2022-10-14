@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 
 function Header() {
-	const [ isUserLoading, user ] = useContext(UserContext);
+	const [ user ] = useContext(UserContext);
 
 	return (
 		<div className='full-width font-header '>

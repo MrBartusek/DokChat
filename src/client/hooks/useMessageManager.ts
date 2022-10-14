@@ -17,7 +17,7 @@ export function useMessageManager(ws: useWebsocketType): [
 	React.Dispatch<LocalChat[]> // setChatList
 	] {
 	const [loading, setLoading] = useState(true);
-	const [isUserLoading, user] = useContext(UserContext);
+	const [user] = useContext(UserContext);
 
 	const initialChatList = useFetch<EndpointResponse<ChatListResponse>>('chat/list', true);
 	const [chatList, setChatList] = useState<LocalChat[]>([]);

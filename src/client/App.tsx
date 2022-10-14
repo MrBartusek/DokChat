@@ -10,10 +10,13 @@ import { RegisterPage } from './pages/RegisterPage';
 import Dialog from './components/Dialog/Dialog';
 
 function App() {
-	const [isUserLoading, user, setUser, removeUser] = useUpdatingUser();
+	const [ isUserLoading, user, setUser, removeUser ] = useUpdatingUser();
+
+	// Don't render anything when user is initializing
+	if(isUserLoading) return <></>;
 
 	return (
-		<UserContext.Provider value={[isUserLoading, user, setUser, removeUser]}>
+		<UserContext.Provider value={[ user, setUser, removeUser ]}>
 			<BrowserRouter>
 				<Routes>
 					<Route path="/" element={<HomePage />} />
@@ -47,14 +50,12 @@ interface SpecialRouteProps {
 }
 
 const PrivateRoute = ({ children }: SpecialRouteProps) => {
-	const [ isUserLoading, user ] = useContext(UserContext);
-	if(isUserLoading) return <></>;
+	const [ user ] = useContext(UserContext);
 	return user.isAuthenticated ? children : <Navigate to="/login" />;
 };
 
 const PublicOnlyRoute = ({ children }: SpecialRouteProps) => {
-	const [ isUserLoading, user ] = useContext(UserContext);
-	if(isUserLoading) return <></>;
+	const [ user ] = useContext(UserContext);
 	return !user.isAuthenticated ? children : <Navigate to="/chat" />;
 };
 

@@ -10,36 +10,53 @@ import { useMessageManager } from '../hooks/useMessageManager';
 import { MessageManagerContext } from '../context/MessageManagerContext';
 import { LocalChat } from '../types/Chat';
 import { Outlet } from 'react-router-dom';
+import MainLoading from '../components/MainLoading/MainLoading';
+import { useDocumentReady } from '../hooks/useDocumentReady';
 
 export function ChatPage() {
 	const ws = useWebsocket();
-	const [isLoading, chats, sendMessage, setChatList] = useMessageManager(ws);
-	const [currentChat, setCurrentChat] = useState<LocalChat>(null);
+	const [ isLoadingManager, chats, sendMessage, setChatList ] = useMessageManager(ws);
+	const [ currentChat, setCurrentChat ] = useState<LocalChat>(null);
+	const documentReady = useDocumentReady();
+	const [ isDelay, setIsDelay ] = useState(true);
+
+	useEffect(() => {
+		setTimeout(() => setIsDelay(false), 500);
+	}, []);
 
 	/**
 	 * Set initial chat window
 	 */
 	useEffect(() => {
-		if(!isLoading) setCurrentChat(chats[0]);
-	}, [isLoading]);
+		if(!isLoadingManager) setCurrentChat(chats[0]);
+	}, [ isLoadingManager ]);
 
+	const isLoading = (isLoadingManager || !currentChat || !documentReady || isDelay);
+
+	// ADD FUCKING CHAT TYPES TO CHATS (SELF, DM, GROUP)
 	return (
-		// ADD FUCKING CHAT TYPES TO CHATS (SELF, DM, GROUP)
-		<MessageManagerContext.Provider value={[isLoading, chats, sendMessage, setChatList]}>
-			<Container fluid style={{'height': '100vh', 'maxHeight': '100vh', 'overflow': 'hidden'}}>
-				<Row className='h-100'>
-					<Col style={{'flex': '0 0 360px', 'width': '360px'}} className='border-separator border-end'>
-						<UserInfo />
-						<ChatList currentChat={currentChat} />
-					</Col>
-					<Col className='d-flex align-items-stretch flex-column mh-100'>
-						<ChatInfo currentChat={currentChat} />
-						<MessagesWindow currentChat={currentChat} />
-						<MessageBar currentChat={currentChat} />
-					</Col>
-				</Row>
-			</Container>
-			<Outlet />
-		</MessageManagerContext.Provider>
+		<>
+			<MainLoading hide={!isLoading} />
+			{!isLoading && (
+				<MessageManagerContext.Provider value={[ chats, sendMessage, setChatList ]}>
+					<Container fluid style={{'height': '100vh', 'maxHeight': '100vh', 'overflow': 'hidden'}}>
+						<Row className='h-100'>
+							<Col style={{'flex': '0 0 360px', 'width': '360px'}} className='border-separator border-end'>
+								<UserInfo />
+								<ChatList currentChat={currentChat} />
+							</Col>
+							<Col className='d-flex align-items-stretch flex-column mh-100'>
+								<ChatInfo currentChat={currentChat} />
+								<MessagesWindow currentChat={currentChat} />
+								<MessageBar currentChat={currentChat} />
+							</Col>
+						</Row>
+					</Container>
+					{/* React Router outlet for popups */}
+					<Outlet />
+				</MessageManagerContext.Provider>
+			)}
+
+		</>
 	);
 }

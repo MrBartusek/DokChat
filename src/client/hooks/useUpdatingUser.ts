@@ -13,9 +13,9 @@ import { User } from '../types/User';
  * that have token refreshing built-in
  */
 export function useUpdatingUser(): [boolean, User, React.Dispatch<string>, React.Dispatch<void>] {
-	const [isLoading, setLoading] = useState(true);
-	const [user, setUser, removeUser] = useUser();
-	const [cookies] = useCookies(['token']);
+	const [ isLoading, setLoading ] = useState(true);
+	const [ user, setUser, removeUser ] = useUser();
+	const [ cookies ] = useCookies([ 'token' ]);
 
 	/**
 	 * Set user decoded from JWT if there is any and fetch new token
@@ -44,7 +44,7 @@ export function useUpdatingUser(): [boolean, User, React.Dispatch<string>, React
 			}
 		}, 10 * 1000);
 		return () => clearInterval(interval);
-	}, [user]);
+	}, [ user ]);
 
 	async function refreshToken() {
 		await axios.post('/api/auth/refresh')
@@ -61,5 +61,5 @@ export function useUpdatingUser(): [boolean, User, React.Dispatch<string>, React
 			});
 	}
 
-	return [isLoading, user, setUser, removeUser];
+	return [ isLoading, user, setUser, removeUser ];
 }

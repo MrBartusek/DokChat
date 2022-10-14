@@ -10,12 +10,12 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 
 function RegisterForm() {
-	const [loading, setLoading] = useState(false);
-	const [values, handleChange] = useForm({ email: '', username: '', password: '', confirmPassword: '', terms: false });
-	const [error, setError] = useState<string | null>(null);
+	const [ loading, setLoading ] = useState(false);
+	const [ values, handleChange ] = useForm({ email: '', username: '', password: '', confirmPassword: '', terms: false });
+	const [ error, setError ] = useState<string | null>(null);
 	const formRef = useRef<HTMLFormElement>(null!);
 	const navigate = useNavigate();
-	const [isUserLoading, user, setUser] = useContext(UserContext);
+	const [ user, setUser ] = useContext(UserContext);
 
 	return (
 		<>
