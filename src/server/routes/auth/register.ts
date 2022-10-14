@@ -57,7 +57,7 @@ router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 	//TEMP: add to main chat
 	await db.query(sql`
 		INSERT INTO participants
-			(id, user_id, conversation_id, created_at)
+			(id, user_id, chat_id, created_at)
 		VALUES
 			($1, $2, 0, 0)
 	`, [snowflakeGenerator.getUniqueID(), snowflake]);

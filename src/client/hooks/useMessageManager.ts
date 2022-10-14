@@ -26,6 +26,7 @@ export function useMessageManager(ws: useWebsocketType): [
      * Load initial chat list and cache it
      */
 	useEffect(() => {
+		console.log(initialChatList);
 		if(initialChatList.loading) return;
 		const rawChats = initialChatList.res.data;
 		setChatList(

@@ -32,8 +32,10 @@ function App() {
 						<PrivateRoute>
 							<ChatPage />
 						</PrivateRoute>
-					} />
-
+					}>
+						<Route path="new" element={<Dialog />} />
+						<Route path="*" />
+					</Route>
 				</Routes>
 			</BrowserRouter>
 		</UserContext.Provider>

@@ -2,14 +2,14 @@
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/mixins";
 
-.conversation {
+.chat {
     cursor: pointer;
 }
 
-.conversation:hover {
+.chat:hover {
     background-color: $gray-200;
 }
 
-.conversation.current {
+.chat.current {
     background-color: $gray-100;
 }

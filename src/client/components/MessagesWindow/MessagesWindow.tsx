@@ -82,7 +82,7 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 					))}
 					{!isLoadingMessages && currentChat.messages.length == 0 &&
 							<span className='text-muted text-center mb-2'>
-								Send anything to start the conversation
+								Send anything to start the chat
 							</span>
 					}
 				</Stack>

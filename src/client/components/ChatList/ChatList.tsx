@@ -21,7 +21,7 @@ function ChatList({ currentChat }: ChatListProps) {
 			<LoadingWrapper isLoading={isLoading}>
 				<Col className="d-flex justify-content-center py-1 px-2">
 					{chats.map((chat) => (
-						<Conversation
+						<Chat
 							key={chat.id}
 							avatar={chat.avatar}
 							name={chat.name}
@@ -35,7 +35,7 @@ function ChatList({ currentChat }: ChatListProps) {
 	);
 }
 
-interface ConversationProps {
+interface ChatProps {
     avatar: string,
 	name: string,
 	lastMessage: {
@@ -45,10 +45,10 @@ interface ConversationProps {
 	isCurrent?: boolean
 }
 
-function Conversation(props: ConversationProps) {
+function Chat(props: ChatProps) {
 	return (
 		<Row
-			className={`conversation flex-row rounded-3 w-100 flex-nowrap ${props.isCurrent ? 'current' : ''}`}
+			className={`chat flex-row rounded-3 w-100 flex-nowrap ${props.isCurrent ? 'current' : ''}`}
 			style={{height: 65}}
 		>
 			<Col xs='auto' className="d-flex align-items-center">
@@ -65,7 +65,7 @@ function Conversation(props: ConversationProps) {
 				<div className='text-muted text-truncate' style={{fontSize: '0.85em'}}>
 					{props.lastMessage ? (
 						<span>{props.lastMessage.author}: {props.lastMessage.content}</span>
-					): 'Click to start the conversation!'}
+					): 'Click to start the chat!'}
 
 				</div>
 			</Col>

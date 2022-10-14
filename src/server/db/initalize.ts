@@ -15,7 +15,7 @@ export async function initializeDB() {
             PRIMARY KEY (id)
         );
 
-        CREATE TABLE IF NOT EXISTS conversations (
+        CREATE TABLE IF NOT EXISTS chats (
             id varchar NOT NULL,
             name varchar(32),
             avatar varchar(255),
@@ -26,7 +26,7 @@ export async function initializeDB() {
 
         CREATE TABLE IF NOT EXISTS messages (
             id varchar NOT NULL,
-            conversation_id varchar REFERENCES conversations,
+            chat_id varchar REFERENCES chats,
             author_id varchar REFERENCES users,
             content text NOT NULL,
             created_at bigint NOT NULL,
@@ -36,7 +36,7 @@ export async function initializeDB() {
         CREATE TABLE IF NOT EXISTS participants (
             id varchar NOT NULL,
             user_id varchar REFERENCES users,
-            conversation_id varchar REFERENCES conversations,
+            chat_id varchar REFERENCES chats,
             created_at bigint NOT NULL,
             PRIMARY KEY (id)
         );
@@ -55,12 +55,12 @@ export async function initializeDB() {
                 '0'
             );
 
-        INSERT INTO conversations
+        INSERT INTO chats
             (id, creator_id, created_at)
         VALUES ( 0, 0, 0);
         
         INSERT INTO participants
-			(id, user_id, conversation_id, created_at)
+			(id, user_id, chat_id, created_at)
 		VALUES
 			(0, 0, 0, 0)
         `).catch(() => console.error('Initial insert error'));

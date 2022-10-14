@@ -9,6 +9,7 @@ import { useWebsocket } from '../hooks/useWebsocket';
 import { useMessageManager } from '../hooks/useMessageManager';
 import { MessageManagerContext } from '../context/MessageManagerContext';
 import { LocalChat } from '../types/Chat';
+import { Outlet } from 'react-router-dom';
 
 export function ChatPage() {
 	const ws = useWebsocket();
@@ -23,6 +24,7 @@ export function ChatPage() {
 	}, [isLoading]);
 
 	return (
+		// ADD FUCKING CHAT TYPES TO CHATS (SELF, DM, GROUP)
 		<MessageManagerContext.Provider value={[isLoading, chats, sendMessage, setChatList]}>
 			<Container fluid style={{'height': '100vh', 'maxHeight': '100vh', 'overflow': 'hidden'}}>
 				<Row className='h-100'>
@@ -37,6 +39,7 @@ export function ChatPage() {
 					</Col>
 				</Row>
 			</Container>
+			<Outlet />
 		</MessageManagerContext.Provider>
 	);
 }

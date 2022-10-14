@@ -17,11 +17,11 @@ router.all('/list', allowedMethods('GET'), ensureAuthenticated(), async (req, re
 
 	const chatsQuery = await queryChats(req, page);
 	const chats = await Promise.all(chatsQuery.rows.map(async (chat) => {
-		const participant = await ChatManager.listParticipants(req, chat.conversationId);
-		const [avatar, chatName] = await ChatManager.generateAvatarAndName(req, chat.conversationId, participant, chat.name, chat.avatar);
+		const participant = await ChatManager.listParticipants(req, chat.chatId);
+		const [avatar, chatName] = await ChatManager.generateAvatarAndName(req, chat.chatId, participant, chat.name, chat.avatar);
 
 		return {
-			id: chat.conversationId,
+			id: chat.chatId,
 			name: chatName,
 			avatar: avatar,
 			lastMessage: chat.message ? {
@@ -35,7 +35,7 @@ router.all('/list', allowedMethods('GET'), ensureAuthenticated(), async (req, re
 });
 
 type ChatsQuery = QueryResult<{
-	conversationId: string,
+	chatId: string,
 	name: string,
 	avatar: string,
 	message: string,
@@ -44,24 +44,24 @@ type ChatsQuery = QueryResult<{
 async function queryChats(req: express.Request, page: number): Promise<ChatsQuery> {
 	return db.query(sql`
         SELECT
-            participants.conversation_id as "conversationId",
-            conversation.name,
-			conversation.avatar,
+            participants.chat_id as "chatId",
+            chat.name,
+			chat.avatar,
             last_message.content as message,
             last_message_author.username as "messageAuthor"
         FROM participants
         -- Join last message
         LEFT JOIN LATERAL (
-            SELECT messages.conversation_id, messages.author_id, messages.content FROM messages
-            WHERE participants.conversation_id = messages.conversation_id ORDER BY
+            SELECT messages.chat_id, messages.author_id, messages.content FROM messages
+            WHERE participants.chat_id = messages.chat_id ORDER BY
             messages.created_at DESC LIMIT 1
         ) AS last_message ON true
-        -- Join conversation
+        -- Join chat
         LEFT JOIN LATERAL (
-            SELECT conversations.id, conversations.name, conversations.avatar FROM conversations
-            WHERE conversations.id = participants.conversation_id
+            SELECT chats.id, chats.name, chats.avatar FROM chats
+            WHERE chats.id = participants.chat_id
             LIMIT 1
-        ) AS conversation ON true
+        ) AS chat ON true
         -- Join last message author
         LEFT JOIN LATERAL (
             SELECT users.id, users.username FROM users

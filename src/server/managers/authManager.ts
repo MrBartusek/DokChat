@@ -15,6 +15,7 @@ export default class AuthManager {
 		res.cookie('refreshToken', refreshToken, {
 			httpOnly: true,
 			sameSite: 'strict',
+			// Cookies expire after 30 minutes by default, keep the default if remember me is not checked
 			expires: (rememberMe ? DateFns.addDays(new Date(), 30) : undefined)
 		});
 		const response: UserLoginResponse = {email: userData.email, token: token };

@@ -29,7 +29,7 @@ export function useFetch<T>(url: string | null, useAuth = false): useFetchState<
 		if(url == null) return;
 
 		axios.get(url, {
-			baseURL: 'api',
+			baseURL: window.location.origin + '/api',
 			headers: headers
 		})
 			.then(res => {

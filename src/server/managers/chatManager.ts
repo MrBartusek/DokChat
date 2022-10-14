@@ -1,53 +1,31 @@
 import db from '../db';
 import sql from 'sql-template-strings';
-import { UserJWTData } from '../../types/jwt';
 import { Chat, ChatParticipant } from '../../types/common';
 import Utils from '../utils';
 import { Request } from 'express';
 import { Handshake } from 'socket.io/dist/socket';
 
 export default class ChatManager {
-	public static async hasChatAccess(auth: UserJWTData, chatId: string) {
-		const permissionsQuery = await db.query(sql`
-            SELECT EXISTS(SELECT 1 FROM participants WHERE user_id = $1 AND conversation_id=$2)
-        `, [auth.id, chatId]);
-		return permissionsQuery.rows[0].exists;
-	}
-
-	/**
-	 * List participant user ids in chat without any joins
-	 */
-	public static async listParticipantsUserIds(conversationId: string): Promise<string[]> {
-		const query = await db.query(sql`
-			SELECT
-				user_id as "userId"
-			FROM
-				participants
-			WHERE conversation_id = $1;
-		`, [ conversationId ]);
-		return query.rows.map(r => r.userId);
-	}
-
-	public static async chatInfo(req: Request | Handshake, conversationId: string): Promise<Chat> {
+	public static async getChat(req: Request | Handshake, chatId: string): Promise<Chat> {
 		const chats = await db.query(sql`
 			SELECT
 				name, avatar
 			FROM
-				conversations
+				chats
 			WHERE id = $1
 			LIMIT 1;
-		`, [ conversationId ]);
+		`, [ chatId ]);
 		if(chats.rowCount == 0) throw new Error('Chat with provided id was not found');
-		const participants = await ChatManager.listParticipants(req, conversationId);
-		const [avatar, name] = await ChatManager.generateAvatarAndName(req, conversationId, participants, chats.rows[0].name, chats.rows[0].avatar);
+		const participants = await ChatManager.listParticipants(req, chatId);
+		const [avatar, name] = await ChatManager.generateAvatarAndName(req, chatId, participants, chats.rows[0].name, chats.rows[0].avatar);
 		return {
-			id: conversationId,
+			id: chatId,
 			avatar: avatar,
 			name: name
 		};
 	}
 
-	public static async listParticipants(req: Request | Handshake, conversationId: string): Promise<ChatParticipant[]> {
+	public static async listParticipants(req: Request | Handshake, chatId: string): Promise<ChatParticipant[]> {
 		const query = await db.query(sql`
 			SELECT
 				participants.id,
@@ -56,8 +34,8 @@ export default class ChatManager {
 			FROM
 				participants
 			JOIN users ON users.id = user_id
-			WHERE conversation_id = $1;
-		`, [ conversationId ]);
+			WHERE chat_id = $1;
+		`, [ chatId ]);
 		const result: ChatParticipant[] = [];
 		for(const part of query.rows) {
 			result.push({
@@ -72,7 +50,7 @@ export default class ChatManager {
 	}
 
 	/**
-	 * Get avatar and name of conversation and generate default ones
+	 * Get avatar and name of chat and generate default ones
 	 * if they are missing
 	 */
 	public static async generateAvatarAndName(

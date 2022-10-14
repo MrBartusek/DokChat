@@ -9,20 +9,21 @@ import Utils from '../../utils';
 import { QueryResult } from 'pg';
 import { Request } from 'express-serve-static-core';
 import ChatManager from '../../managers/chatManager';
+import PermissionsManager from '../../managers/permissionsManager';
 
 const router = express.Router();
 
 router.all('/messages', allowedMethods('GET'), ensureAuthenticated(), async (req, res, next) => {
 	const page = req.query.page as any as number || 0;
-	const conversationId = req.query.chat;
-	if(typeof conversationId != 'string') return new ApiResponse(res).badRequest();
+	const chatId = req.query.chat;
+	if(typeof chatId != 'string') return new ApiResponse(res).badRequest();
 	if(isNaN(page)) return new ApiResponse(res).badRequest();
 
-	if(!ChatManager.hasChatAccess(req.auth, conversationId)) {
+	if(!PermissionsManager.hasChatAccess(req.auth, chatId)) {
 		return new ApiResponse(res).forbidden();
 	}
 
-	const messagesQuery = await queryMessages(req, conversationId, page);
+	const messagesQuery = await queryMessages(req, chatId, page);
 	const messages = messagesQuery.rows.map((msg) => {
 		return {
 			id: msg.id,
@@ -49,7 +50,7 @@ type MessagesQuery = QueryResult<{
 	authorTag: string,
 	createdAt: string
 }>
-async function queryMessages(req: Request, conversationId: string, page: number): Promise<MessagesQuery> {
+async function queryMessages(req: Request, chatId: string, page: number): Promise<MessagesQuery> {
 	return db.query(sql`
 		SELECT
 			messages.id,
@@ -61,11 +62,11 @@ async function queryMessages(req: Request, conversationId: string, page: number)
 		FROM messages
 		INNER JOIN users ON users.id = messages.author_id
 		WHERE
-			conversation_id = $1
+			chat_id = $1
 		ORDER BY 
 			messages.created_at DESC
 		LIMIT 25 OFFSET $2;
-	`, [conversationId, page]);
+	`, [chatId, page]);
 }
 
 export default router;

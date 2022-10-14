@@ -9,11 +9,12 @@ import sql from 'sql-template-strings';
 import * as DateFns from 'date-fns';
 import { Socket } from 'socket.io';
 import Utils from '../utils';
+import PermissionsManager from '../managers/permissionsManager';
 
 export default function registerMessageHandler(io: DokChatServer, socket: DokChatSocket) {
 	socket.on('message', async (msg, callback) => {
 		// Check chat access
-		if(!ChatManager.hasChatAccess(socket.auth, msg.chatId)) {
+		if(!PermissionsManager.hasChatAccess(socket.auth, msg.chatId)) {
 			return new ApiResponse({} as any, callback).forbidden();
 		}
 
@@ -22,9 +23,9 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 		const id = snowflakeGenerator.getUniqueID().toString();
 		await saveMessage(socket, msg, id, timestamp);
 
-		let participantsIds = await ChatManager.listParticipantsUserIds(msg.chatId);
-		participantsIds = participantsIds.filter(p => p != socket.auth.id);
-		const chatInfo = await ChatManager.chatInfo(socket.handshake, msg.chatId);
+		let participants = await ChatManager.listParticipants(socket.handshake, msg.chatId);
+		participants = participants.filter(p => p.userId != socket.auth.id);
+		const chatInfo = await ChatManager.getChat(socket.handshake, msg.chatId);
 		const serverMsg: ServerMessage = {
 			messageId: id,
 			content: msg.content,
@@ -42,7 +43,7 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 			timestamp: timestamp.toString()
 		};
 
-		socket.to(participantsIds).emit('message', serverMsg);
+		socket.to(participants.map(p => p.id)).emit('message', serverMsg);
 
 		new ApiResponse({} as any, callback).success({
 			id: id,
@@ -54,7 +55,7 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 async function saveMessage(socket: Socket, message: ClientMessage, id: string, timestamp: number) {
 	return await db.query(sql`
 		INSERT INTO messages 
-			(id, conversation_id, author_id, content, created_at)
+			(id, chat_id, author_id, content, created_at)
 		VALUES (
 			$1, $2, $3, $4, $5
 		);
