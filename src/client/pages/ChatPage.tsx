@@ -9,7 +9,7 @@ import { useWebsocket } from '../hooks/useWebsocket';
 import { useMessageManager } from '../hooks/useMessageManager';
 import { MessageManagerContext } from '../context/MessageManagerContext';
 import { LocalChat } from '../types/Chat';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useOutlet, useParams, useResolvedPath } from 'react-router-dom';
 import MainLoading from '../components/MainLoading/MainLoading';
 import { useDocumentReady } from '../hooks/useDocumentReady';
 
@@ -18,18 +18,34 @@ export function ChatPage() {
 	const [ isLoadingManager, chats, sendMessage, setChatList ] = useMessageManager(ws);
 	const [ currentChat, setCurrentChat ] = useState<LocalChat>(null);
 	const documentReady = useDocumentReady();
+	const { chatId } = useParams();
+	const navigate = useNavigate();
+	const location = useLocation();
 
-	/**
-	 * Set initial chat window
-	 */
 	useEffect(() => {
-		if(!isLoadingManager) setCurrentChat(chats[0]);
-	}, [ isLoadingManager ]);
+		if(isLoadingManager) return;
 
-	const isLoading = (isLoadingManager || !currentChat || (!documentReady && location.hostname !== 'localhost'));
+		// Handle popup
+		if(location.pathname == '/chat/new') {
+			if(!currentChat) setCurrentChat(chats[0]);
+			return;
+		}
+
+		// If no chat provided, navigate to last chat
+		if(!chatId) navigate(`/chat/${currentChat?.id || chats[0].id}`);
+
+		const chat: LocalChat = chats.find(c => c.id == chatId);
+		// If id is not found, navigate to last chat
+		if(!chat) navigate(`/chat/${chats[0].id}`);
+		setCurrentChat(chats[0]);
+	}, [ isLoadingManager, chatId, location ]);
+
+	const isLoading = (
+		isLoadingManager || !currentChat ||
+		(!documentReady && document.location.hostname !== 'localhost')
+	);
 	if(isLoading) return (<MainLoading />);
 
-	// ADD FUCKING CHAT TYPES TO CHATS (SELF, DM, GROUP)
 	return (
 		<MessageManagerContext.Provider value={[ chats, sendMessage, setChatList ]}>
 			<Container fluid style={{'height': '100vh', 'maxHeight': '100vh', 'overflow': 'hidden'}}>

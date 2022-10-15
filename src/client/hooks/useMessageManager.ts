@@ -16,17 +16,16 @@ export function useMessageManager(ws: useWebsocketType): [
 	React.Dispatch<{chat: LocalChat, content: string}>, // sendMessage
 	React.Dispatch<LocalChat[]> // setChatList
 	] {
-	const [loading, setLoading] = useState(true);
-	const [user] = useContext(UserContext);
+	const [ loading, setLoading ] = useState(true);
+	const [ user ] = useContext(UserContext);
 
 	const initialChatList = useFetch<EndpointResponse<ChatListResponse>>('chat/list', true);
-	const [chatList, setChatList] = useState<LocalChat[]>([]);
+	const [ chatList, setChatList ] = useState<LocalChat[]>([]);
 
 	/**
      * Load initial chat list and cache it
      */
 	useEffect(() => {
-		console.log(initialChatList);
 		if(initialChatList.loading) return;
 		const rawChats = initialChatList.res.data;
 		setChatList(
@@ -35,6 +34,7 @@ export function useMessageManager(ws: useWebsocketType): [
 					chat.id,
 					chat.name,
 					chat.avatar,
+					chat.isGroup,
 					chat.lastMessage ? chat.lastMessage : undefined
 				)
 			))
@@ -47,13 +47,14 @@ export function useMessageManager(ws: useWebsocketType): [
 	 */
 	useEffect(() => {
 		ws.socket.on('message', (msg) => {
-			const chats = [...chatList];
+			const chats = [ ...chatList ];
 			const chat = chats.find((c) => c.id == msg.chat.id);
 			if(!chat) {
 				chats.push(new LocalChat(
 					msg.chat.id,
 					msg.chat.name,
-					msg.chat.avatar
+					msg.chat.avatar,
+					msg.chat.isGroup
 				));
 			}
 			else {
@@ -74,7 +75,7 @@ export function useMessageManager(ws: useWebsocketType): [
 	});
 
 	function ackMessage(chat: LocalChat, pendingId: string, newId: string, timestamp: string) {
-		const chats = [...chatList];
+		const chats = [ ...chatList ];
 		const chatId = chats.findIndex((c) => c.id == chat.id);
 		if(chatId == -1) return;
 		chats[chatId].ackMessage(pendingId, newId, timestamp);
@@ -86,7 +87,7 @@ export function useMessageManager(ws: useWebsocketType): [
 		chatList,
 		(data: {chat: LocalChat, content: string}) => {
 			// Add this message to local cache
-			const chats = [...chatList];
+			const chats = [ ...chatList ];
 			const chatId = chats.findIndex((c) => c.id == data.chat.id);
 			if(chatId == -1) return;
 			const pendingMessageId = chats[chatId].addMessage({

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-export function useForm<T>(initialValues: T): [T, React.Dispatch<any>, React.Dispatch<void>] {
+export function useForm<T>(initialValues: T): [T, React.Dispatch<any>, React.Dispatch<T | void>] {
 	const [ values, setValues ] = useState(initialValues);
 
 	return [
@@ -14,8 +14,8 @@ export function useForm<T>(initialValues: T): [T, React.Dispatch<any>, React.Dis
 				[e.target.name]: isCheckbox ? e.target.checked : e.target.value
 			});
 		},
-		() => {
-			setValues(initialValues);
+		(values?: T) => {
+			setValues(values || initialValues);
 		}
 	];
 }

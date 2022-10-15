@@ -9,6 +9,7 @@ import SimpleLoading from '../SimpleLoadng/SimpleLoading';
 import * as DateFns from 'date-fns';
 import { UserContext } from '../../context/UserContext';
 import './MessagesWindow.scss';
+import ProfilePicture from '../ProfilePicture/ProfilePicture';
 
 export interface MessagesWindowProps {
 	currentChat?: LocalChat
@@ -18,8 +19,7 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
 	const [ user ] = useContext(UserContext);
 	const messageWindowRef = useRef<HTMLDivElement>();
-	const [ fetchUrl, setFetchUrl ] = useState<string | null>(null);
-	const messagesFetch = useFetch<EndpointResponse<MessageListResponse>>(fetchUrl, true);
+	const messagesFetch = useFetch<EndpointResponse<MessageListResponse>>(null, true);
 
 	/**
 	 * Fetch chat messages if window is targeting not initialized chat
@@ -27,7 +27,7 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 	useEffect(() => {
 		if(!currentChat) return;
 		if(currentChat.isInitialized) return;
-		setFetchUrl(`/chat/messages?chat=${currentChat.id}`);
+		messagesFetch.setUrl(`/chat/messages?chat=${currentChat.id}`);
 	}, [ currentChat ]);
 
 	useLayoutEffect(() => {
@@ -44,9 +44,9 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 		const chatsCopy = [ ...chats ];
 		chatsCopy[chatId] = chatsCopy[chatId].addMessagesList(messagesFetch.res.data);
 		setChatList(chatsCopy);
-	}, [ messagesFetch ]);
+	}, [ messagesFetch.res ]);
 
-	if(!currentChat.isInitialized || messagesFetch.loading) return (<SimpleLoading />);
+	const isLoading = !currentChat.isInitialized || messagesFetch.loading;
 
 	const messagesGroups = groupMessages(currentChat);
 	const noMessagesInfo = (
@@ -56,27 +56,32 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 	);
 	return (
 		<Row className='d-flex flex-grow-1' ref={messageWindowRef} style={{overflowY: 'scroll'}}>
-			<Stack className='pt-3 gap-2 flex-column-reverse'>
-				{messagesGroups.map((group, a) => (
-					<Stack className='gap-1 flex-grow-0 flex-column-reverse' key={a}>
-						{group.map((msg, i ) => (
-							<Message
-								key={msg.id}
-								message={msg}
-								isAuthor={user.id == msg.author.id}
-								isLastStackMessage={i == 0}
-							/>
+			{isLoading
+				? <SimpleLoading />
+				: (
+					<Stack className='pt-3 gap-2 flex-column-reverse'>
+						{messagesGroups.map((group, a) => (
+							<Stack className='gap-1 flex-grow-0 flex-column-reverse' key={a}>
+								{group.map((msg, i ) => (
+									<Message
+										key={msg.id}
+										message={msg}
+										isAuthor={user.id == msg.author.id}
+										isLastStackMessage={i == 0}
+									/>
+								))}
+							</Stack>
 						))}
+						{currentChat.messages.length == 0 && noMessagesInfo}
 					</Stack>
-				))}
-				{currentChat.messages.length == 0 && noMessagesInfo}
-			</Stack>
+				)}
 		</Row>
 	);
 }
 
 function groupMessages(chat: LocalChat): LocalMessage[][] {
 	const messagesGroups: LocalMessage[][] = [];
+	if(!chat.isInitialized) return [];
 	for (let i = 0; i < chat.messages.length; i++) {
 		const lastMsg = i > 0 ? chat.messages[i - 1] : null;
 		const msg = chat.messages[i];
@@ -143,7 +148,7 @@ function MessageAvatar({avatar}: MessageAvatarProps) {
 	return (
 		<Col xs='auto' className='d-flex align-items-end'>
 			{avatar ? (
-				<Image roundedCircle src={avatar} style={{height: 32, width: 32}} />
+				<ProfilePicture src={avatar} size={48} />
 			) : (
 				<div style={{height: 32, width: 32}}></div>
 			)}
@@ -159,7 +164,7 @@ function MessageStatus({isPending}: MessageStatusProps) {
 	const iconEl = React.createElement(
 		isPending ? BsCheckCircle : BsCheckCircleFill, {
 			size: 14,
-			color: 'var(--bs-primary'
+			color: 'var(--bs-primary)'
 		}
 	);
 	return (

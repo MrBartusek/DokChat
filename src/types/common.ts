@@ -6,14 +6,15 @@ export interface Chat {
     id: string,
     name: string,
     avatar: string,
+    isGroup: boolean,
     lastMessage?: LastMessage
 }
 
-export interface MessageAuthor {
+export interface User {
 	id: string,
 	username: string,
-	avatar: string
     tag: string,
+	avatar: string
 }
 
 export interface LastMessage {
@@ -23,7 +24,7 @@ export interface LastMessage {
 
 export interface Message {
     id: string,
-    author: MessageAuthor,
+    author: User,
     content: string,
     timestamp: string
 }

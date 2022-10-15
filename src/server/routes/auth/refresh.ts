@@ -19,7 +19,7 @@ router.all('/refresh', allowedMethods('POST'), async (req, res, next) => {
 	if(!userId) return new ApiResponse(res).badRequest('Invalid JWT');
 
 	// Get user
-	const query = await db.query(sql`SELECT id, username, tag, email, password_hash FROM users WHERE id=$1`, [userId]);
+	const query = await db.query(sql`SELECT id, username, tag, email, password_hash FROM users WHERE id=$1`, [ userId ]);
 	if(query.rowCount == 0) return new ApiResponse(res).badRequest('Invalid user');
 	const user = query.rows[0];
 	const jwtData = {
@@ -34,7 +34,7 @@ router.all('/refresh', allowedMethods('POST'), async (req, res, next) => {
 		.then(async () => {
 			// Update last seen
 			const timestamp = DateFns.getUnixTime(new Date());
-			await db.query(sql`UPDATE users SET last_seen=$1 WHERE id=$2`, [timestamp, userId]);
+			await db.query(sql`UPDATE users SET last_seen=$1 WHERE id=$2`, [ timestamp, userId ]);
 
 			AuthManager.sendAuthorizationResponse(res, jwtData, user.password_hash);
 		})

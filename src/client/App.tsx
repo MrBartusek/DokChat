@@ -7,7 +7,7 @@ import { UserContext } from './context/UserContext';
 import { ChatPage } from './pages/ChatPage';
 import { useUpdatingUser } from './hooks/useUpdatingUser';
 import { RegisterPage } from './pages/RegisterPage';
-import Dialog from './components/Dialog/Dialog';
+import NewChatPopup from './components/NewChatPopup/NewChatPopup';
 
 function App() {
 	const [ isUserLoading, user, setUser, removeUser ] = useUpdatingUser();
@@ -36,8 +36,8 @@ function App() {
 							<ChatPage />
 						</PrivateRoute>
 					}>
-						<Route path="new" element={<Dialog />} />
-						<Route path="*" />
+						<Route path=":chatId" element={null} />
+						<Route path="new" element={<NewChatPopup />} />
 					</Route>
 				</Routes>
 			</BrowserRouter>

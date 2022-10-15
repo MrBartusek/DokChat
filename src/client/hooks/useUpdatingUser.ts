@@ -6,23 +6,22 @@ import * as DateFns from 'date-fns';
 import axios from 'axios';
 import { EndpointResponse, UserLoginResponse } from '../../types/endpoints';
 import { useUser } from './useUser';
-import { User } from '../types/User';
+import { LocalUser } from '../types/User';
 
 /**
  * This is more advanced version of useUser hook
  * that have token refreshing built-in
  */
-export function useUpdatingUser(): [boolean, User, React.Dispatch<string>, React.Dispatch<void>] {
+export function useUpdatingUser(): [boolean, LocalUser, React.Dispatch<string>, React.Dispatch<void>] {
 	const [ isLoading, setLoading ] = useState(true);
-	const [ user, setUser, removeUser ] = useUser();
-	const [ cookies ] = useCookies([ 'token' ]);
+	const [ user, cookies, setUser, removeUser ] = useUser();
 
 	/**
 	 * Set user decoded from JWT if there is any and fetch new token
 	 */
 	useEffect(() => {
 		if(cookies.token) {
-			const user = User.fromJWT(cookies.token);
+			const user = LocalUser.fromJWT(cookies.token);
 			if(!user.expired) {
 				console.log(`Loaded user ${user.email} from local JWT`);
 				setUser(cookies.token);
@@ -50,7 +49,7 @@ export function useUpdatingUser(): [boolean, User, React.Dispatch<string>, React
 		await axios.post('/api/auth/refresh')
 			.then((r: any) => {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
-				const user = User.fromJWT(resp.data.token);
+				const user = LocalUser.fromJWT(resp.data.token);
 				setUser(user);
 				console.log(`Updated JWT to ${user.email} from server`);
 			}).catch(() => {

@@ -1,4 +1,4 @@
-import { Chat, Message } from './common';
+import { Chat, Message, User } from './common';
 
 /**
  * Base class for all endpoint responses
@@ -18,13 +18,9 @@ export interface UserLoginResponse {
     token: string
 }
 
-/**
- * Response  for chat list
- */
 export type ChatListResponse = Chat[]
 
-/**
- * Response for messages list
- */
 export type MessageListResponse = Message[];
+
+export type UserGetResponse = User;
 

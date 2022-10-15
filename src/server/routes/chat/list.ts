@@ -18,12 +18,20 @@ router.all('/list', allowedMethods('GET'), ensureAuthenticated(), async (req, re
 	const chatsQuery = await queryChats(req, page);
 	const chats = await Promise.all(chatsQuery.rows.map(async (chat) => {
 		const participant = await ChatManager.listParticipants(req, chat.chatId);
-		const [avatar, chatName] = await ChatManager.generateAvatarAndName(req, chat.chatId, participant, chat.name, chat.avatar);
+		const [ avatar, chatName ] = await ChatManager.generateAvatarAndName(
+			req,
+			chat.chatId,
+			participant,
+			chat.isGroup,
+			chat.name,
+			chat.avatar
+		);
 
 		return {
 			id: chat.chatId,
 			name: chatName,
 			avatar: avatar,
+			isGroup: chat.isGroup,
 			lastMessage: chat.message ? {
 				content: chat.message,
 				author: chat.messageAuthor
@@ -39,14 +47,16 @@ type ChatsQuery = QueryResult<{
 	name: string,
 	avatar: string,
 	message: string,
-	messageAuthor: string
+	messageAuthor: string,
+    isGroup: boolean
 }>
 async function queryChats(req: express.Request, page: number): Promise<ChatsQuery> {
 	return db.query(sql`
         SELECT
-            participants.chat_id as "chatId",
             chat.name,
 			chat.avatar,
+            chat.is_group as "isGroup",
+            participants.chat_id as "chatId",
             last_message.content as message,
             last_message_author.username as "messageAuthor"
         FROM participants
@@ -58,7 +68,7 @@ async function queryChats(req: express.Request, page: number): Promise<ChatsQuer
         ) AS last_message ON true
         -- Join chat
         LEFT JOIN LATERAL (
-            SELECT chats.id, chats.name, chats.avatar FROM chats
+            SELECT chats.id, chats.name, chats.avatar, chats.is_group FROM chats
             WHERE chats.id = participants.chat_id
             LIMIT 1
         ) AS chat ON true
@@ -71,7 +81,7 @@ async function queryChats(req: express.Request, page: number): Promise<ChatsQuer
         WHERE
             participants.user_id = $1
         LIMIT 25 OFFSET $2;
-    `, [req.auth.id, page]);
+    `, [ req.auth.id, page ]);
 }
 
 export default router;

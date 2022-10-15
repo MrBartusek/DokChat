@@ -4,11 +4,17 @@ import axios, { AxiosRequestHeaders } from 'axios';
 import { useEffect, useState, useRef, useContext } from 'react';
 import { UserContext } from '../context/UserContext';
 
-type useFetchState<T> = { res?: T, loading: boolean};
+type useFetchState<T> = {
+	res?: T,
+	error?: boolean,
+	loading: boolean,
+	setUrl: React.Dispatch<React.SetStateAction<string>>
+};
 
-export function useFetch<T>(url: string | null, useAuth = false): useFetchState<T> {
+export function useFetch<T>(initialUrl: string | null, useAuth = false): useFetchState<T> {
 	const isCurrent = useRef(true);
-	const [ state, setState ] = useState<useFetchState<T>>({ res: undefined, loading: true });
+	const [ url, setUrl ]= useState(initialUrl);
+	const [ state, setState ] = useState<useFetchState<T>>({ res: undefined, loading: true, setUrl: setUrl });
 	const [ user ] = useContext(UserContext);
 
 	useEffect(() => {
@@ -23,9 +29,10 @@ export function useFetch<T>(url: string | null, useAuth = false): useFetchState<
 			headers = user.getAuthHeader();
 		}
 
-		setState(state => ({ res: state.res, loading: true }));
-		// Keep fetcher loading when no url is provided
-		if(url == null) return;
+		setState(state => ({ res: state.res, loading: true, setUrl: setUrl }));
+
+		// Don't fetch if no url provided
+		if(url == null) return setState({ loading: false, setUrl: setUrl });
 
 		axios.get(url, {
 			baseURL: window.location.origin + '/api',
@@ -33,8 +40,16 @@ export function useFetch<T>(url: string | null, useAuth = false): useFetchState<
 		})
 			.then(res => {
 				if (isCurrent.current) {
-					setState({ res: res.data, loading: false });
+					setState({ res: res.data, loading: false, setUrl: setUrl });
 				}
+			})
+			.catch((error) => {
+				setState(state => ({
+					res: state.res,
+					loading: false,
+					error: true,
+					setUrl: setUrl
+				}));
 			});
 	}, [ url, setState ]);
 

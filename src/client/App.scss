@@ -57,3 +57,28 @@ body {
 	// For some reason this doesn't work with $variable
 	--bs-tooltip-bg: var(--bs-gray-900);
 }
+
+.modal-title {
+	text-align: center;
+	font-size: 1.3em;
+	width: 100%;
+	// Even spacing with close button
+	margin-left: 32px;
+}
+
+.modal-header {
+	border-bottom: none;
+}
+
+.modal-footer {
+	border-top: none;
+}
+
+.modal-body {
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+}
+
+form {
+	margin-block-end: 0;
+}

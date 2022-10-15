@@ -26,7 +26,7 @@ router.all('/login', allowedMethods('POST'), async (req, res, next) => {
 	}
 
 	authenticateUser(email, password)
-		.then(async ([jwtData, passwordHash]) =>  {
+		.then(async ([ jwtData, passwordHash ]) =>  {
 			AuthManager.sendAuthorizationResponse(res, jwtData, passwordHash);
 		})
 		.catch((reason) => {
@@ -38,7 +38,7 @@ router.all('/login', allowedMethods('POST'), async (req, res, next) => {
 });
 
 async function authenticateUser(email: string, password: string): Promise<[UserJWTData, string]> {
-	const query = await db.query(sql`SELECT id, username, tag, email, password_hash FROM users WHERE email=$1`, [email]);
+	const query = await db.query(sql`SELECT id, username, tag, email, password_hash FROM users WHERE email=$1`, [ email ]);
 	if(query.rowCount == 0) return Promise.reject(INVALID_CREDENTIALS);
 	const user = query.rows[0];
 	const passwordValid = await bcrypt.compare(password, user.password_hash);
@@ -50,7 +50,7 @@ async function authenticateUser(email: string, password: string): Promise<[UserJ
 		tag: user.tag,
 		email: user.email
 	};
-	return [jwtData, user.password_hash];
+	return [ jwtData, user.password_hash ];
 }
 
 export default router;

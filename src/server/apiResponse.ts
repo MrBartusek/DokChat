@@ -48,8 +48,8 @@ export class ApiResponse {
 		return this.error(405, `${req.method} is not supported for this resource.`);
 	}
 
-	public notFound() {
-		return this.error(404, 'Not found');
+	public notFound(message?: string) {
+		return this.error(404, message || 'Not found');
 	}
 
 	public unauthorized(message?: string) {

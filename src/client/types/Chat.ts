@@ -31,7 +31,8 @@ export class LocalChat {
         public id: string,
         public name: string,
         public avatar: string,
-        lastMessage?: LastMessage
+		public isGroup: boolean,
+		lastMessage?: LastMessage
 	) {
 		this.isInitialized = false;
 		this._messages = lastMessage || [];

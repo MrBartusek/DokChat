@@ -29,11 +29,7 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 		const serverMsg: ServerMessage = {
 			messageId: id,
 			content: msg.content,
-			chat: {
-				id: chatInfo.id,
-				name: chatInfo.name,
-				avatar: chatInfo.avatar
-			},
+			chat: chatInfo,
 			author: {
 				id: socket.auth.id,
 				username: socket.auth.username,
@@ -59,6 +55,6 @@ async function saveMessage(socket: Socket, message: ClientMessage, id: string, t
 		VALUES (
 			$1, $2, $3, $4, $5
 		);
-	`, [ id, message.chatId, socket.auth.id, message.content, timestamp]);
+	`, [ id, message.chatId, socket.auth.id, message.content, timestamp ]);
 }
 

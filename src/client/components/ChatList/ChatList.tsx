@@ -5,6 +5,7 @@ import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
 import { useFetch } from '../../hooks/useFetch';
 import { LocalChat } from '../../types/Chat';
+import ProfilePicture from '../ProfilePicture/ProfilePicture';
 import SimpleLoading from '../SimpleLoadng/SimpleLoading';
 import './ChatList.scss';
 
@@ -50,7 +51,7 @@ function Chat(props: ChatProps) {
 			style={{height: 65}}
 		>
 			<Col xs='auto' className="d-flex align-items-center">
-				<Image roundedCircle src={props.avatar} style={{height: '48px'}} />
+				<ProfilePicture src={props.avatar} size={48} />
 			</Col>
 			<Col
 				xs='auto'

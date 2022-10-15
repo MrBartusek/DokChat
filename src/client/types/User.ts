@@ -12,7 +12,7 @@ import { AxiosRequestHeaders } from 'axios';
  * This should be treated as light object for storting data and
  * some utilities. Heavy lifting of updating this thing is handled in hooks
  */
-export class User {
+export class LocalUser {
 	public isAuthenticated: boolean;
 	public token: string;
 	public id: string;
@@ -26,11 +26,11 @@ export class User {
 	}
 
 	static empty() {
-		return new User();
+		return new LocalUser();
 	}
 
 	static fromJWT(token: string) {
-		const user = new User();
+		const user = new LocalUser();
 		const data = jose.decodeJwt(token) as UserJWTData;
 
 		user.isAuthenticated = true;

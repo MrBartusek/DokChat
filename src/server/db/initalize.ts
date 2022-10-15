@@ -3,6 +3,7 @@ import sql from 'sql-template-strings';
 
 export async function initializeDB() {
 	await db.query(sql`
+
         CREATE TABLE IF NOT EXISTS users (
             id varchar NOT NULL,
             password_hash varchar NOT NULL,
@@ -17,6 +18,7 @@ export async function initializeDB() {
 
         CREATE TABLE IF NOT EXISTS chats (
             id varchar NOT NULL,
+            is_group boolean NOT NULL,
             name varchar(32),
             avatar varchar(255),
             creator_id varchar REFERENCES users,
@@ -56,8 +58,8 @@ export async function initializeDB() {
             );
 
         INSERT INTO chats
-            (id, creator_id, created_at)
-        VALUES ( 0, 0, 0);
+            (id, creator_id, created_at, is_group)
+        VALUES ( 0, 0, 0, 'true');
         
         INSERT INTO participants
 			(id, user_id, chat_id, created_at)
