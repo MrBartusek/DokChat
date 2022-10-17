@@ -1,18 +1,20 @@
 import { Axios, AxiosRequestHeaders } from 'axios';
 import { LocalUser } from '../types/User';
+import * as axios from 'axios';
 
 function getAxios(user?: LocalUser): Axios {
 	let headers: AxiosRequestHeaders = {};
 	if(user) {
 		headers = user.getAuthHeader();
 	}
-	const axios = new Axios({
+	return new Axios({
+		...axios.default.defaults,
 		baseURL: window.location.origin + '/api',
 		headers: headers,
-		transformResponse: (data) => JSON.parse(data)
+		validateStatus: function (status) {
+			return status >= 200 && status < 300;
+		}
 	});
-
-	return axios;
 }
 
 export default getAxios;

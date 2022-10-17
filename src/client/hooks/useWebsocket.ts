@@ -9,7 +9,7 @@ export type useWebsocketType = { isConnected?: boolean, socket: Socket<ServerToC
 let socket: Socket = io({ autoConnect: false });
 
 export function useWebsocket(): useWebsocketType {
-	const [isConnected, setIsConnected] = useState(false);
+	const [ isConnected, setIsConnected ] = useState(false);
 	const [ user ] = useContext(UserContext);
 
 	useEffect(() => {
@@ -17,7 +17,7 @@ export function useWebsocket(): useWebsocketType {
 			auth: user.getAuthHeader(),
 			autoConnect: true
 		});
-	}, [user]);
+	}, [ user ]);
 
 	useEffect(() => {
 		socket.on('connect', () => {
