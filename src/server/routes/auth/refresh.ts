@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.all('/refresh', allowedMethods('POST'), async (req, res, next) => {
 	const refreshToken: string = req.cookies.refreshToken;
-	if(refreshToken) {
+	if(!refreshToken) {
 		return new ApiResponse(res).unauthorized();
 	}
 
