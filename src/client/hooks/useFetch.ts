@@ -1,8 +1,8 @@
 // Stolen from https://github.com/benawad/react-hooks-tutorial/blob/7_useContext/src/useFetch.js
 
-import axios, { AxiosRequestHeaders } from 'axios';
 import { useEffect, useState, useRef, useContext } from 'react';
 import { UserContext } from '../context/UserContext';
+import getAxios from '../helpers/axios';
 
 type useFetchState<T> = {
 	res?: T,
@@ -24,20 +24,13 @@ export function useFetch<T>(initialUrl: string | null, useAuth = false): useFetc
 	}, []);
 
 	useEffect(() => {
-		let headers: AxiosRequestHeaders = {};
-		if(useAuth) {
-			headers = user.getAuthHeader();
-		}
-
+		const axios = getAxios(useAuth ? user : undefined);
 		setState(state => ({ res: state.res, loading: true, setUrl: setUrl }));
 
 		// Don't fetch if no url provided
 		if(url == null) return setState({ loading: false, setUrl: setUrl });
 
-		axios.get(url, {
-			baseURL: window.location.origin + '/api',
-			headers: headers
-		})
+		axios.get(url)
 			.then(res => {
 				if (isCurrent.current) {
 					setState({ res: res.data, loading: false, setUrl: setUrl });

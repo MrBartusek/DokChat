@@ -1,62 +1,21 @@
-import  React, {useContext, useMemo, useState} from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { AboutPage } from './pages/AboutPage';
-import { LoginPage } from './pages/LoginPage';
-import { HomePage } from './pages/HomePage';
-import { UserContext } from './context/UserContext';
-import { ChatPage } from './pages/ChatPage';
-import { useUpdatingUser } from './hooks/useUpdatingUser';
-import { RegisterPage } from './pages/RegisterPage';
-import NewChatPopup from './components/NewChatPopup/NewChatPopup';
+import  React from 'react';
+import Router from './components/Router/Router';
+import { ErrorBoundary } from 'react-error-boundary';
+import ErrorPage from './components/ErrorPage/ErrorPage';
 
 function App() {
-	const [ isUserLoading, user, setUser, removeUser ] = useUpdatingUser();
-
-	// Don't render anything when user is initializing
-	if(isUserLoading) return <></>;
-
 	return (
-		<UserContext.Provider value={[ user, setUser, removeUser ]}>
-			<BrowserRouter>
-				<Routes>
-					<Route path="/" element={<HomePage />} />
-					<Route path="about" element={<AboutPage />} />
-					<Route path="login" element={
-						<PublicOnlyRoute>
-							<LoginPage />
-						</PublicOnlyRoute>
-					} />
-					<Route path="register" element={
-						<PublicOnlyRoute>
-							<RegisterPage />
-						</PublicOnlyRoute>
-					} />
-					<Route path="chat" element={
-						<PrivateRoute>
-							<ChatPage />
-						</PrivateRoute>
-					}>
-						<Route path=":chatId" element={null} />
-						<Route path="new" element={<NewChatPopup />} />
-					</Route>
-				</Routes>
-			</BrowserRouter>
-		</UserContext.Provider>
+		<React.StrictMode>
+			<ErrorBoundary fallbackRender={({error, resetErrorBoundary}) => (
+				<ErrorPage
+					displayRefresh
+					message='Failed to render page at this time'
+				/>
+			)}>
+				<Router />
+			</ErrorBoundary>
+		</React.StrictMode>
 	);
 }
-
-interface SpecialRouteProps {
-	children: JSX.Element
-}
-
-const PrivateRoute = ({ children }: SpecialRouteProps) => {
-	const [ user ] = useContext(UserContext);
-	return user.isAuthenticated ? children : <Navigate to="/login" />;
-};
-
-const PublicOnlyRoute = ({ children }: SpecialRouteProps) => {
-	const [ user ] = useContext(UserContext);
-	return !user.isAuthenticated ? children : <Navigate to="/chat" />;
-};
 
 export default App;

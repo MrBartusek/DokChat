@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { Axios, AxiosError } from 'axios';
+import React, { useContext, useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Alert from 'react-bootstrap/Alert';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -6,29 +7,23 @@ import Modal from 'react-bootstrap/Modal';
 import { BsPlus } from 'react-icons/bs';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { User } from '../../../types/common';
-import { EndpointResponse } from '../../../types/endpoints';
+import { EndpointResponse, UserGetResponse } from '../../../types/endpoints';
+import { UserContext } from '../../context/UserContext';
+import getAxios from '../../helpers/axios';
 import { useFetch } from '../../hooks/useFetch';
 import { useForm } from '../../hooks/useForm';
 import IconButton from '../IconButton/IconButton';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import UserList from '../UserList/UserList';
 
-interface Participant {
-	username?: string,
-	tag?: string,
-	id?: string
-}
-
 function NewChatPopup() {
 	const navigate = useNavigate();
-	const [ searchParams ] = useSearchParams();
-	const participantsRaw = searchParams.get('participants');
-	const [ participants, setParticipants ] = useState<(Participant | User)[]>(praseParticipants(participantsRaw));
+	const [ participants, setParticipants ] = useState<(User)[]>([]);
 	const [ isLoading, setLoading ] = useState(false);
 	const [ values, handleChange, setValues ] = useForm({ username: '', tag: '' });
-	const [ isError, setError ] = useState(false);
+	const [ error, setError ] = useState(null);
+	const [ user ] = useContext(UserContext);
 
-	const userCheck = useFetch<EndpointResponse<User>>(null, true);
 	const handleClose = () => navigate('/chat');
 
 	function handleChangeNumeric(event: any) {
@@ -38,30 +33,30 @@ function NewChatPopup() {
 
 	function handleUserAdd(e: any) {
 		e.preventDefault();
-		setError(false);
-		userCheck.setUrl(`/user/get?username=${values.username}&tag=${values.tag}`);
+		const axios = getAxios(user);
+
+		const username = values.username;
+		const tag = values.tag;
+
 		setValues();
+		setError(null);
+		setLoading(true);
+		axios.get(`/user/get?username=${username}&tag=${tag}`)
+			.then((r) => {
+				const resp: EndpointResponse<UserGetResponse> = r.data;
+				if(resp.status == 404) return setError(`User ${username}#${tag} was not found`);
+				const participantsCopy = [ ...participants ];
+				participantsCopy.push(resp.data);
+				setParticipants(participantsCopy);
+			})
+			.catch(() => {
+				setError('Failed to add this user');
+
+			})
+			.finally(() => {
+				setLoading(false);
+			});
 	}
-
-	/**
-	 * Grab data from user check
-	 */
-	useEffect(() => {
-		if(userCheck.loading) return;
-		if(userCheck.error) return setError(true);
-		if(!userCheck.res) return;
-
-		const participantsCopy = [ ...participants ];
-		participantsCopy.push(userCheck.res.data);
-		setParticipants(participantsCopy);
-	}, [ userCheck ]);
-
-	/**
-	 * Synchronize loading
-	 */
-	useEffect(() => {
-		setLoading(userCheck.loading);
-	}, [ userCheck.loading ]);
 
 	return (
 		<Modal show={true} onHide={handleClose}>
@@ -104,7 +99,7 @@ function NewChatPopup() {
 							disabled={isLoading}
 						/>
 					</Form.Group>
-					{isError && <span className='text-danger'>This user was not found</span>}
+					{error && <span className='text-danger'>This user was not found</span>}
 				</Form>
 			</Modal.Body>
 			<Modal.Footer>
@@ -120,16 +115,6 @@ function NewChatPopup() {
 			</Modal.Footer>
 		</Modal>
 	);
-}
-
-function praseParticipants(raw: string | null) : Participant[] {
-	if(raw == null) return [];
-	const participants = raw.split(',');
-	for(const part of participants) {
-		// If any participant is invalid don't return any
-		if(isNaN(Number(part))) return [];
-	}
-	return participants.map(p => ({id: p}));
 }
 
 export default NewChatPopup;

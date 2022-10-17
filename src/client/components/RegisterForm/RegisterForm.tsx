@@ -3,11 +3,14 @@ import { Alert, Button, Form } from 'react-bootstrap';
 import { BsFillChatSquareTextFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import { useForm } from '../../hooks/useForm';
 import { EndpointResponse, UserLoginResponse } from '../../../types/endpoints';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
+import getAxios from '../../helpers/axios';
+
+const axios = getAxios();
 
 function RegisterForm() {
 	const [ loading, setLoading ] = useState(false);
@@ -120,7 +123,7 @@ function RegisterForm() {
 			return formRef.current.reportValidity();
 		}
 		setLoading(true);
-		await axios.post('/api/auth/register',
+		await axios.post('auth/register',
 			{
 				email: values.email,
 				username: values.username,

@@ -2,22 +2,25 @@
 // Tutorial and CSS from CSS Tricks
 // https://css-tricks.com/glitch-effect-text-images-svg/
 
-.error {
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+.errorTitle {
     color: $gray-800;
     font-size: 7rem;
     position: relative;
     line-height: 1;
-    width: 12.5rem;
   }
   @keyframes noise-anim {
     $steps: 20;
     @for $i from 0 through $steps {
-      #{percentage($i*(1/$steps))} {
+      #{percentage($i*calc(1/$steps))} {
         clip: rect(random(100)+px,9999px,random(100)+px,0);
       }
     }
   }
-  .error:after {
+  .errorTitle:after {
     content: attr(data-text);
     position: absolute;
     left: 2px;
@@ -33,12 +36,12 @@
   @keyframes noise-anim-2 {
     $steps: 20;
     @for $i from 0 through $steps {
-      #{percentage($i*(1/$steps))} {
+      #{percentage($i*calc(1/$steps))} {
         clip: rect(random(100)+px,9999px,random(100)+px,0);
       }
     }
   }
-  .error:before {
+  .errorTitle:before {
     content: attr(data-text);
     position: absolute;
     left: -2px;

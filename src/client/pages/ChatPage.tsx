@@ -12,6 +12,7 @@ import { LocalChat } from '../types/Chat';
 import { Outlet, useLocation, useNavigate, useOutlet, useParams, useResolvedPath } from 'react-router-dom';
 import MainLoading from '../components/MainLoading/MainLoading';
 import { useDocumentReady } from '../hooks/useDocumentReady';
+import FullPageContainer from '../components/FullPageContainer/FullPageContainer';
 
 export function ChatPage() {
 	const ws = useWebsocket();
@@ -48,7 +49,7 @@ export function ChatPage() {
 
 	return (
 		<MessageManagerContext.Provider value={[ chats, sendMessage, setChatList ]}>
-			<Container fluid style={{'height': '100vh', 'maxHeight': '100vh', 'overflow': 'hidden'}}>
+			<FullPageContainer>
 				<Row className='h-100'>
 					<Col style={{'flex': '0 0 360px', 'width': '360px'}} className='border-separator border-end'>
 						<UserInfo />
@@ -60,7 +61,7 @@ export function ChatPage() {
 						<MessageBar currentChat={currentChat} />
 					</Col>
 				</Row>
-			</Container>
+			</FullPageContainer>
 			{/* React Router outlet for popups */}
 			<Outlet />
 		</MessageManagerContext.Provider>

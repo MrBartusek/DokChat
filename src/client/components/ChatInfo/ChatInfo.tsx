@@ -1,6 +1,7 @@
 import React from 'react';
 import { Col, Row, Image } from 'react-bootstrap';
 import { BsPersonPlusFill, BsThreeDots } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
 import { LocalChat } from '../../types/Chat';
 import IconButton from '../IconButton/IconButton';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
@@ -10,6 +11,12 @@ export interface ChatInfoProps {
 }
 
 function ChatInfo({ currentChat }: ChatInfoProps) {
+	const navigate = useNavigate();
+
+	function handleNewGroupClick() {
+		navigate('/chat/new?participants=');
+	}
+
 	return (
 		<Row className='p-2 border-bottom border-separator'>
 			<Col xs='auto' className='pe-2'>
@@ -21,7 +28,7 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 				</span>
 			</Col>
 			<Col xs='auto' className='d-flex align-items-center'>
-				<IconButton icon={BsPersonPlusFill} variant='primary' />
+				<IconButton icon={BsPersonPlusFill} variant='primary' onClick={handleNewGroupClick} />
 				<IconButton icon={BsThreeDots} variant='primary' />
 			</Col>
 		</Row>
