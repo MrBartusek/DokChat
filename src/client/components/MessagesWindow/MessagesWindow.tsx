@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Col, Row, Stack, Image, Tooltip, TooltipProps, OverlayTrigger } from 'react-bootstrap';
-import { BsCheckCircle, BsCheckCircleFill, BsCircle } from 'react-icons/bs';
+import { BsCheckCircle, BsCheckCircleFill, BsCircle, BsXCircle } from 'react-icons/bs';
 import { EndpointResponse, MessageListResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { useFetch } from '../../hooks/useFetch';
@@ -115,8 +115,8 @@ function Message({message, isAuthor, isLastStackMessage}: MessageProps) {
 	return (
 		<Row className={`w-100 ${isAuthor ? 'flex-row-reverse' : 'flex-row'}`}>
 			{/* Show indicator only on last message of stack but keep pending indicator on every message */}
-			{((isAuthor && isLastStackMessage) || (isAuthor && message.isPending))
-				? <MessageStatus isPending={message.isPending} />
+			{((isAuthor && isLastStackMessage) || (isAuthor && (message.isPending || message.isFailed)))
+				? <MessageStatus isPending={message.isPending} isFailed={message.isFailed} />
 				: (isAuthor && <span className='p-0' style={{width: '18px'}}></span>)}
 			{/* Show avatar only on last message of stack when user is not author */}
 			{(!isAuthor && isLastStackMessage)
@@ -129,7 +129,7 @@ function Message({message, isAuthor, isLastStackMessage}: MessageProps) {
 			>
 				<Col
 					xs='auto'
-					style={{'opacity': message.isPending ? '50%' : '100%'}}
+					style={{'opacity': (message.isPending || message.isFailed) ? '50%' : '100%'}}
 					className={`message text-break ${isAuthor ? 'bg-primary text-light' : 'bg-gray-200'}`}
 				>
 					{message.content}
@@ -158,13 +158,17 @@ function MessageAvatar({avatar}: MessageAvatarProps) {
 
 interface MessageStatusProps {
 	isPending?: boolean
+	isFailed?: boolean
 }
 
-function MessageStatus({isPending}: MessageStatusProps) {
+function MessageStatus({isPending, isFailed: isError}: MessageStatusProps) {
+	let icon = BsCheckCircleFill;
+	if (isPending) icon = BsCheckCircle;
+	if (isError) icon = BsXCircle;
 	const iconEl = React.createElement(
-		isPending ? BsCheckCircle : BsCheckCircleFill, {
+		icon, {
 			size: 14,
-			color: 'var(--bs-primary)'
+			color: `var(--bs-${isError ? 'danger' : 'primary'})`
 		}
 	);
 	return (

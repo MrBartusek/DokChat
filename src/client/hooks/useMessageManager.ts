@@ -82,6 +82,14 @@ export function useMessageManager(ws: useWebsocketType): [
 		setChatList(chats);
 	}
 
+	function ackErrorMessage(chat: LocalChat, pendingId: string) {
+		const chats = [ ...chatList ];
+		const chatId = chats.findIndex((c) => c.id == chat.id);
+		if(chatId == -1) return;
+		chats[chatId].ackErrorMessage(pendingId);
+		setChatList(chats);
+	}
+
 	return [
 		loading,
 		chatList,
@@ -109,8 +117,12 @@ export function useMessageManager(ws: useWebsocketType): [
 				chatId: data.chat.id,
 				content: data.content
 			}, (response) => {
-				if(response.error) return;
-				ackMessage(data.chat, pendingMessageId, response.data.id, response.data.timestamp);
+				if(response.error) {
+					ackErrorMessage(data.chat, pendingMessageId);
+				}
+				else {
+					ackMessage(data.chat, pendingMessageId, response.data.id, response.data.timestamp);
+				}
 			});
 		},
 		setChatList

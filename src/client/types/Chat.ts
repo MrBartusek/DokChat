@@ -6,10 +6,8 @@ import * as DateFns from 'date-fns';
  * for handling sending lifecycle
  */
 export interface LocalMessage extends Message {
-	/**
-	 * Is this message still in transit to server
-	 */
 	isPending?: boolean;
+	isFailed?: boolean;
 }
 
 /**
@@ -55,7 +53,7 @@ export class LocalChat {
 		if(msg.isPending) {
 			if(!this.isInitialized) throw new Error('Cannot send fresh message to uninitialized chat');
 			msg.id = `PENDING-${this.id}-${this.lastPendingIndex}`;
-			this.lastPendingIndex;
+			this.lastPendingIndex++;
 		}
 		// If chat is uninitialized save only a partial message
 		// since it doesn't accept a regular message list
@@ -82,6 +80,21 @@ export class LocalChat {
 		msg.isPending = false;
 		msg.id = newId;
 		msg.timestamp = timestamp;
+
+		return msg;
+	}
+
+	/**
+	 * Mark message with PENDING- id as failed
+	 */
+	public ackErrorMessage(pendingId: string): LocalMessage {
+		if(!pendingId.startsWith('PENDING-')) throw new Error('Provided message id is not pending id');
+		const msg = this.messages.find(m => m.id == pendingId);
+		if(!msg) throw new Error(`Message with id ${pendingId} was not found`);
+
+		msg.id = msg.id.replace('PENDING', 'ERROR');
+		msg.isPending = false;
+		msg.isFailed = true;
 
 		return msg;
 	}
