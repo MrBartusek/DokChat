@@ -30,19 +30,16 @@ router.all('/login', allowedMethods('POST'), async (req, res, next) => {
 			AuthManager.sendAuthorizationResponse(res, jwtData, passwordHash);
 		})
 		.catch((reason) => {
-			if(reason == INVALID_CREDENTIALS) {
-				return new ApiResponse(res).badRequest('Provided email and password are not valid');
-			}
-			throw reason;
+			return new ApiResponse(res).badRequest('Provided email and password are not valid');
 		});
 });
 
 async function authenticateUser(email: string, password: string): Promise<[UserJWTData, string]> {
 	const query = await db.query(sql`SELECT id, username, tag, email, password_hash FROM users WHERE email=$1`, [ email ]);
-	if(query.rowCount == 0) return Promise.reject(INVALID_CREDENTIALS);
+	if(query.rowCount == 0) return Promise.reject('Provided email and password are not valid');
 	const user = query.rows[0];
 	const passwordValid = await bcrypt.compare(password, user.password_hash);
-	if(!passwordValid) return Promise.reject(INVALID_CREDENTIALS);
+	if(!passwordValid) return Promise.reject('Provided email and password are not valid');
 
 	const jwtData = {
 		id: user.id,

@@ -39,7 +39,6 @@ router.all('/refresh', allowedMethods('POST'), async (req, res, next) => {
 			AuthManager.sendAuthorizationResponse(res, jwtData, user.password_hash);
 		})
 		.catch((error) => {
-			console.log(error);
 			return new ApiResponse(res).unauthorized();
 		});
 });

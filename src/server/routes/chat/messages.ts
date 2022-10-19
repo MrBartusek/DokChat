@@ -66,7 +66,7 @@ async function queryMessages(req: Request, chatId: string, page: number): Promis
 		ORDER BY 
 			messages.created_at DESC
 		LIMIT 25 OFFSET $2;
-	`, [chatId, page]);
+	`, [ chatId, page ]);
 }
 
 export default router;
