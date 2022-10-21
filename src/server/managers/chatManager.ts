@@ -1,9 +1,11 @@
 import db from '../db';
 import sql from 'sql-template-strings';
-import { Chat, ChatParticipant } from '../../types/common';
+import { Chat, ChatParticipant, User } from '../../types/common';
 import Utils from '../utils';
 import { Request } from 'express';
 import { Handshake } from 'socket.io/dist/socket';
+import { snowflakeGenerator } from '../utils/snowflakeGenerator';
+import * as DateFns from 'date-fns';
 
 export default class ChatManager {
 	public static async getChat(req: Request | Handshake, chatId: string): Promise<Chat> {
@@ -37,11 +39,12 @@ export default class ChatManager {
 		const query = await db.query(sql`
 			SELECT
 				participants.id,
-				user_id as "userId",
-				username, tag
+				participants.user_id as "userId",
+				users.username,
+				users.tag
 			FROM
 				participants
-			JOIN users ON users.id = user_id
+			JOIN users ON users.id = participants.user_id
 			WHERE chat_id = $1;
 		`, [ chatId ]);
 		const result: ChatParticipant[] = [];
@@ -85,5 +88,43 @@ export default class ChatManager {
 			];
 
 		}
+	}
+
+	public static async dmExist(userIdA: string, userIdb: string): Promise<string | false> {
+		const result = await db.query(sql`
+			SELECT
+				participants.chat_id
+			FROM (
+				SELECT chat_id
+				FROM participants
+				INNER JOIN chats ON participants.chat_id = chats.id
+				WHERE (participants.user_id = $1 OR participants.user_id = $2)
+				AND chats.is_group = FALSE
+			) AS participants
+			GROUP BY participants.chat_id
+			HAVING count(*) > 1
+		`, [ userIdA, userIdb ]);
+		if(result.rowCount == 0) {
+			return false;
+		}
+		else {
+			return result.rows[0].chat_id;
+		}
+	}
+
+	public static async addUserToChat(userId: string, chatId: string): Promise<string> {
+		const participantId = snowflakeGenerator.getUniqueID();
+		await db.query(sql`
+			INSERT INTO participants
+				(id, user_id, chat_id, created_at)
+			VALUES
+				($1, $2, $3, $4)
+		`, [
+			participantId,
+			userId,
+			chatId,
+			DateFns.getUnixTime(new Date()).toString()
+		]);
+		return participantId.toString();
 	}
 }

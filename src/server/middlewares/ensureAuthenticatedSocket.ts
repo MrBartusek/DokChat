@@ -14,9 +14,9 @@ const ensureAuthenticatedSocket = () => async (socket: Socket, next: NextFunctio
 	token = token.replace('Bearer ', '');
 
 	return AuthManager.verifyJWT(token)
-		.then((data) => {
+		.then(async(data) => {
 			socket.auth = data;
-			socket.join(socket.auth.id);
+			await socket.join(socket.auth.id);
 			return next();
 		})
 		.catch(() => {
