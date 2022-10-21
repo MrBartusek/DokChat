@@ -30,8 +30,6 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 		const id = snowflakeGenerator.getUniqueID().toString();
 		await saveMessage(socket, msg, id, timestamp);
 
-		let participants = await ChatManager.listParticipants(socket.handshake, msg.chatId);
-		participants = participants.filter(p => p.userId != socket.auth.id);
 		const chatInfo = await ChatManager.getChat(socket.handshake, msg.chatId);
 		const serverMsg: ServerMessage = {
 			messageId: id,
@@ -46,7 +44,8 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 			timestamp: timestamp.toString()
 		};
 
-		socket.to(participants.map(p => p.id)).emit('message', serverMsg);
+		const participants = await ChatManager.listParticipants(socket.handshake, msg.chatId);
+		socket.broadcast.to(participants.map(p => p.userId)).emit('message', serverMsg);
 
 		new ApiResponse({} as any, callback).success({
 			id: id,

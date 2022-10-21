@@ -19,6 +19,7 @@ export default class ChatManager {
 		`, [ chatId ]);
 		if(chats.rowCount == 0) throw new Error('Chat with provided id was not found');
 		const participants = await ChatManager.listParticipants(req, chatId);
+
 		const [ avatar, name ] = await ChatManager.generateAvatarAndName(
 			req,
 			chatId,

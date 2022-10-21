@@ -148,7 +148,7 @@ function MessageAvatar({avatar}: MessageAvatarProps) {
 	return (
 		<Col xs='auto' className='d-flex align-items-end'>
 			{avatar ? (
-				<ProfilePicture src={avatar} size={48} />
+				<ProfilePicture src={avatar} size={32} />
 			) : (
 				<div style={{height: 32, width: 32}}></div>
 			)}
