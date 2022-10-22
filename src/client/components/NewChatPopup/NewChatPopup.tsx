@@ -26,7 +26,6 @@ function NewChatPopup() {
 	const [ error, setError ] = useState(null);
 	const [ user ] = useContext(UserContext);
 	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
-	const navigate = useNavigate();
 
 	const handleClose = () => navigate('/chat');
 

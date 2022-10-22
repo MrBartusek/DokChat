@@ -106,7 +106,7 @@ interface MessageProps {
 
 function Message({message, isAuthor, isLastStackMessage}: MessageProps) {
 	const timeTooltip = (props: TooltipProps) => (
-		<Tooltip id="button-tooltip"  {...props}>
+		<Tooltip {...props}>
 			{DateFns.format(DateFns.fromUnixTime(Number(message.timestamp)), 'HH:mm')}
 		</Tooltip>
 	);

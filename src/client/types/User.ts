@@ -72,4 +72,9 @@ export class LocalUser {
 		if(!this.isAuthenticated) throw new Error('User is not authenticated');
 		return `/api/avatar?id=${this.id}`;
 	}
+
+	public get discriminator(): string {
+		if(!this.isAuthenticated) throw new Error('User is not authenticated');
+		return `${this.username}#${this.tag}`;
+	}
 }

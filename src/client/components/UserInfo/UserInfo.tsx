@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Col, Row, Image } from 'react-bootstrap';
+import { Col, Row, Image, Tooltip, TooltipProps, OverlayTrigger } from 'react-bootstrap';
 import { BsPencilSquare, BsPlusCircle, BsPlusSquare } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
@@ -10,11 +10,23 @@ function UserInfo() {
 	const [ user ] = useContext(UserContext);
 	const navigate = useNavigate();
 
+	const usernameTooltip = (props: TooltipProps) => (
+		<Tooltip {...props}>
+			{user.discriminator}
+		</Tooltip>
+	);
+
 	return (
 		<Row className='p-2 border-bottom border-separator'>
-			<Col xs='auto'>
-				<ProfilePicture src={user.avatarUrl} />
-			</Col>
+			<OverlayTrigger
+				placement='right'
+				overlay={usernameTooltip}
+				delay={{show: 500, hide: 0}}
+			>
+				<Col xs='auto'>
+					<ProfilePicture src={user.avatarUrl} />
+				</Col>
+			</OverlayTrigger>
 			<Col className='d-flex justify-content-center align-items-center'>
 				<span className='fw-bold'>
 					DokChat
