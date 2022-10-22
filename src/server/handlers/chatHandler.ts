@@ -48,6 +48,11 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 		};
 
 		const participants = await ChatManager.listParticipants(socket.handshake, msg.chatId);
+		for await(const part of participants) {
+			if(part.isHidden) {
+				//await ChatManager.setChatHideForParticipant(part, false);
+			}
+		}
 		socket.broadcast.to(participants.map(p => p.userId)).emit('message', serverMsg);
 
 		new ApiResponse({} as any, callback).success({

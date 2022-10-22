@@ -104,7 +104,7 @@ async function queryChats(req: express.Request, page: number): Promise<ChatsQuer
             LIMIT 1
         ) AS last_message_author ON true
         WHERE
-            participants.user_id = $1
+            participants.user_id = $1 AND participants.is_hidden = false
 		ORDER BY
 			COALESCE(last_message.created_at, chat.created_at) DESC
         LIMIT 25 OFFSET $2;

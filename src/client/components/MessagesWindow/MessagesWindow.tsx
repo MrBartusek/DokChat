@@ -12,7 +12,7 @@ import './MessagesWindow.scss';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 
 export interface MessagesWindowProps {
-	currentChat?: LocalChat
+	currentChat: LocalChat
 }
 
 function MessagesWindow({ currentChat }: MessagesWindowProps) {
@@ -25,7 +25,6 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 	 * Fetch chat messages if window is targeting not initialized chat
 	 */
 	useEffect(() => {
-		if(!currentChat) return;
 		if(currentChat.isInitialized) return;
 		messagesFetch.setUrl(`/chat/messages?chat=${currentChat.id}`);
 	}, [ currentChat ]);

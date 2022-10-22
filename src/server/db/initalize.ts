@@ -21,15 +21,15 @@ export async function initializeDB() {
             is_group boolean NOT NULL,
             name varchar(32),
             avatar varchar(255),
-            creator_id varchar REFERENCES users,
+            creator_id varchar REFERENCES users ON DELETE CASCADE,
             created_at bigint NOT NULL,
             PRIMARY KEY (id)
         );
 
         CREATE TABLE IF NOT EXISTS messages (
             id varchar NOT NULL,
-            chat_id varchar REFERENCES chats,
-            author_id varchar REFERENCES users,
+            chat_id varchar REFERENCES chats ON DELETE CASCADE,
+            author_id varchar REFERENCES users ON DELETE CASCADE,
             content text NOT NULL,
             created_at bigint NOT NULL,
             PRIMARY KEY (id)
@@ -37,9 +37,10 @@ export async function initializeDB() {
 
         CREATE TABLE IF NOT EXISTS participants (
             id varchar NOT NULL,
-            user_id varchar REFERENCES users,
-            chat_id varchar REFERENCES chats,
+            user_id varchar REFERENCES users ON DELETE CASCADE,
+            chat_id varchar REFERENCES chats ON DELETE CASCADE,
             created_at bigint NOT NULL,
+            is_hidden boolean DEFAULT FALSE,
             PRIMARY KEY (id)
         );
     `);

@@ -44,8 +44,8 @@ export function useMessageManager(ws: useWebsocketType): [
 			const chats = [ ...chatList ];
 			const chat = chats.find((c) => c.id == msg.chat.id);
 
-			// If chat does not exist, add one to cache
 			if(!chat) {
+				// If chat does not exist, add one to cache
 				const newChat = msg.chat;
 				newChat.lastMessage = {
 					author: msg.author.username,
@@ -53,19 +53,19 @@ export function useMessageManager(ws: useWebsocketType): [
 					timestamp: msg.timestamp
 				};
 				chats.push(new LocalChat(newChat));
-				return;
 			}
-
-			// Receive message
-			chat.addMessage({
-				content: msg.content,
-				author: msg.author,
-				id: msg.messageId,
-				timestamp: msg.timestamp
-			});
-			chat.avatar = msg.chat.avatar;
-			chat.name = msg.chat.name;
-
+			else {
+				// Receive message
+				chat.addMessage({
+					content: msg.content,
+					author: msg.author,
+					id: msg.messageId,
+					timestamp: msg.timestamp
+				});
+				chat.avatar = msg.chat.avatar;
+				chat.name = msg.chat.name;
+			}
+			console.log(chatList, chats);
 			setChatList(chats);
 		});
 		return () => {

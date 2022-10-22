@@ -1,11 +1,12 @@
 import db from '../db';
 import sql from 'sql-template-strings';
-import { Chat, ChatParticipant, User } from '../../types/common';
+import { Chat } from '../../types/common';
 import Utils from '../utils';
 import { Request } from 'express';
 import { Handshake } from 'socket.io/dist/socket';
 import { snowflakeGenerator } from '../utils/snowflakeGenerator';
 import * as DateFns from 'date-fns';
+import { InternalChatParticipant } from '../types/common';
 
 export default class ChatManager {
 	public static async getChat(req: Request | Handshake, chatId: string): Promise<Chat | null> {
@@ -43,11 +44,12 @@ export default class ChatManager {
 		};
 	}
 
-	public static async listParticipants(req: Request | Handshake, chatId: string): Promise<ChatParticipant[]> {
+	public static async listParticipants(req: Request | Handshake, chatId: string): Promise<InternalChatParticipant[]> {
 		const query = await db.query(sql`
 			SELECT
 				participants.id,
 				participants.user_id as "userId",
+				participants.is_hidden as "isHidden",
 				users.username,
 				users.tag
 			FROM
@@ -55,14 +57,15 @@ export default class ChatManager {
 			JOIN users ON users.id = participants.user_id
 			WHERE chat_id = $1;
 		`, [ chatId ]);
-		const result: ChatParticipant[] = [];
+		const result: InternalChatParticipant[] = [];
 		for(const part of query.rows) {
 			result.push({
 				id: part.id,
 				userId: part.userId,
 				username: part.username,
 				tag: part.tag,
-				avatar: Utils.avatarUrl(req, part.userId)
+				avatar: Utils.avatarUrl(req, part.userId),
+				isHidden: part.isHidden
 			});
 		}
 		return result;
@@ -75,7 +78,7 @@ export default class ChatManager {
 	public static async generateAvatarAndName(
 		req: Request | Handshake,
 		chatId: string,
-		participants: ChatParticipant[],
+		participants: InternalChatParticipant[],
 		isGroup: boolean,
 		rawName: string,
 		rawAvatar: string
@@ -120,19 +123,29 @@ export default class ChatManager {
 		}
 	}
 
-	public static async addUserToChat(userId: string, chatId: string): Promise<string> {
+	public static async addUserToChat(userId: string, chatId: string, isHidden?: boolean): Promise<string> {
 		const participantId = snowflakeGenerator.getUniqueID();
 		await db.query(sql`
 			INSERT INTO participants
-				(id, user_id, chat_id, created_at)
+				(id, user_id, chat_id, created_at, is_hidden)
 			VALUES
-				($1, $2, $3, $4)
+				($1, $2, $3, $4, $5)
 		`, [
 			participantId,
 			userId,
 			chatId,
-			DateFns.getUnixTime(new Date()).toString()
+			DateFns.getUnixTime(new Date()).toString(),
+			isHidden
 		]);
 		return participantId.toString();
+	}
+
+	public static async setChatHideForParticipant(participant: InternalChatParticipant, hide: boolean) {
+		await db.query(sql`
+			UPDATE participants
+				SET is_hidden = $1
+			WHERE
+				id = $2
+		`, [ hide, participant.id ]);
 	}
 }

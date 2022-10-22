@@ -24,7 +24,7 @@ export function ChatPage() {
 	const location = useLocation();
 
 	useEffect(() => {
-		if(isLoadingManager) return;
+		if(isLoadingManager || chats.length == 0) return;
 
 		// Handle popup
 		if(location.pathname == '/chat/new') {
@@ -41,8 +41,7 @@ export function ChatPage() {
 	}, [ isLoadingManager, chatId, location ]);
 
 	const isLoading = (
-		isLoadingManager || !currentChat ||
-		(!documentReady && document.location.hostname !== 'localhost')
+		isLoadingManager || (!documentReady && document.location.hostname !== 'localhost')
 	);
 	if(isLoading) return (<MainLoading />);
 
@@ -59,8 +58,12 @@ export function ChatPage() {
 					</Col>
 					<Col className='d-flex align-items-stretch flex-column mh-100'>
 						<ChatInfo currentChat={currentChat} />
-						<MessagesWindow currentChat={currentChat} />
-						<MessageBar currentChat={currentChat} />
+						{currentChat && (
+							<>
+								<MessagesWindow currentChat={currentChat} />
+								<MessageBar currentChat={currentChat} />
+							</>
+						)}
 					</Col>
 				</Row>
 			</FullPageContainer>

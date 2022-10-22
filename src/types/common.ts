@@ -31,11 +31,3 @@ export interface Message {
     content: string,
     timestamp: string
 }
-
-export interface ChatParticipant {
-    id: string,
-    userId: string,
-    username: string,
-    tag: string,
-    avatar: string
-}

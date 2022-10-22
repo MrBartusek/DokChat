@@ -45,6 +45,7 @@ router.all('/create', allowedMethods('POST'), ensureAuthenticated(), async (req,
 async function createChat(req: Request, creatorId: string, participants: User[]): Promise<Chat> {
 	// Create chat
 	const chatId = snowflakeGenerator.getUniqueID().toString();
+	const isGroup = participants.length > 2;
 	await db.query(sql`
 		INSERT INTO chats
 			(id, is_group, creator_id, created_at)
@@ -52,13 +53,16 @@ async function createChat(req: Request, creatorId: string, participants: User[])
 			($1, $2, $3, $4)
 	`, [
 		chatId,
-		participants.length > 2,
+		isGroup,
 		creatorId,
 		DateFns.getUnixTime(new Date())
 	]);
 
 	for await(const part of participants) {
-		await ChatManager.addUserToChat(part.id, chatId);
+		// If this is a DM, hide a chat from other user
+		// It will be shown again on first message
+		const hide = (part.id != creatorId) && !isGroup;
+		await ChatManager.addUserToChat(part.id, chatId, hide);
 	}
 
 	return ChatManager.getChat(req, chatId);

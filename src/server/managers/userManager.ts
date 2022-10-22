@@ -1,6 +1,6 @@
 import db from '../db';
 import sql from 'sql-template-strings';
-import { Chat, ChatParticipant, User } from '../../types/common';
+import { User } from '../../types/common';
 import Utils from '../utils';
 import { Request } from 'express';
 import { Handshake } from 'socket.io/dist/socket';

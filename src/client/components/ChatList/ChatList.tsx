@@ -1,22 +1,30 @@
 import React, { useContext } from 'react';
 import { Col, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { LocalChat } from '../../types/Chat';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 import './ChatList.scss';
 
 export interface ChatListProps {
-	currentChat: LocalChat,
+	currentChat?: LocalChat,
 	setCurrentChat: React.Dispatch<React.SetStateAction<LocalChat>>
 }
 
 function ChatList({ currentChat, setCurrentChat }: ChatListProps) {
 	const [ chats ] = useContext(MessageManagerContext);
-	console.log(chats);
+
+	const noChatsInfo = (
+		<span className='text-muted text-center mt-4'>
+			There are no messages yet <br />
+			<Link to='/chat/new' className='link-secondary'>Start a new chat</Link>
+		</span>
+	);
+
 	return (
 		<Row className='h-100'>
 			<Col className="d-flex align-items-center py-3 px-2 flex-column">
-				{chats.map((chat) => (
+				{currentChat ? chats.map((chat) => (
 					<Chat
 						key={chat.id}
 						avatar={chat.avatar}
@@ -25,7 +33,7 @@ function ChatList({ currentChat, setCurrentChat }: ChatListProps) {
 						isCurrent={chat.id == currentChat.id}
 						onClick={() => setCurrentChat(chat)}
 					/>
-				))}
+				)): noChatsInfo}
 			</Col>
 		</Row>
 	);

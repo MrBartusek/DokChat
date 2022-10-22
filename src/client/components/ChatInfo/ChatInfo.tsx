@@ -7,7 +7,7 @@ import IconButton from '../IconButton/IconButton';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 
 export interface ChatInfoProps {
-	currentChat: LocalChat
+	currentChat?: LocalChat
 }
 
 function ChatInfo({ currentChat }: ChatInfoProps) {
@@ -20,17 +20,19 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 	return (
 		<Row className='p-2 border-bottom border-separator'>
 			<Col xs='auto' className='pe-2'>
-				<ProfilePicture src={currentChat.avatar} />
+				<ProfilePicture src={currentChat && currentChat.avatar} />
 			</Col>
 			<Col className='d-flex justify-content-left p-0 align-items-center'>
 				<span className='fw-bold'>
-					{currentChat.name}
+					{currentChat?.name || 'No chat selected'}
 				</span>
 			</Col>
-			<Col xs='auto' className='d-flex align-items-center'>
-				<IconButton icon={BsPersonPlusFill} variant='primary' onClick={handleNewGroupClick} />
-				<IconButton icon={BsThreeDots} variant='primary' />
-			</Col>
+			{currentChat && (
+				<Col xs='auto' className='d-flex align-items-center'>
+					<IconButton icon={BsPersonPlusFill} variant='primary' onClick={handleNewGroupClick} />
+					<IconButton icon={BsThreeDots} variant='primary' />
+				</Col>
+			)}
 		</Row>
 	);
 
