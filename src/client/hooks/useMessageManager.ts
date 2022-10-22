@@ -65,7 +65,6 @@ export function useMessageManager(ws: useWebsocketType): [
 				chat.avatar = msg.chat.avatar;
 				chat.name = msg.chat.name;
 			}
-			console.log(chatList, chats);
 			setChatList(chats);
 		});
 		return () => {

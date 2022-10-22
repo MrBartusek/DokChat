@@ -63,7 +63,6 @@ function NewChatPopup() {
 	}
 
 	async function handleSubmit() {
-		console.log('subbmit');
 		setLoading(true);
 		const axios = getAxios(user);
 		await axios.post('/chat/create', {
@@ -72,7 +71,6 @@ function NewChatPopup() {
 			validateStatus: (s) => [ 200, 409 ].includes(s)
 		})
 			.then((r) => {
-				console.log(r);
 				const resp: EndpointResponse<ChatCreateResponse> = r.data;
 				const chatsCopy = [ ...chats ];
 				const chatExist = chatsCopy.find(c => c.id == resp.data.id);
