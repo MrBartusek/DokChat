@@ -24,16 +24,17 @@ function ChatList({ currentChat, setCurrentChat }: ChatListProps) {
 	return (
 		<Row className='h-100'>
 			<Col className="d-flex align-items-center py-3 px-2 flex-column">
-				{currentChat ? chats.map((chat) => (
+				{chats.map((chat) => (
 					<Chat
 						key={chat.id}
 						avatar={chat.avatar}
 						name={chat.name}
 						lastMessage={chat.lastMessage}
-						isCurrent={chat.id == currentChat.id}
+						isCurrent={chat.id == currentChat?.id}
 						onClick={() => setCurrentChat(chat)}
 					/>
-				)): noChatsInfo}
+				))}
+				{chats.length == 0 && noChatsInfo}
 			</Col>
 		</Row>
 	);
