@@ -24,3 +24,4 @@ export type MessageListResponse = Message[];
 
 export type UserGetResponse = User;
 
+export type ChatCreateResponse = Chat;

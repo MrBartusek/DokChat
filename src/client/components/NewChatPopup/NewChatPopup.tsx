@@ -7,11 +7,13 @@ import Modal from 'react-bootstrap/Modal';
 import { BsPlus } from 'react-icons/bs';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { User } from '../../../types/common';
-import { EndpointResponse, UserGetResponse } from '../../../types/endpoints';
+import { ChatCreateResponse, EndpointResponse, UserGetResponse } from '../../../types/endpoints';
+import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import { useFetch } from '../../hooks/useFetch';
 import { useForm } from '../../hooks/useForm';
+import { LocalChat } from '../../types/Chat';
 import IconButton from '../IconButton/IconButton';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import UserList from '../UserList/UserList';
@@ -23,6 +25,8 @@ function NewChatPopup() {
 	const [ values, handleChange, setValues ] = useForm({ username: '', tag: '' });
 	const [ error, setError ] = useState(null);
 	const [ user ] = useContext(UserContext);
+	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
+	const navigate = useNavigate();
 
 	const handleClose = () => navigate('/chat');
 
@@ -54,6 +58,32 @@ function NewChatPopup() {
 
 			})
 			.finally(() => {
+				setLoading(false);
+			});
+	}
+
+	async function handleSubmit() {
+		console.log('subbmit');
+		setLoading(true);
+		const axios = getAxios(user);
+		await axios.post('/chat/create', {
+			participants: participants.map(p => p.id)
+		}, {
+			validateStatus: (s) => [ 200, 409 ].includes(s)
+		})
+			.then((r) => {
+				console.log(r);
+				const resp: EndpointResponse<ChatCreateResponse> = r.data;
+				const chatsCopy = [ ...chats ];
+				const chatExist = chatsCopy.find(c => c.id == resp.data.id);
+				if(!chatExist) {
+					chatsCopy.push(new LocalChat(resp.data));
+					setChatList(chatsCopy);
+				}
+				navigate(`/chat/${resp.data.id}`);
+			}).catch((e) => {
+				console.error('Chat create error' + e);
+				setError('Something went wrong');
 				setLoading(false);
 			});
 	}
@@ -99,14 +129,14 @@ function NewChatPopup() {
 							disabled={isLoading}
 						/>
 					</Form.Group>
-					{error && <span className='text-danger'>This user was not found</span>}
+					{error && <span className='text-danger'>{error}</span>}
 				</Form>
 			</Modal.Body>
 			<Modal.Footer>
 				<InteractiveButton
 					variant="primary"
 					type="submit"
-					onClick={handleClose}
+					onClick={handleSubmit}
 					loading={isLoading}
 					disabled={participants.length == 0}
 				>
