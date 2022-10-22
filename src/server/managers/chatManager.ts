@@ -8,31 +8,38 @@ import { snowflakeGenerator } from '../utils/snowflakeGenerator';
 import * as DateFns from 'date-fns';
 
 export default class ChatManager {
-	public static async getChat(req: Request | Handshake, chatId: string): Promise<Chat> {
+	public static async getChat(req: Request | Handshake, chatId: string): Promise<Chat | null> {
 		const chats = await db.query(sql`
 			SELECT
-				name, avatar, is_group as "isGroup"
+				name,
+				avatar,
+				is_group as "isGroup",
+				creator_id as "creatorId",
+				created_at as "createdAt"
 			FROM
 				chats
 			WHERE id = $1
 			LIMIT 1;
 		`, [ chatId ]);
-		if(chats.rowCount == 0) throw new Error('Chat with provided id was not found');
+		if(chats.rowCount == 0) return null;
+		const chat = chats.rows[0];
 		const participants = await ChatManager.listParticipants(req, chatId);
 
 		const [ avatar, name ] = await ChatManager.generateAvatarAndName(
 			req,
 			chatId,
 			participants,
-			chats.rows[0].isGroup,
-			chats.rows[0].name,
-			chats.rows[0].avatar
+			chat.isGroup,
+			chat.name,
+			chat.avatar
 		);
 		return {
 			id: chatId,
 			avatar: avatar,
 			name: name,
-			isGroup: chats.rows[0].isGroup
+			isGroup: chat.isGroup,
+			createdAt: chat.createdAt,
+			creatorId: chat.creatorId
 		};
 	}
 

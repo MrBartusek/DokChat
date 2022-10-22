@@ -18,8 +18,8 @@ export function ChatPage() {
 	const ws = useWebsocket();
 	const [ isLoadingManager, chats, sendMessage, setChatList ] = useMessageManager(ws);
 	const [ currentChat, setCurrentChat ] = useState<LocalChat>(null);
-	const documentReady = useDocumentReady();
 	const { chatId } = useParams();
+	const documentReady = useDocumentReady();
 	const navigate = useNavigate();
 	const location = useLocation();
 
@@ -36,7 +36,6 @@ export function ChatPage() {
 		if(!chatId) navigate(`/chat/${currentChat?.id || chats[0].id}`);
 
 		const chat: LocalChat = chats.find(c => c.id == chatId);
-		// If id is not found, navigate to last chat
 		if(!chat) navigate(`/chat/${chats[0].id}`);
 		setCurrentChat(chats[0]);
 	}, [ isLoadingManager, chatId, location ]);
@@ -53,7 +52,10 @@ export function ChatPage() {
 				<Row className='h-100'>
 					<Col style={{'flex': '0 0 360px', 'width': '360px'}} className='border-separator border-end'>
 						<UserInfo />
-						<ChatList currentChat={currentChat} />
+						<ChatList
+							currentChat={currentChat}
+							setCurrentChat={setCurrentChat}
+						/>
 					</Col>
 					<Col className='d-flex align-items-stretch flex-column mh-100'>
 						<ChatInfo currentChat={currentChat} />

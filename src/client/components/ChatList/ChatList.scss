@@ -7,9 +7,9 @@
 }
 
 .chat:hover {
-    background-color: $gray-200;
+    background-color: mix($gray-100, $gray-200) !important;
 }
 
-.chat.current {
+.current.chat {
     background-color: $gray-100;
 }

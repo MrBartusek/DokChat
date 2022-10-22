@@ -7,6 +7,8 @@ export interface Chat {
     name: string,
     avatar: string,
     isGroup: boolean,
+    creatorId: string,
+    createdAt: string,
     lastMessage?: LastMessage
 }
 
@@ -20,6 +22,7 @@ export interface User {
 export interface LastMessage {
 	author: string,
 	content: string,
+    timestamp: string,
 }
 
 export interface Message {

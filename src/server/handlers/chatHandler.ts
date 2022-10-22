@@ -18,6 +18,7 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 			return new ApiResponse({} as any, callback).forbidden();
 		}
 
+		// Check message format
 		if(msg.content.trim().length == 0) {
 			return new ApiResponse({} as any, callback).badRequest('Message is empty');
 		}
@@ -25,16 +26,18 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 			return new ApiResponse({} as any, callback).badRequest('Message is too long');
 		}
 
+		const chat = await ChatManager.getChat(socket.handshake, msg.chatId);
+		if(!chat) return new ApiResponse({} as any, callback).badRequest(`Chat ${msg.chatId} was not found`);
+
 		// Add message to db
 		const timestamp = DateFns.getUnixTime(new Date());
 		const id = snowflakeGenerator.getUniqueID().toString();
 		await saveMessage(socket, msg, id, timestamp);
 
-		const chatInfo = await ChatManager.getChat(socket.handshake, msg.chatId);
 		const serverMsg: ServerMessage = {
 			messageId: id,
 			content: msg.content.trim(),
-			chat: chatInfo,
+			chat: chat,
 			author: {
 				id: socket.auth.id,
 				username: socket.auth.username,

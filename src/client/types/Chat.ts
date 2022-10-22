@@ -1,4 +1,4 @@
-import { LastMessage, Message } from '../../types/common';
+import { Chat, LastMessage, Message } from '../../types/common';
 import * as DateFns from 'date-fns';
 
 /**
@@ -14,7 +14,7 @@ export interface LocalMessage extends Message {
  * Local client version of chat object that handles initialization
  * and adding messages
  */
-export class LocalChat {
+export class LocalChat implements Chat {
 	/**
 	 * Is this chat initialized?
 	 *
@@ -24,16 +24,22 @@ export class LocalChat {
 	public isInitialized: boolean;
 	private _messages: LocalMessage[] | LastMessage;
 	private lastPendingIndex = 0;
+	public id: string;
+	public name: string;
+	public avatar: string;
+	public isGroup: boolean;
+	public createdAt: string;
+	public creatorId: string;
 
-	constructor(
-        public id: string,
-        public name: string,
-        public avatar: string,
-		public isGroup: boolean,
-		lastMessage?: LastMessage
-	) {
+	constructor(chat: Chat) {
 		this.isInitialized = false;
-		this._messages = lastMessage || [];
+		this.id = chat.id;
+		this.name = chat.name;
+		this.avatar = chat.avatar;
+		this.isGroup = chat.isGroup;
+		this.createdAt = chat.createdAt;
+		this.creatorId = chat.creatorId;
+		this._messages = chat.lastMessage || [];
 	}
 
 	/**
@@ -63,7 +69,8 @@ export class LocalChat {
 		else {
 			this._messages = {
 				author: msg.author.username,
-				content: msg.content
+				content: msg.content,
+				timestamp: DateFns.getUnixTime(new Date()).toString()
 			};
 		}
 		return msg.id;
@@ -107,6 +114,9 @@ export class LocalChat {
 
 	get lastMessage(): LastMessage | null {
 		if(!this.isInitialized) {
+			if(Array.isArray(this._messages) && this._messages.length == 0) {
+				return null;
+			}
 			return this._messages as LastMessage;
 		}
 		else {
@@ -115,7 +125,8 @@ export class LocalChat {
 			if(!lastMsg) return null;
 			return  {
 				author: lastMsg.author.username,
-				content: lastMsg.content
+				content: lastMsg.content,
+				timestamp: lastMsg.timestamp
 			};
 		}
 	}

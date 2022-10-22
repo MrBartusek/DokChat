@@ -1,25 +1,21 @@
-import React, { useContext, useState } from 'react';
-import { Col, Row, Stack, Image } from 'react-bootstrap';
-import { ChatListResponse, EndpointResponse } from '../../../types/endpoints';
+import React, { useContext } from 'react';
+import { Col, Row } from 'react-bootstrap';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
-import { UserContext } from '../../context/UserContext';
-import { useFetch } from '../../hooks/useFetch';
 import { LocalChat } from '../../types/Chat';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
-import SimpleLoading from '../SimpleLoadng/SimpleLoading';
 import './ChatList.scss';
 
 export interface ChatListProps {
-	currentChat: LocalChat
+	currentChat: LocalChat,
+	setCurrentChat: React.Dispatch<React.SetStateAction<LocalChat>>
 }
 
-function ChatList({ currentChat }: ChatListProps) {
-	const [ chats, sendMessage ] = useContext(MessageManagerContext);
-	const [ user ] = useContext(UserContext);
-
+function ChatList({ currentChat, setCurrentChat }: ChatListProps) {
+	const [ chats ] = useContext(MessageManagerContext);
+	console.log(chats);
 	return (
 		<Row className='h-100'>
-			<Col className="d-flex justify-content-center py-1 px-2">
+			<Col className="d-flex align-items-center py-3 px-2 flex-column">
 				{chats.map((chat) => (
 					<Chat
 						key={chat.id}
@@ -27,6 +23,7 @@ function ChatList({ currentChat }: ChatListProps) {
 						name={chat.name}
 						lastMessage={chat.lastMessage}
 						isCurrent={chat.id == currentChat.id}
+						onClick={() => setCurrentChat(chat)}
 					/>
 				))}
 			</Col>
@@ -42,6 +39,7 @@ interface ChatProps {
 		author: string
 	},
 	isCurrent?: boolean
+	onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
 function Chat(props: ChatProps) {
@@ -49,6 +47,7 @@ function Chat(props: ChatProps) {
 		<Row
 			className={`chat flex-row rounded-3 w-100 flex-nowrap ${props.isCurrent ? 'current' : ''}`}
 			style={{height: 65}}
+			onClick={props.onClick}
 		>
 			<Col xs='auto' className="d-flex align-items-center">
 				<ProfilePicture src={props.avatar} size={48} />

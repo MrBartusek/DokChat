@@ -32,9 +32,12 @@ router.all('/list', allowedMethods('GET'), ensureAuthenticated(), async (req, re
 			name: chatName,
 			avatar: avatar,
 			isGroup: chat.isGroup,
+			createdAt: chat.createdAt,
+			creatorId: chat.creatorId,
 			lastMessage: chat.message ? {
 				content: chat.message,
-				author: chat.messageAuthor
+				author: chat.messageAuthor,
+				timestamp: chat.messageCreatedAt
 			}: null
 		};
 	}));
@@ -48,7 +51,10 @@ type ChatsQuery = QueryResult<{
 	avatar: string,
 	message: string,
 	messageAuthor: string,
-    isGroup: boolean
+	messageCreatedAt: string,
+    isGroup: boolean,
+	creatorId: string,
+	createdAt: string,
 }>
 async function queryChats(req: express.Request, page: number): Promise<ChatsQuery> {
 	return db.query(sql`
@@ -56,20 +62,39 @@ async function queryChats(req: express.Request, page: number): Promise<ChatsQuer
             chat.name,
 			chat.avatar,
             chat.is_group as "isGroup",
+			chat.creator_id as "creatorId",
+			chat.created_at as "createdAt",
             participants.chat_id as "chatId",
-            last_message.content as message,
-            last_message_author.username as "messageAuthor"
+            last_message.content as "message",
+            last_message_author.username as "messageAuthor",
+			last_message.created_at as "messageCreatedAt"
         FROM participants
         -- Join last message
         LEFT JOIN LATERAL (
-            SELECT messages.chat_id, messages.author_id, messages.content FROM messages
-            WHERE participants.chat_id = messages.chat_id ORDER BY
-            messages.created_at DESC LIMIT 1
+            SELECT
+				messages.chat_id,
+				messages.author_id,
+				messages.content,
+				messages.created_at
+			FROM messages
+            WHERE
+				participants.chat_id = messages.chat_id
+			ORDER BY
+            	messages.created_at
+			DESC LIMIT 1
         ) AS last_message ON true
         -- Join chat
         LEFT JOIN LATERAL (
-            SELECT chats.id, chats.name, chats.avatar, chats.is_group FROM chats
-            WHERE chats.id = participants.chat_id
+            SELECT
+				chats.id,
+				chats.name,
+				chats.avatar,
+				chats.is_group,
+				chats.creator_id,
+				chats.created_at
+			FROM chats
+            WHERE
+				chats.id = participants.chat_id
             LIMIT 1
         ) AS chat ON true
         -- Join last message author
@@ -80,6 +105,8 @@ async function queryChats(req: express.Request, page: number): Promise<ChatsQuer
         ) AS last_message_author ON true
         WHERE
             participants.user_id = $1
+		ORDER BY
+			COALESCE(last_message.created_at, chat.created_at) DESC
         LIMIT 25 OFFSET $2;
     `, [ req.auth.id, page ]);
 }

@@ -9,7 +9,7 @@ function App() {
 			<ErrorBoundary fallbackRender={({error, resetErrorBoundary}) => (
 				<ErrorPage
 					displayRefresh
-					message='Failed to render page at this time'
+					message='Failed to render this page at this time'
 				/>
 			)}>
 				<Router />

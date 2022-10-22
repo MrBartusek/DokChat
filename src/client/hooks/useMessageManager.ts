@@ -30,13 +30,7 @@ export function useMessageManager(ws: useWebsocketType): [
 		const rawChats = initialChatList.res.data;
 		setChatList(
 			rawChats.map((chat) => (
-				new LocalChat(
-					chat.id,
-					chat.name,
-					chat.avatar,
-					chat.isGroup,
-					chat.lastMessage ? chat.lastMessage : undefined
-				)
+				new LocalChat(chat)
 			))
 		);
 		setLoading(false);
@@ -49,24 +43,29 @@ export function useMessageManager(ws: useWebsocketType): [
 		ws.socket.on('message', (msg) => {
 			const chats = [ ...chatList ];
 			const chat = chats.find((c) => c.id == msg.chat.id);
+
+			// If chat does not exist, add one to cache
 			if(!chat) {
-				chats.push(new LocalChat(
-					msg.chat.id,
-					msg.chat.name,
-					msg.chat.avatar,
-					msg.chat.isGroup
-				));
-			}
-			else {
-				chat.addMessage({
+				const newChat = msg.chat;
+				newChat.lastMessage = {
+					author: msg.author.username,
 					content: msg.content,
-					author: msg.author,
-					id: msg.messageId,
 					timestamp: msg.timestamp
-				});
-				chat.avatar = msg.chat.avatar;
-				chat.name = msg.chat.name;
+				};
+				chats.push(new LocalChat(newChat));
+				return;
 			}
+
+			// Receive message
+			chat.addMessage({
+				content: msg.content,
+				author: msg.author,
+				id: msg.messageId,
+				timestamp: msg.timestamp
+			});
+			chat.avatar = msg.chat.avatar;
+			chat.name = msg.chat.name;
+
 			setChatList(chats);
 		});
 		return () => {
@@ -90,9 +89,15 @@ export function useMessageManager(ws: useWebsocketType): [
 		setChatList(chats);
 	}
 
+	function sortedChatList(): LocalChat[] {
+		return [ ...chatList ].sort((a, b) => {
+			return  Number(b.lastMessage?.timestamp || b.createdAt) - Number(a.lastMessage?.timestamp || a.createdAt);
+		});
+	}
+
 	return [
 		loading,
-		chatList,
+		sortedChatList(),
 		(data: {chat: LocalChat, content: string}) => {
 			// Add this message to local cache
 			const chats = [ ...chatList ];
