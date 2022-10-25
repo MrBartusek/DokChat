@@ -34,7 +34,7 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 
 			// Chat is fetched for each user since for DMs name might be different for each
 			// participant
-			const chat = await ChatManager.getChat(socket, msg.chatId, participants, part.userId);
+			const chat = await ChatManager.getChat(socket, msg.chatId, part.userId, participants);
 			const serverMsg: ServerMessage = {
 				messageId: id,
 				content: msg.content.trim(),

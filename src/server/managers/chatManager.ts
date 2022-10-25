@@ -12,21 +12,20 @@ export default class ChatManager {
 
 	/**
 	 * This function fetches Chat object
-	 * WARNING: This object will have chat name that may be specific to requesting user
 	 *
 	 * @param requestOrSocket Express request or socket
 	 * @param chatId ID of the chat to fetch
+	 * @param displayAs ID of the user to which chat name will be generated
 	 * @param participants Optionally provide participants list if fetched beforehand
 	 * @returns Promise with Chat or null if not found
 	 */
 	public static async getChat(
 		requestOrSocket: Request | Socket,
 		chatId: string,
-		participants?: InternalChatParticipant[],
-		displayAs?: string
+		displayAs?: string,
+		participants?: InternalChatParticipant[]
 	): Promise<Chat | null> {
 		const req = (requestOrSocket as Socket).handshake || requestOrSocket as Request;
-		if(!displayAs) displayAs = requestOrSocket.auth.id;
 		const chats = await db.query(sql`
 			SELECT
 				name,

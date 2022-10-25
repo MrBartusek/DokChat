@@ -7,6 +7,7 @@ import db from '../db';
 import sql from 'sql-template-strings';
 import Utils from '../utils';
 import ChatManager from '../managers/chatManager';
+import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const router = express.Router();
 
@@ -24,7 +25,8 @@ router.all('/', allowedMethods('GET'), async (req, res, next) => {
 	else {
 		const chat = await ChatManager.getChat(req, id);
 		if(!chat) return new ApiResponse(res).notFound('User or chat not found');
-		avatar = defaultAvatar(Number(user.tag) % 5);
+		avatar = chatAvatar(id);
+		if(!avatar) avatar = defaultAvatar(Number(user.tag) % 5);
 	}
 
 	res.header('Cache-Control', 'private max-age=3600');
