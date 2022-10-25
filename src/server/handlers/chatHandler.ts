@@ -13,53 +13,61 @@ import PermissionsManager from '../managers/permissionsManager';
 
 export default function registerMessageHandler(io: DokChatServer, socket: DokChatSocket) {
 	socket.on('message', async (msg, callback) => {
-		// Check chat access
+		// This checks both for chat access and if chat exist
 		if(!PermissionsManager.hasChatAccess(socket.auth, msg.chatId)) {
+
 			return new ApiResponse({} as any, callback).forbidden();
 		}
-
-		// Check message format
-		if(msg.content.trim().length == 0) {
-			return new ApiResponse({} as any, callback).badRequest('Message is empty');
-		}
-		else if(msg.content.trim().length >= 2048) {
-			return new ApiResponse({} as any, callback).badRequest('Message is too long');
-		}
-
-		const chat = await ChatManager.getChat(socket.handshake, msg.chatId);
-		if(!chat) return new ApiResponse({} as any, callback).badRequest(`Chat ${msg.chatId} was not found`);
+		if(!validateMessage(msg, callback)) return;
 
 		// Add message to db
 		const timestamp = DateFns.getUnixTime(new Date());
 		const id = snowflakeGenerator.getUniqueID().toString();
 		await saveMessage(socket, msg, id, timestamp);
 
-		const serverMsg: ServerMessage = {
-			messageId: id,
-			content: msg.content.trim(),
-			chat: chat,
-			author: {
-				id: socket.auth.id,
-				username: socket.auth.username,
-				avatar: Utils.avatarUrl(socket.handshake, socket.auth.id),
-				tag: socket.auth.tag
-			},
-			timestamp: timestamp.toString()
-		};
-
+		// Send message to every participant expect sender
 		const participants = await ChatManager.listParticipants(socket.handshake, msg.chatId);
+		participants.filter(p => p.userId != socket.auth.id);
 		for await(const part of participants) {
-			if(part.isHidden) {
-				await ChatManager.setChatHideForParticipant(part, false);
-			}
-		}
-		socket.broadcast.to(participants.map(p => p.userId)).emit('message', serverMsg);
+			// If chat is hidden by specific participant it will show up on message
+			if(part.isHidden) await ChatManager.setChatHideForParticipant(part, false);
 
+			// Chat is fetched for each user since for DMs name might be different for each
+			// participant
+			const chat = await ChatManager.getChat(socket, msg.chatId, participants, part.userId);
+			const serverMsg: ServerMessage = {
+				messageId: id,
+				content: msg.content.trim(),
+				chat: chat,
+				timestamp: timestamp.toString(),
+				author: {
+					id: socket.auth.id,
+					username: socket.auth.username,
+					avatar: Utils.avatarUrl(socket.handshake, socket.auth.id),
+					tag: socket.auth.tag
+				}
+			};
+			socket.to(part.userId).emit('message', serverMsg);
+		}
+
+		// Callback to sender
 		new ApiResponse({} as any, callback).success({
 			id: id,
 			timestamp: timestamp
 		});
 	});
+}
+
+function validateMessage(msg: ClientMessage, callback: (response: any) => void): boolean {
+	if(msg.content.trim().length == 0) {
+		new ApiResponse({} as any, callback).badRequest('Message is empty');
+		return false;
+	}
+	else if(msg.content.trim().length >= 2048) {
+		new ApiResponse({} as any, callback).badRequest('Message is too long');
+		return false;
+	}
+	return true;
 }
 
 async function saveMessage(socket: Socket, message: ClientMessage, id: string, timestamp: number) {

@@ -10,6 +10,7 @@ router.all('/', allowedMethods('GET'), async (req, res, next) => {
 	if(typeof id != 'string') {
 		new ApiResponse(res).badRequest();
 	}
+	res.header('Cache-Control', 'private max-age=3600');
 	res.sendFile(path.join(__dirname, `../public/img/avatars/${randomRange(0,4)}.png`));
 });
 

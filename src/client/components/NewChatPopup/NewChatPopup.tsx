@@ -1,5 +1,5 @@
 import { Axios, AxiosError } from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import Alert from 'react-bootstrap/Alert';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -26,6 +26,7 @@ function NewChatPopup() {
 	const [ error, setError ] = useState(null);
 	const [ user ] = useContext(UserContext);
 	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
+	const formRef = useRef(null);
 
 	const handleClose = () => navigate('/chat');
 
@@ -34,26 +35,40 @@ function NewChatPopup() {
 		handleChange(event);
 	}
 
-	function handleUserAdd(e: any) {
-		e.preventDefault();
-		const axios = getAxios(user);
+	async function handleUserAdd(e?: any): Promise<User | null> {
+		e?.preventDefault();
 
+		// This is additional form validity check, if this function is not called
+		// from regular HTML event
+		const valid = formRef.current.checkValidity();
+		if(!valid) {
+			formRef.current.reportValidity();
+			return null;
+		}
+
+		const axios = getAxios(user);
 		const username = values.username;
 		const tag = values.tag;
 
 		setValues();
 		setError(null);
 		setLoading(true);
-		axios.get(`/user/get?username=${username}&tag=${tag}`)
+		return await axios.get(`/user/get?username=${username}&tag=${tag}`)
 			.then((r) => {
 				const resp: EndpointResponse<UserGetResponse> = r.data;
-				if(resp.status == 404) return setError(`User ${username}#${tag} was not found`);
 				const participantsCopy = [ ...participants ];
 				participantsCopy.push(resp.data);
 				setParticipants(participantsCopy);
+				return resp.data;
 			})
-			.catch(() => {
-				setError('Failed to add this user');
+			.catch((error: AxiosError) => {
+				if(error.response.status == 404) {
+					setError(`User ${username}#${tag} was not found`);
+				}
+				else {
+					setError('Failed to add this user');
+				}
+				return null;
 
 			})
 			.finally(() => {
@@ -62,10 +77,19 @@ function NewChatPopup() {
 	}
 
 	async function handleSubmit() {
+		// If user just typed the discriminator and didn't
+		// press the + button, do it for them
+		let participantsCopy = participants;
+		if(participantsCopy.length == 0) {
+			const userAdded = await handleUserAdd();
+			if(!userAdded) return;
+			participantsCopy = [ userAdded ];
+		}
+
 		setLoading(true);
 		const axios = getAxios(user);
 		await axios.post('/chat/create', {
-			participants: participants.map(p => p.id)
+			participants: participantsCopy.map(p => p.id)
 		}, {
 			validateStatus: (s) => [ 200, 409 ].includes(s)
 		})
@@ -97,28 +121,31 @@ function NewChatPopup() {
 					Insert one or more pair of username and tag to start a new conversation or create a group.
 				</p>
 				<UserList users={participants}/>
-				<Form onSubmit={handleUserAdd} className="mt-2">
+				<Form className="mt-2" onSubmit={handleUserAdd} ref={formRef}>
 					<Form.Group className='d-flex flex-row'>
 						<InputGroup className='me-2'>
 							<Form.Control
 								type="text"
 								name="username"
 								placeholder={'DokChat User'}
-								required
-								maxLength={32}
 								value={values.username}
 								onChange={handleChange}
+								maxLength={32}
+								minLength={6}
+								required
 							/>
 							<InputGroup.Text>#</InputGroup.Text>
 							<Form.Control
 								type="text"
 								name="tag"
-								maxLength={4}
 								style={{maxWidth: 63}}
 								placeholder={'0000'}
-								required
 								value={values.tag}
 								onChange={handleChangeNumeric}
+								pattern=".{4}"
+								maxLength={4}
+								minLength={4}
+								required
 							/>
 						</InputGroup>
 						<IconButton
@@ -135,7 +162,6 @@ function NewChatPopup() {
 					type="submit"
 					onClick={handleSubmit}
 					loading={isLoading}
-					disabled={participants.length == 0}
 				>
 					Create a new {participants.length < 2 ? 'chat' : 'group'}
 				</InteractiveButton>

@@ -5,7 +5,7 @@ import { IconType } from 'react-icons/lib';
 import UserInfo from '../UserInfo/UserInfo';
 import './IconButton.scss';
 
-interface Props {
+interface Props extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
 	icon: IconType,
 	size?: number,
 	variant?: Variant,
@@ -13,24 +13,29 @@ interface Props {
 	disabled?: boolean,
 }
 
-function IconButton({icon, size, variant, onClick, disabled}: Props) {
-	if(disabled) onClick = undefined;
-
+const IconButton = React.forwardRef((props: Props, ref: React.ForwardedRef<any>) => {
 	const iconEl = React.createElement(
-		icon,
+		props.icon,
 		{
-			size: (size || 38) - 16,
-			color: variant ? `var(--bs-${disabled ? 'secondary' : variant})` : 'inherit'
+			size: (props.size || 38) - 16,
+			color: props.variant ? `var(--bs-${props.disabled ? 'secondary' : props.variant})` : 'inherit'
 		}
 	);
+	const passProps = Object.assign({}, props);
+	passProps.icon = null; // Icon mess up native button
 	return (
 		<button
-			className={`iconButton ${disabled ? 'disabled' : 'enabled'}`}
-			onClick={onClick}
-			disabled={disabled}
+			className={`iconButton ${props.disabled ? 'disabled' : 'enabled'}`}
+			onClick={props.onClick}
+			disabled={!props.disabled && props.disabled}
+			ref={ref}
+			{...passProps}
 		>
 			{iconEl}
 		</button>
 	);
-}
+});
+
+IconButton.displayName = 'IconButton';
+
 export default IconButton;
