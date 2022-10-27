@@ -131,7 +131,7 @@ function NewChatPopup() {
 								value={values.username}
 								onChange={handleChange}
 								maxLength={32}
-								minLength={6}
+								minLength={5}
 								required
 							/>
 							<InputGroup.Text>#</InputGroup.Text>

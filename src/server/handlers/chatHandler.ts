@@ -55,6 +55,9 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 			id: id,
 			timestamp: timestamp
 		});
+
+		const sender = `${socket.auth.id}(${socket.auth.username}#${socket.auth.tag})`;
+		console.log(`WS message ${sender}=>${msg.chatId}(chat)`);
 	});
 }
 

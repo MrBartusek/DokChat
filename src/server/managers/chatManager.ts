@@ -28,6 +28,7 @@ export default class ChatManager {
 		const req = (requestOrSocket as Socket).handshake || requestOrSocket as Request;
 		const chats = await db.query(sql`
 			SELECT
+				id,
 				name,
 				avatar,
 				is_group as "isGroup",

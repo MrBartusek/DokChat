@@ -22,7 +22,7 @@ async function main() {
 
 	// Register middleware
 	app.use(express.json());
-	app.use(morgan('tiny'));
+	app.use(morgan('dev'));
 	app.use(express.urlencoded({ extended: true }));
 	app.use(cookieParser());
 	app.use(express.static('public'));
@@ -41,7 +41,7 @@ async function main() {
 
 	// Start the server
 	const port = process.env.PORT || 3000;
-	server.listen(port, () => console.log(`Server listening on port: ${port}`));
+	server.listen(port, () => console.log(`DokChat Server is listening on port: ${port}`));
 }
 
 main();
