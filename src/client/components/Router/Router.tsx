@@ -9,6 +9,7 @@ import { LoginPage } from '../../pages/LoginPage';
 import { RegisterPage } from '../../pages/RegisterPage';
 import ErrorPage from '../ErrorPage/ErrorPage';
 import NewChatPopup from '../NewChatPopup/NewChatPopup';
+import SettingsPopup from '../SettingsPopup/SettingsPopup';
 
 function Router() {
 	const [ isUserLoading, user, setUser, removeUser ] = useUpdatingUser();
@@ -38,7 +39,10 @@ function Router() {
 					}>
 						<Route path=":chatId" element={null} />
 						<Route path="new" element={<NewChatPopup />} />
+						<Route path="profile" element={<SettingsPopup />} />
 					</Route>
+
+					{/* 404 */}
 					<Route path="*" element={<ErrorPage title="404" message="This page was not found" />} />
 				</Routes>
 			</BrowserRouter>

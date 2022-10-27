@@ -1,0 +1,9 @@
+.clickable-profile-picture {
+	cursor: pointer;
+	filter: brightness(100%);
+}
+
+.clickable-profile-picture:hover {
+	filter: brightness(90%);
+	transition: all 0.5 ease;
+}

@@ -16,6 +16,7 @@ import { useForm } from '../../hooks/useForm';
 import { LocalChat } from '../../types/Chat';
 import IconButton from '../IconButton/IconButton';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
+import Popup from '../Popup/Popup';
 import UserList from '../UserList/UserList';
 
 function NewChatPopup() {
@@ -27,8 +28,6 @@ function NewChatPopup() {
 	const [ user ] = useContext(UserContext);
 	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
 	const formRef = useRef(null);
-
-	const handleClose = () => navigate('/chat');
 
 	function handleChangeNumeric(event: any) {
 		event.target.value = event.target.value.replace(/[^0-9]/g, '');
@@ -110,53 +109,9 @@ function NewChatPopup() {
 	}
 
 	return (
-		<Modal show={true} onHide={handleClose}>
-			<Modal.Header closeButton>
-				<Modal.Title as={'div'}>
-					Start a new conversation
-				</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
-				<p className='text-center'>
-					Insert one or more pair of username and tag to start a new conversation or create a group.
-				</p>
-				<UserList users={participants}/>
-				<Form className="mt-2" onSubmit={handleUserAdd} ref={formRef}>
-					<Form.Group className='d-flex flex-row'>
-						<InputGroup className='me-2'>
-							<Form.Control
-								type="text"
-								name="username"
-								placeholder={'DokChat User'}
-								value={values.username}
-								onChange={handleChange}
-								maxLength={32}
-								minLength={5}
-								required
-							/>
-							<InputGroup.Text>#</InputGroup.Text>
-							<Form.Control
-								type="text"
-								name="tag"
-								style={{maxWidth: 63}}
-								placeholder={'0000'}
-								value={values.tag}
-								onChange={handleChangeNumeric}
-								pattern=".{4}"
-								maxLength={4}
-								minLength={4}
-								required
-							/>
-						</InputGroup>
-						<IconButton
-							icon={BsPlus}
-							disabled={isLoading}
-						/>
-					</Form.Group>
-					{error && <span className='text-danger'>{error}</span>}
-				</Form>
-			</Modal.Body>
-			<Modal.Footer>
+		<Popup
+			title="Start a new conversation"
+			footer={(
 				<InteractiveButton
 					variant="primary"
 					type="submit"
@@ -165,8 +120,47 @@ function NewChatPopup() {
 				>
 					Create a new {participants.length < 2 ? 'chat' : 'group'}
 				</InteractiveButton>
-			</Modal.Footer>
-		</Modal>
+			)}
+		>
+			<p className='text-center'>
+					Insert one or more pair of username and tag to start a new conversation or create a group.
+			</p>
+			<UserList users={participants}/>
+			<Form className="mt-2" onSubmit={handleUserAdd} ref={formRef}>
+				<Form.Group className='d-flex flex-row'>
+					<InputGroup className='me-2'>
+						<Form.Control
+							type="text"
+							name="username"
+							placeholder={'DokChat User'}
+							value={values.username}
+							onChange={handleChange}
+							maxLength={32}
+							minLength={5}
+							required
+						/>
+						<InputGroup.Text>#</InputGroup.Text>
+						<Form.Control
+							type="text"
+							name="tag"
+							style={{maxWidth: 63}}
+							placeholder={'0000'}
+							value={values.tag}
+							onChange={handleChangeNumeric}
+							pattern=".{4}"
+							maxLength={4}
+							minLength={4}
+							required
+						/>
+					</InputGroup>
+					<IconButton
+						icon={BsPlus}
+						disabled={isLoading}
+					/>
+				</Form.Group>
+				{error && <span className='text-danger'>{error}</span>}
+			</Form>
+		</Popup>
 	);
 }
 

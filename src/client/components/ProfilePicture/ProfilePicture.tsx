@@ -1,9 +1,11 @@
 import Image, { ImageProps } from 'react-bootstrap/Image';
 import React from 'react';
+import './ProfilePicture.scss';
 
 interface ProfilePictureProps extends ImageProps {
     src: string,
-    size?: number
+    size?: string | number,
+	onClick?: React.MouseEventHandler<HTMLImageElement>
 }
 
 function ProfilePicture(props: ProfilePictureProps) {
@@ -11,12 +13,13 @@ function ProfilePicture(props: ProfilePictureProps) {
 	return (
 		<Image
 			roundedCircle
-			className='bg-light'
+			className={`bg-light ${props.onClick ? 'clickable-profile-picture' : ''}`}
 			src={props.src}
 			style={{
 				height: pictureSize,
 				width: pictureSize
 			}}
+			onClick={props.onClick}
 			{...props}
 		/>
 	);

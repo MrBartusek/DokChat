@@ -5,7 +5,7 @@ import { IconType } from 'react-icons/lib';
 import UserInfo from '../UserInfo/UserInfo';
 import './IconButton.scss';
 
-interface Props extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
+export interface IconButtonProps extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
 	icon: IconType,
 	size?: number,
 	variant?: Variant,
@@ -13,7 +13,7 @@ interface Props extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLB
 	disabled?: boolean,
 }
 
-const IconButton = React.forwardRef((props: Props, ref: React.ForwardedRef<any>) => {
+const IconButton = React.forwardRef((props: IconButtonProps, ref: React.ForwardedRef<any>) => {
 	const iconEl = React.createElement(
 		props.icon,
 		{

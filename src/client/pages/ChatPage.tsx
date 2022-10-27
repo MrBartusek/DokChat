@@ -27,7 +27,7 @@ export function ChatPage() {
 		if(isLoadingManager || chats.length == 0) return;
 
 		// Handle popup
-		if(location.pathname == '/chat/new') {
+		if([ '/chat/new', '/chat/profile' ].includes(location.pathname)) {
 			if(!currentChat) setCurrentChat(chats[0]);
 			return;
 		}

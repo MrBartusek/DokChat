@@ -21,10 +21,9 @@ function UserInfo() {
 			<OverlayTrigger
 				placement='right'
 				overlay={usernameTooltip}
-				delay={{show: 500, hide: 0}}
 			>
 				<Col xs='auto'>
-					<ProfilePicture src={user.avatarUrl} />
+					<ProfilePicture src={user.avatarUrl} onClick={handleAvatarClick} />
 				</Col>
 			</OverlayTrigger>
 			<Col className='d-flex justify-content-center align-items-center'>
@@ -40,6 +39,10 @@ function UserInfo() {
 
 	function handleNewChatClick() {
 		navigate('/chat/new');
+	}
+
+	function handleAvatarClick() {
+		navigate('/chat/profile');
 	}
 
 }
