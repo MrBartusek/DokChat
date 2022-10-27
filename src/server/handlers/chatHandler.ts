@@ -66,7 +66,7 @@ function validateMessage(msg: ClientMessage, callback: (response: any) => void):
 		new ApiResponse({} as any, callback).badRequest('Message is empty');
 		return false;
 	}
-	else if(msg.content.trim().length >= 2048) {
+	else if(msg.content.trim().length >= 4000) {
 		new ApiResponse({} as any, callback).badRequest('Message is too long');
 		return false;
 	}
