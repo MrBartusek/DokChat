@@ -29,11 +29,6 @@ function NewChatPopup() {
 	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
 	const formRef = useRef(null);
 
-	function handleChangeNumeric(event: any) {
-		event.target.value = event.target.value.replace(/[^0-9]/g, '');
-		handleChange(event);
-	}
-
 	async function handleUserAdd(e?: any): Promise<User | null> {
 		e?.preventDefault();
 
@@ -136,20 +131,20 @@ function NewChatPopup() {
 							value={values.username}
 							onChange={handleChange}
 							maxLength={32}
-							minLength={5}
+							minLength={2}
 							required
 						/>
 						<InputGroup.Text>#</InputGroup.Text>
 						<Form.Control
-							type="text"
+							type="number"
 							name="tag"
 							style={{maxWidth: 63}}
 							placeholder={'0000'}
 							value={values.tag}
-							onChange={handleChangeNumeric}
-							pattern=".{4}"
+							onChange={handleChange}
 							maxLength={4}
 							minLength={4}
+							pattern="\d{4}"
 							required
 						/>
 					</InputGroup>

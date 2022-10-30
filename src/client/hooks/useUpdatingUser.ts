@@ -12,7 +12,7 @@ import getAxios from '../helpers/axios';
  * This is more advanced version of useUser hook
  * that have token refreshing built-in
  */
-export function useUpdatingUser(): [boolean, LocalUser, React.Dispatch<string>, React.Dispatch<void>] {
+export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, React.Dispatch<string>, React.Dispatch<void>] {
 	const [ isLoading, setLoading ] = useState(true);
 	const [ user, cookies, setUser, removeUser ] = useUser();
 	const [ isConfirmed, setConfirmed ] = useState(false);
@@ -48,7 +48,7 @@ export function useUpdatingUser(): [boolean, LocalUser, React.Dispatch<string>, 
 
 	async function refreshToken() {
 		const axios = getAxios();
-		await axios.post('auth/refresh')
+		return await axios.post('auth/refresh')
 			.then((r: any) => {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
 				const user = LocalUser.fromJWT(resp.data.token);
@@ -70,5 +70,5 @@ export function useUpdatingUser(): [boolean, LocalUser, React.Dispatch<string>, 
 			});
 	}
 
-	return [ isLoading, user, setUser, removeUser ];
+	return [ isLoading, user, () => refreshToken(), setUser, removeUser ];
 }

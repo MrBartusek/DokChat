@@ -18,7 +18,7 @@ function RegisterForm() {
 	const [ error, setError ] = useState<string | null>(null);
 	const formRef = useRef<HTMLFormElement>(null!);
 	const navigate = useNavigate();
-	const [ user, setUser ] = useContext(UserContext);
+	const [ user, updateToken, setUser ] = useContext(UserContext);
 
 	return (
 		<>

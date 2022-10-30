@@ -20,10 +20,10 @@ router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 	const username: string = req.body.username;
 	const password: string = req.body.password;
 	const email: string = req.body.email;
-
 	if(!username || !password || !email) {
 		return new ApiResponse(res).badRequest('Invalid form body');
 	}
+
 	const parametersResult = validParameters(username, password, email);
 	if(parametersResult !== true) {
 		return new ApiResponse(res).badRequest(parametersResult);
@@ -46,7 +46,7 @@ router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 		VALUES (
 			$1, $2, $3, $4, $5, $6, $7
 		);
-		`, [ snowflake, username, tag, email, hash, timestamp, timestamp]);
+		`, [ snowflake, username, tag, email, hash, timestamp, timestamp ]);
 	const jwtData = {
 		id: snowflake,
 		username: username,
@@ -60,7 +60,7 @@ router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 			(id, user_id, chat_id, created_at)
 		VALUES
 			($1, $2, 0, 0)
-	`, [snowflakeGenerator.getUniqueID(), snowflake]);
+	`, [ snowflakeGenerator.getUniqueID(), snowflake ]);
 
 	AuthManager.sendAuthorizationResponse(res, jwtData, hash);
 });
@@ -79,17 +79,17 @@ function validParameters(username: string, password: string, email: string): tru
 }
 
 async function emailTaken(email: string): Promise<boolean> {
-	const query = await db.query(sql`SELECT EXISTS(SELECT 1 FROM users WHERE email=$1)`, [email]);
+	const query = await db.query(sql`SELECT EXISTS(SELECT 1 FROM users WHERE email=$1)`, [ email ]);
 	return query.rows[0].exists;
 }
 
 async function usersWithUsernameCount(username: string): Promise<number> {
-	const query = await db.query(sql`SELECT COUNT(*) FROM users WHERE username=$1`, [username]);
+	const query = await db.query(sql`SELECT COUNT(*) FROM users WHERE username=$1`, [ username ]);
 	return query.rows[0].count;
 }
 
 async function generateTag(username: string): Promise<string> {
-	const query = await db.query(sql`SELECT tag FROM users WHERE username=$1`, [username]);
+	const query = await db.query(sql`SELECT tag FROM users WHERE username=$1`, [ username ]);
 	const takenTags = query.rows.map(u => u.tag);
 	let tag: string | undefined = undefined;
 	while(tag == undefined) {

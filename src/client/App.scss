@@ -6,6 +6,7 @@ $primary: #0061f2;
 body {
 	font-family: 'Roboto', sans-serif;
 }
+
 * { 
 	box-sizing: border-box
 }
@@ -62,8 +63,6 @@ body {
 	text-align: center;
 	font-size: 1.3em;
 	width: 100%;
-	// Even spacing with close button
-	margin-left: 32px;
 }
 
 .modal-header {
@@ -81,4 +80,14 @@ body {
 
 form {
 	margin-block-end: 0;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type=number] {
+	-moz-appearance: textfield;
 }

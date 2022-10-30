@@ -4,11 +4,30 @@ import { UserJWTData } from '../../types/jwt';
 import { ApiResponse } from '../apiResponse';
 import * as DateFns from 'date-fns';
 import { UserLoginResponse } from '../../types/endpoints';
+import db from '../db';
+import sql from 'sql-template-strings';
+import * as bcrypt from 'bcrypt';
 
 const TOKEN_SECRET = '123k1mdio1u2312j1p2oi4k1i2e1io2j';
 const REFRESH_TOKEN_SECRET = '123k1mdio1u23qweqweq12j1p2oi4k1i2e1io2j';
 
 export default class AuthManager {
+	public static async authenticateUser(email: string, password: string): Promise<[UserJWTData, string]> {
+		const query = await db.query(sql`SELECT id, username, tag, email, password_hash FROM users WHERE email=$1`, [ email ]);
+		if(query.rowCount == 0) return Promise.reject('Provided email and password are not valid');
+		const user = query.rows[0];
+		const passwordValid = await bcrypt.compare(password, user.password_hash);
+		if(!passwordValid) return Promise.reject('Provided email and password are not valid');
+
+		const jwtData = {
+			id: user.id,
+			username: user.username,
+			tag: user.tag,
+			email: user.email
+		};
+		return [ jwtData, user.password_hash ];
+	}
+
 	public static async sendAuthorizationResponse(res: Response, userData: UserJWTData, passwordHash: string, rememberMe?: boolean) {
 		const refreshToken = await this.generateRefreshToken(userData.id, passwordHash);
 		const token = await this.generateJWT(userData);

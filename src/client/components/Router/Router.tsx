@@ -12,12 +12,12 @@ import NewChatPopup from '../NewChatPopup/NewChatPopup';
 import SettingsPopup from '../SettingsPopup/SettingsPopup';
 
 function Router() {
-	const [ isUserLoading, user, setUser, removeUser ] = useUpdatingUser();
+	const [ isUserLoading, user, updateToken, setUser, removeUser ] = useUpdatingUser();
 
 	if(isUserLoading) return <></>;
 
 	return (
-		<UserContext.Provider value={[ user, setUser, removeUser ]}>
+		<UserContext.Provider value={[ user, updateToken, setUser, removeUser ]}>
 			<BrowserRouter>
 				<Routes>
 					<Route path="/" element={<HomePage />} />

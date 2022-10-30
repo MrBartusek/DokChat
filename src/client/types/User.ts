@@ -77,4 +77,9 @@ export class LocalUser {
 		if(!this.isAuthenticated) throw new Error('User is not authenticated');
 		return `${this.username}#${this.tag}`;
 	}
+
+	public get emailMasked(): string {
+		const emailSplit = this.email.split('@');
+		return '*'.repeat(emailSplit[0].length) + '@' + emailSplit[1];
+	}
 }

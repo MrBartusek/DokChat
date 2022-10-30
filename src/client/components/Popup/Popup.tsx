@@ -5,7 +5,9 @@ import { useNavigate } from 'react-router-dom';
 interface PopupProps extends ModalProps {
 	title: string;
 	footer: React.ReactElement;
+	static?: boolean;
 	setHandleClose?: (func: () => void) => void;
+	children: JSX.Element | JSX.Element[];
 }
 
 function Popup(props: PopupProps) {
@@ -17,9 +19,17 @@ function Popup(props: PopupProps) {
 	}, []);
 
 	return (
-		<Modal show={true} onHide={handleClose}>
-			<Modal.Header closeButton>
-				<Modal.Title as={'div'}>
+		<Modal
+			show={true}
+			onHide={handleClose}
+			backdrop={(props.static && 'static') || true}
+			keyboard={!props.static}
+		>
+			<Modal.Header closeButton={!props.static}>
+				<Modal.Title
+					as={'div'}
+					style={!props.static ? {marginLeft: 22.9} : {}} // Even the space with close button
+				>
 					{props.title}
 				</Modal.Title>
 			</Modal.Header>
