@@ -3,8 +3,8 @@ export default class Validate {
 		// eslint-disable-next-line
 		const validCharacters = /^[0-9a-zA-Z_.\-]+$/;
 
-		if(username.length < 2) {
-			return 'Username needs to be at least 2 characters long';
+		if(username.length < 5) {
+			return 'Username needs to be at least 5 characters long';
 		}
 		else if(username.length > 32) {
 			return 'Username cannot exceed 32 charters';
@@ -16,11 +16,11 @@ export default class Validate {
 	}
 
 	static password(password: string): string | true {
-		if(password.length < 6) {
-			return 'Password needs to be at least 6 characters long';
+		if(password.length < 2) {
+			return 'Password needs to be at least 2 characters long';
 		}
 		else if(password.length > 32) {
-			return 'Password cannot exceed 32 characters';
+			return 'Password cannot exceed 32 charters';
 		}
 		return true;
 	}

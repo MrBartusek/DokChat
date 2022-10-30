@@ -37,7 +37,7 @@ export function ChatPage() {
 
 		const chat: LocalChat = chats.find(c => c.id == chatId);
 		if(!chat) navigate(`/chat/${chats[0].id}`);
-		setCurrentChat(chats[0]);
+		setCurrentChat(chat);
 	}, [ isLoadingManager, chatId, location ]);
 
 	const isLoading = (
