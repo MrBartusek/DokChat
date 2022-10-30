@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Col, Container, Row, Stack } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Col, Row } from 'react-bootstrap';
 import ChatInfo from '../components/ChatInfo/ChatInfo';
 import MessagesWindow from '../components/MessagesWindow/MessagesWindow';
 import ChatList from '../components/ChatList/ChatList';
@@ -9,12 +9,10 @@ import { useWebsocket } from '../hooks/useWebsocket';
 import { useMessageManager } from '../hooks/useMessageManager';
 import { MessageManagerContext } from '../context/MessageManagerContext';
 import { LocalChat } from '../types/Chat';
-import { Outlet, useLocation, useNavigate, useOutlet, useParams, useResolvedPath } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import MainLoading from '../components/MainLoading/MainLoading';
 import { useDocumentReady } from '../hooks/useDocumentReady';
 import FullPageContainer from '../components/FullPageContainer/FullPageContainer';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import e from 'express';
 
 export function ChatPage() {
 	const ws = useWebsocket();
