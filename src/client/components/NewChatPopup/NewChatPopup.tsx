@@ -5,7 +5,7 @@ import Alert from 'react-bootstrap/Alert';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Modal from 'react-bootstrap/Modal';
 import { BsPlus } from 'react-icons/bs';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { User } from '../../../types/common';
 import { ChatCreateResponse, EndpointResponse, UserGetResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
@@ -22,12 +22,31 @@ import UserList from '../UserList/UserList';
 function NewChatPopup() {
 	const navigate = useNavigate();
 	const [ participants, setParticipants ] = useState<(User)[]>([]);
+	const [ searchParams ] = useSearchParams({});
 	const [ isLoading, setLoading ] = useState(false);
 	const [ values, handleChange, setValues ] = useForm({ username: '', tag: '' });
 	const [ error, setError ] = useState(null);
 	const [ user ] = useContext(UserContext);
 	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
 	const formRef = useRef(null);
+
+	useEffect(() => {
+		const id = searchParams.get('prefill');
+		if(!id) return;
+		setLoading(true);
+		const axios = getAxios(user);
+		axios.get(`/user/get?id=${id}`)
+			.then((r) => {
+				const resp: EndpointResponse<UserGetResponse> = r.data;
+				const participantsCopy = [ ...participants ];
+				participantsCopy.push(resp.data);
+				setParticipants(participantsCopy);
+			})
+			.catch(() => {
+				setError('Failed to load pre-filled user');
+			})
+			.finally(() => setLoading(false));
+	}, [ searchParams ]);
 
 	async function handleUserAdd(e?: any): Promise<User | null> {
 		e?.preventDefault();

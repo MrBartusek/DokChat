@@ -14,7 +14,7 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 	const navigate = useNavigate();
 
 	function handleNewGroupClick() {
-		navigate('/chat/new?participants=');
+		navigate('/chat/new?prefill=');
 	}
 
 	return (
