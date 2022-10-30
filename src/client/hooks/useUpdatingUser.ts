@@ -26,10 +26,10 @@ export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, Rea
 			if(!user.expired) {
 				console.log(`AUTH: Loaded user ${user.email} from local JWT`);
 				setUser(cookies.token);
+				setLoading(false);
 			}
 		}
-		setLoading(false);
-		(async () => await refreshToken())();
+		(async () => await refreshToken().then(() => setLoading(false)))();
 	}, []);
 
 	/**
