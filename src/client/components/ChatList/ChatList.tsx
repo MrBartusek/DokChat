@@ -1,18 +1,18 @@
 import React, { useContext } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { LocalChat } from '../../types/Chat';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 import './ChatList.scss';
 
 export interface ChatListProps {
-	currentChat?: LocalChat,
-	setCurrentChat: React.Dispatch<React.SetStateAction<LocalChat>>
+	currentChat?: LocalChat
 }
 
-function ChatList({ currentChat, setCurrentChat }: ChatListProps) {
+function ChatList({ currentChat }: ChatListProps) {
 	const [ chats ] = useContext(MessageManagerContext);
+	const navigate = useNavigate();
 
 	const noChatsInfo = (
 		<span className='text-muted text-center mt-4'>
@@ -31,7 +31,7 @@ function ChatList({ currentChat, setCurrentChat }: ChatListProps) {
 						name={chat.name}
 						lastMessage={chat.lastMessage}
 						isCurrent={chat.id == currentChat?.id}
-						onClick={() => setCurrentChat(chat)}
+						onClick={() => navigate(`/chat/${chat.id}`)}
 					/>
 				))}
 				{chats.length == 0 && noChatsInfo}

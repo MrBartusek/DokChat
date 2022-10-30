@@ -13,31 +13,46 @@ import { Outlet, useLocation, useNavigate, useOutlet, useParams, useResolvedPath
 import MainLoading from '../components/MainLoading/MainLoading';
 import { useDocumentReady } from '../hooks/useDocumentReady';
 import FullPageContainer from '../components/FullPageContainer/FullPageContainer';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import e from 'express';
 
 export function ChatPage() {
 	const ws = useWebsocket();
 	const [ isLoadingManager, chats, sendMessage, setChatList ] = useMessageManager(ws);
-	const [ currentChat, setCurrentChat ] = useState<LocalChat>(null);
+
 	const { chatId } = useParams();
+	const [ currentChat, setCurrentChat ] = useState<LocalChat>(null);
+
 	const documentReady = useDocumentReady();
 	const navigate = useNavigate();
 	const location = useLocation();
 
+	/**
+	 * Load current chat
+	 */
 	useEffect(() => {
 		if(isLoadingManager || chats.length == 0) return;
+		const defaultChat = chats[0];
+		const isPopup = [ '/chat/new', '/chat/profile' ].includes(location.pathname);
 
-		// Handle popup
-		if([ '/chat/new', '/chat/profile' ].includes(location.pathname)) {
-			if(!currentChat) setCurrentChat(chats[0]);
-			return;
+		if(!chatId && currentChat) {
+			// If chat is selected but url is not updated, set url to current chat
+			if(isPopup) return;
+			navigate(`/chat/${currentChat.id}`);
 		}
-
-		// If no chat provided, navigate to last chat
-		if(!chatId) navigate(`/chat/${currentChat?.id || chats[0].id}`);
-
-		const chat: LocalChat = chats.find(c => c.id == chatId);
-		if(!chat) navigate(`/chat/${chats[0].id}`);
-		setCurrentChat(chat);
+		else {
+			// If nothing is set or chatId is provided
+			const chat: LocalChat = chats.find(c => c.id == chatId);
+			if(chat) {
+				setCurrentChat(chat);
+			}
+			else if(!isPopup) {
+				navigate(`/chat/${defaultChat.id}`);
+			}
+			else {
+				setCurrentChat(defaultChat);
+			}
+		}
 	}, [ isLoadingManager, chatId, location ]);
 
 	const isLoading = (
@@ -53,7 +68,6 @@ export function ChatPage() {
 						<UserInfo />
 						<ChatList
 							currentChat={currentChat}
-							setCurrentChat={setCurrentChat}
 						/>
 					</Col>
 					<Col className='d-flex align-items-stretch flex-column mh-100'>
