@@ -62,16 +62,26 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 						const prev: LocalMessage | undefined = elements[index - 1];
 						const next: LocalMessage | undefined = elements[index + 1];
 						const isAuthor = msg.author.id == user.id;
-						const timestampDiff = prev ? Math.abs(DateFns.differenceInMinutes(
+						const timestampDiff = next ? Math.abs(DateFns.differenceInHours(
 							DateFns.fromUnixTime(Number(msg.timestamp)),
-							DateFns.fromUnixTime(Number(prev.timestamp)))) : 0;
-						const showTimestamp = timestampDiff >= 60 || !next;
+							DateFns.fromUnixTime(Number(next.timestamp)))) : 0;
+						const showTimestamp = timestampDiff >= 1 || !next;
+
+						const sendAgoInHours = Math.abs(DateFns.differenceInHours(DateFns.fromUnixTime(Number(msg.timestamp)), new Date()));
+
+						let format = 'HH:mm';
+						if(sendAgoInHours > 24 * 7) {
+							format = 'd LLLL yyyy, HH:mm';
+						}
+						else if(sendAgoInHours > 24) {
+							format = 'EEE, HH:mm';
+						}
 
 						return (
 							<div key={msg.id}>
 								{(showTimestamp) && (
 									<SystemMessage
-										content={DateFns.format(DateFns.fromUnixTime(Number(msg.timestamp)), 'HH:mm')}
+										content={DateFns.format(DateFns.fromUnixTime(Number(msg.timestamp)), format)}
 									/>
 								)}
 								<UserMessage
@@ -80,7 +90,7 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 									showAuthor={!isAuthor && msg.author.id != next?.author?.id}
 									showStatus={isAuthor && msg.author.id != prev?.author?.id}
 								/>
-								{(msg.author.id != prev?.author?.id) && <Separator height={12} />}
+								{(prev && msg.author.id != prev.author.id) && <Separator height={12} />}
 							</div>
 						);
 					})}
