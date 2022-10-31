@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Button, Col, Form, InputGroup, Row, Stack } from 'react-bootstrap';
+import { Button, Col, Form, InputGroup, OverlayTrigger, Popover, Row, Stack } from 'react-bootstrap';
 import { BsImage, BsEmojiSmileFill } from 'react-icons/bs';
 import { AiOutlineGif } from 'react-icons/ai';
 import { MdSend } from 'react-icons/md';
@@ -8,20 +8,37 @@ import io from 'socket.io-client';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { useForm } from '../../hooks/useForm';
 import { LocalChat } from '../../types/Chat';
+import EmojiPicker, { EmojiStyle } from 'emoji-picker-react';
+import './MessageBar.scss';
 
 export interface MessageBarProps {
 	currentChat: LocalChat
 }
 
 function MessageBar({ currentChat }: MessageBarProps) {
-	const [chats, sendMessage] = useContext(MessageManagerContext);
-	const [values, handleChange, clearValues] = useForm({ content: '' });
-	const [isEnabled, setEnabled] = useState(false);
+	const [ chats, sendMessage ] = useContext(MessageManagerContext);
+	const [ values, handleChange, setValues ] = useForm({ content: '' });
+	const [ isEnabled, setEnabled ] = useState(false);
 	const inputRef = useRef<HTMLInputElement>();
 
 	useEffect(() => {
 		setEnabled(values.content.length > 0);
-	}, [values]);
+	}, [ values ]);
+
+	const emojiPicker = (
+		<Popover style={{maxWidth: 500}}>
+			<Popover.Body className='p-0'>
+				<EmojiPicker
+					lazyLoadEmojis={true}
+					emojiStyle={EmojiStyle.TWITTER}
+					previewConfig={{showPreview: false}}
+					onEmojiClick={(emoji) => {
+						setValues({ content: values.content + emoji.emoji});
+					}}
+				/>
+			</Popover.Body>
+		</Popover>
+	);
 
 	return (
 		<Row className='d-flex py-3 px-1 align-items-center'>
@@ -53,7 +70,9 @@ function MessageBar({ currentChat }: MessageBarProps) {
 							onBlur={(e) => e.target.parentElement?.classList.remove('focus') }
 						/>
 						<div className='d-flex align-items-center'>
-							<IconButton icon={BsEmojiSmileFill} size={32} variant='primary'/>
+							<OverlayTrigger trigger="click" placement="top-end" overlay={emojiPicker} rootClose>
+								<IconButton icon={BsEmojiSmileFill} size={32} variant='primary'/>
+							</OverlayTrigger>
 						</div>
 					</div>
 				</Form>
@@ -77,7 +96,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 			chat: currentChat,
 			content: values.content
 		});
-		clearValues();
+		setValues();
 		inputRef.current.focus();
 	}
 

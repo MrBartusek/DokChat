@@ -21,6 +21,7 @@
     "copy-to-clipboard": "^3.3.2",
     "css-loader": "^6.3.0",
     "date-fns": "^2.29.2",
+    "emoji-picker-react": "^4.4.4",
     "express": "^4.17.1",
     "jose": "^4.8.3",
     "morgan": "^1.10.0",
