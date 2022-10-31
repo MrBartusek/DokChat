@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { Col, Row } from 'react-bootstrap';
+import { Twemoji } from 'react-emoji-render';
 import { Link, useNavigate } from 'react-router-dom';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { LocalChat } from '../../types/Chat';
@@ -66,12 +67,12 @@ function Chat(props: ChatProps) {
 				className='d-flex justify-content-center flex-column py-0 px-1'
 				style={{maxWidth: '250px'}}
 			>
-				<div className='fw-bol text-truncate'>
-					{props.name}
+				<div className='fw-bol tex-truncate text-nowrap'>
+					<Twemoji text={props.name} />
 				</div>
 				<div className='text-muted text-truncate' style={{fontSize: '0.85em'}}>
 					{props.lastMessage ? (
-						<span>{props.lastMessage.author}: {props.lastMessage.content}</span>
+						<Twemoji text={`${props.lastMessage.author}: ${props.lastMessage.content}`} />
 					): 'Click to start the chat!'}
 
 				</div>

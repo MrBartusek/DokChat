@@ -1,5 +1,6 @@
 import React from 'react';
 import { Col, Row, Image } from 'react-bootstrap';
+import { Twemoji } from 'react-emoji-render';
 import { BsPersonPlusFill, BsThreeDots } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { LocalChat } from '../../types/Chat';
@@ -23,8 +24,8 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 				<ProfilePicture src={currentChat && currentChat.avatar} />
 			</Col>
 			<Col className='d-flex justify-content-left p-0 align-items-center'>
-				<span className='fw-bold'>
-					{currentChat?.name || 'No chat selected'}
+				<span className='fw-bold text-truncate' style={{maxWidth: '400px'}}>
+					<Twemoji text={currentChat?.name || 'No chat selected'} />
 				</span>
 			</Col>
 			{currentChat && (
