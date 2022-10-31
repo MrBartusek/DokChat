@@ -47,49 +47,49 @@ function MessageBar({ currentChat }: MessageBarProps) {
 				<IconButton icon={AiOutlineGif} size={34} variant='primary'/>
 			</Col>
 			<Col className='p-0'>
-				<Form className='mb-0' onSubmit={handleSend}>
-					<div
-						className='form-control rounded-pill d-flex flex-row gap-1 pe-1'
+				<div
+					className='form-control rounded-pill d-flex flex-row gap-1 pe-1'
+					style={{'height': 34}}
+					tabIndex={0}
+					onFocus={(e) => (e.target.firstElementChild as HTMLElement)?.focus()}
+					onBlur={(e) => (e.target.firstElementChild as HTMLElement)?.blur()}
+				>
+					<Form.Control
+						onKeyDown={handleSubmit}
+						type="text"
+						name="content"
+						placeholder="Aa"
+						className='border-0 p-0 h-100 shadow-none'
 						style={{'height': 34}}
-						tabIndex={0}
-						onFocus={(e) => (e.target.firstElementChild as HTMLElement)?.focus()}
-						onBlur={(e) => (e.target.firstElementChild as HTMLElement)?.blur()}
-					>
-						<Form.Control
-							type="text"
-							name="content"
-							placeholder="Aa"
-							className='border-0 p-0 h-100 shadow-none'
-							style={{'height': 34}}
-							autoComplete='off'
+						autoComplete='off'
 
-							ref={inputRef}
-							value={values.content}
-							onChange={handleChange}
-							onFocus={(e) => e.target.parentElement?.classList.add('focus') }
-							onBlur={(e) => e.target.parentElement?.classList.remove('focus') }
-						/>
-						<div className='d-flex align-items-center'>
-							<OverlayTrigger trigger="click" placement="top-end" overlay={emojiPicker} rootClose>
-								<IconButton icon={BsEmojiSmileFill} size={32} variant='primary'/>
-							</OverlayTrigger>
-						</div>
+						ref={inputRef}
+						value={values.content}
+						onChange={handleChange}
+						onFocus={(e) => e.target.parentElement?.classList.add('focus') }
+						onBlur={(e) => e.target.parentElement?.classList.remove('focus') }
+					/>
+					<div className='d-flex align-items-center'>
+						<OverlayTrigger trigger="click" placement="top-end" overlay={emojiPicker} rootClose>
+							<IconButton icon={BsEmojiSmileFill} size={32} variant='primary'/>
+						</OverlayTrigger>
 					</div>
-				</Form>
+				</div>
 			</Col>
 			<Col className='d-flex flex-grow-0 justify-content-center align-items-center ps-1'>
 				<IconButton
 					icon={MdSend}
 					size={34}
 					variant='primary'
-					onClick={handleSend}
+					onClick={handleSubmit}
 					disabled={!isEnabled}
 				/>
 			</Col>
 		</Row>
 	);
 
-	function handleSend(e: any) {
+	function handleSubmit(e: any) {
+		if(e.key && e.key != 'Enter') return;
 		e.preventDefault();
 		if(values.content.length < 1) return;
 		sendMessage({
