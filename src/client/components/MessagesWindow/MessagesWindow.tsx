@@ -11,6 +11,7 @@ import { UserContext } from '../../context/UserContext';
 import './MessagesWindow.scss';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 import { Twemoji } from 'react-emoji-render';
+import Separator from '../Separator/Separator';
 
 export interface MessagesWindowProps {
 	currentChat: LocalChat
@@ -61,18 +62,26 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 						const prev: LocalMessage | undefined = elements[index - 1];
 						const next: LocalMessage | undefined = elements[index + 1];
 						const isAuthor = msg.author.id == user.id;
+						const timestampDiff = prev ? Math.abs(DateFns.differenceInMinutes(
+							DateFns.fromUnixTime(Number(msg.timestamp)),
+							DateFns.fromUnixTime(Number(prev.timestamp)))) : 0;
+						const showTimestamp = timestampDiff >= 60 || !next;
 
 						return (
-							<>
+							<div key={msg.id}>
+								{(showTimestamp) && (
+									<SystemMessage
+										content={DateFns.format(DateFns.fromUnixTime(Number(msg.timestamp)), 'HH:mm')}
+									/>
+								)}
 								<UserMessage
-									key={msg.id}
 									message={msg}
 									showAvatar={!isAuthor && msg.author.id != prev?.author?.id}
 									showAuthor={!isAuthor && msg.author.id != next?.author?.id}
 									showStatus={isAuthor && msg.author.id != prev?.author?.id}
 								/>
-								{(msg.author.id != next?.author?.id) && <Separator height={12} />}
-							</>
+								{(msg.author.id != prev?.author?.id) && <Separator height={12} />}
+							</div>
 						);
 					})}
 				</>
@@ -92,7 +101,7 @@ function UserMessage({message, showAvatar, showAuthor, showStatus}: MessageProps
 	const [ user ] = useContext(UserContext);
 	const isAuthor = message.author.id == user.id;
 
-	// If message is pending or faled, display status regardless of props
+	// If message is pending or failed, display status regardless of props
 	if(message.isPending || message.isFailed) {
 		showStatus = true;
 	}
@@ -143,14 +152,15 @@ function UserMessage({message, showAvatar, showAuthor, showStatus}: MessageProps
 	);
 }
 
-interface SeparatorProps {
-	width?: string | number
-	height?: string | number
+interface SystemMessageProps {
+	content: string,
 }
 
-function Separator({ width, height }: SeparatorProps) {
+function SystemMessage({ content }: SystemMessageProps) {
 	return (
-		<div role='none' className='p-0' style={{minWidth: width || '100%', minHeight: height || '100%'}}></div>
+		<div className='d-flex m-3 justify-content-center text-muted fw-bold' style={{fontSize: '0.8em'}}>
+			{content}
+		</div>
 	);
 }
 
