@@ -24,9 +24,10 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 				<ProfilePicture src={currentChat && currentChat.avatar} />
 			</Col>
 			<Col className='d-flex justify-content-left p-0 align-items-center'>
-				<span className='fw-bold text-truncate' style={{maxWidth: '400px'}}>
-					<Twemoji text={currentChat?.name || 'No chat selected'} />
-				</span>
+				<Twemoji
+					className='fw-bold text-truncate'
+					text={currentChat?.name || 'No chat selected'}
+				/>
 			</Col>
 			{currentChat && (
 				<Col xs='auto' className='d-flex align-items-center'>

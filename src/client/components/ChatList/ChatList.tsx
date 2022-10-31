@@ -67,9 +67,7 @@ function Chat(props: ChatProps) {
 				className='d-flex justify-content-center flex-column py-0 px-1'
 				style={{maxWidth: '250px'}}
 			>
-				<div className='fw-bol tex-truncate text-nowrap'>
-					<Twemoji text={props.name} />
-				</div>
+				<Twemoji className='fw-bol text-truncate text-nowrap' text={props.name} />
 				<div className='text-muted text-truncate' style={{fontSize: '0.85em'}}>
 					{props.lastMessage ? (
 						<Twemoji text={`${props.lastMessage.author}: ${props.lastMessage.content}`} />
