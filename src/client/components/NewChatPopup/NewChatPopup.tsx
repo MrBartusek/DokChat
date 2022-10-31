@@ -63,7 +63,11 @@ function NewChatPopup() {
 		const username = values.username;
 		const tag = values.tag;
 
-		setValues();
+		if(username == user.username && tag == user.tag) {
+			setError('You can\'t add yourself to the new chat');
+			return;
+		}
+
 		setError(null);
 		setLoading(true);
 		return await axios.get(`/user/get?username=${username}&tag=${tag}`)
@@ -72,6 +76,7 @@ function NewChatPopup() {
 				const participantsCopy = [ ...participants ];
 				participantsCopy.push(resp.data);
 				setParticipants(participantsCopy);
+				setValues();
 				return resp.data;
 			})
 			.catch((error: AxiosError) => {
@@ -115,9 +120,9 @@ function NewChatPopup() {
 					setChatList(chatsCopy);
 				}
 				navigate(`/chat/${resp.data.id}`);
-			}).catch((e) => {
-				console.error('Chat create error' + e);
-				setError('Something went wrong');
+			}).catch((e: AxiosError) => {
+				const resp: EndpointResponse<ChatCreateResponse> = e.response?.data as any;
+				setError(resp.message || 'Something went wrong');
 				setLoading(false);
 			});
 	}
