@@ -10,7 +10,7 @@ export async function initializeDB() {
             username varchar(32) NOT NULL,
             tag varchar(4) NOT NULL,
             email varchar(255) NOT NULL,
-            avatar varchar(255),
+            avatar varchar(32),
             last_seen bigint NOT NULL,
             created_at bigint NOT NULL,
             PRIMARY KEY (id)

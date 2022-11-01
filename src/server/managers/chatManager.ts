@@ -1,7 +1,7 @@
 import db from '../db';
 import sql from 'sql-template-strings';
 import { Chat } from '../../types/common';
-import Utils from '../utils';
+import Utils from '../utils/utils';
 import { Request } from 'express';
 import { Handshake, Socket } from 'socket.io/dist/socket';
 import { snowflakeGenerator } from '../utils/snowflakeGenerator';

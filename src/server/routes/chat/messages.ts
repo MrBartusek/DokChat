@@ -5,7 +5,7 @@ import db from '../../db';
 import sql from 'sql-template-strings';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
-import Utils from '../../utils';
+import Utils from '../../utils/utils';
 import { QueryResult } from 'pg';
 import { Request } from 'express-serve-static-core';
 import ChatManager from '../../managers/chatManager';

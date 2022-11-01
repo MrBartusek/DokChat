@@ -7,14 +7,24 @@ import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 import sql from 'sql-template-strings';
 import Validate from '../../utils/validate';
+import * as multer from 'multer';
+import * as sharp from 'sharp';
+import s3Client, { bucketName } from '../../aws/s3';
+import Utils from '../../utils/utils';
+import { DeleteObjectCommand, DeleteObjectCommandOutput, PutObjectCommand } from '@aws-sdk/client-s3';
 
 const router = express.Router();
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-router.all('/update-profile', ensureAuthenticated(), allowedMethods('PUT'), async (req, res, next) => {
+router.all('/update-profile', ensureAuthenticated(), allowedMethods('PUT'), upload.single('avatar'), async (req, res, next) => {
+	// Validate request
 	const username = req.body.username as any;
 	const tag = req.body.tag as any;
 	const password = req.body.password as any;
 	const email = req.body.email as any;
+	const avatar = req.file;
+
 	if(typeof username !== 'string' || typeof tag !== 'string' || typeof password !== 'string' || typeof email !== 'string') {
 		return new ApiResponse(res).badRequest('Invalid form body');
 	}
@@ -23,6 +33,7 @@ router.all('/update-profile', ensureAuthenticated(), allowedMethods('PUT'), asyn
 		return new ApiResponse(res).badRequest(valid);
 	}
 
+	// Authenticate user with password
 	const [ user ] = await AuthManager.authenticateUser(req.auth.email, password)
 		.catch((reason) => {
 			if(typeof reason !== 'string') throw reason;
@@ -33,8 +44,8 @@ router.all('/update-profile', ensureAuthenticated(), allowedMethods('PUT'), asyn
 	const discriminatorChanged = user.username != username || user.tag != tag;
 	const emailChanged = user.email != email;
 
-	if(!discriminatorChanged && !emailChanged) {
-		return new ApiResponse(res).badRequest('Provided details are identical to current one');
+	if(!discriminatorChanged && !emailChanged && !avatar) {
+		return new ApiResponse(res).badRequest('Provided details are identical to current ones');
 	}
 
 	if(discriminatorChanged && await discriminatorTaken(username, tag)) {
@@ -42,6 +53,16 @@ router.all('/update-profile', ensureAuthenticated(), allowedMethods('PUT'), asyn
 	}
 	if(emailChanged && await emailTaken(email)) {
 		return new ApiResponse(res).badRequest('This email is already in use');
+	}
+
+	// Upload avatar to S3
+	if(avatar) {
+		const oldAvatar = await getUserAvatar(user.id);
+		if(oldAvatar) {
+			await deleteAvatar(oldAvatar);
+		}
+		const fileName = await uploadAvatar(user.id, avatar);
+		await db.query(sql`UPDATE users SET avatar = $1 WHERE id=$2`, [ fileName, user.id ]);
 	}
 
 	await db.query(sql`
@@ -82,6 +103,35 @@ function validParameters(username: string, tag: string, email: string): true | s
 	if(emailValid !== true) return emailValid;
 
 	return true;
+}
+
+async function uploadAvatar(userId: string, avatar: Express.Multer.File): Promise<string> {
+	const fileBuffer = await sharp(avatar.buffer)
+		.resize({ height: 256, width: 256, fit: 'cover' })
+		.toBuffer();
+	const fileName = Utils.generateAWSFileName();
+	const uploadParams = {
+		Bucket: bucketName,
+		Body: fileBuffer,
+		Key: fileName,
+		ContentType: avatar.mimetype
+	};
+	await s3Client.send(new PutObjectCommand(uploadParams));
+	return fileName;
+}
+
+async function getUserAvatar(userId: string): Promise<string | null> {
+	const avatarQuery = await db.query(sql`SELECT avatar FROM users WHERE id=$1`, [ userId ]);
+	if(avatarQuery.rowCount != 1) throw new Error('Invalid user id provided to getUserAvatar');
+	return avatarQuery.rows[0].avatar;
+}
+
+async function deleteAvatar(key: string): Promise<DeleteObjectCommandOutput> {
+	const deleteParams = {
+		Bucket: bucketName,
+		Key: key
+	};
+	return s3Client.send(new DeleteObjectCommand(deleteParams));
 }
 
 export default router;

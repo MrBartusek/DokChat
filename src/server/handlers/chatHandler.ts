@@ -8,7 +8,7 @@ import { snowflakeGenerator } from '../utils/snowflakeGenerator';
 import sql from 'sql-template-strings';
 import * as DateFns from 'date-fns';
 import { Socket } from 'socket.io';
-import Utils from '../utils';
+import Utils from '../utils/utils';
 import PermissionsManager from '../managers/permissionsManager';
 
 export default function registerMessageHandler(io: DokChatServer, socket: DokChatSocket) {

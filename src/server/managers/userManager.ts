@@ -1,7 +1,7 @@
 import db from '../db';
 import sql from 'sql-template-strings';
 import { User } from '../../types/common';
-import Utils from '../utils';
+import Utils from '../utils/utils';
 import { Request } from 'express';
 import { Handshake } from 'socket.io/dist/socket';
 
