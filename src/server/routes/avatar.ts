@@ -39,7 +39,7 @@ router.all('/', allowedMethods('GET'), async (req, res, next) => {
 		const chat = await ChatManager.getChat(req, id);
 		if(!chat) return new ApiResponse(res).notFound('User or chat not found');
 		avatar = chatAvatar(id);
-		res.header('Cache-Control', 'private max-age=3600');
+		res.header('Cache-Control', 'public max-age=600');
 		if(avatar) {
 			const avatarUrl = await getAvatarSingedUrl(avatar);
 			res.redirect(301, avatarUrl);
@@ -58,7 +58,7 @@ async function getAvatarSingedUrl(key: string): Promise<string> {
 	};
 	const getCommand = new GetObjectCommand(getParams);
 	return await getSignedUrl(
-		s3Client, getCommand, { expiresIn: 5 * 60 }
+		s3Client, getCommand, { expiresIn: 60 }
 	);
 }
 
