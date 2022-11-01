@@ -27,7 +27,7 @@ router.all('/', allowedMethods('GET'), async (req, res, next) => {
 		res.header('Cache-Control', 'private max-age=3600');
 		if(avatar) {
 			const avatarUrl = await getAvatarSingedUrl(avatar);
-			res.redirect(301, avatarUrl);
+			res.redirect(302, avatarUrl);
 		}
 		else {
 			// Default avatar based on user tag
@@ -42,7 +42,7 @@ router.all('/', allowedMethods('GET'), async (req, res, next) => {
 		res.header('Cache-Control', 'public max-age=600');
 		if(avatar) {
 			const avatarUrl = await getAvatarSingedUrl(avatar);
-			res.redirect(301, avatarUrl);
+			res.redirect(302, avatarUrl);
 		}
 		else {
 			// Default avatar based on chat creator tag
