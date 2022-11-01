@@ -68,7 +68,7 @@ export function ChatPage() {
 							currentChat={currentChat}
 						/>
 					</Col>
-					<Col className='d-flex align-items-stretch flex-column mh-100'>
+					<Col className='d-flex align-items-stretch flex-column mh-100 p-0'>
 						<ChatInfo currentChat={currentChat} />
 						{currentChat && (
 							<>

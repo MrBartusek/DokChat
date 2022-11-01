@@ -41,7 +41,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 	);
 
 	return (
-		<Row className='d-flex py-3 px-1 align-items-center'>
+		<Col className='d-flex px-1 py-3 align-items-center'>
 			<Col className='d-flex flex-grow-0 justify-content-center align-items-center px-1 gap-1'>
 				<IconButton icon={BsImage} size={34} variant='primary'/>
 				<IconButton icon={AiOutlineGif} size={34} variant='primary'/>
@@ -85,7 +85,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 					disabled={!isEnabled}
 				/>
 			</Col>
-		</Row>
+		</Col>
 	);
 
 	function handleSubmit(e: any) {
