@@ -21,7 +21,7 @@ export default class UserManager {
 			id: id,
 			username: user.username,
 			tag: user.tag,
-			avatar: user.avatar || Utils.avatarUrl(req, id)
+			avatar: Utils.avatarUrl(req, id)
 		};
 	}
 
@@ -40,7 +40,7 @@ export default class UserManager {
 			id: user.id,
 			username: username,
 			tag: tag,
-			avatar: user.avatar || Utils.avatarUrl(req, user.id)
+			avatar: Utils.avatarUrl(req, user.id)
 		};
 	}
 }
