@@ -58,7 +58,7 @@ async function getAvatarSingedUrl(key: string): Promise<string> {
 	};
 	const getCommand = new GetObjectCommand(getParams);
 	return await getSignedUrl(
-		s3Client, getCommand, { expiresIn: 60 }
+		s3Client, getCommand, { expiresIn: 600 }
 	);
 }
 

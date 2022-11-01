@@ -3,6 +3,6 @@ node_modules/
 
 # production bundles
 dist/
-public/js/app.js
+public/js/*
 
 .env

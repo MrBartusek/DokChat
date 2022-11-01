@@ -5,6 +5,7 @@ import { LocalChat } from '../types/Chat';
 import { useFetch } from './useFetch';
 import { useWebsocketType } from './useWebsocket';
 import * as DateFns from 'date-fns';
+import useSound from 'use-sound';
 
 /**
  * This hook is a manger for receiving, caching and sending messages
@@ -18,6 +19,7 @@ export function useMessageManager(ws: useWebsocketType): [
 	] {
 	const [ loading, setLoading ] = useState(true);
 	const [ user ] = useContext(UserContext);
+	const [ playPing ] = useSound('/sounds/new_message_ping.mp3', { volume: 0.5 });
 
 	const initialChatList = useFetch<EndpointResponse<ChatListResponse>>('chat/list', true);
 	const [ chatList, setChatList ] = useState<LocalChat[]>([]);
@@ -66,6 +68,7 @@ export function useMessageManager(ws: useWebsocketType): [
 				chat.name = msg.chat.name;
 			}
 			setChatList(chats);
+			playPing();
 		});
 		return () => {
 			ws.socket.off('message');
