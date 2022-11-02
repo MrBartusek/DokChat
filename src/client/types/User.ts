@@ -80,6 +80,6 @@ export class LocalUser {
 
 	public get emailMasked(): string {
 		const emailSplit = this.email.split('@');
-		return '*'.repeat(emailSplit[0].length) + '@' + emailSplit[1];
+		return emailSplit[0][0] + '*'.repeat(emailSplit[0].length - 1) + '@' + emailSplit[1];
 	}
 }

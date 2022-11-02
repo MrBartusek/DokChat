@@ -9,6 +9,7 @@ import { useForm } from '../../hooks/useForm';
 import CopyButton from '../CopyButton/CopyButton';
 import IconButton from '../IconButton/IconButton';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
+import LogoutButton from '../LogoutButton/LogoutButton';
 import Popup from '../Popup/Popup';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 
@@ -194,6 +195,8 @@ function SettingsPopup() {
 					</FloatingLabel>
 				)}
 			</Form>
+
+			{!isEditing && (<div className='mt-3 ms-2'><LogoutButton /></div>)}
 		</Popup>
 	);
 }
