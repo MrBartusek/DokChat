@@ -30,8 +30,7 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 			// If chat is hidden by specific participant it will show up on message
 			if(part.isHidden) await ChatManager.setChatHideForParticipant(part, false);
 
-			// Chat is fetched for each user since for DMs name might be different for each
-			// participant
+			// Chat is fetched for each user since for DMs name might be different for each participant
 			const chat = await ChatManager.getChat(socket, msg.chatId, part.userId, participants);
 			const serverMsg: ServerMessage = {
 				messageId: id,
