@@ -21,9 +21,7 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 		if(!validateMessage(msg, callback)) return;
 
 		// Add message to db
-		const timestamp = DateFns.getUnixTime(new Date());
-		const id = snowflakeGenerator.getUniqueID().toString();
-		await saveMessage(socket, msg, id, timestamp);
+		const [ id, timestamp ] = await ChatManager.saveMessage(socket.auth, msg.chatId, msg.content);
 
 		// Send message to every participant expect sender
 		const participants = await ChatManager.listParticipants(socket.handshake, msg.chatId);
@@ -72,14 +70,3 @@ function validateMessage(msg: ClientMessage, callback: (response: any) => void):
 	}
 	return true;
 }
-
-async function saveMessage(socket: Socket, message: ClientMessage, id: string, timestamp: number) {
-	return await db.query(sql`
-		INSERT INTO messages 
-			(id, chat_id, author_id, content, created_at)
-		VALUES (
-			$1, $2, $3, $4, $5
-		);
-	`, [ id, message.chatId, socket.auth.id, message.content, timestamp ]);
-}
-

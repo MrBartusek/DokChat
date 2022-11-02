@@ -43,4 +43,9 @@ export default class UserManager {
 			avatar: Utils.avatarUrl(req, user.id)
 		};
 	}
+
+	public static async systemUserId() {
+		const query = await db.query(sql`SELECT id FROM users WHERE is_system = 'true'`);
+		return query.rows[0].id;
+	}
 }

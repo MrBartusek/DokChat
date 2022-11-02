@@ -7,6 +7,8 @@ import { Handshake, Socket } from 'socket.io/dist/socket';
 import { snowflakeGenerator } from '../utils/snowflakeGenerator';
 import * as DateFns from 'date-fns';
 import { InternalChatParticipant } from '../types/common';
+import UserManager from './userManager';
+import { UserJWTData } from '../../types/jwt';
 
 export default class ChatManager {
 
@@ -135,7 +137,7 @@ export default class ChatManager {
 		}
 	}
 
-	public static async addUserToChat(userId: string, chatId: string, isHidden?: boolean): Promise<string> {
+	public static async addUserToChat(userId: string, chatId: string, isHidden = false): Promise<string> {
 		const participantId = snowflakeGenerator.getUniqueID();
 		await db.query(sql`
 			INSERT INTO participants
@@ -159,5 +161,30 @@ export default class ChatManager {
 			WHERE
 				id = $2
 		`, [ hide, participant.id ]);
+	}
+
+	public static async publicChatId() {
+		const systemId = await UserManager.systemUserId();
+		const chatQuery = await db.query(sql`SELECT id FROM chats WHERE creator_id = $1;`, [ systemId ]);
+		return chatQuery.rows[0].id;
+	}
+
+	/**
+	 * Save message to database
+	 * @returns [ id, timestamp]
+	 */
+	public static async saveMessage(sender: UserJWTData | 'SYSTEM', chatId: string, content: string): Promise<[string, string]> {
+		const senderId = sender == 'SYSTEM' ? await UserManager.systemUserId() : sender.id;
+		const id = snowflakeGenerator.getUniqueID().toString();
+		const timestamp = DateFns.getUnixTime(new Date()).toString();
+
+		await db.query(sql`
+			INSERT INTO messages 
+				(id, chat_id, author_id, content, created_at)
+			VALUES (
+				$1, $2, $3, $4, $5
+			);
+		`, [ id, chatId, senderId, content, timestamp ]);
+		return [ id, timestamp ];
 	}
 }

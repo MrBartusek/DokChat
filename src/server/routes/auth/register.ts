@@ -13,6 +13,7 @@ import allowedMethods from '../../middlewares/allowedMethods';
 import AuthManager from '../../managers/authManager';
 import * as DateFns from 'date-fns';
 import { snowflakeGenerator } from '../../utils/snowflakeGenerator';
+import ChatManager from '../../managers/chatManager';
 
 const router = express.Router();
 
@@ -37,7 +38,7 @@ router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 
 	const hash = await bcrypt.hash(password, 12);
 	const tag = await generateTag(username);
-	const snowflake = snowflakeGenerator.getUniqueID().toString();
+	const userId = snowflakeGenerator.getUniqueID().toString();
 
 	const timestamp = DateFns.getUnixTime(new Date());
 	await db.query(sql`
@@ -46,21 +47,16 @@ router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 		VALUES (
 			$1, $2, $3, $4, $5, $6, $7
 		);
-		`, [ snowflake, username, tag, email, hash, timestamp, timestamp ]);
+		`, [ userId, username, tag, email, hash, timestamp, timestamp ]);
 	const jwtData = {
-		id: snowflake,
+		id: userId,
 		username: username,
 		tag: tag,
 		email: email
 	};
 
-	//TEMP: add to main chat
-	await db.query(sql`
-		INSERT INTO participants
-			(id, user_id, chat_id, created_at)
-		VALUES
-			($1, $2, 0, 0)
-	`, [ snowflakeGenerator.getUniqueID(), snowflake ]);
+	const publicChatId = await ChatManager.publicChatId();
+	await ChatManager.addUserToChat(userId, publicChatId);
 
 	AuthManager.sendAuthorizationResponse(res, jwtData, hash);
 });
