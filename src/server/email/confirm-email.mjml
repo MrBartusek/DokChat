@@ -1,0 +1,62 @@
+<mjml>
+  <mj-head>
+    <mj-title>Say hello to card</mj-title>
+    <mj-font name="Roboto" href="https://fonts.googleapis.com/css?family=Roboto:300,500"></mj-font>
+    <mj-attributes>
+      <mj-all font-family="Roboto, Helvetica, sans-serif"></mj-all>
+      <mj-text font-weight="300" font-size="16px" color="#000000" line-height="24px"></mj-text>
+      <mj-section padding="0px"></mj-section>
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#F2F2F2">
+    <!-- Logo section -->
+    <mj-section background-color="#e6e6e6">
+      <mj-column>
+        <mj-image padding="20px 20px 0 20px" align="center" width="150px" src="https://dok-chat.herokuapp.com/img/logo/dokchat-logo-blue.png"></mj-image>
+        <mj-image src="https://dok-chat.herokuapp.com/img/email/lineshadow.png" alt="" align="center" border="none" padding="0px"></mj-image>
+      </mj-column>
+    </mj-section>
+    <!-- Title section -->
+    </mj-section>
+    <mj-section padding="20px 20px 0 20px" background-color="#FFFFFF">
+      <mj-column>
+        <mj-text align="center" font-weight="400" padding="30px 40px 10px 40px" font-size="32px" line-height="40px" color="#0061f2">
+          Welcome to&nbsp;DokChat {{username}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <!-- Devider -->
+    <mj-section padding="10px 20px" background-color="#FFFFFF">
+      <mj-column>
+        <mj-divider width="30px" border-width="3px" border-color="#9B9B9B"></mj-divider>
+      </mj-column>
+    </mj-section>
+
+    <!-- Content -->
+    <mj-section padding="0 20px 20px 20px" background-color="#FFFFFF">
+      <mj-column width="80%">
+        <mj-text align="center" padding="10px 0px 20px 0">
+          Thanks for singing up to&nbsp;DokChat! To confirm this email&nbsp;adress,&nbsp;please click the&nbsp;button below.
+      </mj-text>
+      <mj-button background-color="#0061f2" href="{{confirmation-url}}">
+        Confirm Email
+      </mj-button>
+      </mj-column>
+    </mj-section>
+
+    <!-- Footer -->
+  
+    <mj-section background-color="#e6e6e6">
+      <mj-column>
+        <mj-text align="center" color="#9B9B9B" font-size="11px">
+          <a href="https://dok-chat.herokuapp.com" style="color: #9B9B9B;">DokChat</a> |
+          <a href="https://github.com/MrBartusek/DokChat/issues" style="color: #9B9B9B;">Support</a> 
+          <br />
+          You are reciving this email because you have created a DokChat account. <br />
+          © 2022 DokChat All rights reserved.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

@@ -13,7 +13,7 @@ export async function initializeDB() {
             username varchar(32) NOT NULL,
             tag varchar(4) NOT NULL,
             email varchar(255) NOT NULL UNIQUE,
-            avatar varchar(32),
+            avatar varchar(64),
             last_seen bigint NOT NULL,
             created_at bigint NOT NULL,
             is_system boolean NOT NULL DEFAULT FALSE,
@@ -37,7 +37,7 @@ export async function initializeDB() {
             author_id varchar REFERENCES users ON DELETE CASCADE,
             content text NOT NULL,
             created_at bigint NOT NULL,
-            attachment varchar(32),
+            attachment varchar(64),
             is_system boolean NOT NULL DEFAULT FALSE,
             PRIMARY KEY (id)
         );

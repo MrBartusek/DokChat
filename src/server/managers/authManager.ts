@@ -8,8 +8,9 @@ import db from '../db';
 import sql from 'sql-template-strings';
 import * as bcrypt from 'bcrypt';
 
-const TOKEN_SECRET = process.env.JWT_USER_TOKEN_SECRET;
+const USER_TOKEN_SECRET = process.env.JWT_USER_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_TOKEN_SECRET;
+const PASS_RESET_TOKEN_SECRET = process.env.JWT_PASS_RESET_TOKEN_SECRET;
 
 export default class AuthManager {
 	public static async authenticateUser(email: string, password: string): Promise<[UserJWTData, string]> {
@@ -46,8 +47,15 @@ export default class AuthManager {
 			.setProtectedHeader({ alg: 'HS256' })
 			.setIssuedAt()
 			.setExpirationTime('5m')
-			.sign(Buffer.from(TOKEN_SECRET));
+			.sign(Buffer.from(USER_TOKEN_SECRET));
 		return token;
+	}
+
+	public static async verifyUserToken(token: string): Promise<UserJWTData> {
+		return jose.jwtVerify(token, Buffer.from(USER_TOKEN_SECRET))
+			.then((data) => {
+				return data.payload as UserJWTData;
+			});
 	}
 
 	private static async generateRefreshToken(userId: string, passwordHash: string) {
@@ -59,23 +67,38 @@ export default class AuthManager {
 		return token;
 	}
 
-	public static decodeRefreshToken(jwt: string): string | undefined {
-		const data = jose.decodeJwt(jwt);
+	public static decodeRefreshToken(token: string): string | undefined {
+		const data = jose.decodeJwt(token);
 		return data.id as string;
 	}
 
-	public static async verifyRefreshToken(jwt: string, passwordHash: string): Promise<string> {
-		return jose.jwtVerify(jwt, Buffer.from(REFRESH_TOKEN_SECRET + passwordHash))
+	public static async verifyRefreshToken(token: string, passwordHash: string): Promise<string> {
+		return jose.jwtVerify(token, Buffer.from(REFRESH_TOKEN_SECRET + passwordHash))
 			.then((data) => {
 				if(!data.payload.id) return Promise.reject('Invalid JWT');
 				return data.payload.id as string;
 			});
 	}
 
-	public static async verifyUserToken(jwt: string): Promise<UserJWTData> {
-		return jose.jwtVerify(jwt, Buffer.from(TOKEN_SECRET))
+	private static async generatePasswordResetToken(userId: string, passwordHash: string) {
+		const token = await new jose.SignJWT({id: userId})
+			.setProtectedHeader({ alg: 'HS256' })
+			.setIssuedAt()
+			.setExpirationTime('1h')
+			.sign(Buffer.from(PASS_RESET_TOKEN_SECRET + passwordHash));
+		return token;
+	}
+
+	public static decodePasswordResetToken(token: string): string | undefined {
+		const data = jose.decodeJwt(token);
+		return data.id as string;
+	}
+
+	public static async verifyPasswordResetToken(token: string, passwordHash: string): Promise<string> {
+		return jose.jwtVerify(token, Buffer.from(PASS_RESET_TOKEN_SECRET + passwordHash))
 			.then((data) => {
-				return data.payload as UserJWTData;
+				if(!data.payload.id) return Promise.reject('Invalid JWT');
+				return data.payload.id as string;
 			});
 	}
 }
