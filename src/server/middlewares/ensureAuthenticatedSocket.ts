@@ -13,7 +13,7 @@ const ensureAuthenticatedSocket = () => async (socket: Socket, next: NextFunctio
 	}
 	token = token.replace('Bearer ', '');
 
-	return AuthManager.verifyJWT(token)
+	return AuthManager.verifyUserToken(token)
 		.then(async(data) => {
 			socket.auth = data;
 			await socket.join(socket.auth.id);

@@ -11,7 +11,7 @@ if(process.env.NODE_ENV === 'production') {
 	};
 }
 else {
-	poolConfig ={
+	poolConfig = {
 		user: 'postgres',
 		password: 'postgres',
 		host: 'localhost',

@@ -12,7 +12,7 @@ const ensureAuthenticated = () => async (req: Request, res: Response, next: Next
 	}
 	token = token.replace('Bearer ', '');
 
-	return AuthManager.verifyJWT(token)
+	return AuthManager.verifyUserToken(token)
 		.then((data) => {
 			(req as any).auth = data;
 			return next();

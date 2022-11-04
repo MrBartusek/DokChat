@@ -8,8 +8,8 @@ import db from '../db';
 import sql from 'sql-template-strings';
 import * as bcrypt from 'bcrypt';
 
-const TOKEN_SECRET = '123k1mdio1u2312j1p2oi4k1i2e1io2j';
-const REFRESH_TOKEN_SECRET = '123k1mdio1u23qweqweq12j1p2oi4k1i2e1io2j';
+const TOKEN_SECRET = process.env.JWT_USER_TOKEN_SECRET;
+const REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_TOKEN_SECRET;
 
 export default class AuthManager {
 	public static async authenticateUser(email: string, password: string): Promise<[UserJWTData, string]> {
@@ -28,9 +28,9 @@ export default class AuthManager {
 		return [ jwtData, user.password_hash ];
 	}
 
-	public static async sendAuthorizationResponse(res: Response, userData: UserJWTData, passwordHash: string, rememberMe?: boolean) {
+	public static async sendAuthResponse(res: Response, userData: UserJWTData, passwordHash: string, rememberMe?: boolean) {
 		const refreshToken = await this.generateRefreshToken(userData.id, passwordHash);
-		const token = await this.generateJWT(userData);
+		const token = await this.generateUserToken(userData);
 		res.cookie('refreshToken', refreshToken, {
 			httpOnly: true,
 			sameSite: 'strict',
@@ -41,7 +41,7 @@ export default class AuthManager {
 		new ApiResponse(res).success(response);
 	}
 
-	private static async generateJWT(userData: UserJWTData) {
+	private static async generateUserToken(userData: UserJWTData) {
 		const token = await new jose.SignJWT(userData)
 			.setProtectedHeader({ alg: 'HS256' })
 			.setIssuedAt()
@@ -72,7 +72,7 @@ export default class AuthManager {
 			});
 	}
 
-	public static async verifyJWT(jwt: string): Promise<UserJWTData> {
+	public static async verifyUserToken(jwt: string): Promise<UserJWTData> {
 		return jose.jwtVerify(jwt, Buffer.from(TOKEN_SECRET))
 			.then((data) => {
 				return data.payload as UserJWTData;

@@ -58,7 +58,7 @@ router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 	const publicChatId = await ChatManager.publicChatId();
 	await ChatManager.addUserToChat(userId, publicChatId);
 
-	AuthManager.sendAuthorizationResponse(res, jwtData, hash);
+	AuthManager.sendAuthResponse(res, jwtData, hash);
 });
 
 function validParameters(username: string, password: string, email: string): true | string {
