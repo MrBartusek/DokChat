@@ -27,7 +27,7 @@ async function main() {
 	app.use(morgan('dev'));
 	app.use(express.urlencoded({ extended: true }));
 	app.use(cookieParser());
-	app.use(express.static('public'));
+	app.use(express.static(path.join(__dirname, '/../public')));
 
 	// Server API, frontend and
 	app.use('/api', apiRouter);
@@ -42,7 +42,7 @@ async function main() {
 	});
 
 	// Start the server
-	const port = process.env.PORT || 3000;
+	const port = process.env.SERVER_PORT || 3000;
 	server.listen(port, () => console.log(`DokChat Server is listening on port: ${port}`));
 }
 
