@@ -3,13 +3,12 @@ import { Handshake } from 'socket.io/dist/socket';
 import * as crypto from 'crypto';
 
 export default class Utils {
-	public static apiUrl(req: Request | Handshake) {
-		const protocol = (req as any).protocol || (req.secure ? 'https' : 'http');
-		return protocol + '://' + req.headers.host + '/api/';
+	public static apiUrl() {
+		return '/api/';
 	}
 
-	public static avatarUrl(req: Request | Handshake, id: string) {
-		return Utils.apiUrl(req) + `avatar?id=${id}`;
+	public static avatarUrl(id: string) {
+		return Utils.apiUrl() + `avatar?id=${id}`;
 	}
 
 	public static generateAWSFileName(bytes = 32) {

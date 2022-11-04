@@ -19,7 +19,7 @@ router.all('/', allowedMethods('GET'), async (req, res, next) => {
 	if(typeof id != 'string') new ApiResponse(res).badRequest();
 
 	let avatar = null;
-	const user = await UserManager.getUserById(req, id);
+	const user = await UserManager.getUserById(id);
 
 	if(user) {
 		console.log('get user avatar', id);
@@ -38,7 +38,7 @@ router.all('/', allowedMethods('GET'), async (req, res, next) => {
 		console.log('get chat avatar', id);
 		const chat = await ChatManager.getChat(req, id);
 		if(!chat) return new ApiResponse(res).notFound('User or chat not found');
-		avatar = chatAvatar(id);
+		avatar = await chatAvatar(id);
 		res.header('Cache-Control', 'public max-age=600');
 		if(avatar) {
 			const avatarUrl = await getAvatarSingedUrl(avatar);
@@ -46,7 +46,8 @@ router.all('/', allowedMethods('GET'), async (req, res, next) => {
 		}
 		else {
 			// Default avatar based on chat creator tag
-			res.sendFile(defaultAvatar(Number(user.tag) % 5));
+			const creator = await UserManager.getUserById(chat.creatorId);
+			res.sendFile(defaultAvatar(Number(creator.tag) % 5));
 		}
 	}
 });

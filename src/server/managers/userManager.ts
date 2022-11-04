@@ -6,7 +6,7 @@ import { Request } from 'express';
 import { Handshake } from 'socket.io/dist/socket';
 
 export default class UserManager {
-	public static async getUserById(req: Request | Handshake, id: string): Promise<User | null> {
+	public static async getUserById(id: string): Promise<User | null> {
 		const chatsQuery = await db.query(sql`
 			SELECT
 				username, tag, avatar
@@ -21,11 +21,11 @@ export default class UserManager {
 			id: id,
 			username: user.username,
 			tag: user.tag,
-			avatar: Utils.avatarUrl(req, id)
+			avatar: Utils.avatarUrl(id)
 		};
 	}
 
-	public static async getUserByUsername(req: Request | Handshake, username: string, tag: string): Promise<User | null> {
+	public static async getUserByUsername(username: string, tag: string): Promise<User | null> {
 		const chatsQuery = await db.query(sql`
 			SELECT
 				id, avatar
@@ -40,7 +40,7 @@ export default class UserManager {
 			id: user.id,
 			username: username,
 			tag: tag,
-			avatar: Utils.avatarUrl(req, user.id)
+			avatar: Utils.avatarUrl(user.id)
 		};
 	}
 

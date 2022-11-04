@@ -23,19 +23,19 @@ router.all('/messages', allowedMethods('GET'), ensureAuthenticated(), async (req
 		return new ApiResponse(res).forbidden();
 	}
 
-	const messagesQuery = await queryMessages(req, chatId, page);
+	const messagesQuery = await queryMessages(chatId, page);
 	const messages = messagesQuery.rows.map((msg) => {
 		return {
 			id: msg.id,
 			author: {
 				id: msg.authorId,
 				username: msg.authorUsername,
-				avatar: Utils.avatarUrl(req, msg.authorId),
+				avatar: Utils.avatarUrl(msg.authorId),
 				tag: msg.authorTag
 			},
 			content: msg.content,
 			timestamp: msg.createdAt,
-			avatar: Utils.avatarUrl(req, msg.authorId)
+			avatar: Utils.avatarUrl(msg.authorId)
 		};
 	});
 	const result: MessageListResponse = messages;
@@ -50,7 +50,7 @@ type MessagesQuery = QueryResult<{
 	authorTag: string,
 	createdAt: string
 }>
-async function queryMessages(req: Request, chatId: string, page: number): Promise<MessagesQuery> {
+async function queryMessages(chatId: string, page: number): Promise<MessagesQuery> {
 	return db.query(sql`
 		SELECT
 			messages.id,

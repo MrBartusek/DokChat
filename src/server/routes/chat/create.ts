@@ -33,7 +33,7 @@ router.all('/create', allowedMethods('POST'), ensureAuthenticated(), async (req,
 	}
 
 	// Fetch participants
-	const participants = await convertIdsToUsers(req, participantIds);
+	const participants = await convertIdsToUsers(participantIds);
 	if(participants.includes(null)) {
 		return new ApiResponse(res).badRequest('Invalid participants list');
 	}
@@ -68,8 +68,8 @@ async function createChat(req: Request, creatorId: string, participants: User[])
 	return ChatManager.getChat(req, chatId, req.auth.id);
 }
 
-async function convertIdsToUsers(req: Request, ids: string[]): Promise<(User | null)[]> {
-	return Promise.all(ids.map((id) => UserManager.getUserById(req, id)));
+async function convertIdsToUsers(ids: string[]): Promise<(User | null)[]> {
+	return Promise.all(ids.map((id) => UserManager.getUserById(id)));
 }
 
 export default router;

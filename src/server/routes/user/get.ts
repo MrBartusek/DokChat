@@ -24,10 +24,10 @@ router.all('/get', ensureAuthenticated(), allowedMethods('GET'), async (req, res
 
 	let user = null;
 	if(haveId) {
-		user = await UserManager.getUserById(req, id);
+		user = await UserManager.getUserById(id);
 	}
 	else {
-		user = await UserManager.getUserByUsername(req, username, tag);
+		user = await UserManager.getUserByUsername(username, tag);
 	}
 	if(!user) return new ApiResponse(res).notFound('User not found');
 	return new ApiResponse(res).success(user);

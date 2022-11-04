@@ -24,7 +24,7 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 		const [ id, timestamp ] = await ChatManager.saveMessage(socket.auth, msg.chatId, msg.content);
 
 		// Send message to every participant expect sender
-		const participants = await ChatManager.listParticipants(socket.handshake, msg.chatId);
+		const participants = await ChatManager.listParticipants(msg.chatId);
 		participants.filter(p => p.userId != socket.auth.id);
 		for await(const part of participants) {
 			// If chat is hidden by specific participant it will show up on message
@@ -40,7 +40,7 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 				author: {
 					id: socket.auth.id,
 					username: socket.auth.username,
-					avatar: Utils.avatarUrl(socket.handshake, socket.auth.id),
+					avatar: Utils.avatarUrl(socket.auth.id),
 					tag: socket.auth.tag
 				}
 			};
