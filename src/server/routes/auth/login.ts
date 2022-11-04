@@ -29,8 +29,8 @@ router.all('/login', allowedMethods('POST'), async (req, res, next) => {
 			}
 			throw reason;
 		});
-	const emailClient = new EmailClient();
-	await emailClient.sendConfirmEmail('bartusekcraft@gmail.com', 'MrBartusek', '#');
+	// const emailClient = new EmailClient();
+	// await emailClient.sendConfirmEmail('bartusekcraft@gmail.com', 'MrBartusek', '#');
 });
 
 export default router;
