@@ -45,7 +45,7 @@ async function main() {
 	});
 
 	// Schedule jobs
-	if(isProduction || true) {
+	if(isProduction) {
 		schedule.scheduleJob('Handle SES Bounces', '*/10 * * * *', processEmailBounces).invoke();
 		schedule.scheduleJob('Handle SES Complaints', '*/10 * * * *', processEmailComplaints).invoke();
 	}
