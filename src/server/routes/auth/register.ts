@@ -14,6 +14,9 @@ import AuthManager from '../../managers/authManager';
 import * as DateFns from 'date-fns';
 import { snowflakeGenerator } from '../../utils/snowflakeGenerator';
 import ChatManager from '../../managers/chatManager';
+import EmailClient from '../../aws/ses';
+import JWTManager from '../../managers/JWTManager';
+import EmailBlacklistManager from '../../managers/emailBlacklistManager';
 
 const router = express.Router();
 
@@ -32,11 +35,14 @@ router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 	if(await emailTaken(email)) {
 		return new ApiResponse(res).badRequest('This email is already taken');
 	}
+	if(await EmailBlacklistManager.isEmailBlacklisted(email)) {
+		return new ApiResponse(res).badRequest('This email is blacklisted');
+	}
 	if((await usersWithUsernameCount(username)) >= 9999) {
 		return new ApiResponse(res).badRequest('Too many users have this username');
 	}
 
-	const hash = await bcrypt.hash(password, 12);
+	const passwordHash = await bcrypt.hash(password, 12);
 	const tag = await generateTag(username);
 	const userId = snowflakeGenerator.getUniqueID().toString();
 
@@ -47,7 +53,7 @@ router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 		VALUES (
 			$1, $2, $3, $4, $5, $6, $7
 		);
-		`, [ userId, username, tag, email, hash, timestamp, timestamp ]);
+		`, [ userId, username, tag, email, passwordHash, timestamp, timestamp ]);
 	const jwtData = {
 		id: userId,
 		username: username,
@@ -56,10 +62,16 @@ router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 		isBanned: false
 	};
 
+	// Add to public chat
 	const publicChatId = await ChatManager.publicChatId();
 	await ChatManager.addUserToChat(userId, publicChatId);
+	AuthManager.sendAuthResponse(res, jwtData, passwordHash);
 
-	AuthManager.sendAuthResponse(res, jwtData, hash);
+	// Send confirm email, this is situated AFTER response since, it this fails
+	// it's not a big deal for user register process
+	const emailClient = new EmailClient();
+	await emailClient.sendEmailConfirmEmail(jwtData)
+		.catch((error) => console.log('Failed to send register confirm email', error));
 });
 
 function validParameters(username: string, password: string, email: string): true | string {

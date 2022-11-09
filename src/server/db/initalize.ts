@@ -22,10 +22,7 @@ export async function initializeDB() {
             is_banned boolean NOT NULL DEFAULT FALSE,
 
             is_pass_confirmed boolean NOT NULL DEFAULT FALSE,
-            pass_confirm_attempts smallint NOT NULL DEFAULT 0,
             last_pass_confirm_attempt bigint,
-
-            pass_reset_attempts smallint NOT NULL DEFAULT 0,
             last_pass_reset_attempt bigint,
             PRIMARY KEY (id)
         );

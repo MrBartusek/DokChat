@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Socket } from 'socket.io';
 import { ApiResponse } from '../apiResponse';
 import AuthManager from '../managers/authManager';
+import JWTManager from '../managers/JWTManager';
 
 const ensureAuthenticatedSocket = () => async (socket: Socket, next: NextFunction) => {
 	let token: string | undefined = socket.handshake.auth['Authorization'];
@@ -13,7 +14,7 @@ const ensureAuthenticatedSocket = () => async (socket: Socket, next: NextFunctio
 	}
 	token = token.replace('Bearer ', '');
 
-	return AuthManager.verifyUserToken(token)
+	return JWTManager.verifyUserToken(token)
 		.then(async(data) => {
 			socket.auth = data;
 			await socket.join(socket.auth.id);

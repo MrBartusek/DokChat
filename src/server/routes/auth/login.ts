@@ -3,6 +3,7 @@ import { ApiResponse } from '../../apiResponse';
 import allowedMethods from '../../middlewares/allowedMethods';
 import AuthManager from '../../managers/authManager';
 import EmailClient from '../../aws/ses';
+import JWTManager from '../../managers/JWTManager';
 
 const router = express.Router();
 
@@ -29,8 +30,6 @@ router.all('/login', allowedMethods('POST'), async (req, res, next) => {
 			}
 			throw reason;
 		});
-	// const emailClient = new EmailClient();
-	// await emailClient.sendConfirmEmail('bartusekcraft@gmail.com', 'MrBartusek', '#');
 });
 
 export default router;

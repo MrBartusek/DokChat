@@ -1,4 +1,8 @@
 import * as AWS from 'aws-sdk';
+import { UserJWTData } from '../../types/jwt';
+import EmailBlacklistManager from '../managers/emailBlacklistManager';
+import JWTManager from '../managers/JWTManager';
+import Utils from '../utils/utils';
 
 const region = process.env.AWS_REGION;
 
@@ -13,34 +17,23 @@ export default class EmailClient {
 		});
 	}
 
-	public async sendEmail(destination: string, title: string, content: string) {
-		const params: AWS.SES.SendEmailRequest = {
-			Destination: {
-				ToAddresses: [ destination ]
-			},
-			Source: EMAIL_SENDER,
-			ConfigurationSetName: 'dokchat-config-set',
-			Message: {
-				Body: {
-					Text: { Data: content }
-				},
-				Subject: { Data: title }
-			}
-		};
+	public async sendEmailConfirmEmail(user: UserJWTData) {
+		if(await EmailBlacklistManager.isEmailBlacklisted(user.email)) {
+			return Promise.reject('This email is blacklisted');
+		}
 
-		return this.client.sendEmail(params).promise();
-	}
+		const confirmToken = await JWTManager.generateEmailConfirmToken(user);
+		const confirmUrl = `https://dokchat.dokurno.dev/confirm-email/${confirmToken}`;
 
-	public async sendConfirmEmail(email: string, username: string, confirmUrl: string) {
 		const params: AWS.SES.SendTemplatedEmailRequest = {
 			Source: EMAIL_SENDER,
 			ConfigurationSetName: 'dokchat-config-set',
 			Destination: {
-				ToAddresses: [ email ]
+				ToAddresses: [ user.email ]
 			},
 			Template: 'dokchat-confirm-email',
 			//eslint-disable-next-line
-			TemplateData: `{ \"username\":\"${username}\", \"confirmation-url\": \"${confirmUrl}\"  }`
+			TemplateData: `{ \"username\":\"${Utils.userDiscriminator(user)}\", \"confirmation-url\": \"${confirmUrl}\"  }`
 		};
 
 		return this.client.sendTemplatedEmail(params).promise();

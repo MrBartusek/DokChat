@@ -12,8 +12,8 @@
     <!-- Logo section -->
     <mj-section background-color="#e6e6e6">
       <mj-column>
-        <mj-image padding="20px 20px 0 20px" align="center" width="150px" src="https://dok-chat.herokuapp.com/img/logo/dokchat-logo-blue.png"></mj-image>
-        <mj-image src="https://dok-chat.herokuapp.com/img/email/lineshadow.png" alt="" align="center" border="none" padding="0px"></mj-image>
+        <mj-image padding="20px 20px 0 20px" align="center" width="150px" src="https://dokchat.dokurno.dev/img/logo/dokchat-logo-blue.png"></mj-image>
+        <mj-image src="https://dokchat.dokurno.dev/img/email/lineshadow.png" alt="" align="center" border="none" padding="0px"></mj-image>
       </mj-column>
     </mj-section>
     <!-- Title section -->
@@ -49,11 +49,19 @@
   
     <mj-section background-color="#e6e6e6">
       <mj-column>
-        <mj-text align="center" color="#9B9B9B" font-size="11px">
-          <a href="https://dok-chat.herokuapp.com" style="color: #9B9B9B;">DokChat</a> |
-          <a href="https://github.com/MrBartusek/DokChat/issues" style="color: #9B9B9B;">Support</a> 
+        <mj-text align="center" color="#9B9B9B" font-size="11px" line-height="21px">
+          This messaage was sent by <a href="https://dokchat.dokurno.dev" style="color: #9B9B9B;">DokChat</a>.
           <br />
-          You are reciving this email because you have created a DokChat account. <br />
+          If you  recived this email by mistake or belive it is a spam, please forward it to <a href="mailto:dokchat@dokurno.dev" style="color: #9B9B9B;">dokchat@dokurno.dev</a>
+          <br />
+          For general inquries or to request support with your account, please send a email to <a href="mailto:dokchat@dokurno.dev" style="color: #9B9B9B;">dokchat@dokurno.dev</a>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section>
+      <mj-column>
+        <mj-text align="center" color="#9B9B9B" font-size="11px">
           © 2022 DokChat All rights reserved.
         </mj-text>
       </mj-column>

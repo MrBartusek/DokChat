@@ -6,6 +6,7 @@ import allowedMethods from '../../middlewares/allowedMethods';
 import AuthManager from '../../managers/authManager';
 import * as DateFns from 'date-fns';
 import { UserJWTData } from '../../../types/jwt';
+import JWTManager from '../../managers/JWTManager';
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ router.all('/refresh', allowedMethods('POST'), async (req, res, next) => {
 	}
 
 	// Decode JWT
-	const unconfirmedUserId = AuthManager.decodeRefreshToken(refreshToken);
+	const unconfirmedUserId = JWTManager.decodeRefreshToken(refreshToken);
 	if(!unconfirmedUserId) return new ApiResponse(res).badRequest('Invalid JWT');
 
 	// Get user
@@ -32,7 +33,7 @@ router.all('/refresh', allowedMethods('POST'), async (req, res, next) => {
 	};
 
 	// Verify token and respond
-	await AuthManager.verifyRefreshToken(refreshToken, user.password_hash)
+	await JWTManager.verifyRefreshToken(refreshToken, user.password_hash)
 		.then(async (userId: string) => {
 			if(userId != unconfirmedUserId) return new ApiResponse(res).unauthorized();
 

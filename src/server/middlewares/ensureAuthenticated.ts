@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { ApiResponse } from '../apiResponse';
-import AuthManager from '../managers/authManager';
+import JWTManager from '../managers/JWTManager';
 
 const ensureAuthenticated = (allowBanned = false) => async (req: Request, res: Response, next: NextFunction) => {
 	let token: string | undefined = req.headers.authorization;
@@ -12,7 +12,7 @@ const ensureAuthenticated = (allowBanned = false) => async (req: Request, res: R
 	}
 	token = token.replace('Bearer ', '');
 
-	return AuthManager.verifyUserToken(token)
+	return JWTManager.verifyUserToken(token)
 		.then((data) => {
 			if(data.isBanned && !allowBanned) return new ApiResponse(res, next).forbidden('Account is suspended');
 			(req as any).auth = data;

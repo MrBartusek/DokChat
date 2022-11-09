@@ -8,10 +8,13 @@ import * as morgan from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import { Server } from 'socket.io';
 import * as http from 'http';
-import { DokChatSocket } from '../types/websocket';
-import ensureAuthenticated from './middlewares/ensureAuthenticated';
 import registerMessageHandler from './handlers/chatHandler';
 import ensureAuthenticatedSocket from './middlewares/ensureAuthenticatedSocket';
+import * as schedule from 'node-schedule';
+import processEmailBounces from './jobs/processBounces';
+import processEmailComplaints from './jobs/processComplaints';
+
+const isProduction = (process.env.NODE_ENV || 'development') == 'production';
 
 async function main() {
 	// Initialize database
@@ -40,6 +43,15 @@ async function main() {
 	io.on('connection', (socket) => {
 		registerMessageHandler(io, socket);
 	});
+
+	// Schedule jobs
+	if(isProduction || true) {
+		schedule.scheduleJob('Handle SES Bounces', '*/10 * * * *', processEmailBounces).invoke();
+		schedule.scheduleJob('Handle SES Complaints', '*/10 * * * *', processEmailComplaints).invoke();
+	}
+	else {
+		console.info('Not processing Bounces/Complains - app is running in development mode');
+	}
 
 	// Start the server
 	const port = process.env.SERVER_PORT || 3000;
