@@ -52,7 +52,8 @@ router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 		id: userId,
 		username: username,
 		tag: tag,
-		email: email
+		email: email,
+		isBanned: false
 	};
 
 	const publicChatId = await ChatManager.publicChatId();

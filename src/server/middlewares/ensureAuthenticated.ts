@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { ApiResponse } from '../apiResponse';
 import AuthManager from '../managers/authManager';
 
-const ensureAuthenticated = () => async (req: Request, res: Response, next: NextFunction) => {
+const ensureAuthenticated = (allowBanned = false) => async (req: Request, res: Response, next: NextFunction) => {
 	let token: string | undefined = req.headers.authorization;
 	if(!token) {
 		return new ApiResponse(res, next).unauthorized('User is not authenticated');
@@ -14,6 +14,7 @@ const ensureAuthenticated = () => async (req: Request, res: Response, next: Next
 
 	return AuthManager.verifyUserToken(token)
 		.then((data) => {
+			if(data.isBanned && !allowBanned) return new ApiResponse(res, next).forbidden('Account is suspended');
 			(req as any).auth = data;
 			return next();
 		})

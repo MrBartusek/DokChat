@@ -5,6 +5,7 @@ import sql from 'sql-template-strings';
 import allowedMethods from '../../middlewares/allowedMethods';
 import AuthManager from '../../managers/authManager';
 import * as DateFns from 'date-fns';
+import { UserJWTData } from '../../../types/jwt';
 
 const router = express.Router();
 
@@ -19,14 +20,15 @@ router.all('/refresh', allowedMethods('POST'), async (req, res, next) => {
 	if(!unconfirmedUserId) return new ApiResponse(res).badRequest('Invalid JWT');
 
 	// Get user
-	const query = await db.query(sql`SELECT id, username, tag, email, password_hash FROM users WHERE id=$1`, [ unconfirmedUserId ]);
+	const query = await db.query(sql`SELECT id, username, tag, email, password_hash, is_banned as "isBanned" FROM users WHERE id=$1`, [ unconfirmedUserId ]);
 	if(query.rowCount == 0) return new ApiResponse(res).badRequest('Invalid user');
 	const user = query.rows[0];
-	const jwtData = {
+	const jwtData: UserJWTData = {
 		id: user.id,
 		username: user.username,
 		tag: user.tag,
-		email: user.email
+		email: user.email,
+		isBanned: user.isBanned
 	};
 
 	// Verify token and respond

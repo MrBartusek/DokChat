@@ -16,8 +16,17 @@ export async function initializeDB() {
             avatar varchar(64),
             last_seen bigint NOT NULL,
             created_at bigint NOT NULL,
+
             is_system boolean NOT NULL DEFAULT FALSE,
             is_admin boolean NOT NULL DEFAULT FALSE,
+            is_banned boolean NOT NULL DEFAULT FALSE,
+
+            is_pass_confirmed boolean NOT NULL DEFAULT FALSE,
+            pass_confirm_attempts smallint NOT NULL DEFAULT 0,
+            last_pass_confirm_attempt bigint,
+
+            pass_reset_attempts smallint NOT NULL DEFAULT 0,
+            last_pass_reset_attempt bigint,
             PRIMARY KEY (id)
         );
 
@@ -48,6 +57,12 @@ export async function initializeDB() {
             chat_id varchar REFERENCES chats ON DELETE CASCADE,
             created_at bigint NOT NULL,
             is_hidden boolean NOT NULL DEFAULT FALSE,
+            PRIMARY KEY (id)
+        );
+
+        CREATE TABLE IF NOT EXISTS email_blacklist (
+            id varchar NOT NULL,
+            email varchar(255) NOT NULL UNIQUE,
             PRIMARY KEY (id)
         );
     `);

@@ -14,6 +14,7 @@ import { AxiosRequestHeaders } from 'axios';
  */
 export class LocalUser {
 	public isAuthenticated: boolean;
+	public isBanned: boolean;
 	public token: string;
 	public id: string;
 	public username: string;
@@ -39,6 +40,7 @@ export class LocalUser {
 		user.username = data.username,
 		user.tag = data.tag,
 		user.email = data.email;
+		user.isBanned = data.isBanned;
 		user.expiryDate = DateFns.fromUnixTime(data.exp);
 
 		return user;

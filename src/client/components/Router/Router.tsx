@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import { useUpdatingUser } from '../../hooks/useUpdatingUser';
 import { AboutPage } from '../../pages/AboutPage';
+import { AccountBannedPage } from '../../pages/AccountBannedPage';
 import { ChatPage } from '../../pages/ChatPage';
 import { HomePage } from '../../pages/HomePage';
 import { LoginPage } from '../../pages/LoginPage';
@@ -41,6 +42,11 @@ function Router() {
 						<Route path="new" element={<NewChatPopup />} />
 						<Route path="profile" element={<SettingsPopup />} />
 					</Route>
+					<Route path="suspended" element={
+						<PrivateRoute isSuspendedRoute>
+							<AccountBannedPage />
+						</PrivateRoute>
+					} />
 
 					{/* 404 */}
 					<Route path="*" element={<ErrorPage title="404" message="This page was not found" />} />
@@ -53,12 +59,22 @@ function Router() {
 export default Router;
 
 interface SpecialRouteProps {
-	children: JSX.Element
+	children: JSX.Element,
+	isSuspendedRoute?: boolean
 }
 
-const PrivateRoute = ({ children }: SpecialRouteProps) => {
+const PrivateRoute = ({ children, isSuspendedRoute }: SpecialRouteProps) => {
 	const [ user ] = useContext(UserContext);
-	return user.isAuthenticated ? children : <Navigate to="/login" />;
+	if(user.isAuthenticated) {
+		if(user.isBanned && !isSuspendedRoute) {
+			return <Navigate to="/suspended" />;
+		}
+		else if(!user.isBanned && isSuspendedRoute) {
+			<Navigate to="/chat" />;
+		}
+		return  children;
+	}
+	return <Navigate to="/login" />;
 };
 
 const PublicOnlyRoute = ({ children }: SpecialRouteProps) => {

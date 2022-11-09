@@ -14,7 +14,7 @@ const PASS_RESET_TOKEN_SECRET = process.env.JWT_PASS_RESET_TOKEN_SECRET;
 
 export default class AuthManager {
 	public static async authenticateUser(email: string, password: string): Promise<[UserJWTData, string]> {
-		const query = await db.query(sql`SELECT id, username, tag, email, password_hash FROM users WHERE email=$1`, [ email ]);
+		const query = await db.query(sql`SELECT id, username, tag, email, password_hash, is_banned as "isBanned" FROM users WHERE email=$1`, [ email ]);
 		if(query.rowCount == 0) return Promise.reject('Provided email and password are not valid');
 		const user = query.rows[0];
 		const passwordValid = await bcrypt.compare(password, user.password_hash);
@@ -24,7 +24,8 @@ export default class AuthManager {
 			id: user.id,
 			username: user.username,
 			tag: user.tag,
-			email: user.email
+			email: user.email,
+			isBanned: user.isBanned
 		};
 		return [ jwtData, user.password_hash ];
 	}
