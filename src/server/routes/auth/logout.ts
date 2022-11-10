@@ -6,7 +6,7 @@ import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 
 const router = express.Router();
 
-router.all('/logout', ensureAuthenticated(true), allowedMethods('POST'), async (req, res, next) => {
+router.all('/logout', allowedMethods('POST'), async (req, res, next) => {
 	res.clearCookie('token');
 	res.clearCookie('refreshToken');
 	new ApiResponse(res).success();

@@ -13,16 +13,16 @@ const router = express.Router();
 router.all('/refresh', allowedMethods('POST'), async (req, res, next) => {
 	const refreshToken: string = req.cookies.refreshToken;
 	if(!refreshToken) {
-		return new ApiResponse(res).unauthorized();
+		return new ApiResponse(res).unauthorized('No refreshToken');
 	}
 
 	// Decode JWT
 	const unconfirmedUserId = JWTManager.decodeRefreshToken(refreshToken);
-	if(!unconfirmedUserId) return new ApiResponse(res).badRequest('Invalid JWT');
+	if(!unconfirmedUserId) return new ApiResponse(res).unauthorized('Invalid JWT');
 
 	// Get user
 	const query = await db.query(sql`SELECT id, username, tag, email, password_hash, is_banned as "isBanned" FROM users WHERE id=$1`, [ unconfirmedUserId ]);
-	if(query.rowCount == 0) return new ApiResponse(res).badRequest('Invalid user');
+	if(query.rowCount == 0) return new ApiResponse(res).unauthorized('Invalid user');
 	const user = query.rows[0];
 	const jwtData: UserJWTData = {
 		id: user.id,
@@ -35,7 +35,7 @@ router.all('/refresh', allowedMethods('POST'), async (req, res, next) => {
 	// Verify token and respond
 	await JWTManager.verifyRefreshToken(refreshToken, user.password_hash)
 		.then(async (userId: string) => {
-			if(userId != unconfirmedUserId) return new ApiResponse(res).unauthorized();
+			if(userId != unconfirmedUserId) return new ApiResponse(res).unauthorized('Invalid JWT');
 
 			// Update last seen
 			const timestamp = DateFns.getUnixTime(new Date());
@@ -44,7 +44,7 @@ router.all('/refresh', allowedMethods('POST'), async (req, res, next) => {
 			AuthManager.sendAuthResponse(res, jwtData, user.password_hash);
 		})
 		.catch((error) => {
-			return new ApiResponse(res).unauthorized();
+			return new ApiResponse(res).unauthorized('Invalid JWT');
 		});
 });
 

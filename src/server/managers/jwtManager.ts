@@ -107,7 +107,7 @@ export default class JWTManager {
 	}
 
 	public static async verifyRefreshToken(token: string, passwordHash: string): Promise<string> {
-		const data = await this.verifyJWT<{ id: string}>(token, TokenType.USER_TOKEN, passwordHash);
+		const data = await this.verifyJWT<{ id: string}>(token, TokenType.REFRESH_TOKEN, passwordHash);
 		return data.id;
 	}
 }
