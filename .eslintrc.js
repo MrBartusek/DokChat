@@ -11,6 +11,7 @@ module.exports = {
 	],
 	overrides: [
 	],
+	ignorePatterns: [ '*.html' ],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
 		'ecmaVersion': 'latest',

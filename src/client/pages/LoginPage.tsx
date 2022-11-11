@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Image, Row } from 'react-bootstrap';
+import { Col, Container, Image, Row } from 'react-bootstrap';
 import FormPage from '../components/FormPage/FormPage';
 import Layout from '../components/Layout/Layout';
 import LoginForm from '../components/LoginForm/LoginForm';
@@ -7,10 +7,12 @@ import LoginForm from '../components/LoginForm/LoginForm';
 export function LoginPage() {
 	return (
 		<Layout>
-			<FormPage img='img/undraw_login.svg'>
-				<h2 className='fw-normal mb-5 text-center'>Login to DokChat</h2>
-				<LoginForm />
-			</FormPage>
+			<Container>
+				<FormPage img='img/undraw_login.svg'>
+					<h2 className='fw-normal mb-5 text-center'>Login to DokChat</h2>
+					<LoginForm />
+				</FormPage>
+			</Container>
 		</Layout>
 
 	);

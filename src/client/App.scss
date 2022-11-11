@@ -12,15 +12,6 @@ body {
 }
 
 /* From: https://gomakethings.com/how-to-break-an-image-out-of-its-parent-container-with-css/ */
-.full-width {
-	left: 50%;
-	margin-left: -50vw;
-	margin-right: -50vw;
-	max-width: 100vw;
-	position: relative;
-	right: 50%;
-	width: 100vw;
-}
 
 .btn {
 	border-radius: 9999px;

@@ -9,7 +9,7 @@ function Header() {
 	const [ user ] = useContext(UserContext);
 
 	return (
-		<div className='full-width font-header '>
+		<div className='font-header w-100'>
 			<Container
 				className='text-center text-white'
 				style={{
@@ -30,9 +30,11 @@ function Header() {
 						Open DokChat in your browser
 						</Button>
 					</Link>
-					<Button variant='dark' size='lg' className='mt-3 d-flex align-items-center'>
-						<BsCloudArrowDown className='me-2' /> Download
-					</Button>
+					<Link to='/download'>
+						<Button variant='dark' size='lg' className='mt-3 d-flex align-items-center'>
+							<BsCloudArrowDown className='me-2' /> Download
+						</Button>
+					</Link>
 				</div>
 
 			</Container>

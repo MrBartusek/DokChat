@@ -30,9 +30,8 @@ function Navbar({zeroHeight} : Props) {
 				</BsNavbar.Brand>
 				<BsNavbar.Collapse className="justify-content-center">
 					<Nav>
-						<Nav.Link as={Link} to='/'>Download</Nav.Link>
-						<Nav.Link as={Link} to='/'>Features</Nav.Link>
-						<Nav.Link as={Link} to='/about'>About</Nav.Link>
+						<Nav.Link as={Link} to='/'>About</Nav.Link>
+						<Nav.Link as={Link} to='/download'>Download</Nav.Link>
 						<Nav.Link href='https://github.com/MrBartusek/DokChat/issues' target='_blank'>Support</Nav.Link>
 						<Nav.Link href='https://github.com/MrBartusek/DokChat' target='_blank'>Github</Nav.Link>
 					</Nav>

@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import { useUpdatingUser } from '../../hooks/useUpdatingUser';
 import { AboutPage } from '../../pages/AboutPage';
@@ -14,6 +14,7 @@ import NewChatPopup from '../NewChatPopup/NewChatPopup';
 import NewPasswordDialog from '../NewPasswordDialog/NewPasswordDialog';
 import NewPasswordForm from '../NewPasswordForm/NewPasswordForm';
 import PasswordResetForm from '../PasswordResetForm/PasswordResetForm';
+import ScrollToTop from '../ScrollToTop/ScrollToTop';
 import SettingsPopup from '../SettingsPopup/SettingsPopup';
 
 function Router() {
@@ -24,6 +25,7 @@ function Router() {
 	return (
 		<UserContext.Provider value={[ user, updateToken, setUser, removeUser ]}>
 			<BrowserRouter>
+				<ScrollToTop />
 				<Routes>
 					<Route path="/" element={<HomePage />} />
 					<Route path="about" element={<AboutPage />} />
