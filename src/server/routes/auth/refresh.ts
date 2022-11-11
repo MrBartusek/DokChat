@@ -52,9 +52,10 @@ router.all('/refresh', allowedMethods('POST'), async (req, res, next) => {
 			const timestamp = DateFns.getUnixTime(new Date());
 			await db.query(sql`UPDATE users SET last_seen=$1 WHERE id=$2`, [ timestamp, userId ]);
 
-			AuthManager.sendAuthResponse(res, jwtData, user.password_hash);
+			AuthManager.sendAuthResponse(res, jwtData, user.passwordHash);
 		})
 		.catch((error) => {
+			console.log(error);
 			return new ApiResponse(res).unauthorized('Invalid JWT');
 		});
 });
