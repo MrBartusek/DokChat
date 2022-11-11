@@ -14,7 +14,7 @@ import * as schedule from 'node-schedule';
 import processEmailBounces from './jobs/processBounces';
 import processEmailComplaints from './jobs/processComplaints';
 
-const isProduction = (process.env.NODE_ENV || 'development') == 'production';
+const isProduction = (process.env['NODE' + '_ENV'] || 'development') == 'production';
 
 async function main() {
 	// Initialize database
