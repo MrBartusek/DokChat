@@ -30,7 +30,7 @@ function Header() {
 						Open DokChat in your browser
 						</Button>
 					</Link>
-					<Link to='/download'>
+					<Link to='/download' className='text-decoration-none'>
 						<Button variant='dark' size='lg' className='mt-3 d-flex align-items-center'>
 							<BsCloudArrowDown className='me-2' /> Download
 						</Button>
