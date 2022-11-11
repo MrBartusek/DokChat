@@ -75,17 +75,17 @@ export default class JWTManager {
 		return this.signJWT(data, TokenType.USER_TOKEN);
 	}
 
-	public static async generateRefreshToken(userId: string, passwordHash: string): Promise<string> {
-		return this.signJWT({ id: userId}, TokenType.REFRESH_TOKEN, passwordHash);
+	public static async generateRefreshToken(id: string, passwordHash: string): Promise<string> {
+		return this.signJWT({ id }, TokenType.REFRESH_TOKEN, passwordHash);
 	}
 
-	public static async generatePassResetToken(userData: UserJWTData, passwordHash: string): Promise<string> {
-		const data: PasswordResetJWTData = { id: userData.id, email: userData.email };
+	public static async generatePassResetToken(id: string, email: string, passwordHash: string): Promise<string> {
+		const data: PasswordResetJWTData = { id, email };
 		return this.signJWT(data, TokenType.PASS_RESET_TOKEN, passwordHash);
 	}
 
-	public static async generateEmailConfirmToken(userData: UserJWTData): Promise<string> {
-		const data: EmailConfirmJWTData  = { id: userData.id, email: userData.email };
+	public static async generateEmailConfirmToken(id: string, email: string ): Promise<string> {
+		const data: EmailConfirmJWTData  = { id, email };
 		return this.signJWT(data, TokenType.PASS_RESET_TOKEN);
 	}
 
@@ -94,6 +94,11 @@ export default class JWTManager {
 	// --------------------------
 
 	public static decodeRefreshToken(token: string): string {
+		const id = this.decodeJWT(token).id as string;
+		return id;
+	}
+
+	public static decodePassResetToken(token: string): string {
 		const id = this.decodeJWT(token).id as string;
 		return id;
 	}
@@ -108,6 +113,12 @@ export default class JWTManager {
 
 	public static async verifyRefreshToken(token: string, passwordHash: string): Promise<string> {
 		const data = await this.verifyJWT<{ id: string}>(token, TokenType.REFRESH_TOKEN, passwordHash);
+		return data.id;
+	}
+
+	public static async verifyPassResetToken(token: string, email: string, passwordHash: string): Promise<string> {
+		const data = await this.verifyJWT<{ id: string, email: string}>(token, TokenType.PASS_RESET_TOKEN, passwordHash);
+		if(data.email != email) throw new Error('JWT email does not match account emil');
 		return data.id;
 	}
 }

@@ -11,10 +11,25 @@ import JWTManager from './JWTManager';
 
 export default class AuthManager {
 	public static async authenticateUser(email: string, password: string): Promise<[UserJWTData, string]> {
-		const query = await db.query(sql`SELECT id, username, tag, email, password_hash, is_banned as "isBanned" FROM users WHERE email=$1`, [ email ]);
-		if(query.rowCount == 0) return Promise.reject('Provided email and password are not valid');
+		const query = await db.query(sql`
+			SELECT
+				id,
+				username,
+				tag,
+				email,
+				password_hash as "passwordHash",
+				is_banned as "isBanned",
+				is_email_confirmed as "isEmailVerified"
+			FROM users WHERE email = $1;
+		`, [ email ]);
+		if(query.rowCount == 0) {
+			// Prevent timing-based attacks
+			const dummyHash = '$2a$12$ofYWWnSx93s.whi3Zth6qOxUHTBPeDsowsI7Wq.CqpU9SCmLgrrNO';
+			await bcrypt.compare(password, dummyHash);
+			return Promise.reject('Provided email and password are not valid');
+		}
 		const user = query.rows[0];
-		const passwordValid = await bcrypt.compare(password, user.password_hash);
+		const passwordValid = await bcrypt.compare(password, user.passwordHash);
 		if(!passwordValid) return Promise.reject('Provided email and password are not valid');
 
 		const jwtData = {
@@ -22,9 +37,10 @@ export default class AuthManager {
 			username: user.username,
 			tag: user.tag,
 			email: user.email,
-			isBanned: user.isBanned
+			isBanned: user.isBanned,
+			isEmailConfirmed: user.isEmailConfirmed
 		};
-		return [ jwtData, user.password_hash ];
+		return [ jwtData, user.passwordHash ];
 	}
 
 	public static async sendAuthResponse(res: Response, userData: UserJWTData, passwordHash: string, rememberMe?: boolean) {

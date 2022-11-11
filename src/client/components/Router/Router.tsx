@@ -7,9 +7,13 @@ import { AccountBannedPage } from '../../pages/AccountBannedPage';
 import { ChatPage } from '../../pages/ChatPage';
 import { HomePage } from '../../pages/HomePage';
 import { LoginPage } from '../../pages/LoginPage';
+import { PasswordResetPage } from '../../pages/PasswordResetPage';
 import { RegisterPage } from '../../pages/RegisterPage';
 import ErrorPage from '../ErrorPage/ErrorPage';
 import NewChatPopup from '../NewChatPopup/NewChatPopup';
+import NewPasswordDialog from '../NewPasswordDialog/NewPasswordDialog';
+import NewPasswordForm from '../NewPasswordForm/NewPasswordForm';
+import PasswordResetForm from '../PasswordResetForm/PasswordResetForm';
 import SettingsPopup from '../SettingsPopup/SettingsPopup';
 
 function Router() {
@@ -33,6 +37,14 @@ function Router() {
 							<RegisterPage />
 						</PublicOnlyRoute>
 					} />
+					<Route path="forgot-password" element={
+						<PublicOnlyRoute>
+							<PasswordResetPage />
+						</PublicOnlyRoute>
+					}>
+						<Route path="" element={<PasswordResetForm />} />
+						<Route path=":token" element={<NewPasswordDialog />} />
+					</Route>
 					<Route path="chat" element={
 						<PrivateRoute>
 							<ChatPage />
@@ -42,7 +54,7 @@ function Router() {
 						<Route path="new" element={<NewChatPopup />} />
 						<Route path="profile" element={<SettingsPopup />} />
 					</Route>
-					<Route path="suspended" element={
+					<Route path="suspended/" element={
 						<PrivateRoute isSuspendedRoute>
 							<AccountBannedPage />
 						</PrivateRoute>

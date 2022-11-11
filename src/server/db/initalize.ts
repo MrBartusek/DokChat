@@ -20,9 +20,9 @@ export async function initializeDB() {
             is_system boolean NOT NULL DEFAULT FALSE,
             is_admin boolean NOT NULL DEFAULT FALSE,
             is_banned boolean NOT NULL DEFAULT FALSE,
-
-            is_pass_confirmed boolean NOT NULL DEFAULT FALSE,
-            last_pass_confirm_attempt bigint,
+            is_email_confirmed boolean NOT NULL DEFAULT FALSE,
+            
+            last_email_confirm_attempt bigint,
             last_pass_reset_attempt bigint,
             PRIMARY KEY (id)
         );
@@ -31,7 +31,7 @@ export async function initializeDB() {
             id varchar NOT NULL,
             is_group boolean NOT NULL,
             name varchar(32),
-            avatar varchar(255),
+            avatar varchar(64),
             creator_id varchar REFERENCES users ON DELETE CASCADE,
             created_at bigint NOT NULL,
             PRIMARY KEY (id)

@@ -59,5 +59,9 @@ export class ApiResponse {
 	public forbidden(message?: string) {
 		return this.error(403, message || 'Forbidden');
 	}
+
+	public tooManyRequests(message?: string) {
+		return this.error(429, message || 'Forbidden');
+	}
 }
 

@@ -14,7 +14,7 @@ import AuthManager from '../../managers/authManager';
 import * as DateFns from 'date-fns';
 import { snowflakeGenerator } from '../../utils/snowflakeGenerator';
 import ChatManager from '../../managers/chatManager';
-import EmailClient from '../../aws/ses';
+import emailClient from '../../aws/ses';
 import JWTManager from '../../managers/JWTManager';
 import EmailBlacklistManager from '../../managers/emailBlacklistManager';
 
@@ -59,7 +59,8 @@ router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 		username: username,
 		tag: tag,
 		email: email,
-		isBanned: false
+		isBanned: false,
+		isEmailConfirmed: false
 	};
 
 	// Add to public chat
@@ -69,8 +70,7 @@ router.all('/register', allowedMethods('POST'), async (req, res, next) => {
 
 	// Send confirm email, this is situated AFTER response since, it this fails
 	// it's not a big deal for user register process
-	const emailClient = new EmailClient();
-	await emailClient.sendEmailConfirmEmail(jwtData)
+	await emailClient.sendEmailConfirmEmail(jwtData, email)
 		.catch((error) => console.log('Failed to send register confirm email', error));
 });
 

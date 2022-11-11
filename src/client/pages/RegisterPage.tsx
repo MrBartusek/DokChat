@@ -8,6 +8,7 @@ export function RegisterPage() {
 	return (
 		<Layout>
 			<FormPage img='img/undraw_chat.svg'>
+				<h2 className='fw-normal mb-5 text-center'>Sing up to DokChat</h2>
 				<RegisterForm />
 			</FormPage>
 		</Layout>

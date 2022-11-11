@@ -3,7 +3,7 @@ import { Image, Row, Col } from 'react-bootstrap';
 
 interface Props {
     img: string,
-    children: JSX.Element,
+    children: JSX.Element | JSX.Element[],
 }
 
 function FormPage({img, children}: Props) {

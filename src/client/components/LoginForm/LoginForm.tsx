@@ -22,7 +22,6 @@ function LoginForm() {
 
 	return (
 		<>
-			<LoginTitle />
 			{error && <Alert variant='danger'>{error}</Alert>}
 			<Form ref={formRef}>
 				<Form.Group className="mb-3" controlId="formBasicEmail">
@@ -119,18 +118,6 @@ function LoginForm() {
 			});
 
 	}
-}
-
-function LoginTitle() {
-	return (
-		<h2 className='d-flex justify-content-center flex-row fw-normal gap-1 mb-5'>
-			<span>Log in to</span>
-			<span className='fw-bold'>
-				<BsFillChatSquareTextFill className='mx-2'/>
-                DokChat
-			</span>
-		</h2>
-	);
 }
 
 export default LoginForm;

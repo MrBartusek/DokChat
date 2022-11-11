@@ -1,9 +1,7 @@
 import * as express from 'express';
 import { ApiResponse } from '../../apiResponse';
-import allowedMethods from '../../middlewares/allowedMethods';
 import AuthManager from '../../managers/authManager';
-import EmailClient from '../../aws/ses';
-import JWTManager from '../../managers/JWTManager';
+import allowedMethods from '../../middlewares/allowedMethods';
 
 const router = express.Router();
 

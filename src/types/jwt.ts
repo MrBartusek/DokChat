@@ -5,5 +5,6 @@ export interface UserJWTData extends JWTPayload {
     username: string,
     tag: string,
     email: string,
-    isBanned: boolean
+    isBanned: boolean,
+    isEmailConfirmed: boolean
 }

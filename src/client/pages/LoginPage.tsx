@@ -8,6 +8,7 @@ export function LoginPage() {
 	return (
 		<Layout>
 			<FormPage img='img/undraw_login.svg'>
+				<h2 className='fw-normal mb-5 text-center'>Login to DokChat</h2>
 				<LoginForm />
 			</FormPage>
 		</Layout>

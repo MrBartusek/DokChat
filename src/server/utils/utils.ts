@@ -2,6 +2,7 @@ import { Request } from 'express';
 import { Handshake } from 'socket.io/dist/socket';
 import * as crypto from 'crypto';
 import { UserJWTData } from '../../types/jwt';
+import { User } from '../../types/common';
 
 export default class Utils {
 	public static apiUrl() {
@@ -16,7 +17,7 @@ export default class Utils {
 		return crypto.randomBytes(bytes).toString('hex');
 	}
 
-	public static userDiscriminator(user: UserJWTData) {
+	public static userDiscriminator(user: UserJWTData | User) {
 		return `${user.username}#${user.tag}`;
 	}
 }
