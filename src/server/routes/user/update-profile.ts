@@ -12,69 +12,76 @@ import * as sharp from 'sharp';
 import s3Client, { bucketName } from '../../aws/s3';
 import Utils from '../../utils/utils';
 import { DeleteObjectCommand, DeleteObjectCommandOutput, PutObjectCommand } from '@aws-sdk/client-s3';
+import { body, validationResult } from 'express-validator';
+import { isValidUsername } from '../../validators/username';
+import { isValidPassword } from '../../validators/password';
+import { isValidTag } from '../../validators/TAG';
 
 const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-router.all('/update-profile', ensureAuthenticated(), allowedMethods('PUT'), upload.single('avatar'), async (req, res, next) => {
-	// Validate request
-	const username = req.body.username as any;
-	const tag = req.body.tag as any;
-	const password = req.body.password as any;
-	const email = req.body.email as any;
-	const avatar = req.file;
+router.all('/update-profile',
+	ensureAuthenticated(),
+	allowedMethods('PUT'),
+	upload.single('avatar'),
+	body('username').custom(isValidUsername),
+	body('password').custom(isValidPassword),
+	body('email').isEmail().normalizeEmail(),
+	body('tag').custom(isValidTag),
+	async (req, res, next) => {
+		console.log(req.body);
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 
-	if(typeof username !== 'string' || typeof tag !== 'string' || typeof password !== 'string' || typeof email !== 'string') {
-		return new ApiResponse(res).badRequest('Invalid form body');
-	}
-	const valid = validParameters(username, tag, email);
-	if(valid !== true) {
-		return new ApiResponse(res).badRequest(valid);
-	}
+		const username: string = req.body.username;
+		const tag: string = req.body.tag;
+		const password: string = req.body.password;
+		const email: string = req.body.email;
+		const avatar = req.file;
 
-	// Authenticate user with password
-	const [ user ] = await AuthManager.authenticateUser(req.auth.email, password)
-		.catch((reason) => {
-			if(typeof reason !== 'string') throw reason;
-			return new ApiResponse(res).badRequest('Provided password is not valid');
-		}) as [UserJWTData, string];
-	if(!user) return;
+		// Authenticate user with password
+		const [ user ] = await AuthManager.authenticateUser(req.auth.email, password)
+			.catch((reason) => {
+				if(typeof reason !== 'string') throw reason;
+				return new ApiResponse(res).badRequest('Provided password is not valid');
+			}) as [UserJWTData, string];
+		if(!user) return;
 
-	const discriminatorChanged = user.username != username || user.tag != tag;
-	const emailChanged = user.email != email;
+		const discriminatorChanged = user.username != username || user.tag != tag;
+		const emailChanged = user.email != email;
 
-	if(!discriminatorChanged && !emailChanged && !avatar) {
-		return new ApiResponse(res).badRequest('Provided details are identical to current ones');
-	}
-
-	if(discriminatorChanged && await discriminatorTaken(username, tag)) {
-		return new ApiResponse(res).badRequest('This username and tag belongs to another user, please select other discriminator');
-	}
-	if(emailChanged && await emailTaken(email)) {
-		return new ApiResponse(res).badRequest('This email is already in use');
-	}
-
-	// Upload avatar to S3
-	if(avatar) {
-		const oldAvatar = await getUserAvatar(user.id);
-		if(oldAvatar) {
-			await deleteAvatar(oldAvatar);
+		if(!discriminatorChanged && !emailChanged && !avatar) {
+			return new ApiResponse(res).badRequest('Provided details are identical to current ones');
 		}
-		const fileName = await uploadAvatar(user.id, avatar);
-		await db.query(sql`UPDATE users SET avatar = $1 WHERE id=$2`, [ fileName, user.id ]);
-	}
 
-	await db.query(sql`
+		if(discriminatorChanged && await discriminatorTaken(username, tag)) {
+			return new ApiResponse(res).badRequest('This username and tag belongs to another user, please select other discriminator');
+		}
+		if(emailChanged && await emailTaken(email)) {
+			return new ApiResponse(res).badRequest('This email is already in use');
+		}
+
+		// Upload avatar to S3
+		if(avatar) {
+			const oldAvatar = await getUserAvatar(user.id);
+			if(oldAvatar) {
+				await deleteAvatar(oldAvatar);
+			}
+			const fileName = await uploadAvatar(user.id, avatar);
+			await db.query(sql`UPDATE users SET avatar = $1 WHERE id=$2`, [ fileName, user.id ]);
+		}
+
+		await db.query(sql`
 		UPDATE users SET
 			username = $1,
 			tag = $2,
 			email = $3
 		WHERE id=$4`,
-	[ username, tag, email, user.id ]);
+		[ username, tag, email, user.id ]);
 
-	return new ApiResponse(res).success();
-});
+		return new ApiResponse(res).success();
+	});
 
 async function discriminatorTaken(username: string, tag: string) {
 	const result = await db.query(sql`
@@ -90,19 +97,6 @@ async function emailTaken(email: string) {
 	[ email ]);
 
 	return result.rows[0].exists;
-}
-
-function validParameters(username: string, tag: string, email: string): true | string {
-	const usernameValid = Validate.username(username);
-	if(usernameValid !== true) return usernameValid;
-
-	const tagValid = Validate.tag(tag);
-	if(tagValid !== true) return tagValid;
-
-	const emailValid = Validate.email(email);
-	if(emailValid !== true) return emailValid;
-
-	return true;
 }
 
 async function uploadAvatar(userId: string, avatar: Express.Multer.File): Promise<string> {

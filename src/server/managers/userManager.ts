@@ -4,10 +4,11 @@ import { User } from '../../types/common';
 import Utils from '../utils/utils';
 import { Request } from 'express';
 import { Handshake } from 'socket.io/dist/socket';
+import { UserJWTData } from '../../types/jwt';
 
 export default class UserManager {
 	public static async getUserById(id: string): Promise<User | null> {
-		const chatsQuery = await db.query(sql`
+		const query = await db.query(sql`
 			SELECT
 				username, tag, avatar
 			FROM
@@ -15,8 +16,8 @@ export default class UserManager {
 			WHERE id = $1
 			LIMIT 1;
 		`, [ id ]);
-		if(chatsQuery.rowCount == 0) return null;
-		const user = chatsQuery.rows[0];
+		if(query.rowCount == 0) return null;
+		const user = query.rows[0];
 		return {
 			id: id,
 			username: user.username,
@@ -26,7 +27,7 @@ export default class UserManager {
 	}
 
 	public static async getUserByUsername(username: string, tag: string): Promise<User | null> {
-		const chatsQuery = await db.query(sql`
+		const query = await db.query(sql`
 			SELECT
 				id, avatar
 			FROM
@@ -34,8 +35,8 @@ export default class UserManager {
 			WHERE username = $1 AND tag = $2
 			LIMIT 1;
 		`, [ username, tag ]);
-		if(chatsQuery.rowCount == 0) return null;
-		const user = chatsQuery.rows[0];
+		if(query.rowCount == 0) return null;
+		const user = query.rows[0];
 		return {
 			id: user.id,
 			username: username,
@@ -48,4 +49,65 @@ export default class UserManager {
 		const query = await db.query(sql`SELECT id FROM users WHERE is_system = 'true'`);
 		return query.rows[0].id;
 	}
+
+	public static async getUserJwtDataById(id: string): Promise<UserJWTData | null> {
+		const query = await db.query(sql`
+			SELECT
+				id,
+				username,
+				tag,
+				email,
+				password_hash as "passwordHash",
+				is_banned as "isBanned",
+				is_email_confirmed as "isEmailVerified"
+			FROM users WHERE id = $1;
+		`, [ id ]);
+
+		if(query.rowCount == 0) return null;
+		const user = query.rows[0];
+		return {
+			id: user.id,
+			username: user.username,
+			tag: user.tag,
+			email: user.email,
+			isBanned: user.isBanned,
+			isEmailConfirmed: user.isEmailConfirmed
+		};
+	}
+
+	public static async getUserJwtDataByEmail(email: string): Promise<UserJWTData | null> {
+		const query = await db.query(sql`
+			SELECT
+				id,
+				username,
+				tag,
+				email,
+				password_hash as "passwordHash",
+				is_banned as "isBanned",
+				is_email_confirmed as "isEmailVerified"
+			FROM users WHERE email = $1;
+		`, [ email ]);
+
+		if(query.rowCount == 0) return null;
+		const user = query.rows[0];
+		return {
+			id: user.id,
+			username: user.username,
+			tag: user.tag,
+			email: user.email,
+			isBanned: user.isBanned,
+			isEmailConfirmed: user.isEmailConfirmed
+		};
+	}
+
+	public static async getUserHashById(id: string): Promise<string | null> {
+		const query = await db.query(sql`SELECT password_hash as "passwordHash" FROM users WHERE id = $1;`, [ id ]);
+		return query.rows[0].passwordHash;
+	}
+
+	public static async getUserHashByEmail(email: string): Promise<string | null> {
+		const query = await db.query(sql`SELECT password_hash as "passwordHash" FROM users WHERE email = $1;`, [ email ]);
+		return query.rows[0].passwordHash;
+	}
+
 }

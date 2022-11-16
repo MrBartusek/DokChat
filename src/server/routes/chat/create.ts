@@ -10,37 +10,42 @@ import * as DateFns from 'date-fns';
 import UserManager from '../../managers/userManager';
 import { Request } from 'express-serve-static-core';
 import { Chat, User } from '../../../types/common';
+import { body, validationResult } from 'express-validator';
 
 const router = express.Router();
 
-router.all('/create', allowedMethods('POST'), ensureAuthenticated(), async (req, res, next) => {
-	const participantIds = req.body.participants as string[];
-	if(!Array.isArray(participantIds)) return new ApiResponse(res).badRequest();
-	if(participantIds.length <= 0) return new ApiResponse(res).badRequest();
-	if(participantIds.length > 25) return new ApiResponse(res).badRequest();
+router.all('/create',
+	allowedMethods('POST'),
+	ensureAuthenticated(),
+	body('participant').isArray({ min: 2, max: 25 }),
+	async (req, res, next) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 
-	// Add req.auth user to participants
-	if(participantIds.includes(req.auth.id)) {
-		return new ApiResponse(res).badRequest('Authenticated user is included in participants');
-	}
-	participantIds.push(req.auth.id);
+		const participantIds = req.body.participants as string[];
 
-	// Check if specific DM already exist
-	const dmId = await ChatManager.dmExist(participantIds[0], participantIds[1]);
-	if(dmId !== false) {
-		const chat = await ChatManager.getChat(req, dmId, req.auth.id);
-		return new ApiResponse(res).respond(true, 409, 'This DM already exist', chat);
-	}
+		// Add req.auth user to participants
+		if(participantIds.includes(req.auth.id)) {
+			return new ApiResponse(res).badRequest('Authenticated user is included in participants');
+		}
+		participantIds.push(req.auth.id);
 
-	// Fetch participants
-	const participants = await convertIdsToUsers(participantIds);
-	if(participants.includes(null)) {
-		return new ApiResponse(res).badRequest('Invalid participants list');
-	}
+		// Check if specific DM already exist
+		const dmId = await ChatManager.dmExist(participantIds[0], participantIds[1]);
+		if(dmId !== false) {
+			const chat = await ChatManager.getChat(req, dmId, req.auth.id);
+			return new ApiResponse(res).respond(true, 409, 'This DM already exist', chat);
+		}
 
-	const chat = await createChat(req, req.auth.id, participants);
-	new ApiResponse(res).success(chat);
-});
+		// Fetch participants
+		const participants = await convertIdsToUsers(participantIds);
+		if(participants.includes(null)) {
+			return new ApiResponse(res).badRequest('Invalid participants list');
+		}
+
+		const chat = await createChat(req, req.auth.id, participants);
+		new ApiResponse(res).success(chat);
+	});
 
 async function createChat(req: Request, creatorId: string, participants: User[]): Promise<Chat> {
 	// Create chat

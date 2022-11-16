@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
+import { Result, ValidationError } from 'express-validator';
 import { Socket } from 'socket.io';
 import { SocketError } from '../types/error';
+
+const isProduction = (process.env['NODE' + '_ENV'] || 'development') == 'production';
 
 export class ApiResponse {
 	constructor(
@@ -62,6 +65,16 @@ export class ApiResponse {
 
 	public tooManyRequests(message?: string) {
 		return this.error(429, message || 'Forbidden');
+	}
+
+	public validationError(errors: Result<ValidationError>) {
+		if(!isProduction) console.log(errors.array());
+		const error = errors.array({ onlyFirstError: true }).at(0);
+		let msg = error.msg;
+		if(msg == 'Invalid value') {
+			msg = `Invalid ${error.param} provided`;
+		}
+		return this.badRequest(msg);
 	}
 }
 

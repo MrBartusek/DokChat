@@ -10,37 +10,44 @@ import { QueryResult } from 'pg';
 import { Request } from 'express-serve-static-core';
 import ChatManager from '../../managers/chatManager';
 import PermissionsManager from '../../managers/permissionsManager';
+import { body, query, validationResult } from 'express-validator';
 
 const router = express.Router();
 
-router.all('/messages', allowedMethods('GET'), ensureAuthenticated(), async (req, res, next) => {
-	const page = req.query.page as any as number || 0;
-	const chatId = req.query.chat;
-	if(typeof chatId != 'string') return new ApiResponse(res).badRequest();
-	if(isNaN(page)) return new ApiResponse(res).badRequest();
+router.all('/messages',
+	allowedMethods('GET'),
+	ensureAuthenticated(),
+	query('page').optional().isNumeric(),
+	query('chat').isString(),
+	async (req, res, next) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 
-	if(!PermissionsManager.hasChatAccess(req.auth, chatId)) {
-		return new ApiResponse(res).forbidden();
-	}
+		const page = req.query.page as any as number || 0;
+		const chatId = req.query.chat;
 
-	const messagesQuery = await queryMessages(chatId, page);
-	const messages = messagesQuery.rows.map((msg) => {
-		return {
-			id: msg.id,
-			author: {
-				id: msg.authorId,
-				username: msg.authorUsername,
-				avatar: Utils.avatarUrl(msg.authorId),
-				tag: msg.authorTag
-			},
-			content: msg.content,
-			timestamp: msg.createdAt,
-			avatar: Utils.avatarUrl(msg.authorId)
-		};
+		if(!PermissionsManager.hasChatAccess(req.auth, chatId)) {
+			return new ApiResponse(res).forbidden();
+		}
+
+		const messagesQuery = await queryMessages(chatId, page);
+		const messages = messagesQuery.rows.map((msg) => {
+			return {
+				id: msg.id,
+				author: {
+					id: msg.authorId,
+					username: msg.authorUsername,
+					avatar: Utils.avatarUrl(msg.authorId),
+					tag: msg.authorTag
+				},
+				content: msg.content,
+				timestamp: msg.createdAt,
+				avatar: Utils.avatarUrl(msg.authorId)
+			};
+		});
+		const result: MessageListResponse = messages;
+		new ApiResponse(res).success(result);
 	});
-	const result: MessageListResponse = messages;
-	new ApiResponse(res).success(result);
-});
 
 type MessagesQuery = QueryResult<{
 	id: string,

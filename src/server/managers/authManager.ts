@@ -8,39 +8,22 @@ import db from '../db';
 import sql from 'sql-template-strings';
 import * as bcrypt from 'bcrypt';
 import JWTManager from './JWTManager';
+import UserManager from './userManager';
 
 export default class AuthManager {
 	public static async authenticateUser(email: string, password: string): Promise<[UserJWTData, string]> {
-		const query = await db.query(sql`
-			SELECT
-				id,
-				username,
-				tag,
-				email,
-				password_hash as "passwordHash",
-				is_banned as "isBanned",
-				is_email_confirmed as "isEmailVerified"
-			FROM users WHERE email = $1;
-		`, [ email ]);
-		if(query.rowCount == 0) {
+		const user = await UserManager.getUserJwtDataByEmail(email);
+		const passwordHash = await UserManager.getUserHashByEmail(email);
+		if(!user) {
 			// Prevent timing-based attacks
 			const dummyHash = '$2a$12$ofYWWnSx93s.whi3Zth6qOxUHTBPeDsowsI7Wq.CqpU9SCmLgrrNO';
 			await bcrypt.compare(password, dummyHash);
 			return Promise.reject('Provided email and password are not valid');
 		}
-		const user = query.rows[0];
-		const passwordValid = await bcrypt.compare(password, user.passwordHash);
+		const passwordValid = await bcrypt.compare(password, passwordHash);
 		if(!passwordValid) return Promise.reject('Provided email and password are not valid');
 
-		const jwtData = {
-			id: user.id,
-			username: user.username,
-			tag: user.tag,
-			email: user.email,
-			isBanned: user.isBanned,
-			isEmailConfirmed: user.isEmailConfirmed
-		};
-		return [ jwtData, user.passwordHash ];
+		return [ user, passwordHash ];
 	}
 
 	public static async sendAuthResponse(res: Response, userData: UserJWTData, passwordHash: string, rememberMe?: boolean) {

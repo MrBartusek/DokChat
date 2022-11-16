@@ -1,5 +1,6 @@
 import * as DateFns from 'date-fns';
 import * as express from 'express';
+import { body, validationResult } from 'express-validator';
 import sql from 'sql-template-strings';
 import { ApiResponse } from '../../../apiResponse';
 import emailClient from '../../../aws/ses';
@@ -8,9 +9,11 @@ import allowedMethods from '../../../middlewares/allowedMethods';
 
 const router = express.Router();
 
-router.all('/start', allowedMethods('POST'), async (req, res, next) => {
+router.all('/start', body('email').isEmail().normalizeEmail(), async (req, res, next) => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
+
 	const email: string = req.body.email;
-	if(typeof email !== 'string') return new ApiResponse(res).badRequest('Invalid form body');
 
 	const query = await db.query(sql`SELECT last_pass_reset_attempt as "lastResetAttempt" FROM users WHERE email = $1;`, [ email ]);
 	if(query.rowCount == 0)  {

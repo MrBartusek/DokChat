@@ -8,37 +8,43 @@ import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 import Utils from '../../utils/utils';
 import { QueryResult } from 'pg';
 import ChatManager from '../../managers/chatManager';
+import { body, query, validationResult } from 'express-validator';
 
 const router = express.Router();
 
-router.all('/list', allowedMethods('GET'), ensureAuthenticated(), async (req, res, next) => {
-	const page = req.query.page as any as number|| 0;
-	if(isNaN(page)) return new ApiResponse(res).badRequest();
+router.all('/list',
+	allowedMethods('GET'),
+	ensureAuthenticated(),
+	query('page').optional().isNumeric(),
+	async (req, res, next) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
+		const page = req.query.page as any as number|| 0;
 
-	const chatsQuery = await queryChats(req, page);
-	const chats = await Promise.all(chatsQuery.rows.map(async (chat) => {
-		const participant = await ChatManager.listParticipants(chat.chatId);
-		const [ avatar, chatName ] = await ChatManager.generateAvatarAndName(
-			chat.chatId, chat.name, chat.avatar, participant, req.auth.id
-		);
+		const chatsQuery = await queryChats(req, page);
+		const chats = await Promise.all(chatsQuery.rows.map(async (chat) => {
+			const participant = await ChatManager.listParticipants(chat.chatId);
+			const [ avatar, chatName ] = await ChatManager.generateAvatarAndName(
+				chat.chatId, chat.name, chat.avatar, participant, req.auth.id
+			);
 
-		return {
-			id: chat.chatId,
-			name: chatName,
-			avatar: avatar,
-			isGroup: chat.isGroup,
-			createdAt: chat.createdAt,
-			creatorId: chat.creatorId,
-			lastMessage: chat.message ? {
-				content: chat.message,
-				author: chat.messageAuthor,
-				timestamp: chat.messageCreatedAt
-			}: null
-		};
-	}));
-	const result: ChatListResponse = chats;
-	new ApiResponse(res).success(result);
-});
+			return {
+				id: chat.chatId,
+				name: chatName,
+				avatar: avatar,
+				isGroup: chat.isGroup,
+				createdAt: chat.createdAt,
+				creatorId: chat.creatorId,
+				lastMessage: chat.message ? {
+					content: chat.message,
+					author: chat.messageAuthor,
+					timestamp: chat.messageCreatedAt
+				}: null
+			};
+		}));
+		const result: ChatListResponse = chats;
+		new ApiResponse(res).success(result);
+	});
 
 type ChatsQuery = QueryResult<{
 	chatId: string,
