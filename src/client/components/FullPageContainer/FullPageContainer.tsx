@@ -12,7 +12,7 @@ function FullPageContainer(props : FullPageContainerProps) {
 		<Container
 			{...props}
 			fluid
-			className={`fullPageContainer ${props.className}`}
+			className={`fullPageContainer ${props.className || ''}`}
 		>
 			{props.children}
 		</Container>

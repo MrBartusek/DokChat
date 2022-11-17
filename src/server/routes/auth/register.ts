@@ -71,11 +71,6 @@ router.all('/register',
 		const publicChatId = await ChatManager.publicChatId();
 		await ChatManager.addUserToChat(userId, publicChatId);
 		AuthManager.sendAuthResponse(res, jwtData, passwordHash);
-
-		// Send confirm email, this is situated AFTER response since, it this fails
-		// it's not a big deal for user register process
-		await emailClient.sendEmailConfirmEmail(jwtData, email)
-			.catch((error) => console.log('Failed to send register confirm email', error));
 	});
 
 async function emailTaken(email: string): Promise<boolean> {

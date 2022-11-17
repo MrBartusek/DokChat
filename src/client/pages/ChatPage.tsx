@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Alert, Col, Row } from 'react-bootstrap';
 import ChatInfo from '../components/ChatInfo/ChatInfo';
 import MessagesWindow from '../components/MessagesWindow/MessagesWindow';
 import ChatList from '../components/ChatList/ChatList';
@@ -60,15 +60,15 @@ export function ChatPage() {
 
 	return (
 		<MessageManagerContext.Provider value={[ chats, sendMessage, setChatList ]}>
-			<FullPageContainer>
-				<Row className='h-100'>
-					<Col style={{'flex': '0 0 360px', 'width': '360px'}} className='border-separator border-end'>
+			<FullPageContainer className='d-flex flex-column'>
+				<Row className='d-flex flex-fill'>
+					<Col style={{'flex': '0 0 360px', 'width': '360px'}} className='d-flex flex-column border-separator border-end'>
 						<UserInfo />
 						<ChatList
 							currentChat={currentChat}
 						/>
 					</Col>
-					<Col className='d-flex align-items-stretch flex-column mh-100 p-0'>
+					<Col className='d-flex align-items-stretch flex-column h-100 p-0'>
 						<ChatInfo currentChat={currentChat} />
 						{currentChat && (
 							<>
