@@ -1,17 +1,15 @@
-import { Axios, AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Form } from 'react-bootstrap';
-import Alert from 'react-bootstrap/Alert';
 import InputGroup from 'react-bootstrap/InputGroup';
-import Modal from 'react-bootstrap/Modal';
+import toast from 'react-hot-toast';
 import { BsPlus } from 'react-icons/bs';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { User } from '../../../types/common';
 import { ChatCreateResponse, EndpointResponse, UserGetResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
-import { useFetch } from '../../hooks/useFetch';
 import { useForm } from '../../hooks/useForm';
 import { LocalChat } from '../../types/Chat';
 import IconButton from '../IconButton/IconButton';
@@ -119,6 +117,7 @@ function NewChatPopup() {
 					chatsCopy.push(new LocalChat(resp.data));
 					setChatList(chatsCopy);
 				}
+				resp.status == 409 ?? toast('This chat already exist');
 				navigate(`/chat/${resp.data.id}`);
 			}).catch((e: AxiosError) => {
 				const resp: EndpointResponse<ChatCreateResponse> = e.response?.data as any;

@@ -11,13 +11,14 @@ import UserManager from '../../managers/userManager';
 import { Request } from 'express-serve-static-core';
 import { Chat, User } from '../../../types/common';
 import { body, validationResult } from 'express-validator';
+import toast from 'react-hot-toast';
 
 const router = express.Router();
 
 router.all('/create',
 	allowedMethods('POST'),
 	ensureAuthenticated(),
-	body('participant').isArray({ min: 2, max: 25 }),
+	body('participants').isArray({ min: 1, max: 25 }),
 	async (req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);

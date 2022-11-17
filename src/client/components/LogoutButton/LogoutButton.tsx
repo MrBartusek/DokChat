@@ -3,6 +3,7 @@ import { BsBoxArrowLeft } from 'react-icons/bs';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
+import toast from 'react-hot-toast';
 
 export default function LogoutButton() {
 	const [ user, refreshToken, setUser, removeUser ] = useContext(UserContext);
@@ -12,6 +13,7 @@ export default function LogoutButton() {
 		setLoading(true);
 		const axios = getAxios(user);
 		axios.post('/auth/logout')
+			.then(() => toast('You have successfully been logged out'))
 			.then(() => removeUser())
 			.catch(() => setLoading(false));
 	}
