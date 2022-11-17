@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Alert, Col, Row } from 'react-bootstrap';
 import ChatInfo from '../components/ChatInfo/ChatInfo';
 import MessagesWindow from '../components/MessagesWindow/MessagesWindow';
@@ -13,17 +13,18 @@ import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import MainLoading from '../components/MainLoading/MainLoading';
 import { useDocumentReady } from '../hooks/useDocumentReady';
 import FullPageContainer from '../components/FullPageContainer/FullPageContainer';
+import EmailConfirmNotice from '../components/EmailConfirmNotice/EmailConfirmNotice';
+import { UserContext } from '../context/UserContext';
 
 export function ChatPage() {
 	const ws = useWebsocket();
 	const [ isLoadingManager, chats, sendMessage, setChatList ] = useMessageManager(ws);
-
 	const { chatId } = useParams();
 	const [ currentChat, setCurrentChat ] = useState<LocalChat>(null);
-
 	const documentReady = useDocumentReady();
 	const navigate = useNavigate();
 	const location = useLocation();
+	const [ user ] = useContext(UserContext);
 
 	/**
 	 * Load current chat
@@ -60,8 +61,9 @@ export function ChatPage() {
 
 	return (
 		<MessageManagerContext.Provider value={[ chats, sendMessage, setChatList ]}>
-			<FullPageContainer className='d-flex flex-column'>
-				<Row className='d-flex flex-fill'>
+			<FullPageContainer className='d-flex flex-column p-0'>
+				{ !user.isEmailConfirmed && <EmailConfirmNotice /> }
+				<Row className='d-flex flex-fill px-2'>
 					<Col style={{'flex': '0 0 360px', 'width': '360px'}} className='d-flex flex-column border-separator border-end'>
 						<UserInfo />
 						<ChatList
