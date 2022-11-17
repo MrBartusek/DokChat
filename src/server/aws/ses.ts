@@ -22,7 +22,7 @@ class EmailClient {
 
 	private async sendTemplatedEmail(template: string, templateData: string, destination: string) {
 		if(await EmailBlacklistManager.isEmailBlacklisted(destination)) {
-			return Promise.reject('This email is blacklisted');
+			return Promise.reject('This e-mail address is blacklisted. Please contact support.');
 		}
 
 		const params: AWS.SES.SendTemplatedEmailRequest = {

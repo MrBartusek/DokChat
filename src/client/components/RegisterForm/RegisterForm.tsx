@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useLayoutEffect, useRef, useState } from 'react';
 import { Alert, Button, Form } from 'react-bootstrap';
 import { BsFillChatSquareTextFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
@@ -17,8 +17,18 @@ function RegisterForm() {
 	const [ values, handleChange ] = useForm({ email: '', username: '', password: '', confirmPassword: '', terms: false });
 	const [ error, setError ] = useState<string | null>(null);
 	const formRef = useRef<HTMLFormElement>(null!);
+	const passwordConfirmRef = useRef<HTMLInputElement>(null!);
 	const navigate = useNavigate();
 	const [ user, updateToken, setUser ] = useContext(UserContext);
+
+	useLayoutEffect(() => {
+		if(values.password != passwordConfirmRef.current.value) {
+			passwordConfirmRef.current.setCustomValidity('The password confirmation does not match');
+		}
+		else {
+			passwordConfirmRef.current.setCustomValidity('');
+		}
+	}, [ values, passwordConfirmRef ]);
 
 	return (
 		<>
@@ -34,6 +44,9 @@ function RegisterForm() {
 						value={values.email}
 						onChange={handleChange}
 					/>
+					<Form.Text className="text-muted">
+						Use your real e-mail. It will be used to confirm your account.
+					</Form.Text>
 				</Form.Group>
 
 				<Form.Group className="mb-3" controlId="formUsername">
@@ -65,18 +78,11 @@ function RegisterForm() {
 					<Form.Control
 						type="password"
 						name="confirmPassword"
+						ref={passwordConfirmRef}
 						required
 						disabled={loading}
 						value={values.confirmPassword}
-						onChange={(e) => {
-							handleChange(e);
-							if(values.password != e.target.value) {
-								e.target.setCustomValidity('The password confirmation does not match');
-							}
-							else {
-								e.target.setCustomValidity('');
-							}
-						}}
+						onChange={handleChange}
 					/>
 				</Form.Group>
 				<Form.Group className="mb-3" controlId="formBasicCheckbox">

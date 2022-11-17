@@ -15,10 +15,14 @@ router.all('/start', body('email').isEmail().normalizeEmail(), async (req, res, 
 
 	const email: string = req.body.email;
 
-	const query = await db.query(sql`SELECT last_pass_reset_attempt as "lastResetAttempt" FROM users WHERE email = $1;`, [ email ]);
-	if(query.rowCount == 0)  {
-		return new ApiResponse(res).badRequest('No account associated with this e-mail address was found');
-	}
+	const query = await db.query(sql`
+		SELECT
+			last_pass_reset_attempt as "lastResetAttempt",
+			is_email_confirmed as "isEmailConfirmed"
+		FROM users WHERE email = $1;`,
+	[ email ]);
+	if(query.rowCount == 0) return new ApiResponse(res).badRequest('No account associated with this e-mail address was found');
+	if(query.rows[0]) return new ApiResponse(res).badRequest('This e-mail address was not confirmed. Please contact support to reset your password.');
 
 	const lastResetAttempt = DateFns.fromUnixTime(Number(query.rows[0].lastResetAttempt || 0));
 	const lastResetAttemptInMinutes = DateFns.differenceInMinutes(new Date(), lastResetAttempt);
