@@ -1,14 +1,13 @@
-import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Button, Col, Form, InputGroup, OverlayTrigger, Popover, Row, Stack } from 'react-bootstrap';
-import { BsImage, BsEmojiSmileFill } from 'react-icons/bs';
+import EmojiPicker, { EmojiStyle } from 'emoji-picker-react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { Col, Form, OverlayTrigger, Popover } from 'react-bootstrap';
 import { AiOutlineGif } from 'react-icons/ai';
+import { BsEmojiSmileFill, BsImage } from 'react-icons/bs';
 import { MdSend } from 'react-icons/md';
-import IconButton from '../IconButton/IconButton';
-import io from 'socket.io-client';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { useForm } from '../../hooks/useForm';
 import { LocalChat } from '../../types/Chat';
-import EmojiPicker, { EmojiStyle } from 'emoji-picker-react';
+import IconButton from '../IconButton/IconButton';
 import './MessageBar.scss';
 
 export interface MessageBarProps {

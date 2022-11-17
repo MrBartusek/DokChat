@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react';
+import toast from 'react-hot-toast';
 import { BsBoxArrowLeft } from 'react-icons/bs';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
-import toast from 'react-hot-toast';
 
 export default function LogoutButton() {
 	const [ user, refreshToken, setUser, removeUser ] = useContext(UserContext);

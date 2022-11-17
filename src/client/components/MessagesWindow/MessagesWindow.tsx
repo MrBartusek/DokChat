@@ -1,17 +1,17 @@
-import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Tooltip, TooltipProps, OverlayTrigger } from 'react-bootstrap';
-import { BsCheckCircle, BsCheckCircleFill, BsCircle, BsXCircle } from 'react-icons/bs';
+import * as DateFns from 'date-fns';
+import React, { useContext, useEffect, useLayoutEffect, useRef } from 'react';
+import { OverlayTrigger, Tooltip, TooltipProps } from 'react-bootstrap';
+import { Twemoji } from 'react-emoji-render';
+import { BsCheckCircle, BsCheckCircleFill, BsXCircle } from 'react-icons/bs';
 import { EndpointResponse, MessageListResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
+import { UserContext } from '../../context/UserContext';
 import { useFetch } from '../../hooks/useFetch';
 import { LocalChat, LocalMessage } from '../../types/Chat';
-import SimpleLoading from '../SimpleLoadng/SimpleLoading';
-import * as DateFns from 'date-fns';
-import { UserContext } from '../../context/UserContext';
-import './MessagesWindow.scss';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
-import { Twemoji } from 'react-emoji-render';
 import Separator from '../Separator/Separator';
+import SimpleLoading from '../SimpleLoadng/SimpleLoading';
+import './MessagesWindow.scss';
 
 export interface MessagesWindowProps {
 	currentChat: LocalChat

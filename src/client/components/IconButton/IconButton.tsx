@@ -1,8 +1,6 @@
 import React from 'react';
-import { Col, Row, Stack, Image, Alert } from 'react-bootstrap';
 import { Variant } from 'react-bootstrap/esm/types';
 import { IconType } from 'react-icons/lib';
-import UserInfo from '../UserInfo/UserInfo';
 import './IconButton.scss';
 
 export interface IconButtonProps extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {

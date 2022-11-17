@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from 'react';
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import { useUpdatingUser } from '../../hooks/useUpdatingUser';
 import { AboutPage } from '../../pages/AboutPage';
@@ -12,7 +12,6 @@ import { RegisterPage } from '../../pages/RegisterPage';
 import ErrorPage from '../ErrorPage/ErrorPage';
 import NewChatPopup from '../NewChatPopup/NewChatPopup';
 import NewPasswordDialog from '../NewPasswordDialog/NewPasswordDialog';
-import NewPasswordForm from '../NewPasswordForm/NewPasswordForm';
 import PasswordResetForm from '../PasswordResetForm/PasswordResetForm';
 import ScrollToTop from '../ScrollToTop/ScrollToTop';
 import SettingsPopup from '../SettingsPopup/SettingsPopup';

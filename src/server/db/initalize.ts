@@ -1,8 +1,7 @@
-import db from './index';
-import sql from 'sql-template-strings';
-import UserManager from '../managers/userManager';
 import * as DateFns from 'date-fns';
+import sql from 'sql-template-strings';
 import { snowflakeGenerator } from '../utils/snowflakeGenerator';
+import db from './index';
 
 export async function initializeDB() {
 	await db.query(sql`

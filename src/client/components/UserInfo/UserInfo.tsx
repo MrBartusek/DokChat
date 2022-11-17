@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { Col, Row, Image, Tooltip, TooltipProps, OverlayTrigger } from 'react-bootstrap';
-import { BsPencilSquare, BsPlusCircle, BsPlusSquare } from 'react-icons/bs';
+import { Col, OverlayTrigger, Row, Tooltip, TooltipProps } from 'react-bootstrap';
+import { BsPlusCircle } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import IconButton from '../IconButton/IconButton';

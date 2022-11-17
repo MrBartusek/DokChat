@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
-import { Container, Button, Image } from 'react-bootstrap';
-import './Header.scss';
-import { BsCloudArrowDown, BsGlobe } from 'react-icons/bs';
+import { Button, Container } from 'react-bootstrap';
+import { BsCloudArrowDown } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
+import './Header.scss';
 
 function Header() {
 	const [ user ] = useContext(UserContext);

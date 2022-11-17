@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import Section from '../Section/Section';
 
 interface SectionProps {

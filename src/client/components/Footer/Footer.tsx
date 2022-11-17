@@ -1,7 +1,7 @@
 import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-import { BsHeartFill } from 'react-icons/bs';
+import { Col, Container, Row } from 'react-bootstrap';
 import { BiCoffeeTogo } from 'react-icons/bi';
+import { BsHeartFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import DokChatLogo from '../DokChatLogo/DokChatLogo';
 

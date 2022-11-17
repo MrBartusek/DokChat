@@ -1,8 +1,8 @@
 import React from 'react';
-import { OverlayTrigger, Tooltip, TooltipProps } from 'react-bootstrap';
+import { OverlayTrigger, TooltipProps } from 'react-bootstrap';
 import { BsCheck, BsClipboard } from 'react-icons/bs';
 import useCopy from '../../hooks/useCopy';
-import IconButton, { IconButtonProps } from '../IconButton/IconButton';
+import IconButton from '../IconButton/IconButton';
 import UpdatingTooltip from '../UpdatingTooltip/UpdatingTooltip';
 
 interface CopyButtonProps extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {

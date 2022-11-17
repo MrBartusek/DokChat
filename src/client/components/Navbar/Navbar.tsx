@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { Button, Container, Nav, Navbar as BsNavbar } from 'react-bootstrap';
-import './Navbar.scss';
 import { BsFillChatSquareTextFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
+import './Navbar.scss';
 
 interface Props {
 	zeroHeight?: boolean;

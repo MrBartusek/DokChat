@@ -1,7 +1,6 @@
-import Image, { ImageProps } from 'react-bootstrap/Image';
 import React from 'react';
+import Image, { ImageProps } from 'react-bootstrap/Image';
 import './ProfilePicture.scss';
-import { IconType } from 'react-icons';
 
 interface ProfilePictureProps extends ImageProps {
     src: string,

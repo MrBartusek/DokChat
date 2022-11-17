@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Row, Image } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import { Twemoji } from 'react-emoji-render';
 import { BsPersonPlusFill, BsThreeDots } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';

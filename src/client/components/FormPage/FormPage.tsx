@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Row, Col } from 'react-bootstrap';
+import { Col, Image, Row } from 'react-bootstrap';
 
 interface Props {
     img: string,

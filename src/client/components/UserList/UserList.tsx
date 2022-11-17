@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Row, Stack, Image } from 'react-bootstrap';
+import React from 'react';
+import { Stack } from 'react-bootstrap';
 import { User } from '../../../types/common';
-import { EndpointResponse, UserGetResponse } from '../../../types/endpoints';
-import { useFetch } from '../../hooks/useFetch';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 
 interface UserListProps {

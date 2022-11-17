@@ -1,9 +1,7 @@
-import React, { FormEvent, useContext, useRef, useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { Alert, Button, Form } from 'react-bootstrap';
-import { BsFillChatSquareTextFill } from 'react-icons/bs';
-import { Link, useNavigate } from 'react-router-dom';
-import { EndpointResponse, UserLoginResponse } from '../../../types/endpoints';
-import { UserContext } from '../../context/UserContext';
+import { Link } from 'react-router-dom';
+import { EndpointResponse } from '../../../types/endpoints';
 import getAxios from '../../helpers/axios';
 import { useForm } from '../../hooks/useForm';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';

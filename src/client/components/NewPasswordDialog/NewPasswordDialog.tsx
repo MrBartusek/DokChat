@@ -1,14 +1,11 @@
-import * as jose from 'jose';
-import React, { FormEvent, useEffect, useState } from 'react';
-import { Alert, Button, Form } from 'react-bootstrap';
-import { Link, useParams } from 'react-router-dom';
-import { EndpointResponse } from '../../../types/endpoints';
-import getAxios from '../../helpers/axios';
-import { useForm } from '../../hooks/useForm';
-import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import * as DateFns from 'date-fns';
-import SimpleLoading from '../SimpleLoadng/SimpleLoading';
+import * as jose from 'jose';
+import React, { useEffect, useState } from 'react';
+import { Alert, Button } from 'react-bootstrap';
+import { Link, useParams } from 'react-router-dom';
+import getAxios from '../../helpers/axios';
 import NewPasswordForm from '../NewPasswordForm/NewPasswordForm';
+import SimpleLoading from '../SimpleLoadng/SimpleLoading';
 
 const axios = getAxios();
 
