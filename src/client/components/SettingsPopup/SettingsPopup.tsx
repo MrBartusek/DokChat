@@ -87,7 +87,7 @@ function SettingsPopup() {
 					{isEditing ? (
 						<>
 							<Button variant='secondary' onClick={handleClose}>
-								Close
+								{isUnsaved ? 'Discord changes' : 'Close'}
 							</Button>
 							<InteractiveButton
 								variant='primary'
