@@ -88,11 +88,12 @@ export class LocalUser {
 		const emailSplit = this.email.split('@');
 		const domainSplit = emailSplit[1].split('.');
 		const sender = emailSplit[0];
-		const domain = domainSplit[0];
-		const tdl = domainSplit[1];
 		const senderMask = sender[0] + '*'.repeat(sender.length - 1);
-		const domainMask = domain[0] + '*'.repeat(domain.length - 1);
-		return `${senderMask}@${domainMask}.${tdl}`;
+		const domainMask = domainSplit.map((item, i, arr) => {
+			if(arr.length - 1 == i) return item;
+			return item[0] + '*'.repeat(item.length - 1);
+		}).join('.');
+		return `${senderMask}@${domainMask}`;
 	}
 
 	public refreshAvatar(): void {

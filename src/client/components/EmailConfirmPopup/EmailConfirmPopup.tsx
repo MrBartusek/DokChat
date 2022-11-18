@@ -26,11 +26,11 @@ function EmailConfirmPopup() {
 		event.preventDefault();
 		setLoading(true);
 
-		await getAxios(user).post('/email-confirm/start')
+		await getAxios(user).post('/auth/email-confirm/start')
 			.then(() => {
 				setLoading(false);
 				setSuccess(true);
-				toast('Confirmation email have been sent');
+				setError(null);
 			})
 			.catch((e) => {
 				const resp: EndpointResponse<null> = e.response?.data;
@@ -41,7 +41,7 @@ function EmailConfirmPopup() {
 
 	return (
 		<Popup
-			title="Confirm E-mail address"
+			title="Confirm e-mail address"
 			footer={(
 				<>
 					<Button variant='secondary' onClick={handleClose}>

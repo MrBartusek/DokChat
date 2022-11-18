@@ -1,14 +1,17 @@
 import React, { useContext } from 'react';
+import { Alert } from 'react-bootstrap';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import { useUpdatingUser } from '../../hooks/useUpdatingUser';
 import { AboutPage } from '../../pages/AboutPage';
 import { AccountBannedPage } from '../../pages/AccountBannedPage';
 import { ChatPage } from '../../pages/ChatPage';
+import { EmailConfirmPage } from '../../pages/EmailConfirmPage';
 import { HomePage } from '../../pages/HomePage';
 import { LoginPage } from '../../pages/LoginPage';
 import { PasswordResetPage } from '../../pages/PasswordResetPage';
 import { RegisterPage } from '../../pages/RegisterPage';
+import EmailConfirmer from '../EmailConfirmer/EmailConfirmer';
 import EmailConfirmPopup from '../EmailConfirmPopup/EmailConfirmPopup';
 import ErrorPage from '../ErrorPage/ErrorPage';
 import NewChatPopup from '../NewChatPopup/NewChatPopup';
@@ -34,11 +37,13 @@ function Router() {
 							<LoginPage />
 						</PublicOnlyRoute>
 					} />
+
 					<Route path="register" element={
 						<PublicOnlyRoute>
 							<RegisterPage />
 						</PublicOnlyRoute>
 					} />
+
 					<Route path="forgot-password" element={
 						<PublicOnlyRoute>
 							<PasswordResetPage />
@@ -47,6 +52,14 @@ function Router() {
 						<Route path="" element={<PasswordResetForm />} />
 						<Route path=":token" element={<NewPasswordDialog />} />
 					</Route>
+
+					<Route path="email-confirm" element={
+						<EmailConfirmPage />
+					}>
+						<Route path="" element={<Alert variant='danger'>No token provided</Alert>} />
+						<Route path=":token" element={<EmailConfirmer />} />
+					</Route>
+
 					<Route path="chat" element={
 						<PrivateRoute>
 							<ChatPage />

@@ -27,7 +27,7 @@ router.all('/start', body('email').isEmail().normalizeEmail(), async (req, res, 
 	const lastResetAttempt = DateFns.fromUnixTime(Number(query.rows[0].lastResetAttempt || 0));
 	const lastResetAttemptInMinutes = DateFns.differenceInMinutes(new Date(), lastResetAttempt);
 
-	if(lastResetAttemptInMinutes < 1) {
+	if(lastResetAttemptInMinutes < 10) {
 		return new ApiResponse(res).tooManyRequests('Password reset request for this email was just send lately, please check your inbox');
 	}
 	await emailClient.sendPasswordResetEmail(email)

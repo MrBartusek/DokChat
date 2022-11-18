@@ -40,7 +40,7 @@ class EmailClient {
 
 	public async sendEmailConfirmEmail(user: UserJWTData | User, email: string) {
 		const confirmToken = await JWTManager.generateEmailConfirmToken(user.id, email);
-		const confirmUrl = `https://dokchat.dokurno.dev/confirm-email/${confirmToken}`;
+		const confirmUrl = `https://dokchat.dokurno.dev/email-confirm/${confirmToken}`;
 
 		// eslint-disable-next-line no-useless-escape
 		const templateData = `{ \"username\":\"${Utils.userDiscriminator(user)}\", \"confirmation-url\": \"${confirmUrl}\"  }`;

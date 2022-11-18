@@ -86,7 +86,7 @@ export default class JWTManager {
 
 	public static async generateEmailConfirmToken(id: string, email: string ): Promise<string> {
 		const data: EmailConfirmJWTData  = { id, email };
-		return this.signJWT(data, TokenType.PASS_RESET_TOKEN);
+		return this.signJWT(data, TokenType.EMAIL_CONFIRM_TOKEN);
 	}
 
 	// --------------------------
@@ -118,7 +118,12 @@ export default class JWTManager {
 
 	public static async verifyPassResetToken(token: string, email: string, passwordHash: string): Promise<string> {
 		const data = await this.verifyJWT<{ id: string, email: string}>(token, TokenType.PASS_RESET_TOKEN, passwordHash);
-		if(data.email != email) throw new Error('JWT email does not match account emil');
+		if(data.email != email) throw new Error('JWT email does not match account email');
 		return data.id;
+	}
+
+	public static async verifyEmailConfirmToken(token: string): Promise<EmailConfirmJWTData> {
+		const data = await this.verifyJWT<EmailConfirmJWTData>(token, TokenType.EMAIL_CONFIRM_TOKEN);
+		return data;
 	}
 }
