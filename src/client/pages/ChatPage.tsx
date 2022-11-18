@@ -63,14 +63,20 @@ export function ChatPage() {
 		<MessageManagerContext.Provider value={[ chats, sendMessage, setChatList ]}>
 			<FullPageContainer className='d-flex flex-column p-0'>
 				{ !user.isEmailConfirmed && <EmailConfirmNotice /> }
-				<Row className='d-flex flex-fill px-2'>
-					<Col style={{'flex': '0 0 360px', 'width': '360px'}} className='d-flex flex-column border-separator border-end'>
+				<Row className='d-flex flex-fill m-0'>
+					<Col
+						style={{flex: '0 0 360px', width: '360px', minWidth: 0}}
+						className='d-flex flex-column border-separator border-end'
+					>
 						<UserInfo />
 						<ChatList
 							currentChat={currentChat}
 						/>
 					</Col>
-					<Col className='d-flex align-items-stretch flex-column h-100 p-0'>
+					<Col
+						style={{minWidth: 0}}
+						className='d-flex align-items-stretch flex-column h-100 p-0'
+					>
 						<ChatInfo currentChat={currentChat} />
 						{currentChat && (
 							<>
