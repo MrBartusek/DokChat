@@ -9,6 +9,7 @@ import { HomePage } from '../../pages/HomePage';
 import { LoginPage } from '../../pages/LoginPage';
 import { PasswordResetPage } from '../../pages/PasswordResetPage';
 import { RegisterPage } from '../../pages/RegisterPage';
+import EmailConfirmPopup from '../EmailConfirmPopup/EmailConfirmPopup';
 import ErrorPage from '../ErrorPage/ErrorPage';
 import NewChatPopup from '../NewChatPopup/NewChatPopup';
 import NewPasswordDialog from '../NewPasswordDialog/NewPasswordDialog';
@@ -54,6 +55,7 @@ function Router() {
 						<Route path=":chatId" element={null} />
 						<Route path="new" element={<NewChatPopup />} />
 						<Route path="profile" element={<SettingsPopup />} />
+						<Route path="email-confirm" element={<EmailConfirmPopup />} />
 					</Route>
 					<Route path="suspended/" element={
 						<PrivateRoute isSuspendedRoute>

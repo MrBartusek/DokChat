@@ -12,6 +12,7 @@ import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import LogoutButton from '../LogoutButton/LogoutButton';
 import Popup from '../Popup/Popup';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
+import { Link } from 'react-router-dom';
 
 function SettingsPopup() {
 	const [ user, updateToken ] = useContext(UserContext);
@@ -176,7 +177,22 @@ function SettingsPopup() {
 
 					/>
 				</FloatingLabel>
-				<FloatingLabel label={'E-mail address'} className="mb-2">
+				<FloatingLabel
+					className="mb-2"
+					label={(
+						<>
+							<span>E-mail address</span>
+							{!user.isEmailConfirmed && !isEditing && (
+								<>
+									<span> - </span>
+									<Link to='/chat/email-confirm' style={{ pointerEvents: 'auto'}}>
+										Confirm E-Mail
+									</Link>
+								</>
+							)}
+						</>
+					)}
+				>
 					<SettingsOption
 						type="email"
 						name="email"

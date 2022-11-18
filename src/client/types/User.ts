@@ -86,7 +86,13 @@ export class LocalUser {
 
 	public get emailMasked(): string {
 		const emailSplit = this.email.split('@');
-		return emailSplit[0][0] + '*'.repeat(emailSplit[0].length - 1) + '@' + emailSplit[1];
+		const domainSplit = emailSplit[1].split('.');
+		const sender = emailSplit[0];
+		const domain = domainSplit[0];
+		const tdl = domainSplit[1];
+		const senderMask = sender[0] + '*'.repeat(sender.length - 1);
+		const domainMask = domain[0] + '*'.repeat(domain.length - 1);
+		return `${senderMask}@${domainMask}.${tdl}`;
 	}
 
 	public refreshAvatar(): void {
