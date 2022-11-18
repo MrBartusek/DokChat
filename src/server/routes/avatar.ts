@@ -11,20 +11,23 @@ import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import s3Client, { bucketName } from '../aws/s3';
 import { GetObjectCommand } from '@aws-sdk/client-s3';
+import { param, validationResult } from 'express-validator';
+import * as DateFns from 'date-fns';
+
+const S3_FILE_EXPIRE_TIME = 600;
 
 const router = express.Router();
 
-router.all('/', allowedMethods('GET'), async (req, res, next) => {
-	const id = req.query.id as string;
-	if(typeof id != 'string') new ApiResponse(res).badRequest();
+router.all('/:id.png', param('id').isString(), allowedMethods('GET'), async (req, res, next) => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
+	const id = req.params.id as string;
 
 	let avatar = null;
 	const user = await UserManager.getUserById(id);
 
 	if(user) {
-		console.log('get user avatar', id);
 		avatar = await userAvatar(id);
-		res.header('Cache-Control', 'private max-age=3600');
 		if(avatar) {
 			const avatarUrl = await getAvatarSingedUrl(avatar);
 			res.redirect(302, avatarUrl);
@@ -39,7 +42,6 @@ router.all('/', allowedMethods('GET'), async (req, res, next) => {
 		const chat = await ChatManager.getChat(req, id);
 		if(!chat) return new ApiResponse(res).notFound('User or chat not found');
 		avatar = await chatAvatar(id);
-		res.header('Cache-Control', 'public max-age=600');
 		if(avatar) {
 			const avatarUrl = await getAvatarSingedUrl(avatar);
 			res.redirect(302, avatarUrl);
@@ -59,7 +61,7 @@ async function getAvatarSingedUrl(key: string): Promise<string> {
 	};
 	const getCommand = new GetObjectCommand(getParams);
 	return await getSignedUrl(
-		s3Client, getCommand, { expiresIn: 600 }
+		s3Client, getCommand, { expiresIn: S3_FILE_EXPIRE_TIME }
 	);
 }
 

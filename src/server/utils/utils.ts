@@ -10,7 +10,7 @@ export default class Utils {
 	}
 
 	public static avatarUrl(id: string) {
-		return Utils.apiUrl() + `avatar?id=${id}`;
+		return Utils.apiUrl() + `avatar/${id}.png`;
 	}
 
 	public static generateAWSFileName(bytes = 32) {

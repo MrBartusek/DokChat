@@ -1,5 +1,6 @@
 import React, { ChangeEvent, FormEvent, useContext, useEffect, useRef, useState } from 'react';
 import { Alert, Button, FloatingLabel, Form, FormControlProps } from 'react-bootstrap';
+import toast from 'react-hot-toast';
 import { BsPencil } from 'react-icons/bs';
 import { EndpointResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
@@ -23,7 +24,7 @@ function SettingsPopup() {
 	const [ isLoading, setLoading ] = useState(false);
 	const formRef = useRef<HTMLFormElement>(null);
 	const avatarUploadRef = useRef<HTMLInputElement>(null);
-	const [ avatar, setAvatar ] = useState<[string | ArrayBuffer, File]>([ user.avatarUrl, null ]);
+	const [ avatar, setAvatar ] = useState<[string | ArrayBuffer, File]>([ user.avatar, null ]);
 
 	/**
 	 * Handle isUnsaved hook
@@ -33,7 +34,7 @@ function SettingsPopup() {
 			values.username != defaultValues.username ||
 			values.tag != defaultValues.tag ||
 			values.email != defaultValues.email ||
-			avatar[0] != user.avatarUrl
+			avatar[0] != user.avatar
 		);
 		setUnsaved(changed);
 	}, [ values, avatar ]);
@@ -47,13 +48,16 @@ function SettingsPopup() {
 		formData.append('tag', values.tag);
 		formData.append('email', values.email);
 		formData.append('password', values.password);
-		if(avatar[0] != user.avatarUrl) {
+
+		const avatarUpdated = avatar[0] != user.avatar;
+		if(avatarUpdated) {
 			formData.append('avatar', avatar[1]);
 		}
 
 		await getAxios(user).put('/user/update-profile', formData, { headers: {'Content-Type': 'multipart/form-data'}})
-			.then(() => updateToken())
+			.then(() => updateToken(avatarUpdated))
 			.then(() => handleClose())
+			.then(() => toast('Updated profile'))
 			.catch((e) => {
 				const resp: EndpointResponse<null> = e.response?.data;
 				setError(resp?.message || 'Failed to update profile at this time. Please try again later.');

@@ -23,7 +23,7 @@ function UserInfo() {
 				overlay={usernameTooltip}
 			>
 				<Col xs='auto'>
-					<ProfilePicture src={user.avatarUrl} onClick={handleAvatarClick} />
+					<ProfilePicture src={user.avatar} onClick={handleAvatarClick} />
 				</Col>
 			</OverlayTrigger>
 			<Col className='d-flex justify-content-center align-items-center'>

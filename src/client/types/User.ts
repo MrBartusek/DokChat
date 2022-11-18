@@ -21,7 +21,13 @@ export class LocalUser {
 	public username: string;
 	public tag: string;
 	public email: string;
+	private _avatar: string;
 	public expiryDate: Date;
+
+	/**
+	 * This is used for refreshing user avatar
+	 */
+	private avatarRefreshTimestamp: string;
 
 	constructor() {
 		this.isAuthenticated = false;
@@ -42,6 +48,7 @@ export class LocalUser {
 		user.tag = data.tag,
 		user.email = data.email;
 		user.isBanned = data.isBanned;
+		user._avatar = data.avatar;
 		user.isEmailConfirmed = data.isEmailConfirmed;
 		user.expiryDate = DateFns.fromUnixTime(data.exp);
 
@@ -72,11 +79,6 @@ export class LocalUser {
 		};
 	}
 
-	public get avatarUrl(): string {
-		if(!this.isAuthenticated) throw new Error('User is not authenticated');
-		return `/api/avatar?id=${this.id}`;
-	}
-
 	public get discriminator(): string {
 		if(!this.isAuthenticated) throw new Error('User is not authenticated');
 		return `${this.username}#${this.tag}`;
@@ -85,5 +87,16 @@ export class LocalUser {
 	public get emailMasked(): string {
 		const emailSplit = this.email.split('@');
 		return emailSplit[0][0] + '*'.repeat(emailSplit[0].length - 1) + '@' + emailSplit[1];
+	}
+
+	public refreshAvatar(): void {
+		this.avatarRefreshTimestamp = DateFns.getUnixTime(new Date()).toString();
+	}
+
+	public get avatar(): string {
+		if(this.avatarRefreshTimestamp) {
+			return this._avatar + `?timestamp=${this.avatarRefreshTimestamp}`;
+		}
+		return this._avatar;
 	}
 }

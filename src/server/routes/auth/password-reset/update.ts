@@ -27,9 +27,6 @@ router.all('/update', allowedMethods('POST'),
 		const passwordHash = await UserManager.getUserHashById(unconfirmedUserId);
 		await JWTManager.verifyPassResetToken(token, user.email, passwordHash)
 			.then(async (userId: string) => {
-				if(userId != unconfirmedUserId) {
-					return new ApiResponse(res).unauthorized('Invalid JWT');
-				}
 				if(bcrypt.compareSync(password, passwordHash)) {
 					return new ApiResponse(res).badRequest('New password cannot be same as the old one');
 				}
@@ -39,8 +36,7 @@ router.all('/update', allowedMethods('POST'),
 				return new ApiResponse(res).success();
 			})
 			.catch((error) => {
-				console.log(error);
-				return new ApiResponse(res).unauthorized('Invalid JWT');
+				return new ApiResponse(res).unauthorized('Invalid token, please try to reset your password once again.');
 			});
 	});
 

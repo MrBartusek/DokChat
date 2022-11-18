@@ -70,6 +70,7 @@ export default class UserManager {
 			username: user.username,
 			tag: user.tag,
 			email: user.email,
+			avatar: Utils.avatarUrl(user.id),
 			isBanned: user.isBanned,
 			isEmailConfirmed: user.isEmailConfirmed
 		};
@@ -95,6 +96,7 @@ export default class UserManager {
 			username: user.username,
 			tag: user.tag,
 			email: user.email,
+			avatar: Utils.avatarUrl(user.id),
 			isBanned: user.isBanned,
 			isEmailConfirmed: user.isEmailConfirmed
 		};

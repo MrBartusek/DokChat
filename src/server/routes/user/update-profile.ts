@@ -11,7 +11,7 @@ import * as multer from 'multer';
 import * as sharp from 'sharp';
 import s3Client, { bucketName } from '../../aws/s3';
 import Utils from '../../utils/utils';
-import { DeleteObjectCommand, DeleteObjectCommandOutput, PutObjectCommand } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, DeleteObjectCommandInput, DeleteObjectCommandOutput, PutObjectCommand } from '@aws-sdk/client-s3';
 import { body, validationResult } from 'express-validator';
 import { isValidUsername } from '../../validators/username';
 import { isValidPassword } from '../../validators/password';
@@ -30,7 +30,6 @@ router.all('/update-profile',
 	body('email').isEmail().normalizeEmail(),
 	body('tag').custom(isValidTag),
 	async (req, res, next) => {
-		console.log(req.body);
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 
@@ -102,13 +101,14 @@ async function emailTaken(email: string) {
 async function uploadAvatar(userId: string, avatar: Express.Multer.File): Promise<string> {
 	const fileBuffer = await sharp(avatar.buffer)
 		.resize({ height: 256, width: 256, fit: 'cover' })
+		.toFormat('png')
 		.toBuffer();
 	const fileName = Utils.generateAWSFileName();
 	const uploadParams = {
 		Bucket: bucketName,
 		Body: fileBuffer,
 		Key: fileName,
-		ContentType: avatar.mimetype
+		ContentType: 'image/png'
 	};
 	await s3Client.send(new PutObjectCommand(uploadParams));
 	return fileName;
@@ -121,7 +121,7 @@ async function getUserAvatar(userId: string): Promise<string | null> {
 }
 
 async function deleteAvatar(key: string): Promise<DeleteObjectCommandOutput> {
-	const deleteParams = {
+	const deleteParams: DeleteObjectCommandInput = {
 		Bucket: bucketName,
 		Key: key
 	};

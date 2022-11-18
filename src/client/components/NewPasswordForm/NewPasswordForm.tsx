@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useLayoutEffect, useRef, useState } from 'react';
 import { Alert, Button, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { EndpointResponse } from '../../../types/endpoints';
@@ -17,6 +17,16 @@ function NewPasswordForm({ token }: NewPasswordFormProps) {
 	const [ values, handleChange ] = useForm({ password: '', confirmPassword: '' });
 	const [ error, setError ] = useState<string | null>(null);
 	const [ success, setSuccess ] = useState<boolean>(false);
+	const passwordConfirmRef = useRef<HTMLInputElement>(null);
+
+	useLayoutEffect(() => {
+		if(values.password != passwordConfirmRef.current.value) {
+			passwordConfirmRef.current.setCustomValidity('The password confirmation does not match');
+		}
+		else {
+			passwordConfirmRef.current.setCustomValidity('');
+		}
+	}, [ values, passwordConfirmRef ]);
 
 	if(success) {
 		return (
@@ -67,15 +77,8 @@ function NewPasswordForm({ token }: NewPasswordFormProps) {
 						required
 						disabled={loading}
 						value={values.confirmPassword}
-						onChange={(e) => {
-							handleChange(e);
-							if(values.password != e.target.value) {
-								e.target.setCustomValidity('The password confirmation does not match');
-							}
-							else {
-								e.target.setCustomValidity('');
-							}
-						}}
+						onChange={handleChange}
+						ref={passwordConfirmRef}
 					/>
 				</Form.Group>
 

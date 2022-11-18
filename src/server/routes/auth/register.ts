@@ -20,6 +20,7 @@ import EmailBlacklistManager from '../../managers/emailBlacklistManager';
 import { body, validationResult } from 'express-validator';
 import { isValidUsername } from '../../validators/username';
 import { isValidPassword } from '../../validators/password';
+import Utils from '../../utils/utils';
 
 const router = express.Router();
 
@@ -58,11 +59,12 @@ router.all('/register',
 			$1, $2, $3, $4, $5, $6, $7
 		);
 		`, [ userId, username, tag, email, passwordHash, timestamp, timestamp ]);
-		const jwtData = {
+		const jwtData: UserJWTData = {
 			id: userId,
 			username: username,
 			tag: tag,
 			email: email,
+			avatar: Utils.avatarUrl(userId),
 			isBanned: false,
 			isEmailConfirmed: false
 		};

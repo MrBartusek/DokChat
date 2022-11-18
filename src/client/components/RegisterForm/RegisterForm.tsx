@@ -19,7 +19,7 @@ function RegisterForm() {
 	const [ user, updateToken, setUser ] = useContext(UserContext);
 
 	useLayoutEffect(() => {
-		if(values.password != passwordConfirmRef.current.value) {
+		if(values.password != values.confirmPassword) {
 			passwordConfirmRef.current.setCustomValidity('The password confirmation does not match');
 		}
 		else {

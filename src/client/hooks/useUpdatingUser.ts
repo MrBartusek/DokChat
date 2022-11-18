@@ -49,12 +49,14 @@ export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, Rea
 		return () => clearInterval(interval);
 	}, [ user ]);
 
-	async function refreshToken() {
+	async function refreshToken(refreshAvatar = false) {
 		const axios = getAxios();
 		return await axios.post('auth/refresh')
 			.then((r: any) => {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
 				const user = LocalUser.fromJWT(resp.data.token);
+				if(refreshAvatar) user.refreshAvatar();
+				console.log(refreshAvatar, user.avatar);
 				setUser(user);
 				setConfirmed(true);
 				console.log(`AUTH: Updated JWT to ${user.email} from server`);
@@ -80,5 +82,5 @@ export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, Rea
 		return axios.post('/auth/logout').catch((e) => console.error('Failed to post /auth/logout'));
 	}
 
-	return [ isLoading, user, () => refreshToken(), setUser, removeUser ];
+	return [ isLoading, user, (refreshAvatar?: boolean) => refreshToken(refreshAvatar), setUser, removeUser ];
 }

@@ -111,7 +111,7 @@ export function useMessageManager(ws: useWebsocketType): [
 				author: {
 					id: user.id,
 					username: user.username,
-					avatar: user.avatarUrl,
+					avatar: user.avatar,
 					tag: user.tag
 				},
 				content: data.content,
