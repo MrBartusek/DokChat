@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import InputGroup from 'react-bootstrap/InputGroup';
 import toast from 'react-hot-toast';
 import { BsPlus } from 'react-icons/bs';
@@ -27,6 +27,7 @@ function NewChatPopup() {
 	const [ user ] = useContext(UserContext);
 	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
 	const formRef = useRef(null);
+	const [ handleClose, setHandleClose ] = useState<() => void>(null);
 
 	useEffect(() => {
 		const id = searchParams.get('prefill');
@@ -128,16 +129,22 @@ function NewChatPopup() {
 
 	return (
 		<Popup
+			setHandleClose={setHandleClose}
 			title="Start a new conversation"
 			footer={(
-				<InteractiveButton
-					variant="primary"
-					type="submit"
-					onClick={handleSubmit}
-					loading={isLoading}
-				>
+				<>
+					<Button variant='secondary' onClick={handleClose}>
+						Close
+					</Button>
+					<InteractiveButton
+						variant="primary"
+						type="submit"
+						onClick={handleSubmit}
+						loading={isLoading}
+					>
 					Create a new {participants.length < 2 ? 'chat' : 'group'}
-				</InteractiveButton>
+					</InteractiveButton>
+				</>
 			)}
 		>
 			<p className='text-center'>

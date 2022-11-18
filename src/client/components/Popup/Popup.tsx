@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 interface PopupProps extends ModalProps {
 	title: string;
-	footer: React.ReactElement;
+	footer: JSX.Element | JSX.Element[];
 	static?: boolean;
 	setHandleClose?: (func: () => void) => void;
 	children: JSX.Element | JSX.Element[];
