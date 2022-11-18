@@ -32,7 +32,6 @@ router.all('/refresh', allowedMethods('POST'), cookie('refreshToken').isString()
 			AuthManager.sendAuthResponse(res, user, passwordHash);
 		})
 		.catch((error) => {
-			console.log(error);
 			return new ApiResponse(res).unauthorized('Invalid JWT');
 		});
 });

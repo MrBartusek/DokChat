@@ -56,7 +56,6 @@ export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, Rea
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
 				const user = LocalUser.fromJWT(resp.data.token);
 				if(refreshAvatar) user.refreshAvatar();
-				console.log(refreshAvatar, user.avatar);
 				setUser(user);
 				setConfirmed(true);
 				console.log(`AUTH: Updated JWT to ${user.email} from server`);
