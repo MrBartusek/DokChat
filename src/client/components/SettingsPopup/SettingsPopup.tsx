@@ -57,7 +57,7 @@ function SettingsPopup() {
 		await getAxios(user).put('/user/update-profile', formData, { headers: {'Content-Type': 'multipart/form-data'}})
 			.then(() => updateToken(avatarUpdated))
 			.then(() => handleClose())
-			.then(() => toast('Updated profile'))
+			.then(() => toast('Your profile has been updated'))
 			.catch((e) => {
 				const resp: EndpointResponse<null> = e.response?.data;
 				setError(resp?.message || 'Failed to update profile at this time. Please try again later.');
