@@ -33,7 +33,6 @@ router.all('/confirm', allowedMethods('POST'),
 				return new ApiResponse(res).success();
 			})
 			.catch((error) => {
-				console.log(error);
 				return new ApiResponse(res).unauthorized('Invalid token, please try to reset your password once again.');
 			});
 	}

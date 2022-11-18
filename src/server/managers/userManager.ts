@@ -85,7 +85,7 @@ export default class UserManager {
 				email,
 				password_hash as "passwordHash",
 				is_banned as "isBanned",
-				is_email_confirmed as "isEmailVerified"
+				is_email_confirmed as "isEmailConfirmed"
 			FROM users WHERE email = $1;
 		`, [ email ]);
 

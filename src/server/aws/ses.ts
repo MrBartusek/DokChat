@@ -58,6 +58,10 @@ class EmailClient {
 		const templateData = `{ \"email\":\"${email}\", \"reset-url\": \"${resetUrl}\"  }`;
 		return this.sendTemplatedEmail('dokchat-password-reset', templateData, email);
 	}
+
+	public async sendEmailChangedEmail(user: UserJWTData) {
+		return this.sendTemplatedEmail('dokchat-email-changed', '{}', user.email);
+	}
 }
 
 const client = new EmailClient();

@@ -15,7 +15,8 @@ import { DeleteObjectCommand, DeleteObjectCommandInput, DeleteObjectCommandOutpu
 import { body, validationResult } from 'express-validator';
 import { isValidUsername } from '../../validators/username';
 import { isValidPassword } from '../../validators/password';
-import { isValidTag } from '../../validators/TAG';
+import { isValidTag } from '../../validators/tag';
+import emailClient from '../../aws/ses';
 
 const router = express.Router();
 const storage = multer.memoryStorage();
@@ -78,6 +79,13 @@ router.all('/update-profile',
 			email = $3
 		WHERE id=$4`,
 		[ username, tag, email, user.id ]);
+
+		if(emailChanged) {
+			await db.query(sql`UPDATE users SET is_email_confirmed = FALSE WHERE id = $1`, [ user.id ]);
+			if(user.isEmailConfirmed) {
+				await emailClient.sendEmailChangedEmail(req.auth);
+			}
+		}
 
 		return new ApiResponse(res).success();
 	});
