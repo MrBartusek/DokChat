@@ -24,14 +24,14 @@ function Header() {
 					accept messages from new people. Create private groups and stay in touch with your friends.
 				</p>
 
-				<div className='d-flex justify-content-center gap-3'>
+				<div className='d-flex justify-content-center mt-3 mx-4 gap-3 flex-column flex-lg-row stretch'>
 					<Link to={user.isAuthenticated ? '/chat' : '/login'}>
-						<Button variant='light' size='lg' className='mt-3'>
+						<Button variant='light' size='lg' className='w-100'>
 						Open DokChat in your browser
 						</Button>
 					</Link>
 					<Link to='/download' className='text-decoration-none'>
-						<Button variant='dark' size='lg' className='mt-3 d-flex align-items-center'>
+						<Button variant='dark' size='lg' className='d-flex justify-content-center align-items-center w-100'>
 							<BsCloudArrowDown className='me-2' /> Download
 						</Button>
 					</Link>

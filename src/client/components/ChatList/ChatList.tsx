@@ -23,7 +23,7 @@ function ChatList({ currentChat }: ChatListProps) {
 	);
 
 	return (
-		<Row className='d-flex h-100' style={{overflowY: 'scroll'}}>
+		<Row className='d-flex h-100' style={{overflowY: 'scroll', flex: '1 0 0'}}>
 			<Col className="d-flex align-items-center py-3 px-2 flex-column">
 				{chats.map((chat) => (
 					<Chat

@@ -51,8 +51,8 @@ function MessageBar({ currentChat }: MessageBarProps) {
 	);
 
 	return (
-		<Col className='d-flex px-1 py-3'>
-			<Form onSubmit={handleSubmit} className='d-flex align-items-center flex-fill'>
+		<div className='d-flex px-1 py-3'>
+			<Form onSubmit={handleSubmit} className='d-flex align-items-center w-100'>
 				<Col className='d-flex flex-grow-0 justify-content-center align-items-center px-1 gap-1'>
 					<IconButton icon={BsImage} size={34} variant='primary'/>
 					<IconButton icon={AiOutlineGif} size={34} variant='primary'/>
@@ -95,7 +95,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 					/>
 				</Col>
 			</Form>
-		</Col>
+		</div>
 	);
 }
 export default MessageBar;

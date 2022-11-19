@@ -75,7 +75,7 @@ export function ChatPage() {
 					</Col>
 					<Col
 						style={{minWidth: 0}}
-						className='d-flex align-items-stretch flex-column h-100 p-0'
+						className='d-flex flex-column p-0'
 					>
 						<ChatInfo currentChat={currentChat} />
 						{currentChat && (

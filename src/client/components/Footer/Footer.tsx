@@ -11,7 +11,7 @@ function Footer() {
 			<Container className='py-5 text-light'>
 				<Row>
 					<Col xs={'auto'}>
-						<DokChatLogo variant='white' height={55} />
+						<DokChatLogo variant='white' height={65} />
 						<p className='lead text-muted text-center'>
 							Connect with anyone
 						</p>
@@ -19,20 +19,23 @@ function Footer() {
 					<Col className='d-flex justify-content-end gap-5'>
 						<div style={{width: 250}}>
 							<h3>
+								Support
+							</h3>
+							<p>
+								<a href='https://github.com/MrBartusek/DokChat' className='link-secondary'>Bug tracker</a><br/>
+								<a href='mailto:dokchat@dokurno.dev' className='link-secondary'>dokchat@dokurno.dev</a><br/>
+							</p>
+						</div>
+						<div style={{width: 250}}>
+							<h3>
 								Links
 							</h3>
 							<Link to='/' className='link-secondary'>About DokChat</Link><br/>
 							<Link to='/download' className='link-secondary'>Download for Desktop</Link><br/>
-							<Link to='https://github.com/MrBartusek/DokChat' className='link-secondary'>Github Repository</Link><br/>
-							<Link to='/login' className='link-secondary'>Login to DokChat</Link>
-						</div>
-						<div style={{width: 250}}>
-							<h3>
-								Contact
-							</h3>
-							<p>
-								E-mail: <a href="mailto:dokchat@dokurno.dev" className='link-secondary'>dokchat@dokurno.dev</a>
-							</p>
+							<a href='https://github.com/MrBartusek/DokChat' className='link-secondary'>Github Repository</a><br/>
+							<Link to='/login' className='link-secondary'>Login to DokChat</Link><br/>
+							<Link to='/register' className='link-secondary'>Register Account</Link><br/>
+							<Link to='/forgot-password' className='link-secondary'>Forgot Password</Link><br/>
 						</div>
 					</Col>
 				</Row>
