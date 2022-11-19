@@ -1,8 +1,12 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
+const mode = process.env.NODE_ENV || 'development';
+
+console.log(`Building for ${mode}`);
+
 const serverConfig = {
-	mode: process.env.NODE_ENV || 'development',
+	mode: mode,
 	entry: './src/server/server.ts',
 	module: {
 		rules: [
@@ -18,7 +22,7 @@ const serverConfig = {
 		]
 	},
 	resolve: {
-		extensions: ['.ts', '.js']
+		extensions: [ '.ts', '.js' ]
 	},
 	output: {
 		filename: 'server.js',
@@ -28,11 +32,11 @@ const serverConfig = {
 	node: {
 		__dirname: false
 	},
-	externals: [nodeExternals()]
+	externals: [ nodeExternals() ]
 };
 
 const clientConfig = {
-	mode: process.env.NODE_ENV || 'development',
+	mode: mode,
 	entry: './src/client/index.tsx',
 	devtool: 'inline-source-map',
 	module: {
@@ -48,12 +52,12 @@ const clientConfig = {
 			},
 			{
 				test: /\.scss$/,
-				use: ['style-loader', 'css-loader', 'sass-loader']
+				use: [ 'style-loader', 'css-loader', 'sass-loader' ]
 			}
 		]
 	},
 	resolve: {
-		extensions: ['.tsx', '.ts', '.js', '.css', '.scss']
+		extensions: [ '.tsx', '.ts', '.js', '.css', '.scss' ]
 	},
 	output: {
 		filename: 'app.js',
@@ -61,4 +65,4 @@ const clientConfig = {
 	}
 };
 
-module.exports = [serverConfig, clientConfig];
+module.exports = [ serverConfig, clientConfig ];
