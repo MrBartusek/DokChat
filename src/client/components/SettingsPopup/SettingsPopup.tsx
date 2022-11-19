@@ -13,6 +13,8 @@ import LogoutButton from '../LogoutButton/LogoutButton';
 import Popup from '../Popup/Popup';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 import { Link } from 'react-router-dom';
+import ChangeableAvatar from '../ChangeableAvatar/ChangeableAvatar';
+import { FileUploaderResult } from '../FileUploader/FileUploader';
 
 function SettingsPopup() {
 	const [ user, updateToken ] = useContext(UserContext);
@@ -24,8 +26,7 @@ function SettingsPopup() {
 	const [ error, setError ] = useState<string | null>(null);
 	const [ isLoading, setLoading ] = useState(false);
 	const formRef = useRef<HTMLFormElement>(null);
-	const avatarUploadRef = useRef<HTMLInputElement>(null);
-	const [ avatar, setAvatar ] = useState<[string | ArrayBuffer, File]>([ user.avatar, null ]);
+	const [ avatarUploader, setAvatarUploader ]  = useState<FileUploaderResult>({});
 
 	/**
 	 * Handle isUnsaved hook
@@ -35,10 +36,13 @@ function SettingsPopup() {
 			values.username != defaultValues.username ||
 			values.tag != defaultValues.tag ||
 			values.email != defaultValues.email ||
-			avatar[0] != user.avatar
+			avatarUploader.file != undefined
 		);
 		setUnsaved(changed);
-	}, [ values, avatar ]);
+		if(changed && !isEditing) {
+			setEditing(true);
+		}
+	}, [ values, avatarUploader ]);
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -50,9 +54,9 @@ function SettingsPopup() {
 		formData.append('email', values.email);
 		formData.append('password', values.password);
 
-		const avatarUpdated = avatar[0] != user.avatar;
+		const avatarUpdated = avatarUploader.file != undefined;
 		if(avatarUpdated) {
-			formData.append('avatar', avatar[1]);
+			formData.append('avatar', avatarUploader.file);
 		}
 
 		await getAxios(user).put('/user/update-profile', formData, { headers: {'Content-Type': 'multipart/form-data'}})
@@ -64,20 +68,6 @@ function SettingsPopup() {
 				setError(resp?.message || 'Failed to update profile at this time. Please try again later.');
 				setLoading(false);
 			});
-	}
-
-	function onChangeAvatar(event: ChangeEvent<HTMLInputElement>) {
-		if (event.target.files && event.target.files[0]) {
-			const file = event.target.files[0];
-			const reader = new FileReader();
-			reader.readAsDataURL(file);
-			reader.onload = (function(f) {
-				return function(e) {
-					setAvatar([ reader.result, file ]);
-					setEditing(true);
-				};
-			})(file);
-		}
 	}
 
 	return (
@@ -111,17 +101,11 @@ function SettingsPopup() {
 			static={isUnsaved}
 		>
 			<div className='d-flex align-items-center flex-column me-2'>
-				<input
-					type="file"
-					accept="image/*"
-					ref={avatarUploadRef}
-					style={{display: 'none'}}
-					onChange={onChangeAvatar}
-				/>
-				<ProfilePicture
-					src={avatar[0] as string}
+				<ChangeableAvatar
 					size={80}
-					onClick={() => avatarUploadRef.current.click()}
+					currentAvatar={user.avatar}
+					fileUploader={avatarUploader}
+					setFileUploader={setAvatarUploader}
 				/>
 				<span className='lead fw-bold mt-2 d-flex align-items-center'>
 					<span className='mx-1' style={{paddingLeft: 32}}>
