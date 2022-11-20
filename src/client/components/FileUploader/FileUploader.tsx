@@ -2,6 +2,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 
 export interface FileUploaderResult {
     click?: () => void;
+	reset?: () => void;
     file?: File;
     getURL?: () => Promise<string>;
     getBase64?: () => Promise<string>;
@@ -15,10 +16,11 @@ export default function FileUploader({ onChange }: FileUploaderProps) {
 	const uploaderRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
-		onChange({ click: onClick });
+		onChange({ click: onClick, reset: onReset });
 	}, []);
 
-	const onClick = () => uploaderRef.current.click();
+	const onClick: (() => void) = () => uploaderRef.current.click();
+	const onReset: (() => void) = () => uploaderRef.current.value = null;
 
 	function getBase64(file: File): Promise<string> {
 		return new Promise((resolve, reject) => {
@@ -43,12 +45,13 @@ export default function FileUploader({ onChange }: FileUploaderProps) {
 			const file = event.target.files[0];
 			return onChange({
 				click: onClick,
+				reset: onReset,
 				file: file,
 				getBase64: () => getBase64(file),
 				getURL: () => getURL(file)
 			});
 		}
-		onChange({ click: onClick });
+		onChange({ click: onClick, reset: onReset });
 	}
 
 	return (
