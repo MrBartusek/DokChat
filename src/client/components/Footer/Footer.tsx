@@ -10,7 +10,7 @@ function Footer() {
 		<div className='bg-dark'>
 			<Container className='py-5 text-light'>
 				<Row>
-					<Col lg={'auto'} className='text-center'>
+					<Col lg={'auto'} className='text-center mb-3'>
 						<DokChatLogo variant='white' height={65} />
 						<p className='lead text-muted'>
 							Connect with anyone
