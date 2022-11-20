@@ -31,21 +31,22 @@ router.all('/messages',
 		}
 
 		const messagesQuery = await queryMessages(chatId, page);
-		const messages = messagesQuery.rows.map((msg) => {
+		const messages: MessageListResponse = messagesQuery.rows.map((msg) => {
 			return {
 				id: msg.id,
+				content: msg.content,
+				timestamp: msg.createdAt,
+				avatar: Utils.avatarUrl(msg.authorId),
+				attachment: msg.attachment != undefined,
 				author: {
 					id: msg.authorId,
 					username: msg.authorUsername,
 					avatar: Utils.avatarUrl(msg.authorId),
 					tag: msg.authorTag
-				},
-				content: msg.content,
-				timestamp: msg.createdAt,
-				avatar: Utils.avatarUrl(msg.authorId)
+				}
 			};
 		});
-		const result: MessageListResponse = messages;
+		const result = messages;
 		new ApiResponse(res).success(result);
 	});
 
@@ -55,7 +56,8 @@ type MessagesQuery = QueryResult<{
 	authorId: string,
 	authorUsername: string,
 	authorTag: string,
-	createdAt: string
+	createdAt: string,
+	attachment: string
 }>
 async function queryMessages(chatId: string, page: number): Promise<MessagesQuery> {
 	return db.query(sql`
@@ -65,7 +67,8 @@ async function queryMessages(chatId: string, page: number): Promise<MessagesQuer
 			messages.author_id as "authorId",
 			users.username as "authorUsername",
 			users.tag as "authorTag",
-			messages.created_at as "createdAt"
+			messages.created_at as "createdAt",
+			messages.attachment
 		FROM messages
 		INNER JOIN users ON users.id = messages.author_id
 		WHERE

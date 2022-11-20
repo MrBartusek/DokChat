@@ -28,6 +28,7 @@ export interface LastMessage {
 export interface Message {
     id: string,
     author: User,
-    content: string,
-    timestamp: string
+    content?: string,
+    timestamp: string,
+    attachment: boolean
 }

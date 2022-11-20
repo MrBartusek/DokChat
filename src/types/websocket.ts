@@ -13,10 +13,13 @@ export interface ClientToServerEvents {
     message: (message: ClientMessage, callback: (response: EventAcknowledgement<{id: string, timestamp: string}>) => void) => void;
 }
 
+export type Attachment = string | File;
+
 export interface ServerMessage {
-    messageId: string,
-    content: string,
+    id: string,
+    content?: string,
     chat: Chat,
+    attachment: boolean,
     author: {
         id: string,
         username: string,
@@ -28,7 +31,8 @@ export interface ServerMessage {
 
 export interface ClientMessage {
     chatId: string,
-    content: string
+    content?: string,
+    attachment?: Attachment
 }
 
 export interface EventAcknowledgement<T> extends EndpointResponse<T> { }

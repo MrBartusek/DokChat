@@ -15,12 +15,14 @@ interface FileUploaderProps {
 export default function FileUploader({ onChange }: FileUploaderProps) {
 	const uploaderRef = useRef<HTMLInputElement>(null);
 
-	useEffect(() => {
-		onChange({ click: onClick, reset: onReset });
-	}, []);
+	useEffect(() => resetHook(), []);
+	const resetHook = () => onChange({ click: onClick, reset: onReset });
 
-	const onClick: (() => void) = () => uploaderRef.current.click();
-	const onReset: (() => void) = () => uploaderRef.current.value = null;
+	const onClick = () => uploaderRef.current.click();
+	function onReset() {
+		uploaderRef.current.value = null;
+		resetHook();
+	}
 
 	function getBase64(file: File): Promise<string> {
 		return new Promise((resolve, reject) => {
@@ -51,7 +53,7 @@ export default function FileUploader({ onChange }: FileUploaderProps) {
 				getURL: () => getURL(file)
 			});
 		}
-		onChange({ click: onClick, reset: onReset });
+		resetHook();
 	}
 
 	return (

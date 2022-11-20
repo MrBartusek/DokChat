@@ -1,15 +1,8 @@
-import { Request } from 'express';
-import { QueryResult } from 'pg';
 import { ClientMessage, DokChatServer, DokChatSocket, ServerMessage } from '../../types/websocket';
 import { ApiResponse } from '../apiResponse';
-import db from '../db';
 import ChatManager from '../managers/chatManager';
-import { snowflakeGenerator } from '../utils/snowflakeGenerator';
-import sql from 'sql-template-strings';
-import * as DateFns from 'date-fns';
-import { Socket } from 'socket.io';
-import Utils from '../utils/utils';
 import PermissionsManager from '../managers/permissionsManager';
+import Utils from '../utils/utils';
 
 export default function registerMessageHandler(io: DokChatServer, socket: DokChatSocket) {
 	socket.on('message', async (msg, callback) => {
@@ -33,10 +26,11 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 			// Chat is fetched for each user since for DMs name might be different for each participant
 			const chat = await ChatManager.getChat(socket, msg.chatId, part.userId, participants);
 			const serverMsg: ServerMessage = {
-				messageId: id,
-				content: msg.content.trim(),
+				id: id,
+				content: msg.content?.trim(),
 				chat: chat,
 				timestamp: timestamp.toString(),
+				attachment: msg.attachment != undefined,
 				author: {
 					id: socket.auth.id,
 					username: socket.auth.username,
@@ -59,13 +53,19 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 }
 
 function validateMessage(msg: ClientMessage, callback: (response: any) => void): boolean {
-	if(msg.content.trim().length == 0) {
-		new ApiResponse({} as any, callback).badRequest('Message is empty');
+	if(msg.content && msg.attachment || !msg.content && !msg.attachment) {
+		new ApiResponse({} as any, callback).badRequest('Message content invalid');
 		return false;
 	}
-	else if(msg.content.trim().length >= 4000) {
-		new ApiResponse({} as any, callback).badRequest('Message is too long');
-		return false;
+	if(msg.content) {
+		if(msg.content.trim().length == 0) {
+			new ApiResponse({} as any, callback).badRequest('Message is empty');
+			return false;
+		}
+		else if(msg.content.trim().length >= 4000) {
+			new ApiResponse({} as any, callback).badRequest('Message is too long');
+			return false;
+		}
 	}
 	return true;
 }

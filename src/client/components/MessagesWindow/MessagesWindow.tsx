@@ -1,6 +1,6 @@
 import * as DateFns from 'date-fns';
 import React, { useContext, useEffect, useLayoutEffect, useRef } from 'react';
-import { OverlayTrigger, Tooltip, TooltipProps } from 'react-bootstrap';
+import { OverlayTrigger, Spinner, Tooltip, TooltipProps } from 'react-bootstrap';
 import { Twemoji } from 'react-emoji-render';
 import { BsCheckCircle, BsCheckCircleFill, BsXCircle } from 'react-icons/bs';
 import { EndpointResponse, MessageListResponse } from '../../../types/endpoints';
@@ -78,7 +78,7 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 						}
 
 						return (
-							<div key={msg.id}>
+							<div className='d-flex flex-column' key={msg.id}>
 								{(showTimestamp) && (
 									<SystemMessage
 										content={DateFns.format(DateFns.fromUnixTime(Number(msg.timestamp)), format)}
@@ -115,6 +115,7 @@ function UserMessage({message, showAvatar, showAuthor, showStatus}: MessageProps
 	if(message.isPending || message.isFailed) {
 		showStatus = true;
 	}
+	const isSent = !(message.isPending || message.isFailed);
 
 	const timeTooltip = (props: TooltipProps) => (
 		<Tooltip {...props}>
@@ -123,7 +124,7 @@ function UserMessage({message, showAvatar, showAuthor, showStatus}: MessageProps
 	);
 
 	const onlyEmojisRegex = /^(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])+$/i;
-	const onlyEmojis = onlyEmojisRegex.test(message.content);
+	const nonTextMessage = (message.attachment && isSent) || onlyEmojisRegex.test(message.content);
 
 	return (
 		<div className='d-flex flex-row align-items-end' style={{marginBottom: 3}}>
@@ -133,7 +134,7 @@ function UserMessage({message, showAvatar, showAuthor, showStatus}: MessageProps
 					: <Separator width={32} />}
 			</div>
 
-			<div className='d-flex flex-grow-1 flex-column'>
+			<div className='d-flex flex-fill flex-column'>
 				{showAuthor && (
 					<span className='text-muted' style={{marginLeft: 12, fontSize: '0.7em'}}>
 						{message.author.username}
@@ -146,10 +147,28 @@ function UserMessage({message, showAvatar, showAuthor, showStatus}: MessageProps
 						delay={{show: 500, hide: 0}}
 					>
 						<div
-							style={{'opacity': (message.isPending || message.isFailed) ? '50%' : '100%'}}
-							className={`message text-break ${onlyEmojis ? 'message-emojis' : (isAuthor ? 'bg-primary text-light' : 'bg-gray-200')}`}
+							style={{'opacity': isSent ? '100%' : '50%'}}
+							className={`message text-break ${nonTextMessage ? 'message-emojis' : (isAuthor ? 'bg-primary text-light' : 'bg-gray-200')}`}
 						>
-							<Twemoji text={message.content} onlyEmojiClassName={onlyEmojis ? 'large-emojis' : ''} />
+							{message.attachment ? (
+								<>
+									{isSent ? (
+										<img
+											src={`/api/attachment?id=${message.id}`}
+											style={{borderRadius: '1.2rem', maxHeight: '200px'}}
+											alt='Message attachment'
+										/>
+									): (
+										<span>{message.isPending ? (
+											<Spinner size='sm' variant='light' animation='border' />
+										) : 'Attachment upload failed'}</span>
+
+									)}
+
+								</>
+							): (
+								<Twemoji text={message.content || ''} onlyEmojiClassName={nonTextMessage ? 'large-emojis' : ''} />
+							)}
 						</div>
 					</OverlayTrigger>
 				</div>

@@ -5,6 +5,11 @@ import db from './index';
 
 export async function initializeDB() {
 	await db.query(sql`
+        DO $$ BEGIN
+            CREATE TYPE atchtype AS ENUM ('image', 'tenor');
+        EXCEPTION
+            WHEN duplicate_object THEN null;
+        END $$;
 
         CREATE TABLE IF NOT EXISTS users (
             id varchar NOT NULL,
@@ -40,9 +45,10 @@ export async function initializeDB() {
             id varchar NOT NULL,
             chat_id varchar REFERENCES chats ON DELETE CASCADE,
             author_id varchar REFERENCES users ON DELETE CASCADE,
-            content text NOT NULL,
+            content text,
             created_at bigint NOT NULL,
             attachment varchar(64),
+            attachment_type atchtype,
             is_system boolean NOT NULL DEFAULT FALSE,
             PRIMARY KEY (id)
         );

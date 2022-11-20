@@ -6,6 +6,7 @@ import { useFetch } from './useFetch';
 import { useWebsocketType } from './useWebsocket';
 import * as DateFns from 'date-fns';
 import useSound from 'use-sound';
+import { Attachment } from '../../types/websocket';
 
 /**
  * This hook is a manger for receiving, caching and sending messages
@@ -58,12 +59,7 @@ export function useMessageManager(ws: useWebsocketType): [
 			}
 			else {
 				// Receive message
-				chat.addMessage({
-					content: msg.content,
-					author: msg.author,
-					id: msg.messageId,
-					timestamp: msg.timestamp
-				});
+				chat.addMessage(msg);
 				chat.avatar = msg.chat.avatar;
 				chat.name = msg.chat.name;
 			}
@@ -75,7 +71,7 @@ export function useMessageManager(ws: useWebsocketType): [
 		};
 	});
 
-	function ackMessage(chat: LocalChat, pendingId: string, newId: string, timestamp: string) {
+	function ackMessage(chat: LocalChat, pendingId: string, newId: string, timestamp: string, attachment?: string) {
 		const chats = [ ...chatList ];
 		const chatId = chats.findIndex((c) => c.id == chat.id);
 		if(chatId == -1) return;
@@ -100,7 +96,7 @@ export function useMessageManager(ws: useWebsocketType): [
 	return [
 		loading,
 		sortedChatList(),
-		(data: {chat: LocalChat, content: string}) => {
+		(data: {chat: LocalChat, content?: string, attachment?: Attachment}) => {
 			// Add this message to local cache
 			const chats = [ ...chatList ];
 			const chatId = chats.findIndex((c) => c.id == data.chat.id);
@@ -108,6 +104,7 @@ export function useMessageManager(ws: useWebsocketType): [
 			const pendingMessageId = chats[chatId].addMessage({
 				id: '0', // This will be auto-generated
 				isPending: true,
+				attachment: data.attachment != undefined,
 				author: {
 					id: user.id,
 					username: user.username,
@@ -122,10 +119,12 @@ export function useMessageManager(ws: useWebsocketType): [
 			// Send message to WS
 			ws.socket.emit('message', {
 				chatId: data.chat.id,
-				content: data.content
+				content: data.content,
+				attachment: data.attachment
 			}, (response) => {
 				if(response.error) {
 					ackErrorMessage(data.chat, pendingMessageId);
+					console.error('Failed to send message', response);
 				}
 				else {
 					ackMessage(data.chat, pendingMessageId, response.data.id, response.data.timestamp);

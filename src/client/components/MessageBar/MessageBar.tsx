@@ -1,12 +1,14 @@
 import EmojiPicker, { EmojiStyle } from 'emoji-picker-react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Col, Form, OverlayTrigger, Popover } from 'react-bootstrap';
+import toast from 'react-hot-toast';
 import { AiOutlineGif } from 'react-icons/ai';
 import { BsEmojiSmileFill, BsImage } from 'react-icons/bs';
 import { MdSend } from 'react-icons/md';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { useForm } from '../../hooks/useForm';
 import { LocalChat } from '../../types/Chat';
+import FileUploader, { FileUploaderResult } from '../FileUploader/FileUploader';
 import IconButton from '../IconButton/IconButton';
 import './MessageBar.scss';
 
@@ -19,10 +21,22 @@ function MessageBar({ currentChat }: MessageBarProps) {
 	const [ values, handleChange, setValues ] = useForm({ content: '' });
 	const [ isEnabled, setEnabled ] = useState(false);
 	const inputRef = useRef<HTMLInputElement>();
+	const [ fileUploader, setFileUploader ] = useState<FileUploaderResult>({});
 
 	useEffect(() => {
 		setEnabled(values.content.length > 0);
 	}, [ values ]);
+
+	useEffect(() => {
+		(async () => {
+			if(!fileUploader.file) return;
+			sendMessage({
+				chat: currentChat,
+				attachment: fileUploader.file
+			});
+			fileUploader.reset();
+		})();
+	}, [ fileUploader ]);
 
 	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -53,9 +67,14 @@ function MessageBar({ currentChat }: MessageBarProps) {
 	return (
 		<div className='d-flex px-1 py-3'>
 			<Form onSubmit={handleSubmit} className='d-flex align-items-center w-100'>
+				<FileUploader onChange={setFileUploader}/>
 				<Col className='d-flex flex-grow-0 justify-content-center align-items-center px-1 gap-1'>
-					<IconButton icon={BsImage} size={34} variant='primary'/>
-					<IconButton icon={AiOutlineGif} size={34} variant='primary'/>
+					<IconButton icon={BsImage} size={34} variant='primary' type='button'
+						onClick={() => fileUploader.click()}
+					/>
+					<IconButton icon={AiOutlineGif} size={34} variant='primary' type='button'
+						onClick={() => toast.error('Not Implemented')}
+					/>
 				</Col>
 				<Col className='p-0'>
 					<div
@@ -80,7 +99,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 						/>
 						<div className='d-flex align-items-center'>
 							<OverlayTrigger trigger="click" placement="top-end" overlay={emojiPicker} rootClose>
-								<IconButton icon={BsEmojiSmileFill} size={32} variant='primary'/>
+								<IconButton icon={BsEmojiSmileFill} size={32} variant='primary' type='button'/>
 							</OverlayTrigger>
 						</div>
 					</div>
