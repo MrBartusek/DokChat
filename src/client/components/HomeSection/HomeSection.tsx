@@ -13,7 +13,7 @@ export default function HomeSection({ img, title, children, variant }: SectionPr
 	return (
 		<Section variantBackground={variant}>
 			<Row className={`align-items-center justify-content-center ${variant ? 'flex-row-reverse' : ''}`}>
-				<Col sm={7} className="p-5 d-flex align-items-center justify-content-center">
+				<Col md={7} className="p-6 d-flex align-items-center justify-content-center">
 					<img
 						src={img}
 						alt={title}
@@ -21,7 +21,7 @@ export default function HomeSection({ img, title, children, variant }: SectionPr
 						style={{maxWidth: '450'}}
 					/>
 				</Col>
-				<Col md={5} className="px-5 d-flex justify-content-center flex-column">
+				<Col md={5} className="px-5 d-flex justify-content-center flex-column text-center text-md-start">
 					<h2 className='fs-1 mb-4'>
 						{title}
 					</h2>

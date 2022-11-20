@@ -10,13 +10,13 @@ function Footer() {
 		<div className='bg-dark'>
 			<Container className='py-5 text-light'>
 				<Row>
-					<Col xs={'auto'}>
+					<Col lg={'auto'} className='text-center'>
 						<DokChatLogo variant='white' height={65} />
-						<p className='lead text-muted text-center'>
+						<p className='lead text-muted'>
 							Connect with anyone
 						</p>
 					</Col>
-					<Col className='d-flex justify-content-end gap-5'>
+					<Col className='d-flex justify-content-center justify-content-lg-end gap-5 text-center text-lg-start'>
 						<div style={{width: 250}}>
 							<h3>
 								Support
@@ -39,7 +39,7 @@ function Footer() {
 						</div>
 					</Col>
 				</Row>
-				<Row className='pt-5'>
+				<Row className='pt-5 text-center text-lg-start'>
 					<Col className='text-secondary'>
 						&copy; DokChat {new Date().getFullYear()} - Made with <BsHeartFill /> & <BiCoffeeTogo /> by {' '}
 						<a href="https://dokurno.dev/" className='link-secondary'>MrBartusek</a>!

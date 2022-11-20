@@ -9,10 +9,10 @@ interface Props {
 function FormPage({img, children}: Props) {
 	return (
 		<Row className='my-5 py-5 align-items-center'>
-			<Col lg={6}  className='d-flex justify-content-center d-lg-flex d-none' style={{'height': 500}}>
+			<Col md={6}  className='d-flex justify-content-center d-md-flex d-none' style={{'height': 500}}>
 				<Image src={img} style={{'maxWidth': '100%', 'maxHeight': '100%'}}/>
 			</Col>
-			<Col xs={12} lg={6} className='px-5'>
+			<Col xs={12} md={6} className='px-5'>
 				{children}
 			</Col>
 		</Row>
