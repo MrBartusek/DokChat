@@ -133,9 +133,7 @@ export function useMessageManager(ws: useWebsocketType): [
 				type: attachment.type
 			};
 		}
-		console.log('emmit');
 		ws.socket.emit('message', message, (response) => {
-			console.log('res', response);
 			if(response.error) {
 				ackErrorMessage(chat, pendingMessageId);
 				console.error('Failed to send message', response);
