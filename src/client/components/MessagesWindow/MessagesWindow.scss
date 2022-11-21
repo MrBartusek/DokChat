@@ -8,7 +8,7 @@
 	overflow: hidden;
 }
 
-@include media-breakpoint-up(lg) {
+@include media-breakpoint-up(md) {
 	.message {
 		max-width: min(700px, 70%) !important;
 	}
