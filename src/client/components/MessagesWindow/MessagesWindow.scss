@@ -1,8 +1,17 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
 .message {
     padding: 8px 12px;
-	max-width: min(700px, 70%) !important;
 	border-radius: 1.2rem;
 	overflow: hidden;
+}
+
+@include media-breakpoint-up(lg) {
+	.message {
+		max-width: min(700px, 70%) !important;
+	}
 }
 
 .message-emojis {

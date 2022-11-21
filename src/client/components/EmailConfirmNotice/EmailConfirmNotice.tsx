@@ -11,7 +11,7 @@ export default function EmailConfirmNotice() {
 
 	if(!show) return <></>;
 	return (
-		<div className='p-2 bg-warning d-flex justify-content-center align-items-center'>
+		<div className='p-2 bg-warning d-flex justify-content-center align-items-center gap-2'>
 			<Separator width={24} />
 			<div className='d-flex justify-content-center align-items-center w-100'>
 				<BsExclamationTriangle className='me-2' />

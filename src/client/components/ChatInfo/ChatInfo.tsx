@@ -19,23 +19,23 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 	}
 
 	return (
-		<Row className='p-2 border-bottom border-separator'>
-			<Col xs='auto' className='pe-2'>
+		<div className='d-flex p-2 border-bottom border-separator'>
+			<div className='d-flex pe-2'>
 				<ProfilePicture src={currentChat && currentChat.avatar} />
-			</Col>
-			<Col className='d-flex justify-content-left p-0 align-items-center'>
+			</div>
+			<div className='d-flex flex-fill justify-content-left p-0 align-items-center'>
 				<Twemoji
 					className='fw-bold text-truncate'
 					text={currentChat?.name || 'No chat selected'}
 				/>
-			</Col>
+			</div>
 			{currentChat && (
-				<Col xs='auto' className='d-flex align-items-center'>
+				<div className='d-flex align-items-center'>
 					<IconButton icon={BsPersonPlusFill} variant='primary' onClick={handleNewGroupClick} />
 					<IconButton icon={BsThreeDots} variant='primary' />
-				</Col>
+				</div>
 			)}
-		</Row>
+		</div>
 	);
 
 }

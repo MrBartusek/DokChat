@@ -17,24 +17,29 @@ function UserInfo() {
 	);
 
 	return (
-		<Row className='p-2 border-bottom border-separator'>
+		<div className='d-flex flex-column flex-lg-row p-2 border-bottom border-separator align-items-center gap-1'>
+			<div className='d-flex d-lg-none'>
+				<span className='fw-bold small'>
+					DokChat
+				</span>
+			</div>
 			<OverlayTrigger
 				placement='right'
 				overlay={usernameTooltip}
 			>
-				<Col xs='auto'>
+				<div className='d-flex'>
 					<ProfilePicture src={user.avatar} onClick={handleAvatarClick} />
-				</Col>
+				</div>
 			</OverlayTrigger>
-			<Col className='d-flex justify-content-center align-items-center'>
+			<div className='d-none d-lg-flex flex-fill justify-content-center align-items-center'>
 				<span className='fw-bold'>
 					DokChat
 				</span>
-			</Col>
-			<Col xs='auto' className='d-flex align-items-center'>
+			</div>
+			<div className='d-flex align-items-center'>
 				<IconButton icon={BsPlusCircle} onClick={handleNewChatClick} />
-			</Col>
-		</Row>
+			</div>
+		</div>
 	);
 
 	function handleNewChatClick() {

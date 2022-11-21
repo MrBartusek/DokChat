@@ -165,7 +165,7 @@ function UserMessage({message, showAvatar, showAuthor, showStatus}: MessageProps
 									{isSent ? (
 										<img
 											src={`/api/attachment?id=${message.id}`}
-											style={{borderRadius: '1.2rem', maxHeight: '200px'}}
+											style={{borderRadius: '1.2rem', maxHeight: 230, width: '100%'}}
 											alt='Message attachment'
 										/>
 									): (

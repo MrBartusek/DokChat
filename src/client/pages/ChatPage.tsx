@@ -63,20 +63,14 @@ export function ChatPage() {
 		<MessageManagerContext.Provider value={[ chats, sendMessage, setChatList ]}>
 			<FullPageContainer className='d-flex flex-column p-0'>
 				{ !user.isEmailConfirmed && <EmailConfirmNotice /> }
-				<Row className='d-flex flex-fill m-0'>
-					<Col
-						style={{flex: '0 0 360px', width: '360px', minWidth: 0}}
+				<div className='d-flex flex-fill m-0 flex-nowrap'>
+					<div
 						className='d-flex flex-column border-separator border-end'
 					>
 						<UserInfo />
-						<ChatList
-							currentChat={currentChat}
-						/>
-					</Col>
-					<Col
-						style={{minWidth: 0}}
-						className='d-flex flex-column p-0'
-					>
+						<ChatList currentChat={currentChat} />
+					</div>
+					<div className='d-flex flex-column p-0 flex-fill' style={{ minWidth: 0 }}>
 						<ChatInfo currentChat={currentChat} />
 						{currentChat && (
 							<>
@@ -84,8 +78,8 @@ export function ChatPage() {
 								<MessageBar currentChat={currentChat} />
 							</>
 						)}
-					</Col>
-				</Row>
+					</div>
+				</div>
 			</FullPageContainer>
 			{/* React Router outlet for popups */}
 			<Outlet />

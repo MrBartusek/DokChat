@@ -23,21 +23,19 @@ function ChatList({ currentChat }: ChatListProps) {
 	);
 
 	return (
-		<Row className='d-flex h-100' style={{overflowY: 'scroll', flex: '1 0 0'}}>
-			<Col className="d-flex align-items-center py-3 px-2 flex-column">
-				{chats.map((chat) => (
-					<Chat
-						key={chat.id}
-						avatar={chat.avatar}
-						name={chat.name}
-						lastMessage={chat.lastMessage}
-						isCurrent={chat.id == currentChat?.id}
-						onClick={() => navigate(`/chat/${chat.id}`)}
-					/>
-				))}
-				{chats.length == 0 && noChatsInfo}
-			</Col>
-		</Row>
+		<div className='d-flex py-3 px-2 align-items-center flex-column' style={{overflowY: 'scroll', flex: '1 0 0'}}>
+			{chats.map((chat) => (
+				<Chat
+					key={chat.id}
+					avatar={chat.avatar}
+					name={chat.name}
+					lastMessage={chat.lastMessage}
+					isCurrent={chat.id == currentChat?.id}
+					onClick={() => navigate(`/chat/${chat.id}`)}
+				/>
+			))}
+			{chats.length == 0 && noChatsInfo}
+		</div>
 	);
 }
 
@@ -54,18 +52,17 @@ interface ChatProps {
 
 function Chat(props: ChatProps) {
 	return (
-		<Row
-			className={`chat flex-row rounded-3 w-100 flex-nowrap ${props.isCurrent ? 'current' : ''}`}
+		<div
+			className={`d-flex px-2 chat flex-row rounded-3 flex-nowrap ${props.isCurrent ? 'current' : ''}`}
 			style={{height: 65}}
 			onClick={props.onClick}
 		>
-			<Col xs='auto' className="d-flex align-items-center">
+			<div className="d-flex align-items-center pe-lg-3">
 				<ProfilePicture src={props.avatar} size={48} />
-			</Col>
-			<Col
-				xs='auto'
-				className='d-flex justify-content-center flex-column py-0 px-1'
-				style={{maxWidth: '250px'}}
+			</div>
+			<div
+				className='d-none d-lg-flex justify-content-center flex-column py-0 px-1'
+				style={{width: 240}}
 			>
 				<Twemoji className='fw-bol text-truncate text-nowrap' text={props.name} />
 				<div className='text-muted text-truncate' style={{fontSize: '0.85em'}}>
@@ -74,8 +71,8 @@ function Chat(props: ChatProps) {
 					): 'Click to start the chat!'}
 
 				</div>
-			</Col>
-		</Row>
+			</div>
+		</div>
 	);
 }
 
