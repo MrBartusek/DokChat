@@ -19,7 +19,7 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 	}
 
 	return (
-		<div className='d-flex p-2 border-bottom border-separator'>
+		<div className='d-flex px-3 py-2 border-bottom border-separator'>
 			<div className='d-flex pe-2'>
 				<ProfilePicture src={currentChat && currentChat.avatar} />
 			</div>
