@@ -60,7 +60,7 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 		</span>
 	);
 	return (
-		<div className='d-flex px-2 flex-column-reverse' ref={messageWindowRef} style={{overflowY: 'scroll', flex: '1 0 0'}}>
+		<div className='d-flex px-3 flex-column-reverse' ref={messageWindowRef} style={{overflowY: 'scroll', flex: '1 0 0'}}>
 			{isLoading ? <SimpleLoading /> : (
 				<>
 					{currentChat.messages.length == 0 && noMessagesInfo }
