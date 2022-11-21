@@ -14,8 +14,6 @@ import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { param, validationResult } from 'express-validator';
 import * as DateFns from 'date-fns';
 
-const S3_FILE_EXPIRE_TIME = 600;
-
 const router = express.Router();
 
 router.all('/:id.png', param('id').isString(), allowedMethods('GET'), async (req, res, next) => {
@@ -26,11 +24,12 @@ router.all('/:id.png', param('id').isString(), allowedMethods('GET'), async (req
 	let avatar = null;
 	const user = await UserManager.getUserById(id);
 
+	res.header('Cache-Control', s3Client.cacheControlHeader);
 	if(user) {
 		avatar = await userAvatar(id);
 		if(avatar) {
 			const avatarUrl = await s3Client.getSingedUrl(avatar);
-			res.redirect(302, avatarUrl);
+			res.redirect(301, avatarUrl);
 		}
 		else {
 			// Default avatar based on user tag
@@ -43,7 +42,7 @@ router.all('/:id.png', param('id').isString(), allowedMethods('GET'), async (req
 		avatar = await chatAvatar(id);
 		if(avatar) {
 			const avatarUrl = await s3Client.getSingedUrl(avatar);
-			res.redirect(302, avatarUrl);
+			res.redirect(301, avatarUrl);
 		}
 		else {
 			// Default avatar based on chat creator tag

@@ -28,7 +28,7 @@ export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, Rea
 				setUser(cookies.token);
 				setLoading(false);
 			}
-			(async () => await refreshToken().then(() => setLoading(false)))();
+			(async () => await refreshToken(true).then(() => setLoading(false)))();
 		}
 		else {
 			setLoading(false);

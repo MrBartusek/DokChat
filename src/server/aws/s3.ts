@@ -1,11 +1,11 @@
-import { DeleteObjectCommand, DeleteObjectCommandInput, GetObjectCommand, PutObjectCommand, PutObjectCommandInput, S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, DeleteObjectCommandInput, GetObjectCommand, GetObjectCommandInput, PutObjectCommand, PutObjectCommandInput, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import * as crypto from 'crypto';
 import * as sharp from 'sharp';
 
 export const bucketName = process.env.AWS_BUCKET_NAME;
 const region = process.env.AWS_REGION;
-const SINGED_URL_EXPIRE = 600;
+const SINGED_URL_EXPIRE = 60 * 60;
 
 class DokChatS3Client {
 	private client: S3Client;
@@ -21,15 +21,20 @@ class DokChatS3Client {
      * @param key Resource key
      * @returns Url
      */
-	async getSingedUrl(key: string): Promise<string> {
-		const getParams = {
+	public async getSingedUrl(key: string): Promise<string> {
+		const getParams: GetObjectCommandInput = {
 			Bucket: bucketName,
-			Key: key
+			Key: key,
+			ResponseCacheControl: this.cacheControlHeader
 		};
 		const getCommand = new GetObjectCommand(getParams);
 		return await getSignedUrl(
 			this.client, getCommand, { expiresIn: SINGED_URL_EXPIRE }
 		);
+	}
+
+	public get cacheControlHeader() {
+		return `public, max-age=${SINGED_URL_EXPIRE}, immutable`;
 	}
 
 	/**

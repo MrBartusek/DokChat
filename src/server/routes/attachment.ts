@@ -20,6 +20,7 @@ router.all('/', query('id').isString(), allowedMethods('GET'), async (req, res, 
 	const attachment = query.rows[0].attachment;
 	if(!attachment) return new ApiResponse(res).badRequest('This message doesn\'t have an attachment');
 	const url = await s3Client.getSingedUrl(attachment);
+	res.header('Cache-Control', s3Client.cacheControlHeader);
 	res.redirect(301, url);
 });
 
