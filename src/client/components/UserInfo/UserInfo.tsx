@@ -17,8 +17,8 @@ function UserInfo() {
 	);
 
 	return (
-		<div className='d-flex flex-column flex-lg-row p-2 border-bottom border-separator align-items-center gap-1'>
-			<div className='d-flex d-lg-none'>
+		<div className='d-flex flex-column flex-md-row p-2 border-bottom border-separator align-items-center gap-1'>
+			<div className='d-flex d-md-none'>
 				<span className='fw-bold small'>
 					DokChat
 				</span>
@@ -31,7 +31,7 @@ function UserInfo() {
 					<ProfilePicture src={user.avatar} onClick={handleAvatarClick} />
 				</div>
 			</OverlayTrigger>
-			<div className='d-none d-lg-flex flex-fill justify-content-center align-items-center'>
+			<div className='d-none d-md-flex flex-fill justify-content-center align-items-center'>
 				<span className='fw-bold'>
 					DokChat
 				</span>

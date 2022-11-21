@@ -57,11 +57,11 @@ function Chat(props: ChatProps) {
 			style={{height: 65}}
 			onClick={props.onClick}
 		>
-			<div className="d-flex align-items-center pe-lg-3">
+			<div className="d-flex align-items-center pe-md-3">
 				<ProfilePicture src={props.avatar} size={48} />
 			</div>
 			<div
-				className='d-none d-lg-flex justify-content-center flex-column py-0 px-1'
+				className='d-none d-md-flex justify-content-center flex-column py-0 px-1'
 				style={{width: 240}}
 			>
 				<Twemoji className='fw-bol text-truncate text-nowrap' text={props.name} />
