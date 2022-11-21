@@ -5,7 +5,8 @@ import * as sharp from 'sharp';
 
 export const bucketName = process.env.AWS_BUCKET_NAME;
 const region = process.env.AWS_REGION;
-const SINGED_URL_EXPIRE = 60 * 60;
+const SINGED_URL_EXPIRE = 60 * 60; // 60 minutes
+const CACHE_TIME = 60 * 30; // 30 minutes
 
 class DokChatS3Client {
 	private client: S3Client;
@@ -34,7 +35,7 @@ class DokChatS3Client {
 	}
 
 	public get cacheControlHeader() {
-		return `public, max-age=${SINGED_URL_EXPIRE}, immutable`;
+		return `public, max-age=${CACHE_TIME}, immutable`;
 	}
 
 	/**
