@@ -53,7 +53,7 @@ export function HomePage() {
 
 			<Section variantBackground>
 				<div className='d-flex flex-column align-items-center py-5 mb-5'>
-					<h2 className='fs-1 mb-5'>Ready to start using DokChat?</h2>
+					<h2 className='fs-1 mb-5 text-center'>Ready to start using DokChat?</h2>
 					<Link to='/register'>
 						<InteractiveButton size='lg' icon={BsChatSquareTextFill}>
 						Create Account
