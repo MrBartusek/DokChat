@@ -1,7 +1,7 @@
 import { DeleteObjectCommand, DeleteObjectCommandInput, GetObjectCommand, PutObjectCommand, PutObjectCommandInput, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import * as crypto from 'crypto';
-import sharp from 'sharp';
+import * as sharp from 'sharp';
 
 export const bucketName = process.env.AWS_BUCKET_NAME;
 const region = process.env.AWS_REGION;
@@ -83,13 +83,13 @@ class DokChatS3Client {
 	}
 
 	private async imageToBuffer(file: Express.Multer.File | File): Promise<Buffer> {
-		if(file instanceof File) {
-			const arrBuffer = await file.arrayBuffer();
-			const buffer = Buffer.from(arrBuffer);
-			return buffer;
+		if((file as any).buffer) {
+			return (file as Express.Multer.File).buffer;
 		}
 		else {
-			return file.buffer;
+			const arrBuffer = await (file as File).arrayBuffer();
+			const buffer = Buffer.from(arrBuffer);
+			return buffer;
 		}
 	}
 
