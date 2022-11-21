@@ -13,10 +13,6 @@ export default class Utils {
 		return Utils.apiUrl() + `avatar/${id}.png`;
 	}
 
-	public static generateAWSFileName(bytes = 32) {
-		return crypto.randomBytes(bytes).toString('hex');
-	}
-
 	public static userDiscriminator(user: UserJWTData | User) {
 		return `${user.username}#${user.tag}`;
 	}

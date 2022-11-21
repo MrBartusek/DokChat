@@ -159,9 +159,16 @@ function UserMessage({message, showAvatar, showAuthor, showStatus}: MessageProps
 											alt='Message attachment'
 										/>
 									): (
-										<span>{message.isPending ? (
-											<Spinner size='sm' variant='light' animation='border' />
-										) : 'Attachment upload failed'}</span>
+										<>
+											{message.isPending ? (
+												<>
+													<Spinner size='sm' variant='light' animation='border' className='me-2' />
+													<span>
+														Uploading Attachment
+													</span>
+												</>
+											) : 'Attachment upload failed'}
+										</>
 
 									)}
 

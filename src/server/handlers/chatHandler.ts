@@ -3,18 +3,21 @@ import { ApiResponse } from '../apiResponse';
 import ChatManager from '../managers/chatManager';
 import PermissionsManager from '../managers/permissionsManager';
 import Utils from '../utils/utils';
+import s3Client from '../aws/s3';
 
 export default function registerMessageHandler(io: DokChatServer, socket: DokChatSocket) {
 	socket.on('message', async (msg, callback) => {
 		// This checks both for chat access and if chat exist
 		if(!PermissionsManager.hasChatAccess(socket.auth, msg.chatId)) {
-
 			return new ApiResponse({} as any, callback).forbidden();
 		}
-		if(!validateMessage(msg, callback)) return;
+		if(!validateMessage(msg, callback)) {
+			return new ApiResponse({} as any, callback).badRequest('Invalid message');
+		}
 
 		// Add message to db
-		const [ id, timestamp ] = await ChatManager.saveMessage(socket.auth, msg.chatId, msg.content);
+		const attachment = msg.attachment ? await s3Client.uploadAttachment(msg.attachment.buffer, msg.attachment.type) : null;
+		const [ id, timestamp ] = await ChatManager.saveMessage(socket.auth, msg.chatId, msg.content, attachment);
 
 		// Send message to every participant expect sender
 		const participants = await ChatManager.listParticipants(msg.chatId);
@@ -57,13 +60,24 @@ function validateMessage(msg: ClientMessage, callback: (response: any) => void):
 		new ApiResponse({} as any, callback).badRequest('Message content invalid');
 		return false;
 	}
-	if(msg.content) {
+	else if(msg.content) {
 		if(msg.content.trim().length == 0) {
 			new ApiResponse({} as any, callback).badRequest('Message is empty');
 			return false;
 		}
 		else if(msg.content.trim().length >= 4000) {
 			new ApiResponse({} as any, callback).badRequest('Message is too long');
+			return false;
+		}
+	}
+	else if(msg.attachment) {
+		const allowedFormats = [
+			'image/bmp', 'image/gif', 'image/jpeg', 'image/svg+xml', 'image/png'
+		];
+		if(!allowedFormats.includes(msg.attachment.type)) {
+			return false;
+		}
+		if(!Buffer.isBuffer(msg.attachment.buffer)) {
 			return false;
 		}
 	}

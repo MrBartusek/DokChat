@@ -13,6 +13,7 @@ import ensureAuthenticatedSocket from './middlewares/ensureAuthenticatedSocket';
 import * as schedule from 'node-schedule';
 import processEmailBounces from './jobs/processBounces';
 import processEmailComplaints from './jobs/processComplaints';
+import { ATTACHMENT_MAX_SIZE } from '../types/const';
 
 const isProduction = (process.env['NODE' + '_ENV'] || 'development') == 'production';
 
@@ -23,7 +24,7 @@ async function main() {
 	// Setup web and websocket server
 	const app = express();
 	const server = http.createServer(app);
-	const io = new Server(server);
+	const io = new Server(server, { maxHttpBufferSize: ATTACHMENT_MAX_SIZE});
 
 	// Register middleware
 	app.use(express.json());

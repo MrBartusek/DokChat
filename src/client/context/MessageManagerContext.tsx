@@ -4,6 +4,5 @@ import { LocalChat } from '../types/Chat';
 
 export const MessageManagerContext = createContext<[
     LocalChat[],
-    React.Dispatch<{chat: LocalChat, content?: string, attachment?: Attachment}>,
-    React.Dispatch<LocalChat[]>
-]>(null as any);
+    (chat: LocalChat, content?: string, attachment?: File) => Promise<void>,
+    React.Dispatch<LocalChat[]>]>(null as any);

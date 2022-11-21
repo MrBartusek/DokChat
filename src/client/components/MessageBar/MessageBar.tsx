@@ -30,10 +30,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 	useEffect(() => {
 		(async () => {
 			if(!fileUploader.file) return;
-			sendMessage({
-				chat: currentChat,
-				attachment: fileUploader.file
-			});
+			sendMessage(currentChat, null, fileUploader.file);
 			fileUploader.reset();
 		})();
 	}, [ fileUploader ]);
@@ -41,10 +38,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		if(!isEnabled) return;
-		sendMessage({
-			chat: currentChat,
-			content: values.content
-		});
+		sendMessage(currentChat, values.content);
 		setValues();
 		inputRef.current.focus();
 	}
@@ -69,11 +63,11 @@ function MessageBar({ currentChat }: MessageBarProps) {
 			<Form onSubmit={handleSubmit} className='d-flex align-items-center w-100'>
 				<FileUploader onChange={setFileUploader}/>
 				<Col className='d-flex flex-grow-0 justify-content-center align-items-center px-1 gap-1'>
-					<IconButton icon={BsImage} size={34} variant='primary' type='button'
-						onClick={() => fileUploader.click()}
-					/>
 					<IconButton icon={AiOutlineGif} size={34} variant='primary' type='button'
 						onClick={() => toast.error('Not Implemented')}
+					/>
+					<IconButton icon={BsImage} size={34} variant='primary' type='button'
+						onClick={() => fileUploader.click()}
 					/>
 				</Col>
 				<Col className='p-0'>

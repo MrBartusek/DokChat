@@ -9,7 +9,7 @@ import Utils from '../utils/utils';
 import ChatManager from '../managers/chatManager';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import s3Client, { bucketName } from '../aws/s3';
+import s3Client from '../aws/s3';
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { param, validationResult } from 'express-validator';
 import * as DateFns from 'date-fns';
@@ -29,7 +29,7 @@ router.all('/:id.png', param('id').isString(), allowedMethods('GET'), async (req
 	if(user) {
 		avatar = await userAvatar(id);
 		if(avatar) {
-			const avatarUrl = await getAvatarSingedUrl(avatar);
+			const avatarUrl = await s3Client.getSingedUrl(avatar);
 			res.redirect(302, avatarUrl);
 		}
 		else {
@@ -42,7 +42,7 @@ router.all('/:id.png', param('id').isString(), allowedMethods('GET'), async (req
 		if(!chat) return new ApiResponse(res).notFound('User or chat not found');
 		avatar = await chatAvatar(id);
 		if(avatar) {
-			const avatarUrl = await getAvatarSingedUrl(avatar);
+			const avatarUrl = await s3Client.getSingedUrl(avatar);
 			res.redirect(302, avatarUrl);
 		}
 		else {
@@ -52,17 +52,6 @@ router.all('/:id.png', param('id').isString(), allowedMethods('GET'), async (req
 		}
 	}
 });
-
-async function getAvatarSingedUrl(key: string): Promise<string> {
-	const getParams = {
-		Bucket: bucketName,
-		Key: key
-	};
-	const getCommand = new GetObjectCommand(getParams);
-	return await getSignedUrl(
-		s3Client, getCommand, { expiresIn: S3_FILE_EXPIRE_TIME }
-	);
-}
 
 async function userAvatar(id: string): Promise<string | null> {
 	const query = await db.query(sql`

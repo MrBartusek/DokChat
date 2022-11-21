@@ -172,18 +172,18 @@ export default class ChatManager {
 	 * Save message to database
 	 * @returns [ id, timestamp]
 	 */
-	public static async saveMessage(sender: UserJWTData | 'SYSTEM', chatId: string, content: string): Promise<[string, string]> {
+	public static async saveMessage(sender: UserJWTData | 'SYSTEM', chatId: string, content?: string, attachment?: string): Promise<[string, string]> {
 		const senderId = sender == 'SYSTEM' ? await UserManager.systemUserId() : sender.id;
 		const id = snowflakeGenerator.getUniqueID().toString();
 		const timestamp = DateFns.getUnixTime(new Date()).toString();
 
 		await db.query(sql`
 			INSERT INTO messages 
-				(id, chat_id, author_id, content, created_at)
+				(id, chat_id, author_id, content, created_at, attachment)
 			VALUES (
-				$1, $2, $3, $4, $5
+				$1, $2, $3, $4, $5, $6
 			);
-		`, [ id, chatId, senderId, content, timestamp ]);
+		`, [ id, chatId, senderId, content, timestamp, attachment ]);
 		return [ id, timestamp ];
 	}
 }

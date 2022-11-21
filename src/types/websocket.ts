@@ -13,7 +13,10 @@ export interface ClientToServerEvents {
     message: (message: ClientMessage, callback: (response: EventAcknowledgement<{id: string, timestamp: string}>) => void) => void;
 }
 
-export type Attachment = string | File;
+export type Attachment = {
+    buffer: Buffer,
+    type: string
+};
 
 export interface ServerMessage {
     id: string,

@@ -1,12 +1,15 @@
+import { Buffer } from 'buffer';
+import * as DateFns from 'date-fns';
 import React, { useContext, useEffect, useState } from 'react';
+import useSound from 'use-sound';
 import { ChatListResponse, EndpointResponse } from '../../types/endpoints';
+import { ClientMessage } from '../../types/websocket';
 import { UserContext } from '../context/UserContext';
 import { LocalChat } from '../types/Chat';
+import { ATTACHMENT_MAX_SIZE } from '../../types/const';
 import { useFetch } from './useFetch';
 import { useWebsocketType } from './useWebsocket';
-import * as DateFns from 'date-fns';
-import useSound from 'use-sound';
-import { Attachment } from '../../types/websocket';
+import toast from 'react-hot-toast';
 
 /**
  * This hook is a manger for receiving, caching and sending messages
@@ -15,7 +18,7 @@ import { Attachment } from '../../types/websocket';
 export function useMessageManager(ws: useWebsocketType): [
 	boolean, // loading
 	LocalChat[], // chats
-	React.Dispatch<{chat: LocalChat, content: string}>, // sendMessage
+	(chat: LocalChat, content?: string, attachment?: File) => Promise<void>, // sendMessage
 	React.Dispatch<LocalChat[]> // setChatList
 	] {
 	const [ loading, setLoading ] = useState(true);
@@ -93,44 +96,60 @@ export function useMessageManager(ws: useWebsocketType): [
 		});
 	}
 
+	async function sendMessage(chat: LocalChat, content?: string, attachment?: File)  {
+		if(attachment && attachment.size > ATTACHMENT_MAX_SIZE) {
+			toast.error('Max attachments size is 25MB');
+			return;
+		}
+
+		// Add this message to local cache
+		const chats = [ ...chatList ];
+		const chatId = chats.findIndex((c) => c.id == chat.id);
+		if(chatId == -1) return;
+		const pendingMessageId = chats[chatId].addMessage({
+			id: '0', // This will be auto-generated
+			isPending: true,
+			attachment: attachment != undefined,
+			author: {
+				id: user.id,
+				username: user.username,
+				avatar: user.avatar,
+				tag: user.tag
+			},
+			content: content,
+			timestamp: DateFns.getUnixTime(new Date()).toString()
+		});
+		setChatList(chats);
+
+		// Send message to WS
+		const message: ClientMessage = {
+			chatId: chat.id,
+			content: content
+		};
+		if(attachment) {
+			const arrBuffer = await attachment.arrayBuffer();
+			message.attachment = {
+				buffer: Buffer.from(arrBuffer),
+				type: attachment.type
+			};
+		}
+		console.log('emmit');
+		ws.socket.emit('message', message, (response) => {
+			console.log('res', response);
+			if(response.error) {
+				ackErrorMessage(chat, pendingMessageId);
+				console.error('Failed to send message', response);
+			}
+			else {
+				ackMessage(chat, pendingMessageId, response.data.id, response.data.timestamp);
+			}
+		});
+	}
+
 	return [
 		loading,
 		sortedChatList(),
-		(data: {chat: LocalChat, content?: string, attachment?: Attachment}) => {
-			// Add this message to local cache
-			const chats = [ ...chatList ];
-			const chatId = chats.findIndex((c) => c.id == data.chat.id);
-			if(chatId == -1) return;
-			const pendingMessageId = chats[chatId].addMessage({
-				id: '0', // This will be auto-generated
-				isPending: true,
-				attachment: data.attachment != undefined,
-				author: {
-					id: user.id,
-					username: user.username,
-					avatar: user.avatar,
-					tag: user.tag
-				},
-				content: data.content,
-				timestamp: DateFns.getUnixTime(new Date()).toString()
-			});
-			setChatList(chats);
-
-			// Send message to WS
-			ws.socket.emit('message', {
-				chatId: data.chat.id,
-				content: data.content,
-				attachment: data.attachment
-			}, (response) => {
-				if(response.error) {
-					ackErrorMessage(data.chat, pendingMessageId);
-					console.error('Failed to send message', response);
-				}
-				else {
-					ackMessage(data.chat, pendingMessageId, response.data.id, response.data.timestamp);
-				}
-			});
-		},
+		sendMessage,
 		setChatList
 	];
 }

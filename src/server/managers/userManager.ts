@@ -114,4 +114,8 @@ export default class UserManager {
 		return query.rows[0].passwordHash;
 	}
 
+	public static async emailTaken(email: string): Promise<boolean> {
+		const query = await db.query(sql`SELECT EXISTS(SELECT 1 FROM users WHERE email=$1)`, [ email ]);
+		return query.rows[0].exists;
+	}
 }

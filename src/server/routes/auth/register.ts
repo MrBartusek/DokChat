@@ -21,6 +21,7 @@ import { body, validationResult } from 'express-validator';
 import { isValidUsername } from '../../validators/username';
 import { isValidPassword } from '../../validators/password';
 import Utils from '../../utils/utils';
+import UserManager from '../../managers/userManager';
 
 const router = express.Router();
 
@@ -37,7 +38,7 @@ router.all('/register',
 		const password: string = req.body.password;
 		const email: string = req.body.email;
 
-		if(await emailTaken(email)) {
+		if(await UserManager.emailTaken(email)) {
 			return new ApiResponse(res).badRequest('This email is already taken');
 		}
 		if(await EmailBlacklistManager.isEmailBlacklisted(email)) {
@@ -74,11 +75,6 @@ router.all('/register',
 		await ChatManager.addUserToChat(userId, publicChatId);
 		AuthManager.sendAuthResponse(res, jwtData, passwordHash);
 	});
-
-async function emailTaken(email: string): Promise<boolean> {
-	const query = await db.query(sql`SELECT EXISTS(SELECT 1 FROM users WHERE email=$1)`, [ email ]);
-	return query.rows[0].exists;
-}
 
 async function usersWithUsernameCount(username: string): Promise<number> {
 	const query = await db.query(sql`SELECT COUNT(*) FROM users WHERE username=$1`, [ username ]);
