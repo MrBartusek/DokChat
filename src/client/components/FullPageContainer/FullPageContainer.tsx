@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Container, ContainerProps } from 'react-bootstrap';
-import './FullPageContainer.scss';
 
 export interface FullPageContainerProps extends ContainerProps {
     children: JSX.Element | JSX.Element[];
@@ -8,10 +7,27 @@ export interface FullPageContainerProps extends ContainerProps {
 }
 
 function FullPageContainer(props : FullPageContainerProps) {
+	const [ innerHeight, setInnerHeight ] = useState(window.innerHeight);
+
+	useEffect(() => {
+		function handleResize() {
+			setInnerHeight(window.innerHeight);
+		}
+
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
+
 	return (
 		<Container
 			{...props}
 			fluid
+			style={{
+				minHeight: 0,
+				overflowX: 'hidden',
+				maxHeight: innerHeight,
+				height: innerHeight
+			}}
 			className={`fullPageContainer ${props.className || ''}`}
 		>
 			{props.children}
