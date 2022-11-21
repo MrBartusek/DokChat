@@ -64,7 +64,11 @@ export class LocalChat implements Chat {
 		// If chat is uninitialized save only a partial message
 		// since it doesn't accept a regular message list
 		if(this.isInitialized) {
-			(this._messages as Message[]).push(msg);
+			const msgs = (this._messages as Message[]);
+			if(msgs.find(m => m.id == msg.id)) {
+				console.warn('Ignoring duplicate message', msg);
+			}
+			msgs.push(msg);
 		}
 		else {
 			this._messages = {
