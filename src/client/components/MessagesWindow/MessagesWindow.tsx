@@ -46,6 +46,12 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 		setChatList(chatsCopy);
 	}, [ messagesFetch.res ]);
 
+	function timestampDiffInHours(a: string, b: string) {
+		return Math.abs(DateFns.differenceInHours(
+			DateFns.fromUnixTime(Number(a)),
+			DateFns.fromUnixTime(Number(b))));
+	}
+
 	const isLoading = !currentChat.isInitialized || messagesFetch.loading;
 
 	const noMessagesInfo = (
@@ -59,23 +65,27 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 				<>
 					{currentChat.messages.length == 0 && noMessagesInfo }
 					{currentChat.messages.map((msg, index, elements) => {
+						const BLOCK_SEPARATION_HOURS = 1;
+
 						const prev: LocalMessage | undefined = elements[index - 1];
 						const next: LocalMessage | undefined = elements[index + 1];
 						const isAuthor = msg.author.id == user.id;
-						const timestampDiff = next ? Math.abs(DateFns.differenceInHours(
-							DateFns.fromUnixTime(Number(msg.timestamp)),
-							DateFns.fromUnixTime(Number(next.timestamp)))) : 0;
-						const showTimestamp = timestampDiff >= 1 || !next;
+						const timestampDiffNext = next ? timestampDiffInHours(msg.timestamp, next.timestamp) : 0;
+						const timestampDiffPrev = prev ? timestampDiffInHours(msg.timestamp, prev.timestamp) : 0;
+						const showTimestamp = timestampDiffNext >= BLOCK_SEPARATION_HOURS || !next;
 
-						const sendAgoInHours = Math.abs(DateFns.differenceInHours(DateFns.fromUnixTime(Number(msg.timestamp)), new Date()));
+						const msgTimestamp = DateFns.fromUnixTime(Number(msg.timestamp));
+						const sendAgoInHours = Math.abs(DateFns.differenceInHours(msgTimestamp, new Date()));
 
 						let format = 'HH:mm';
 						if(sendAgoInHours > 24 * 7) {
 							format = 'd LLLL yyyy, HH:mm';
 						}
-						else if(sendAgoInHours > 24) {
+						else if(!DateFns.isToday(msgTimestamp)) {
 							format = 'EEE, HH:mm';
 						}
+
+						const isFirstInBlock = timestampDiffPrev >= BLOCK_SEPARATION_HOURS;
 
 						return (
 							<div className='d-flex flex-column' key={msg.id}>
@@ -86,8 +96,8 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 								)}
 								<UserMessage
 									message={msg}
-									showAvatar={!isAuthor && msg.author.id != prev?.author?.id}
-									showAuthor={!isAuthor && msg.author.id != next?.author?.id}
+									showAvatar={!isAuthor && (msg.author.id != prev?.author?.id || isFirstInBlock)}
+									showAuthor={!isAuthor && (msg.author.id != next?.author?.id || showTimestamp)}
 									showStatus={isAuthor && msg.author.id != prev?.author?.id}
 								/>
 								{(prev && msg.author.id != prev.author.id) && <Separator height={12} />}
