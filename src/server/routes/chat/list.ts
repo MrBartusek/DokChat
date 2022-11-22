@@ -35,8 +35,8 @@ router.all('/list',
 				isGroup: chat.isGroup,
 				createdAt: chat.createdAt,
 				creatorId: chat.creatorId,
-				lastMessage: chat.message ? {
-					content: chat.message,
+				lastMessage: chat.messageCreatedAt ? {
+					content: chat.messageContent || '',
 					author: chat.messageAuthor,
 					timestamp: chat.messageCreatedAt
 				}: null
@@ -50,7 +50,7 @@ type ChatsQuery = QueryResult<{
 	chatId: string,
 	name: string,
 	avatar: string,
-	message: string,
+	messageContent: string,
 	messageAuthor: string,
 	messageCreatedAt: string,
     isGroup: boolean,
@@ -66,7 +66,7 @@ async function queryChats(req: express.Request, page: number): Promise<ChatsQuer
 			chat.creator_id as "creatorId",
 			chat.created_at as "createdAt",
             participants.chat_id as "chatId",
-            last_message.content as "message",
+			last_message.content as "messageContent",
             last_message_author.username as "messageAuthor",
 			last_message.created_at as "messageCreatedAt"
         FROM participants
