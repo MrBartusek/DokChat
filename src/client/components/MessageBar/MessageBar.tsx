@@ -30,15 +30,19 @@ function MessageBar({ currentChat }: MessageBarProps) {
 	useEffect(() => {
 		(async () => {
 			if(!fileUploader.file) return;
-			sendMessage(currentChat, null, fileUploader.file);
-			fileUploader.reset();
+			// First, send text message if there is any
+			if(isEnabled) await handleSubmit();
+			setTimeout(async() => {
+				await sendMessage(currentChat, null, fileUploader.file);
+				fileUploader.reset();
+			}, (isEnabled ? 100 : 0));
 		})();
 	}, [ fileUploader ]);
 
-	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault();
+	async function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
+		e?.preventDefault();
 		if(!isEnabled) return;
-		sendMessage(currentChat, values.content);
+		await sendMessage(currentChat, values.content);
 		setValues();
 		inputRef.current.focus();
 	}
