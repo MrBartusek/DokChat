@@ -32,7 +32,7 @@ export function ChatPage() {
 	useEffect(() => {
 		if(isLoadingManager || chats.length == 0) return;
 		const defaultChat = chats[0];
-		const isPopup = [ '/chat/new', '/chat/profile', '/chat/email-confirm' ].includes(location.pathname);
+		const isPopup = ([ '/chat/new', '/chat/profile', '/chat/email-confirm' ].includes(location.pathname));
 
 		if(!chatId && currentChat) {
 			// If chat is selected but url is not updated, set url to current chat
@@ -81,7 +81,7 @@ export function ChatPage() {
 				</div>
 			</FullPageContainer>
 			{/* React Router outlet for popups */}
-			<Outlet />
+			<Outlet context={currentChat} />
 		</MessageManagerContext.Provider>
 	);
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { Twemoji } from 'react-emoji-render';
 import { BsPersonPlusFill, BsThreeDots } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LocalChat } from '../../types/Chat';
 import IconButton from '../IconButton/IconButton';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
@@ -12,12 +12,6 @@ export interface ChatInfoProps {
 }
 
 function ChatInfo({ currentChat }: ChatInfoProps) {
-	const navigate = useNavigate();
-
-	function handleNewGroupClick() {
-		navigate('/chat/new?prefill=');
-	}
-
 	return (
 		<div className='d-flex px-3 py-2 border-bottom border-separator'>
 			<div className='d-flex pe-2'>
@@ -31,8 +25,12 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 			</div>
 			{currentChat && (
 				<div className='d-flex align-items-center'>
-					<IconButton icon={BsPersonPlusFill} variant='primary' onClick={handleNewGroupClick} />
-					<IconButton icon={BsThreeDots} variant='primary' />
+					<Link to="/chat/new">
+						<IconButton icon={BsPersonPlusFill} variant='primary' />
+					</Link>
+					<Link to={`/chat/${currentChat.id}/details`}>
+						<IconButton icon={BsThreeDots} variant='primary' />
+					</Link>
 				</div>
 			)}
 		</div>

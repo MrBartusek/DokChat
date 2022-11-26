@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Alert } from 'react-bootstrap';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import { useUpdatingUser } from '../../hooks/useUpdatingUser';
 import { AboutPage } from '../../pages/AboutPage';
@@ -11,6 +11,7 @@ import { HomePage } from '../../pages/HomePage';
 import { LoginPage } from '../../pages/LoginPage';
 import { PasswordResetPage } from '../../pages/PasswordResetPage';
 import { RegisterPage } from '../../pages/RegisterPage';
+import ChatDetailsPopup from '../ChatDetailsPopup/ChatDetailsPopup';
 import EmailConfirmer from '../EmailConfirmer/EmailConfirmer';
 import EmailConfirmPopup from '../EmailConfirmPopup/EmailConfirmPopup';
 import ErrorPage from '../ErrorPage/ErrorPage';
@@ -66,6 +67,7 @@ function Router() {
 						</PrivateRoute>
 					}>
 						<Route path=":chatId" element={null} />
+						<Route path=":chatId/details" element={<ChatDetailsPopup />} />
 						<Route path="new" element={<NewChatPopup />} />
 						<Route path="profile" element={<SettingsPopup />} />
 						<Route path="email-confirm" element={<EmailConfirmPopup />} />
