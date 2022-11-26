@@ -32,6 +32,14 @@ export function ChatPage() {
 		const defaultChat = chats[0];
 		const isPopup = ([ '/chat/new', '/chat/profile', '/chat/email-confirm' ].includes(location.pathname));
 
+		const isEmailConfirmRoute = location.pathname == '/chat/email-confirm';
+		if(!user.isEmailConfirmed && !isEmailConfirmRoute) {
+			navigate('/chat/email-confirm');
+		}
+		if(user.isEmailConfirmed && isEmailConfirmRoute) {
+			navigate('/chat');
+		}
+
 		if(!chatId && currentChat) {
 			// If chat is selected but url is not updated, set url to current chat
 			if(isPopup) return;
