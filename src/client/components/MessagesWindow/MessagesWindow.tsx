@@ -8,6 +8,7 @@ import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
 import { useFetch } from '../../hooks/useFetch';
 import { LocalChat, LocalMessage } from '../../types/Chat';
+import MessageAttachment from '../MessageAttachment/MessageAttachment';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 import Separator from '../Separator/Separator';
 import SimpleLoading from '../SimpleLoadng/SimpleLoading';
@@ -151,38 +152,13 @@ function UserMessage({message, showAvatar, showAuthor, showStatus}: MessageProps
 					</span>)
 				}
 				<div className={`d-flex ${isAuthor ? 'flex-row-reverse' : 'flex-row'}`}>
-					<OverlayTrigger
-						placement={isAuthor ? 'left' : 'right'}
-						overlay={timeTooltip}
-						delay={{show: 500, hide: 0}}
-					>
+					<OverlayTrigger placement={isAuthor ? 'left' : 'right'} overlay={timeTooltip} delay={{show: 500, hide: 0}}>
 						<div
 							style={{'opacity': isSent ? '100%' : '50%'}}
 							className={`message text-break ${nonTextMessage ? 'message-emojis' : (isAuthor ? 'bg-primary text-light' : 'bg-gray-200')}`}
 						>
 							{message.attachment ? (
-								<>
-									{isSent ? (
-										<img
-											src={`/api/attachment?id=${message.id}`}
-											style={{borderRadius: '1.2rem', maxHeight: 230, width: '100%'}}
-											alt='Message attachment'
-										/>
-									): (
-										<>
-											{message.isPending ? (
-												<>
-													<Spinner size='sm' variant='light' animation='border' className='me-2' />
-													<span>
-														Uploading Attachment
-													</span>
-												</>
-											) : 'Attachment upload failed'}
-										</>
-
-									)}
-
-								</>
+								<MessageAttachment message={message} />
 							): (
 								<Twemoji text={message.content || ''} onlyEmojiClassName={nonTextMessage ? 'large-emojis' : ''} />
 							)}
