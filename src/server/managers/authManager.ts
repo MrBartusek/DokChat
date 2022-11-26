@@ -1,12 +1,9 @@
+import * as bcrypt from 'bcrypt';
+import * as DateFns from 'date-fns';
 import { Response } from 'express';
-import * as jose from 'jose';
+import { UserLoginResponse } from '../../types/endpoints';
 import { UserJWTData } from '../../types/jwt';
 import { ApiResponse } from '../apiResponse';
-import * as DateFns from 'date-fns';
-import { UserLoginResponse } from '../../types/endpoints';
-import db from '../db';
-import sql from 'sql-template-strings';
-import * as bcrypt from 'bcrypt';
 import JWTManager from './JWTManager';
 import UserManager from './userManager';
 

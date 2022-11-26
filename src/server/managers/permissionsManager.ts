@@ -1,6 +1,6 @@
+import sql from 'sql-template-strings';
 import { UserJWTData } from '../../types/jwt';
 import db from '../db';
-import sql from 'sql-template-strings';
 
 export default class PermissionsManager {
 	public static async hasChatAccess(auth: UserJWTData, chatId: string) {

@@ -1,14 +1,14 @@
-import db from '../db';
+import * as DateFns from 'date-fns';
+import { Request } from 'express';
+import { Socket } from 'socket.io/dist/socket';
 import sql from 'sql-template-strings';
 import { Chat } from '../../types/common';
-import Utils from '../utils/utils';
-import { Request } from 'express';
-import { Handshake, Socket } from 'socket.io/dist/socket';
-import { snowflakeGenerator } from '../utils/snowflakeGenerator';
-import * as DateFns from 'date-fns';
-import { InternalChatParticipant } from '../types/common';
-import UserManager from './userManager';
 import { UserJWTData } from '../../types/jwt';
+import db from '../db';
+import { InternalChatParticipant } from '../types/common';
+import { snowflakeGenerator } from '../utils/snowflakeGenerator';
+import Utils from '../utils/utils';
+import UserManager from './userManager';
 
 export default class ChatManager {
 
