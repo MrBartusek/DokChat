@@ -1,5 +1,7 @@
-import * as cookieParser from 'cookie-parser';
 import * as dotenv from 'dotenv';
+dotenv.config();
+
+import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
 import * as http from 'http';
 import * as morgan from 'morgan';
@@ -13,7 +15,6 @@ import processEmailBounces from './jobs/processBounces';
 import processEmailComplaints from './jobs/processComplaints';
 import ensureAuthenticatedSocket from './middlewares/ensureAuthenticatedSocket';
 import apiRouter from './routes';
-dotenv.config();
 
 const isProduction = (process.env['NODE' + '_ENV'] || 'development') == 'production';
 
