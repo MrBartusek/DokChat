@@ -62,6 +62,7 @@ export function ChatPage() {
 	return (
 		<MessageManagerContext.Provider value={[ chats, sendMessage, setChatList ]}>
 			<FullPageContainer className='d-flex flex-column p-0'>
+				{ !user.isEmailConfirmed && <EmailConfirmNotice /> }
 				<div className='d-flex flex-fill m-0 flex-nowrap'>
 					<div
 						className='d-flex flex-column border-separator border-end'
