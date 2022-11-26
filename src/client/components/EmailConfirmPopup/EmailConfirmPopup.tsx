@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 import MaskedText from '../MaskedText/MaskedText';
 
 function EmailConfirmPopup() {
-	const [ user, updateToken ] = useContext(UserContext);
+	const [ user ] = useContext(UserContext);
 	const [ handleClose, setHandleClose ] = useState<() => void>(null);
 	const [ error, setError ] = useState<string | null>(null);
 	const [ isLoading, setLoading ] = useState(false);
@@ -25,6 +25,8 @@ function EmailConfirmPopup() {
 	async function handleSubmit(event: React.MouseEvent<HTMLInputElement>) {
 		event.preventDefault();
 		setLoading(true);
+		setError(null);
+		setSuccess(false);
 
 		await getAxios(user).post('/auth/email-confirm/start')
 			.then(() => {
@@ -41,53 +43,37 @@ function EmailConfirmPopup() {
 
 	return (
 		<Popup
-			title="Confirm e-mail address"
+			title="Confirm your e-mail address"
 			footer={(
 				<>
-					<Button variant='secondary' onClick={handleClose}>
-						Close
-					</Button>
-					{!success && (
-						<InteractiveButton
-							variant='primary'
-							onClick={handleSubmit}
-							loading={isLoading}
-						>
-							Send confirmation e-mail
-						</InteractiveButton>
-					)}
+					<LogoutButton size={null} />
+					<InteractiveButton
+						variant='primary'
+						onClick={handleSubmit}
+						loading={isLoading}
+					>
+						Send confirmation
+					</InteractiveButton>
 				</>
 			)}
 			setHandleClose={setHandleClose}
+			static={true}
 		>
 			{error && <Alert variant='danger'>{error}</Alert>}
-			{!success ? (
-				<div className='text-center'>
-					<p>
-						You are about to request confirmation for this DokChat account {' '}
-						<span className='text-muted'>({user.discriminator})</span>. {' '}
-						We&apos;ll send you an confirmation e-mail with one-time link that you can use to verify your account.
-					</p>
-					<p>
-						Please ensure that this is a correct email address:
-					</p>
-					<p className='lead'>
-						<MaskedText text={user.email} masked={user.emailMasked} />
-					</p>
-				</div>
-			): (
-				<div className='text-center'>
-					<p>
-						We&apos;ve sent account confirmation instructions to:
-					</p>
-					<p className='lead'>
-						<MaskedText text={user.email} masked={user.emailMasked} />
-					</p>
-					<p>
-						If you haven&apos;t received this email in few minutes, please check your spam folder.
-					</p>
-				</div>
-			)}
+			{success && <Alert variant='success'>We&apos;ve sent account confirmation instructions to your inbox.</Alert>}
+			<div className='text-center'>
+				<p>
+					Before using DokChat, you need to confirm your account. We&apos;ll send
+					you an confirmation e-mail with one-time link that you can use to verify your
+					account.
+				</p>
+				<p>
+					Please ensure that this is a correct email address:
+				</p>
+				<p className='lead'>
+					<MaskedText text={user.email} masked={user.emailMasked} />
+				</p>
+			</div>
 
 		</Popup>
 	);

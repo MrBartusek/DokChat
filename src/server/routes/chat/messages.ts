@@ -16,7 +16,7 @@ const router = express.Router();
 
 router.all('/messages',
 	allowedMethods('GET'),
-	ensureAuthenticated(),
+	ensureAuthenticated(true),
 	query('page').optional().isNumeric(),
 	query('chat').isString(),
 	async (req, res, next) => {

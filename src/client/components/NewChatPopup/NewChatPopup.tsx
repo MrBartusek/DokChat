@@ -78,12 +78,13 @@ function NewChatPopup() {
 				setValues();
 				return resp.data;
 			})
-			.catch((error: AxiosError) => {
+			.catch((error) => {
 				if(error.response.status == 404) {
 					setError(`User ${username}#${tag} was not found`);
 				}
 				else {
-					setError('Failed to add this user');
+					const resp: EndpointResponse<null> = error.response?.data;
+					setError(resp?.message || 'Failed to add this user');
 				}
 				return null;
 

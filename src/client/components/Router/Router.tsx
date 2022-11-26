@@ -72,7 +72,7 @@ function Router() {
 						<Route path="profile" element={<SettingsPopup />} />
 						<Route path="email-confirm" element={<EmailConfirmPopup />} />
 					</Route>
-					<Route path="suspended/" element={
+					<Route path="suspended" element={
 						<PrivateRoute isSuspendedRoute>
 							<AccountBannedPage />
 						</PrivateRoute>
@@ -100,7 +100,7 @@ const PrivateRoute = ({ children, isSuspendedRoute }: SpecialRouteProps) => {
 			return <Navigate to="/suspended" />;
 		}
 		else if(!user.isBanned && isSuspendedRoute) {
-			<Navigate to="/chat" />;
+			return <Navigate to="/chat" />;
 		}
 		return  children;
 	}

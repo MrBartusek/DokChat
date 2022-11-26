@@ -1,20 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Alert, Col, Row } from 'react-bootstrap';
-import ChatInfo from '../components/ChatInfo/ChatInfo';
-import MessagesWindow from '../components/MessagesWindow/MessagesWindow';
-import ChatList from '../components/ChatList/ChatList';
-import UserInfo from '../components/UserInfo/UserInfo';
-import MessageBar from '../components/MessageBar/MessageBar';
-import { useWebsocket } from '../hooks/useWebsocket';
-import { useMessageManager } from '../hooks/useMessageManager';
-import { MessageManagerContext } from '../context/MessageManagerContext';
-import { LocalChat } from '../types/Chat';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
-import MainLoading from '../components/MainLoading/MainLoading';
-import { useDocumentReady } from '../hooks/useDocumentReady';
+import ChatInfo from '../components/ChatInfo/ChatInfo';
+import ChatList from '../components/ChatList/ChatList';
 import FullPageContainer from '../components/FullPageContainer/FullPageContainer';
-import EmailConfirmNotice from '../components/EmailConfirmNotice/EmailConfirmNotice';
+import MainLoading from '../components/MainLoading/MainLoading';
+import MessageBar from '../components/MessageBar/MessageBar';
+import MessagesWindow from '../components/MessagesWindow/MessagesWindow';
+import UserInfo from '../components/UserInfo/UserInfo';
+import { MessageManagerContext } from '../context/MessageManagerContext';
 import { UserContext } from '../context/UserContext';
+import { useDocumentReady } from '../hooks/useDocumentReady';
+import { useMessageManager } from '../hooks/useMessageManager';
+import { useWebsocket } from '../hooks/useWebsocket';
+import { LocalChat } from '../types/Chat';
 
 export function ChatPage() {
 	const ws = useWebsocket();
@@ -62,7 +60,6 @@ export function ChatPage() {
 	return (
 		<MessageManagerContext.Provider value={[ chats, sendMessage, setChatList ]}>
 			<FullPageContainer className='d-flex flex-column p-0'>
-				{ !user.isEmailConfirmed && <EmailConfirmNotice /> }
 				<div className='d-flex flex-fill m-0 flex-nowrap'>
 					<div
 						className='d-flex flex-column border-separator border-end'

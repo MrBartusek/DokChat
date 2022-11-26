@@ -3,9 +3,11 @@ import toast from 'react-hot-toast';
 import { BsBoxArrowLeft } from 'react-icons/bs';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
-import InteractiveButton from '../InteractiveButton/InteractiveButton';
+import InteractiveButton, { InteractiveButtonProps } from '../InteractiveButton/InteractiveButton';
 
-export default function LogoutButton() {
+export interface LogoutButton extends InteractiveButtonProps {}
+
+export default function LogoutButton(props: InteractiveButtonProps) {
 	const [ user, refreshToken, setUser, removeUser ] = useContext(UserContext);
 	const [ isLoading, setLoading ] = useState(false);
 
@@ -25,6 +27,7 @@ export default function LogoutButton() {
 			icon={BsBoxArrowLeft}
 			variant="secondary"
 			size='sm'
+			{...props}
 		>
 			Logout
 		</InteractiveButton>

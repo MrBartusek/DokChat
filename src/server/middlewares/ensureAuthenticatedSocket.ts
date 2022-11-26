@@ -16,6 +16,8 @@ const ensureAuthenticatedSocket = () => async (socket: Socket, next: NextFunctio
 
 	return JWTManager.verifyUserToken(token)
 		.then(async(data) => {
+			if(data.isBanned) return new ApiResponse(socket, next).forbidden('Account is suspended');
+			if(!data.isEmailConfirmed) return new ApiResponse(socket, next).forbidden('E-mail not confirmed');
 			socket.auth = data;
 			await socket.join(socket.auth.id);
 			return next();

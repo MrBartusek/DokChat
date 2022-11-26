@@ -2,13 +2,13 @@ import React from 'react';
 import { Button, ButtonProps, Spinner } from 'react-bootstrap';
 import { IconType } from 'react-icons';
 
-interface Props extends ButtonProps  {
+export interface InteractiveButtonProps extends ButtonProps  {
     loading?: boolean,
 	icon?: IconType
-    children: React.ReactNode
+    children?: React.ReactNode
 }
 
-function InteractiveButton(props: Props) {
+function InteractiveButton(props: InteractiveButtonProps) {
 	const spinner = (<Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className='me-2'/>);
 	const iconEl = props.icon ? React.createElement(
 		props.icon, { className: 'me-2' }

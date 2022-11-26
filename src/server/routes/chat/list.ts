@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.all('/list',
 	allowedMethods('GET'),
-	ensureAuthenticated(),
+	ensureAuthenticated(true),
 	query('page').optional().isNumeric(),
 	async (req, res, next) => {
 		const errors = validationResult(req);
