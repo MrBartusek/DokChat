@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
-import { UserJWTData } from '../../types/jwt';
-import * as jose from 'jose';
+import { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { LocalUser } from '../types/User';
 

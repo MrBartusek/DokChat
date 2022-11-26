@@ -1,17 +1,16 @@
+import * as DateFns from 'date-fns';
 import * as express from 'express';
+import { Request } from 'express-serve-static-core';
+import { body, validationResult } from 'express-validator';
+import sql from 'sql-template-strings';
+import { Chat, User } from '../../../types/common';
 import { ApiResponse } from '../../apiResponse';
 import db from '../../db';
-import sql from 'sql-template-strings';
+import ChatManager from '../../managers/chatManager';
+import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
-import ChatManager from '../../managers/chatManager';
 import { snowflakeGenerator } from '../../utils/snowflakeGenerator';
-import * as DateFns from 'date-fns';
-import UserManager from '../../managers/userManager';
-import { Request } from 'express-serve-static-core';
-import { Chat, User } from '../../../types/common';
-import { body, validationResult } from 'express-validator';
-import toast from 'react-hot-toast';
 
 const router = express.Router();
 

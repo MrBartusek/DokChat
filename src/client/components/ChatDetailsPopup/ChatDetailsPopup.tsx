@@ -1,5 +1,5 @@
-import React, {FormEvent, useContext, useEffect, useRef, useState } from 'react';
-import { Button, FloatingLabel, Form, FormControlProps } from 'react-bootstrap';
+import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react';
+import { Alert, Button, FloatingLabel, Form, FormControlProps } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import { BsPencil } from 'react-icons/bs';
 import { useOutletContext } from 'react-router-dom';
@@ -8,12 +8,11 @@ import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import { useForm } from '../../hooks/useForm';
 import { LocalChat } from '../../types/Chat';
+import ChangeableAvatar from '../ChangeableAvatar/ChangeableAvatar';
 import { FileUploaderResult } from '../FileUploader/FileUploader';
 import IconButton from '../IconButton/IconButton';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import Popup from '../Popup/Popup';
-import { Alert } from 'react-bootstrap';
-import ChangeableAvatar from '../ChangeableAvatar/ChangeableAvatar';
 
 function ChatDetailsPopup() {
 	const currentChat = useOutletContext<LocalChat>();

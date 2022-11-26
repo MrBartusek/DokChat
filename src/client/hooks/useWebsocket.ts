@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { DefaultEventsMap } from 'socket.io/dist/typed-events';
-import { ClientToServerEvents, DokChatSocket, ServerToClientEvents } from '../../types/websocket';
+import { ClientToServerEvents, ServerToClientEvents } from '../../types/websocket';
 import { UserContext } from '../context/UserContext';
 
 export type useWebsocketType = { isConnected?: boolean, socket: Socket<ServerToClientEvents, ClientToServerEvents>};

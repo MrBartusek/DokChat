@@ -1,11 +1,11 @@
 import * as AWS from 'aws-sdk';
+import sql from 'sql-template-strings';
+import { User } from '../../types/common';
 import { UserJWTData } from '../../types/jwt';
 import db from '../db';
 import EmailBlacklistManager from '../managers/emailBlacklistManager';
 import JWTManager from '../managers/JWTManager';
 import Utils from '../utils/utils';
-import sql from 'sql-template-strings';
-import { User } from '../../types/common';
 
 const region = process.env.AWS_REGION;
 

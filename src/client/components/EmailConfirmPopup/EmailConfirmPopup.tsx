@@ -1,19 +1,12 @@
-import React, { ChangeEvent, FormEvent, useContext, useEffect, useRef, useState } from 'react';
-import { Alert, Button, FloatingLabel, Form, FormControlProps } from 'react-bootstrap';
-import toast from 'react-hot-toast';
-import { BsPencil } from 'react-icons/bs';
+import React, { useContext, useState } from 'react';
+import { Alert } from 'react-bootstrap';
 import { EndpointResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
-import { useForm } from '../../hooks/useForm';
-import CopyButton from '../CopyButton/CopyButton';
-import IconButton from '../IconButton/IconButton';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import LogoutButton from '../LogoutButton/LogoutButton';
-import Popup from '../Popup/Popup';
-import ProfilePicture from '../ProfilePicture/ProfilePicture';
-import { Link } from 'react-router-dom';
 import MaskedText from '../MaskedText/MaskedText';
+import Popup from '../Popup/Popup';
 
 function EmailConfirmPopup() {
 	const [ user ] = useContext(UserContext);

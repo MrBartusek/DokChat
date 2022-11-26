@@ -1,5 +1,5 @@
 import copyToClipboard from 'copy-to-clipboard';
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 function useCopy(str: string): [boolean, () => void, (value: boolean) => void] {
 	const copyableString = useRef(str);

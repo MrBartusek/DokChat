@@ -1,7 +1,6 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction } from 'express';
 import { Socket } from 'socket.io';
 import { ApiResponse } from '../apiResponse';
-import AuthManager from '../managers/authManager';
 import JWTManager from '../managers/JWTManager';
 
 const ensureAuthenticatedSocket = () => async (socket: Socket, next: NextFunction) => {

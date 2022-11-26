@@ -1,10 +1,10 @@
 import * as express from 'express';
 import { ApiResponse } from './apiResponse';
-import authRoutes from './routes/auth';
-import chatRoutes from './routes/chat';
-import avatarRoutes from './routes/avatar';
-import userRoutes from './routes/user';
 import attachmentRoutes from './routes/attachment';
+import authRoutes from './routes/auth';
+import avatarRoutes from './routes/avatar';
+import chatRoutes from './routes/chat';
+import userRoutes from './routes/user';
 
 const router = express.Router();
 

@@ -1,8 +1,8 @@
-import  React from 'react';
-import Router from './components/Router/Router';
+import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import ErrorPage from './components/ErrorPage/ErrorPage';
 import { Toaster } from 'react-hot-toast';
+import ErrorPage from './components/ErrorPage/ErrorPage';
+import Router from './components/Router/Router';
 
 function App() {
 	return (

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Col, OverlayTrigger, Row, Tooltip, TooltipProps } from 'react-bootstrap';
+import { OverlayTrigger, Tooltip, TooltipProps } from 'react-bootstrap';
 import { BsPlusCircle } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';

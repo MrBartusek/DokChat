@@ -1,4 +1,4 @@
-import { SES, SNS, SQS } from 'aws-sdk';
+import { SQS } from 'aws-sdk';
 import sqsClient, { bouncesQueueUrl } from '../aws/sqs';
 import EmailBlacklistManager from '../managers/emailBlacklistManager';
 

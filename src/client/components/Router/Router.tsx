@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Alert } from 'react-bootstrap';
-import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import { useUpdatingUser } from '../../hooks/useUpdatingUser';
 import { AboutPage } from '../../pages/AboutPage';

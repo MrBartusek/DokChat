@@ -1,6 +1,5 @@
 import * as DateFns from 'date-fns';
 import * as express from 'express';
-import { validationResult } from 'express-validator';
 import sql from 'sql-template-strings';
 import { ApiResponse } from '../../../apiResponse';
 import emailClient from '../../../aws/ses';

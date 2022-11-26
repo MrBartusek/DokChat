@@ -1,8 +1,8 @@
 import * as express from 'express';
+import { body, validationResult } from 'express-validator';
 import { ApiResponse } from '../../apiResponse';
 import AuthManager from '../../managers/authManager';
 import allowedMethods from '../../middlewares/allowedMethods';
-import { body, validationResult } from 'express-validator';
 import { isValidPassword } from '../../validators/password';
 
 const router = express.Router();

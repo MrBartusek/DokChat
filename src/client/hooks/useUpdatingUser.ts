@@ -1,12 +1,9 @@
-import { useEffect, useState } from 'react';
-import { UserJWTData } from '../../types/jwt';
-import * as jose from 'jose';
-import { useCookies } from 'react-cookie';
 import * as DateFns from 'date-fns';
+import { useEffect, useState } from 'react';
 import { EndpointResponse, UserLoginResponse } from '../../types/endpoints';
-import { useUser } from './useUser';
-import { LocalUser } from '../types/User';
 import getAxios from '../helpers/axios';
+import { LocalUser } from '../types/User';
+import { useUser } from './useUser';
 
 /**
  * This is more advanced version of useUser hook

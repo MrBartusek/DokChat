@@ -5,7 +5,6 @@ import sql from 'sql-template-strings';
 import { ApiResponse } from '../../../apiResponse';
 import emailClient from '../../../aws/ses';
 import db from '../../../db';
-import allowedMethods from '../../../middlewares/allowedMethods';
 
 const router = express.Router();
 

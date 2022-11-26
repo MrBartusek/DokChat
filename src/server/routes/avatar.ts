@@ -1,18 +1,13 @@
 import * as express from 'express';
-import allowedMethods from '../middlewares/allowedMethods';
-import { ApiResponse } from '../apiResponse';
-import * as path from 'path';
-import UserManager from '../managers/userManager';
-import db from '../db';
-import sql from 'sql-template-strings';
-import Utils from '../utils/utils';
-import ChatManager from '../managers/chatManager';
-import ensureAuthenticated from '../middlewares/ensureAuthenticated';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import s3Client from '../aws/s3';
-import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { param, validationResult } from 'express-validator';
-import * as DateFns from 'date-fns';
+import * as path from 'path';
+import sql from 'sql-template-strings';
+import { ApiResponse } from '../apiResponse';
+import s3Client from '../aws/s3';
+import db from '../db';
+import ChatManager from '../managers/chatManager';
+import UserManager from '../managers/userManager';
+import allowedMethods from '../middlewares/allowedMethods';
 
 const router = express.Router();
 

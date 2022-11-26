@@ -1,15 +1,15 @@
 import { Buffer } from 'buffer';
 import * as DateFns from 'date-fns';
 import React, { useContext, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import useSound from 'use-sound';
+import { ATTACHMENT_MAX_SIZE } from '../../types/const';
 import { ChatListResponse, EndpointResponse } from '../../types/endpoints';
 import { ClientMessage } from '../../types/websocket';
 import { UserContext } from '../context/UserContext';
 import { LocalChat } from '../types/Chat';
-import { ATTACHMENT_MAX_SIZE } from '../../types/const';
 import { useFetch } from './useFetch';
 import { useWebsocketType } from './useWebsocket';
-import toast from 'react-hot-toast';
 
 /**
  * This hook is a manger for receiving, caching and sending messages

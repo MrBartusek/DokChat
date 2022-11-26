@@ -1,4 +1,3 @@
-import * as bcrypt from 'bcrypt';
 import * as express from 'express';
 import { body, validationResult } from 'express-validator';
 import { QueryResult } from 'pg';
@@ -6,10 +5,8 @@ import sql from 'sql-template-strings';
 import { ApiResponse } from '../../../apiResponse';
 import db from '../../../db';
 import JWTManager from '../../../managers/JWTManager';
-import UserManager from '../../../managers/userManager';
 import allowedMethods from '../../../middlewares/allowedMethods';
 import { EmailConfirmJWTData } from '../../../types/jwt';
-import { isValidPassword } from '../../../validators/password';
 
 const router = express.Router();
 

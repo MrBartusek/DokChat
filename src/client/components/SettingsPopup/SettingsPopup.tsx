@@ -1,20 +1,19 @@
-import React, { ChangeEvent, FormEvent, useContext, useEffect, useRef, useState } from 'react';
+import React, { FormEvent, useContext, useEffect, useRef, useState } from 'react';
 import { Alert, Button, FloatingLabel, Form, FormControlProps } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import { BsPencil } from 'react-icons/bs';
+import { Link } from 'react-router-dom';
 import { EndpointResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import { useForm } from '../../hooks/useForm';
+import ChangeableAvatar from '../ChangeableAvatar/ChangeableAvatar';
 import CopyButton from '../CopyButton/CopyButton';
+import { FileUploaderResult } from '../FileUploader/FileUploader';
 import IconButton from '../IconButton/IconButton';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import LogoutButton from '../LogoutButton/LogoutButton';
 import Popup from '../Popup/Popup';
-import ProfilePicture from '../ProfilePicture/ProfilePicture';
-import { Link } from 'react-router-dom';
-import ChangeableAvatar from '../ChangeableAvatar/ChangeableAvatar';
-import { FileUploaderResult } from '../FileUploader/FileUploader';
 
 function SettingsPopup() {
 	const [ user, updateToken ] = useContext(UserContext);

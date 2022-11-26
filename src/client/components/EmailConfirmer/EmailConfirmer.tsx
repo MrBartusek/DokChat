@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Alert, Button } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
-import { EndpointResponse, MessageListResponse } from '../../../types/endpoints';
+import { EndpointResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import SimpleLoading from '../SimpleLoadng/SimpleLoading';

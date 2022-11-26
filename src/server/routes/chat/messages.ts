@@ -1,16 +1,14 @@
 import * as express from 'express';
-import { MessageListResponse, UserLoginResponse } from '../../../types/endpoints';
+import { query, validationResult } from 'express-validator';
+import { QueryResult } from 'pg';
+import sql from 'sql-template-strings';
+import { MessageListResponse } from '../../../types/endpoints';
 import { ApiResponse } from '../../apiResponse';
 import db from '../../db';
-import sql from 'sql-template-strings';
+import PermissionsManager from '../../managers/permissionsManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 import Utils from '../../utils/utils';
-import { QueryResult } from 'pg';
-import { Request } from 'express-serve-static-core';
-import ChatManager from '../../managers/chatManager';
-import PermissionsManager from '../../managers/permissionsManager';
-import { body, query, validationResult } from 'express-validator';
 
 const router = express.Router();
 

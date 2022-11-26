@@ -1,9 +1,9 @@
 import { ClientMessage, DokChatServer, DokChatSocket, ServerMessage } from '../../types/websocket';
 import { ApiResponse } from '../apiResponse';
+import s3Client from '../aws/s3';
 import ChatManager from '../managers/chatManager';
 import PermissionsManager from '../managers/permissionsManager';
 import Utils from '../utils/utils';
-import s3Client from '../aws/s3';
 
 export default function registerMessageHandler(io: DokChatServer, socket: DokChatSocket) {
 	socket.on('message', async (msg, callback) => {

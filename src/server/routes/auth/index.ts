@@ -1,10 +1,10 @@
 import * as express from 'express';
+import emailConfirmRouter from './email-confirm/index';
 import loginRoute from './login';
-import registerRoute from './register';
-import refreshRouter from './refresh';
 import logoutRouter from './logout';
 import passwordResetRouter from './password-reset/index';
-import emailConfirmRouter from './email-confirm/index';
+import refreshRouter from './refresh';
+import registerRoute from './register';
 
 const router = express.Router();
 

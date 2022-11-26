@@ -1,6 +1,6 @@
+import * as axios from 'axios';
 import { Axios, AxiosRequestHeaders } from 'axios';
 import { LocalUser } from '../types/User';
-import * as axios from 'axios';
 
 function getAxios(user?: LocalUser): Axios {
 	let headers: AxiosRequestHeaders = {};

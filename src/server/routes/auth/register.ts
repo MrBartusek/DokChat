@@ -1,27 +1,20 @@
+import * as bcrypt from 'bcrypt';
+import * as DateFns from 'date-fns';
 import * as express from 'express';
-import * as jose from 'jose';
-import { Snowflake } from 'nodejs-snowflake';
-import { UserLoginResponse } from '../../../types/endpoints';
+import { body, validationResult } from 'express-validator';
+import sql from 'sql-template-strings';
 import { UserJWTData } from '../../../types/jwt';
 import { ApiResponse } from '../../apiResponse';
 import db from '../../db';
-import Validate from '../../utils/validate';
-import sql from 'sql-template-strings';
-import * as bcrypt from 'bcrypt';
-import JWT from '../../managers/authManager';
-import allowedMethods from '../../middlewares/allowedMethods';
 import AuthManager from '../../managers/authManager';
-import * as DateFns from 'date-fns';
-import { snowflakeGenerator } from '../../utils/snowflakeGenerator';
 import ChatManager from '../../managers/chatManager';
-import emailClient from '../../aws/ses';
-import JWTManager from '../../managers/JWTManager';
 import EmailBlacklistManager from '../../managers/emailBlacklistManager';
-import { body, validationResult } from 'express-validator';
-import { isValidUsername } from '../../validators/username';
-import { isValidPassword } from '../../validators/password';
-import Utils from '../../utils/utils';
 import UserManager from '../../managers/userManager';
+import allowedMethods from '../../middlewares/allowedMethods';
+import { snowflakeGenerator } from '../../utils/snowflakeGenerator';
+import Utils from '../../utils/utils';
+import { isValidPassword } from '../../validators/password';
+import { isValidUsername } from '../../validators/username';
 
 const router = express.Router();
 

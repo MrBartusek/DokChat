@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, ContainerProps } from 'react-bootstrap';
 
 export interface FullPageContainerProps extends ContainerProps {

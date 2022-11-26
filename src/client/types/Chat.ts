@@ -1,5 +1,5 @@
-import { Chat, LastMessage, Message } from '../../types/common';
 import * as DateFns from 'date-fns';
+import { Chat, LastMessage, Message } from '../../types/common';
 
 /**
  * Local client version of message with additional properties

@@ -1,8 +1,7 @@
 import React from 'react';
-import { Col, Row } from 'react-bootstrap';
 import { Twemoji } from 'react-emoji-render';
 import { BsPersonPlusFill, BsThreeDots } from 'react-icons/bs';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { LocalChat } from '../../types/Chat';
 import IconButton from '../IconButton/IconButton';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';

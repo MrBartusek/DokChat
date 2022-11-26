@@ -1,19 +1,19 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
-import * as express from 'express';
-import apiRouter from './routes';
-import * as path from 'path';
-import { initializeDB } from './db/initalize';
-import * as morgan from 'morgan';
 import * as cookieParser from 'cookie-parser';
-import { Server } from 'socket.io';
+import * as dotenv from 'dotenv';
+import * as express from 'express';
 import * as http from 'http';
-import registerMessageHandler from './handlers/chatHandler';
-import ensureAuthenticatedSocket from './middlewares/ensureAuthenticatedSocket';
+import * as morgan from 'morgan';
 import * as schedule from 'node-schedule';
+import * as path from 'path';
+import { Server } from 'socket.io';
+import { ATTACHMENT_MAX_SIZE } from '../types/const';
+import { initializeDB } from './db/initalize';
+import registerMessageHandler from './handlers/chatHandler';
 import processEmailBounces from './jobs/processBounces';
 import processEmailComplaints from './jobs/processComplaints';
-import { ATTACHMENT_MAX_SIZE } from '../types/const';
+import ensureAuthenticatedSocket from './middlewares/ensureAuthenticatedSocket';
+import apiRouter from './routes';
+dotenv.config();
 
 const isProduction = (process.env['NODE' + '_ENV'] || 'development') == 'production';
 

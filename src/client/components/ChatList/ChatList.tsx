@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { Col, Row } from 'react-bootstrap';
 import { Twemoji } from 'react-emoji-render';
 import { Link, useNavigate } from 'react-router-dom';
 import { MessageManagerContext } from '../../context/MessageManagerContext';

@@ -1,12 +1,10 @@
-import React, { useContext, useEffect } from 'react';
+import * as DateFns from 'date-fns';
+import React, { useContext } from 'react';
 import { Container } from 'react-bootstrap';
 import { BsDashCircle } from 'react-icons/bs';
 import DokChatLogo from '../components/DokChatLogo/DokChatLogo';
-import FullPageContainer from '../components/FullPageContainer/FullPageContainer';
 import LogoutButton from '../components/LogoutButton/LogoutButton';
 import { UserContext } from '../context/UserContext';
-import * as DateFns from 'date-fns';
-import { useNavigate } from 'react-router-dom';
 
 export function AccountBannedPage() {
 	const [ user ] = useContext(UserContext);

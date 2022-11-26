@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FileUploader, { FileUploaderResult } from '../FileUploader/FileUploader';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 

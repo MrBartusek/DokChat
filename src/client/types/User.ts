@@ -1,7 +1,6 @@
-import { UserJWTData } from '../../types/jwt';
-import * as jose from 'jose';
 import * as DateFns from 'date-fns';
-import { AxiosRequestHeaders } from 'axios';
+import * as jose from 'jose';
+import { UserJWTData } from '../../types/jwt';
 
 /**
  * This class initialization is split into two constructors. The default constructor

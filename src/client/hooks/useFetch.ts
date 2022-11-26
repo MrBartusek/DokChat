@@ -1,6 +1,6 @@
 // Stolen from https://github.com/benawad/react-hooks-tutorial/blob/7_useContext/src/useFetch.js
 
-import { useEffect, useState, useRef, useContext } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { UserContext } from '../context/UserContext';
 import getAxios from '../helpers/axios';
 

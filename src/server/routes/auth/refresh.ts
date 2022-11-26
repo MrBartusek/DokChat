@@ -1,6 +1,6 @@
 import * as DateFns from 'date-fns';
 import * as express from 'express';
-import { body, cookie, validationResult } from 'express-validator';
+import { cookie, validationResult } from 'express-validator';
 import sql from 'sql-template-strings';
 import { ApiResponse } from '../../apiResponse';
 import db from '../../db';

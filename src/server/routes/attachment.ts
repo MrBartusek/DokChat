@@ -1,10 +1,10 @@
 import * as express from 'express';
 import { query, validationResult } from 'express-validator';
-import { ApiResponse } from '../apiResponse';
-import allowedMethods from '../middlewares/allowedMethods';
 import sql from 'sql-template-strings';
-import db from '../db';
+import { ApiResponse } from '../apiResponse';
 import s3Client from '../aws/s3';
+import db from '../db';
+import allowedMethods from '../middlewares/allowedMethods';
 
 const router = express.Router();
 
