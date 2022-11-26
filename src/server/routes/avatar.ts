@@ -24,7 +24,7 @@ router.all('/:id.png', param('id').isString(), allowedMethods('GET'), async (req
 		avatar = await userAvatar(id);
 		if(avatar) {
 			const avatarUrl = await s3Client.getSingedUrl(avatar);
-			res.redirect(301, avatarUrl);
+			res.redirect(302, avatarUrl);
 		}
 		else {
 			// Default avatar based on user tag
@@ -37,7 +37,7 @@ router.all('/:id.png', param('id').isString(), allowedMethods('GET'), async (req
 		avatar = await chatAvatar(id);
 		if(avatar) {
 			const avatarUrl = await s3Client.getSingedUrl(avatar);
-			res.redirect(301, avatarUrl);
+			res.redirect(302, avatarUrl);
 		}
 		else {
 			// Default avatar based on chat creator tag
