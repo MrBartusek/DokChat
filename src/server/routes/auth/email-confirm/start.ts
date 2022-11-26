@@ -8,7 +8,7 @@ import ensureAuthenticated from '../../../middlewares/ensureAuthenticated';
 
 const router = express.Router();
 
-router.all('/start', ensureAuthenticated(), async (req, res, next) => {
+router.all('/start', ensureAuthenticated(true), async (req, res, next) => {
 	const query = await db.query(sql`
 		SELECT
 			last_email_confirm_attempt as "lastConfirmAttempt",
