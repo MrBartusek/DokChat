@@ -6,11 +6,64 @@ import HomeSection from '../components/HomeSection/HomeSection';
 import InteractiveButton from '../components/InteractiveButton/InteractiveButton';
 import Layout from '../components/Layout/Layout';
 import Section from '../components/Section/Section';
+import { Row, Col, Badge } from 'react-bootstrap';
+import DokChatLogo from '../components/DokChatLogo/DokChatLogo';
+import Countdown from 'react-countdown';
+import * as DateFns from 'date-fns';
 
 export function HomePage() {
 	return (
 		<Layout zeroHeightNavbar={true}>
 			<Header />
+
+			<Row className='align-items-center justify-content-center bg-dark text-light'>
+				<Col xs={12} className="px-5 d-flex justify-content-center flex-column text-center text-md-start p-5">
+					<div className='fs-2 d-flex flex-row align-items-center justify-content-center'>
+						<DokChatLogo variant='white' height={75} />
+						<span>
+							<Badge bg='light' className='text-dark'>
+							1.0
+							</Badge>
+						</span>
+					</div>
+					<div className='text-muted text-center mt-2'>
+						<div className='lead fs-3'>The full release</div>
+						<div className='mt-4'>Social logins using Facebook & Google</div>
+						<div className='mt-1'>GIF support</div>
+						<div className='mt-1'>Infinite chats & messages scrolling</div>
+						<div className='mt-1'>Link-based group invites</div>
+						<div className='mt-1'>No more account resets</div>
+						<div className='mt-1'>Polished experience</div>
+					</div>
+
+					<h2 className='text-center mt-5'>
+						Coming January 1st 2023 *
+					</h2>
+
+					<Countdown
+						date={DateFns.fromUnixTime(1672592400)}
+						renderer={({ days, hours, minutes, seconds, completed }) => {
+							if (!completed) {
+								return (
+									<h2 className='text-center mt-3 lead display-3'>
+										{days.toString().padStart(2, '0')}:
+										{hours.toString().padStart(2, '0')}:
+										{minutes.toString().padStart(2, '0')}:
+										{seconds.toString().padStart(2, '0')}
+									</h2>
+								);
+							}
+						}}
+					/>
+
+					<div className='text-muted text-center mt-5'>
+						* release date may be changed, check {' '}
+						<a href="https://github.com/MrBartusek/DokChat/milestone/1" className='link-secondary'>current progress</a> {' '}
+						for reference
+					</div>
+				</Col>
+			</Row>
+
 			<div id='features'></div>
 			<HomeSection
 				img="/img/undraw_ask_me_anything.svg"
