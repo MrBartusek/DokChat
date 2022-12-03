@@ -6,6 +6,8 @@ import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import { useForm } from '../../hooks/useForm';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
+import { GoogleLogin } from '@react-oauth/google';
+import SocialLogin from '../SocialLogin/SocialLogin';
 
 const axios = getAxios();
 
@@ -81,6 +83,7 @@ function LoginForm() {
 					</Form.Text>
 				</div>
 			</Form>
+			<SocialLogin setError={setError} setLoading={setLoading} loading={loading} />
 		</>
 	);
 
@@ -91,29 +94,17 @@ function LoginForm() {
 			return formRef.current.reportValidity();
 		}
 		setLoading(true);
-		await axios.post('/auth/login',
-			values, // Backend request body should exactly match this hook
-			{ validateStatus: () => true })
+		await axios.post('/auth/login', values) // Backend request body should exactly match this hook
 			.then((r: any) => {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
-				if(resp.error === true) {
-					setError(resp.message);
-					setLoading(false);
-				}
-				else if(resp.error === false) {
-					setUser(resp.data.token);
-					navigate('/chat');
-				}
-				else {
-					setError('Failed to log you in you at this time. Please try again later.');
-					setLoading(false);
-				}
+				setUser(resp.data.token);
+				navigate('/chat');
 			})
-			.catch(() => {
-				setError('Failed to log you in you at this time. Please try again later.');
+			.catch((e) => {
+				const resp: EndpointResponse<null> = e.response?.data;
+				setError(resp?.message || 'Failed to log you in you at this time. Please try again later.');
 				setLoading(false);
 			});
-
 	}
 }
 

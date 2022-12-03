@@ -6,6 +6,7 @@ import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import { useForm } from '../../hooks/useForm';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
+import SocialLogin from '../SocialLogin/SocialLogin';
 
 const axios = getAxios();
 
@@ -115,6 +116,7 @@ function RegisterForm() {
 					</Form.Text>
 				</div>
 			</Form>
+			<SocialLogin setError={setError} setLoading={setLoading} loading={loading} />
 		</>
 	);
 

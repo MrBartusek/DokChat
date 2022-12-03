@@ -3,8 +3,89 @@ import { User } from '../../types/common';
 import { UserJWTData } from '../../types/jwt';
 import db from '../db';
 import Utils from '../utils/utils';
+import EmailBlacklistManager from './emailBlacklistManager';
+import * as bcrypt from 'bcrypt';
+import { snowflakeGenerator } from '../utils/snowflakeGenerator';
+import * as DateFns from 'date-fns';
+import ChatManager from './chatManager';
+import * as crypto from 'crypto';
 
 export default class UserManager {
+	public static async createUser(username: string, email: string, password?: string, socialLogin = false): Promise<[UserJWTData, string]> {
+		if(await UserManager.emailTaken(email)) {
+			return Promise.reject('This email is already taken');
+		}
+		if(await EmailBlacklistManager.isEmailBlacklisted(email)) {
+			return Promise.reject('This email is blacklisted');
+		}
+		if((await this.usersWithUsernameCount(username)) >= 9999) {
+			return Promise.reject('Too many users have this username');
+		}
+
+		if(!password && !socialLogin) {
+			throw new Error('No password provided');
+		}
+		else if(!password && socialLogin) {
+			// Generate random password for social registers
+			password = crypto.randomBytes(32).toString('hex');
+		}
+
+		const passwordHash = await bcrypt.hash(password, 12);
+		const tag = await this.generateTag(username);
+		const userId = snowflakeGenerator.getUniqueID().toString();
+
+		const timestamp = DateFns.getUnixTime(new Date());
+		await db.query(sql`
+		INSERT INTO users 
+			(id, username, tag, email, password_hash, created_at, last_seen, is_email_confirmed)
+		VALUES (
+			$1, $2, $3, $4, $5, $6, $7, $8
+		);
+		`, [
+			userId,
+			username,
+			tag,
+			email,
+			passwordHash,
+			timestamp,
+			timestamp,
+			socialLogin /* confirm email for social logins */
+		]);
+
+		// Add to public chat
+		const publicChatId = await ChatManager.publicChatId();
+		await ChatManager.addUserToChat(userId, publicChatId);
+
+		const jwtData: UserJWTData = {
+			id: userId,
+			username: username,
+			tag: tag,
+			email: email,
+			avatar: Utils.avatarUrl(userId),
+			isBanned: false,
+			isEmailConfirmed: false
+		};
+		return [ jwtData, passwordHash ];
+	}
+
+	private static async usersWithUsernameCount(username: string): Promise<number> {
+		const query = await db.query(sql`SELECT COUNT(*) FROM users WHERE username=$1`, [ username ]);
+		return query.rows[0].count;
+	}
+
+	private static async generateTag(username: string): Promise<string> {
+		const query = await db.query(sql`SELECT tag FROM users WHERE username=$1`, [ username ]);
+		const takenTags = query.rows.map(u => u.tag);
+		let tag: string | undefined = undefined;
+		while(tag == undefined) {
+			const newTag = Math.floor(Math.random() * 9999) + 1;
+			if(!takenTags.includes(newTag)) {
+				tag = newTag.toString().padStart(4, '0');
+			}
+		}
+		return tag;
+	}
+
 	public static async getUserById(id: string): Promise<User | null> {
 		const query = await db.query(sql`
 			SELECT
