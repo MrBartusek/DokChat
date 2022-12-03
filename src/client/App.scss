@@ -64,6 +64,10 @@ body {
 	--bs-tooltip-bg: var(--bs-gray-900);
 }
 
+.modal-dialog {
+	--bs-modal-width: 550;
+}
+
 .modal-title {
 	text-align: center;
 	font-size: 1.3em;
