@@ -85,8 +85,14 @@ function RegisterForm() {
 				<Form.Group className="mb-3" controlId="formBasicCheckbox">
 					<Form.Check
 						type="checkbox"
-						label="Akceptuję Polityke Pawła Kukiza"
 						name='terms'
+						label={
+							<span>
+								I have read and agreed to {' '}
+								<Link to='/privacy-policy'>DokChat Privacy Policy</Link>
+							</span>
+
+						}
 						disabled={loading}
 						checked={values.terms}
 						onChange={handleChange}

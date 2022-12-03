@@ -2,14 +2,13 @@ import React, { useContext } from 'react';
 import { Alert } from 'react-bootstrap';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
-import { useUpdatingUser } from '../../hooks/useUpdatingUser';
-import { AboutPage } from '../../pages/AboutPage';
 import { AccountBannedPage } from '../../pages/AccountBannedPage';
 import { ChatPage } from '../../pages/ChatPage';
 import { EmailConfirmPage } from '../../pages/EmailConfirmPage';
 import { HomePage } from '../../pages/HomePage';
 import { LoginPage } from '../../pages/LoginPage';
 import { PasswordResetPage } from '../../pages/PasswordResetPage';
+import { PrivacyPolicyPage } from '../../pages/PrivacyPolicy';
 import { RegisterPage } from '../../pages/RegisterPage';
 import ChatDetailsPopup from '../ChatDetailsPopup/ChatDetailsPopup';
 import EmailConfirmer from '../EmailConfirmer/EmailConfirmer';
@@ -27,7 +26,7 @@ function Router() {
 			<ScrollToTop />
 			<Routes>
 				<Route path="/" element={<HomePage />} />
-				<Route path="about" element={<AboutPage />} />
+				<Route path="privacy-policy" element={<PrivacyPolicyPage />} />
 				<Route path="login" element={
 					<PublicOnlyRoute>
 						<LoginPage />

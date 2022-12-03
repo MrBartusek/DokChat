@@ -33,9 +33,8 @@ function Footer() {
 							<Link to='/' className='link-secondary'>About DokChat</Link><br/>
 							<Link to='/download' className='link-secondary'>Download for Desktop</Link><br/>
 							<a href='https://github.com/MrBartusek/DokChat' className='link-secondary'>Github Repository</a><br/>
-							<Link to='/login' className='link-secondary'>Login to DokChat</Link><br/>
 							<Link to='/register' className='link-secondary'>Register Account</Link><br/>
-							<Link to='/forgot-password' className='link-secondary'>Forgot Password</Link><br/>
+							<Link to='/privacy-policy' className='link-secondary'>Privacy Policy</Link><br/>
 						</div>
 					</Col>
 				</Row>
