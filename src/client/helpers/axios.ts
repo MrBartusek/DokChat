@@ -14,7 +14,7 @@ function getAxios(user?: LocalUser): Axios {
 		validateStatus: function (status) {
 			return status >= 200 && status < 300;
 		},
-		timeout: 15 * 1000
+		timeout: 30 * 1000
 	});
 }
 
