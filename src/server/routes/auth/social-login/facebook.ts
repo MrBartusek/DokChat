@@ -50,7 +50,8 @@ router.all('/facebook', body('token').isString(), async (req, res, next) => {
 		);
 	}
 
-	await SocialLoginManager.socialLogin(res, data.email);
+	const profilePicture = !data.picture?.data?.is_silhouette && data.picture?.data?.url;
+	await SocialLoginManager.socialLogin(res, data.email, profilePicture);
 });
 
 export default router;

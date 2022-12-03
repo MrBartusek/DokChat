@@ -37,7 +37,8 @@ router.all('/google', body('token').isString(), async (req, res, next) => {
 		return new ApiResponse(res).unauthorized('Provided Google e-mail address is not verified');
 	}
 
-	await SocialLoginManager.socialLogin(res, payload.email);
+	const profilePicture = payload.picture && payload.picture.replace('s96-c', 's256-c');
+	await SocialLoginManager.socialLogin(res, payload.email, profilePicture);
 });
 
 export default router;

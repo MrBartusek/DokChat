@@ -43,7 +43,7 @@ class DokChatS3Client {
      * @param avatar Raw avatar sent by user
      * @returns Resource key
      */
-	public async uploadAvatar(avatar: Express.Multer.File): Promise<string> {
+	public async uploadAvatar(avatar: Express.Multer.File | Buffer): Promise<string> {
 		const buffer = await this.imageToBuffer(avatar);
 		const formatted = await this.formatAvatar(buffer);
 		return await this.uploadBuffer(formatted, 'image/png');
@@ -88,7 +88,10 @@ class DokChatS3Client {
 		await this.client.send(new DeleteObjectCommand(deleteParams));
 	}
 
-	private async imageToBuffer(file: Express.Multer.File | File): Promise<Buffer> {
+	private async imageToBuffer(file: Express.Multer.File | File | Buffer): Promise<Buffer> {
+		if(file instanceof Buffer) {
+			return file;
+		}
 		if((file as any).buffer) {
 			return (file as Express.Multer.File).buffer;
 		}
