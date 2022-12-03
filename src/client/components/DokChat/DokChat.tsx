@@ -7,13 +7,13 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { GOOGLE_CLIENT_ID } from '../../config';
 
 export default function DokChat() {
-	const [ isUserLoading, user, updateToken, setUser, removeUser ] = useUpdatingUser();
+	const [ isUserLoading, user, updateToken, setUser, callLogout ] = useUpdatingUser();
 
 	if(isUserLoading) return <></>;
 
 	return (
 		<GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-			<UserContext.Provider value={[ user, updateToken, setUser, removeUser ]}>
+			<UserContext.Provider value={[ user, updateToken, setUser, callLogout ]}>
 				<Toaster toastOptions={{
 					style: {
 						backgroundColor: 'var(--bs-dark)',

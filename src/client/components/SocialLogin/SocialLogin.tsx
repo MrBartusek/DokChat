@@ -1,5 +1,5 @@
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EndpointResponse, UserLoginResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
@@ -8,6 +8,7 @@ import HorizontalSeparator from '../HorizontalSeparator/HorizontalSeparator';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import { FACEBOOK_CLIENT_ID } from '../../config';
 import { BsFacebook } from 'react-icons/bs';
+import useBreakpoint from '../../hooks/useBreakpoint';
 
 const axios = getAxios();
 
@@ -28,6 +29,23 @@ type FacebookAuthResponse = {
 function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
 	const [ user, updateToken, setUser ] = useContext(UserContext);
 	const navigate = useNavigate();
+	const breakpoint = useBreakpoint();
+	const [ buttonWidth, setButtonWidth ] = useState('200');
+
+	useEffect(() => {
+		switch (breakpoint) {
+			case 'xs':
+				setButtonWidth('230');
+				break;
+			case 'sm':
+			case 'md':
+				setButtonWidth('400');
+				break;
+			default:
+				setButtonWidth('350');
+				break;
+		}
+	}, [ breakpoint ]);
 
 	async function sendLoginRequest(service: 'google' | 'facebook', token: string) {
 		if(loading) return;
@@ -36,8 +54,10 @@ function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
 		await axios.post(`/auth/social-login/${service}`, { token })
 			.then((r: any) => {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
-				setUser(resp.data.token);
-				navigate('/chat');
+				setTimeout(() => {
+					setUser(resp.data.token);
+					navigate('/chat');
+				}, 1000);
 			})
 			.catch((e) => {
 				const resp: EndpointResponse<null> = e.response?.data;
@@ -47,7 +67,7 @@ function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
 	}
 
 	async function onGoogleLogin(credentialResponse: CredentialResponse) {
-		await sendLoginRequest('facebook', credentialResponse.credential);
+		await sendLoginRequest('google', credentialResponse.credential);
 	}
 
 	async function onFacebookLogin(response: FacebookAuthResponse) {
@@ -64,16 +84,23 @@ function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
 						setError('Failed to get authorization response from Google');
 					}}
 					useOneTap
-					width='280'
+					width={buttonWidth}
 					logo_alignment='center'
 					locale='en_US'
 				/>
 				<FacebookLogin
 					appId={FACEBOOK_CLIENT_ID}
 					onSuccess={onFacebookLogin}
-					onFail={() => {
-						setError('Failed to get authorization response from Facebook');
+					onFail={(res) => {
+						if(res.status == 'loginCancelled') {
+							setError('Facebook authorization was canceled');
+						}
+						else {
+							setError('Failed to get authorization response from Facebook');
+						}
+
 					}}
+					scope='public_profile, email'
 					style={{
 						backgroundColor: '#1877f2',
 						color: '#fff',
@@ -81,7 +108,7 @@ function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
 						border: 'none',
 						borderRadius: '4px',
 						padding: 0,
-						width: '280px',
+						width: buttonWidth + 'px',
 						height: '38px',
 						fontWeight: 500
 					}}

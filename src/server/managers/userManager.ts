@@ -63,7 +63,7 @@ export default class UserManager {
 			email: email,
 			avatar: Utils.avatarUrl(userId),
 			isBanned: false,
-			isEmailConfirmed: false
+			isEmailConfirmed: socialLogin
 		};
 		return [ jwtData, passwordHash ];
 	}
@@ -196,5 +196,11 @@ export default class UserManager {
 	public static async emailTaken(email: string): Promise<boolean> {
 		const query = await db.query(sql`SELECT EXISTS(SELECT 1 FROM users WHERE email=$1)`, [ email ]);
 		return query.rows[0].exists;
+	}
+
+	public static async confirmEmail(userData: UserJWTData): Promise<void> {
+		await db.query(sql`
+			UPDATE users SET is_email_confirmed = 'true' WHERE id = $1
+		`, [ userData.id ]);
 	}
 }

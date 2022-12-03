@@ -14,7 +14,6 @@ function RegisterForm() {
 	const [ loading, setLoading ] = useState(false);
 	const [ values, handleChange ] = useForm({ email: '', username: '', password: '', confirmPassword: '', terms: false });
 	const [ error, setError ] = useState<string | null>(null);
-	const formRef = useRef<HTMLFormElement>(null!);
 	const passwordConfirmRef = useRef<HTMLInputElement>(null!);
 	const navigate = useNavigate();
 	const [ user, updateToken, setUser ] = useContext(UserContext);
@@ -31,7 +30,7 @@ function RegisterForm() {
 	return (
 		<>
 			{error && <Alert variant='danger'>{error}</Alert>}
-			<Form ref={formRef}>
+			<Form onSubmit={onSubmit}>
 				<Form.Group className="mb-3" controlId="formEmail">
 					<Form.Label>Email address</Form.Label>
 					<Form.Control
@@ -99,16 +98,15 @@ function RegisterForm() {
 						variant="primary"
 						type="submit"
 						className='py-2'
-						onClick={onSubmit}
 						loading={loading}
 					>
-						Log in
+						Create new account
 					</InteractiveButton>
 				</div>
 				<div className='d-flex justify-content-center mt-3'>
 					<Form.Text className="text-muted">
 						<span>
-						Already have account? {' '}
+						Already a user? {' '}
 						</span>
 						<Link to='/login' className='link-secondary'>
 						Log in
@@ -120,37 +118,25 @@ function RegisterForm() {
 		</>
 	);
 
-	async function onSubmit(event: React.MouseEvent) {
+	async function onSubmit(event: React.FormEvent) {
 		event.preventDefault();
-		const valid = formRef.current.checkValidity();
-		if(!valid) {
-			return formRef.current.reportValidity();
-		}
 		setLoading(true);
 		await axios.post('auth/register',
 			{
 				email: values.email,
 				username: values.username,
 				password: values.password
-			},
-			{ validateStatus: () => true })
+			})
 			.then((r: any) => {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
-				if(resp.error === true) {
-					setError(resp.message);
-					setLoading(false);
-				}
-				else if(resp.error === false) {
+				setTimeout(() => {
 					setUser(resp.data.token);
 					navigate('/chat');
-				}
-				else {
-					setError('Failed to log you in you at this time. Please try again later.');
-					setLoading(false);
-				}
+				}, 1000);
 			})
-			.catch(() => {
-				setError('Failed to log you in you at this time. Please try again later.');
+			.catch((e) => {
+				const resp: EndpointResponse<null> = e.response?.data;
+				setError(resp?.message || 'Failed to register this account at this time. Please try again later.');
 				setLoading(false);
 			});
 

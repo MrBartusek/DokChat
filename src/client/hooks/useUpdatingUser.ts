@@ -4,12 +4,15 @@ import { EndpointResponse, UserLoginResponse } from '../../types/endpoints';
 import getAxios from '../helpers/axios';
 import { LocalUser } from '../types/User';
 import { useUser } from './useUser';
+import { googleLogout } from '@react-oauth/google';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * This is more advanced version of useUser hook
  * that have token refreshing built-in
  */
-export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, React.Dispatch<string>, React.Dispatch<void>] {
+export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, React.Dispatch<string>,  () => Promise<void>] {
 	const [ isLoading, setLoading ] = useState(true);
 	const [ user, cookies, setUser, removeUser ] = useUser();
 	const [ isConfirmed, setConfirmed ] = useState(false);
@@ -62,21 +65,29 @@ export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, Rea
 				if(!isConfirmed) {
 					console.error('AUTH: Local user rejected by server! Logging out...');
 					callLogout();
-					removeUser();
 				}
 				// If past tries to refresh user failed, just log out the user
 				if(user.isAuthenticated && user.expireIn < 15) {
 					console.error('AUTH: Log out after too many tries.');
 					callLogout();
-					removeUser();
 				}
 			});
 	}
 
 	async function callLogout() {
 		const axios = getAxios(user);
-		return axios.post('/auth/logout').catch((e) => console.error('Failed to post /auth/logout'));
+		await axios.post('/auth/logout').catch(() => console.error('Failed to post /auth/logout'));
+		googleLogout();
+		removeUser();
+		toast('You have successfully been logged out');
 	}
 
-	return [ isLoading, user, (refreshAvatar?: boolean) => refreshToken(refreshAvatar), setUser, removeUser ];
+	async function setUserWrapper(newUser: string | LocalUser) {
+		if(!user.isAuthenticated) {
+			toast('You have successfully signed in');
+		}
+		setUser(newUser);
+	}
+
+	return [ isLoading, user, (refreshAvatar?: boolean) => refreshToken(refreshAvatar), setUserWrapper, callLogout ];
 }

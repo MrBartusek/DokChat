@@ -8,16 +8,12 @@ import InteractiveButton, { InteractiveButtonProps } from '../InteractiveButton/
 export interface LogoutButton extends InteractiveButtonProps {}
 
 export default function LogoutButton(props: InteractiveButtonProps) {
-	const [ user, refreshToken, setUser, removeUser ] = useContext(UserContext);
+	const [ user, refreshToken, setUser, callLogout ] = useContext(UserContext);
 	const [ isLoading, setLoading ] = useState(false);
 
-	function handleClick() {
+	async function handleClick() {
 		setLoading(true);
-		const axios = getAxios(user);
-		axios.post('/auth/logout')
-			.then(() => toast('You have successfully been logged out'))
-			.then(() => removeUser())
-			.catch(() => setLoading(false));
+		await callLogout();
 	}
 
 	return (

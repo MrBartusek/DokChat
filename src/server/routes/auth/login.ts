@@ -26,7 +26,7 @@ router.all('/login',
 			})
 			.catch((reason) => {
 				if(typeof reason == 'string') {
-					return new ApiResponse(res).badRequest(reason);
+					return new ApiResponse(res).unauthorized(reason);
 				}
 				throw reason;
 			});

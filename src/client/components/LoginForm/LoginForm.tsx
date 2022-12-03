@@ -15,14 +15,13 @@ function LoginForm() {
 	const [ loading, setLoading ] = useState(false);
 	const [ values, handleChange ] = useForm({ email: '', password: '', rememberMe: false });
 	const [ error, setError ] = useState<string | null>(null);
-	const formRef = useRef<HTMLFormElement>(null!);
 	const navigate = useNavigate();
 	const [ user, updateToken, setUser ] = useContext(UserContext);
 
 	return (
 		<>
 			{error && <Alert variant='danger'>{error}</Alert>}
-			<Form ref={formRef}>
+			<Form onSubmit={onSubmit}>
 				<Form.Group className="mb-3" controlId="formBasicEmail">
 					<Form.Label>Email address</Form.Label>
 					<Form.Control
@@ -66,7 +65,6 @@ function LoginForm() {
 						variant="primary"
 						type="submit"
 						className='py-2'
-						onClick={onSubmit}
 						loading={loading}
 					>
 						Log in
@@ -87,18 +85,16 @@ function LoginForm() {
 		</>
 	);
 
-	async function onSubmit(event: React.MouseEvent) {
+	async function onSubmit(event: React.FormEvent) {
 		event.preventDefault();
-		const valid = formRef.current.checkValidity();
-		if(!valid) {
-			return formRef.current.reportValidity();
-		}
 		setLoading(true);
 		await axios.post('/auth/login', values) // Backend request body should exactly match this hook
 			.then((r: any) => {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
-				setUser(resp.data.token);
-				navigate('/chat');
+				setTimeout(() => {
+					setUser(resp.data.token);
+					navigate('/chat');
+				}, 1000);
 			})
 			.catch((e) => {
 				const resp: EndpointResponse<null> = e.response?.data;
