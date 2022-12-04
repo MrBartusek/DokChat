@@ -1,7 +1,6 @@
 import { createContext } from 'react';
-import { Theme } from '../hooks/useTheme';
-import { LocalUser } from '../types/User';
+import { Settings } from '../hooks/useSettings';
 
-export const ThemeContext = createContext<[
-    Theme,
-    (theme: Theme) => void]>(null as any);
+export const SettingsContext = createContext<[
+    Settings,
+    (settings: Settings) => void]>({} as any);

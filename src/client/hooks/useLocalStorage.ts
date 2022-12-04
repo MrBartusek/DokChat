@@ -8,8 +8,16 @@ export function useLocalStorage<T = string>(key: string, initialValue: T): [ T, 
 			return initialValue;
 		}
 		try {
-			const item = window.localStorage.getItem('dokchat_' + key) as any;
-			return item ? item as T : initialValue;
+			const item = window.localStorage.getItem('dokchat_' + key);
+			if(!item) {
+				return initialValue;
+			}
+			else if(typeof initialValue == 'string') {
+				return item as any as T;
+			}
+			else {
+				return JSON.parse(item) as T;
+			}
 		}
 		catch (error) {
 			console.log(error);
@@ -21,7 +29,14 @@ export function useLocalStorage<T = string>(key: string, initialValue: T): [ T, 
 		try {
 			setStoredValue(value);
 			if (typeof window !== 'undefined') {
-				window.localStorage.setItem('dokchat_' + key, value as any);
+				let valueToStore: string = undefined;
+				if(typeof value == 'string') {
+					valueToStore = value;
+				}
+				else {
+					valueToStore = JSON.stringify(value);
+				}
+				window.localStorage.setItem('dokchat_' + key, valueToStore);
 			}
 		}
 		catch (error) {
