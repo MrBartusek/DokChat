@@ -6,6 +6,7 @@ import useSound from 'use-sound';
 import { ATTACHMENT_MAX_SIZE } from '../../types/const';
 import { ChatListResponse, EndpointResponse } from '../../types/endpoints';
 import { ClientMessage } from '../../types/websocket';
+import { SettingsContext } from '../context/ThemeContext';
 import { UserContext } from '../context/UserContext';
 import { LocalChat } from '../types/Chat';
 import { useFetch } from './useFetch';
@@ -24,6 +25,7 @@ export function useMessageManager(ws: useWebsocketType): [
 	const [ loading, setLoading ] = useState(true);
 	const [ user ] = useContext(UserContext);
 	const [ playPing ] = useSound('/sounds/new_message_ping.mp3', { volume: 0.5 });
+	const [ settings ] = useContext(SettingsContext);
 
 	const initialChatList = useFetch<EndpointResponse<ChatListResponse>>('chat/list', true);
 	const [ chatList, setChatList ] = useState<LocalChat[]>([]);
@@ -67,7 +69,7 @@ export function useMessageManager(ws: useWebsocketType): [
 				chat.name = msg.chat.name;
 			}
 			setChatList(chats);
-			playPing();
+			if(settings.soundNotifications) playPing();
 		});
 		return () => {
 			ws.socket.off('message');
