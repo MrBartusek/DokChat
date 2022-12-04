@@ -68,6 +68,11 @@ export function ChatPage() {
 	const isLoading = (
 		isLoadingManager || (!documentReady && document.location.hostname !== 'localhost')
 	);
+	console.log(
+		'isLoading:', isLoading,
+		'manager:', isLoadingManager,
+		'ready:', (!documentReady && document.location.hostname !== 'localhost')
+	);
 	if(isLoading) return (<MainLoading />);
 
 	return (
