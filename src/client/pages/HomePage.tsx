@@ -43,7 +43,7 @@ export function HomePage() {
 
 					<Countdown
 						date={DateFns.fromUnixTime(1672592400)}
-						renderer={({ days, hours, minutes, seconds, completed }) => {
+						renderer={({ days, hours, minutes, seconds, completed }: any) => {
 							if (!completed) {
 								return (
 									<h2 className='text-center mt-3 lead display-3'>
@@ -57,7 +57,13 @@ export function HomePage() {
 						}}
 					/>
 
-					<div className='text-muted text-center mt-5'>
+					<div className='text-muted text-center mt-3'>
+						<a href="https://www.google.com/calendar/render?action=TEMPLATE&text=DokChat+1.0&location=https%3A%2F%2Fdokchat.dokurno.dev&dates=20230101T170000Z%2F20230101T180000Z">
+							+ Add to Google Calendar
+						</a>
+					</div>
+
+					<div className='text-muted text-center mt-3'>
 						* release date may be changed, check {' '}
 						<a href="https://github.com/MrBartusek/DokChat/milestone/1" className='link-secondary'>current progress</a> {' '}
 						for reference
