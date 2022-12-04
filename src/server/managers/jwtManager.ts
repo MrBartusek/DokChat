@@ -1,12 +1,5 @@
-import { Response } from 'express';
 import * as jose from 'jose';
 import { UserJWTData } from '../../types/jwt';
-import { ApiResponse } from '../apiResponse';
-import * as DateFns from 'date-fns';
-import { UserLoginResponse } from '../../types/endpoints';
-import db from '../db';
-import sql from 'sql-template-strings';
-import * as bcrypt from 'bcrypt';
 import { EmailConfirmJWTData, PasswordResetJWTData } from '../types/jwt';
 
 const USER_TOKEN_SECRET = process.env.JWT_USER_TOKEN_SECRET;

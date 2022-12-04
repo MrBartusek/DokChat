@@ -1,7 +1,6 @@
 import React from 'react';
 import { BsShieldLock, BsUnlockFill } from 'react-icons/bs';
 import DeleteAccountButton from '../DeleteAccountButton/DeleteAccountButton';
-import HorizontalSeparator from '../HorizontalSeparator/HorizontalSeparator';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import LogoutButton from '../LogoutButton/LogoutButton';
 import './AccountTab.scss';

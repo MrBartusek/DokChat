@@ -8,8 +8,8 @@
 
 // npm i -S debounce
 
-import { useState, useEffect } from 'react';
 import debounce from 'debounce';
+import { useEffect, useState } from 'react';
 
 export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 

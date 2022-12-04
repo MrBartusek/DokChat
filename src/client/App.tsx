@@ -1,9 +1,7 @@
 import React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Toaster } from 'react-hot-toast';
 import DokChat from './components/DokChat/DokChat';
 import ErrorPage from './components/ErrorPage/ErrorPage';
-import Router from './components/Router/Router';
 
 function App() {
 	return (

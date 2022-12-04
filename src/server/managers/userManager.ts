@@ -1,14 +1,14 @@
+import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
+import * as DateFns from 'date-fns';
 import sql from 'sql-template-strings';
 import { User } from '../../types/common';
 import { UserJWTData } from '../../types/jwt';
 import db from '../db';
-import Utils from '../utils/utils';
-import EmailBlacklistManager from './emailBlacklistManager';
-import * as bcrypt from 'bcrypt';
 import { snowflakeGenerator } from '../utils/snowflakeGenerator';
-import * as DateFns from 'date-fns';
+import Utils from '../utils/utils';
 import ChatManager from './chatManager';
-import * as crypto from 'crypto';
+import EmailBlacklistManager from './emailBlacklistManager';
 
 export default class UserManager {
 	public static async createUser(username: string, email: string, password?: string, socialLogin = false): Promise<[UserJWTData, string]> {

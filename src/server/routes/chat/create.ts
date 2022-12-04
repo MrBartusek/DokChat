@@ -1,5 +1,6 @@
 import * as DateFns from 'date-fns';
-import express, { Request } from 'express';
+import * as express from 'express';
+import { Request } from 'express';
 import { body, validationResult } from 'express-validator';
 import sql from 'sql-template-strings';
 import { Chat, User } from '../../../types/common';

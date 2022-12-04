@@ -1,14 +1,14 @@
+import FacebookLogin from '@greatsumini/react-facebook-login';
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import React, { useContext, useEffect, useState } from 'react';
+import { BsFacebook } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { EndpointResponse, UserLoginResponse } from '../../../types/endpoints';
+import { FACEBOOK_CLIENT_ID } from '../../config';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
-import HorizontalSeparator from '../HorizontalSeparator/HorizontalSeparator';
-import FacebookLogin from '@greatsumini/react-facebook-login';
-import { FACEBOOK_CLIENT_ID } from '../../config';
-import { BsFacebook } from 'react-icons/bs';
 import useBreakpoint from '../../hooks/useBreakpoint';
+import HorizontalSeparator from '../HorizontalSeparator/HorizontalSeparator';
 
 const axios = getAxios();
 

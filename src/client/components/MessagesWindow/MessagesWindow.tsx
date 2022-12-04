@@ -1,6 +1,6 @@
 import * as DateFns from 'date-fns';
 import React, { useContext, useEffect, useLayoutEffect, useRef } from 'react';
-import { OverlayTrigger, Spinner, Tooltip, TooltipProps } from 'react-bootstrap';
+import { OverlayTrigger, Tooltip, TooltipProps } from 'react-bootstrap';
 import { Twemoji } from 'react-emoji-render';
 import { BsCheckCircle, BsCheckCircleFill, BsXCircle } from 'react-icons/bs';
 import { EndpointResponse, MessageListResponse } from '../../../types/endpoints';

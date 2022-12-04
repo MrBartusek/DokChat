@@ -1,8 +1,6 @@
 import React, { useContext, useState } from 'react';
-import toast from 'react-hot-toast';
 import { BsBoxArrowLeft } from 'react-icons/bs';
 import { UserContext } from '../../context/UserContext';
-import getAxios from '../../helpers/axios';
 import InteractiveButton, { InteractiveButtonProps } from '../InteractiveButton/InteractiveButton';
 
 export interface LogoutButton extends InteractiveButtonProps {}

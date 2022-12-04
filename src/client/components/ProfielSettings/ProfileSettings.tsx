@@ -12,7 +12,6 @@ import CopyButton from '../CopyButton/CopyButton';
 import { FileUploaderResult } from '../FileUploader/FileUploader';
 import IconButton from '../IconButton/IconButton';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
-import LogoutButton from '../LogoutButton/LogoutButton';
 
 export interface ProfileSettingsProps {
 	setCustomFooter: React.Dispatch<React.SetStateAction<JSX.Element>>,

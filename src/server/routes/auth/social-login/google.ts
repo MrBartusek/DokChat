@@ -1,13 +1,8 @@
 import * as express from 'express';
 import { body, validationResult } from 'express-validator';
 import { OAuth2Client } from 'google-auth-library';
-import validator from 'validator';
 import { ApiResponse } from '../../../apiResponse';
-import { user } from '../../../db';
-import AuthManager from '../../../managers/authManager';
 import SocialLoginManager from '../../../managers/socialLoginManager';
-import UserManager from '../../../managers/userManager';
-import Utils from '../../../utils/utils';
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 

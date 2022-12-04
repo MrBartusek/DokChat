@@ -1,13 +1,13 @@
+import axios from 'axios';
 import { Response } from 'express';
+import sql from 'sql-template-strings';
 import validator from 'validator';
 import { ApiResponse } from '../apiResponse';
+import s3Client from '../aws/s3';
+import db from '../db';
 import Utils from '../utils/utils';
 import AuthManager from './authManager';
 import UserManager from './userManager';
-import sql from 'sql-template-strings';
-import db from '../db';
-import axios from 'axios';
-import s3Client from '../aws/s3';
 
 export default class SocialLoginManager {
 	public static async socialLogin(res: Response, email: string, profilePictureUrl?: string) {

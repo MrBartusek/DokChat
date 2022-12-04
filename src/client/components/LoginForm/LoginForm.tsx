@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Alert, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { EndpointResponse, UserLoginResponse } from '../../../types/endpoints';
@@ -6,7 +6,6 @@ import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import { useForm } from '../../hooks/useForm';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
-import { GoogleLogin } from '@react-oauth/google';
 import SocialLogin from '../SocialLogin/SocialLogin';
 
 const axios = getAxios();

@@ -1,9 +1,9 @@
+import axios from 'axios';
+import * as DateFns from 'date-fns';
 import * as express from 'express';
 import { body, validationResult } from 'express-validator';
 import { ApiResponse } from '../../../apiResponse';
-import axios from 'axios';
 import SocialLoginManager from '../../../managers/socialLoginManager';
-import * as DateFns from 'date-fns';
 
 const FACEBOOK_CLIENT_ID = process.env.FACEBOOK_CLIENT_ID;
 const router = express.Router();

@@ -1,12 +1,11 @@
+import { googleLogout } from '@react-oauth/google';
 import * as DateFns from 'date-fns';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { EndpointResponse, UserLoginResponse } from '../../types/endpoints';
 import getAxios from '../helpers/axios';
 import { LocalUser } from '../types/User';
 import { useUser } from './useUser';
-import { googleLogout } from '@react-oauth/google';
-import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
 
 /**
  * This is more advanced version of useUser hook

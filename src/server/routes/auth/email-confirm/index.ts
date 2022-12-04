@@ -1,6 +1,6 @@
 import * as express from 'express';
-import startRoute from './start';
 import confirmRoute from './confirm';
+import startRoute from './start';
 
 const router = express.Router();
 
