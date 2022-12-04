@@ -30,7 +30,12 @@ export function ChatPage() {
 	useEffect(() => {
 		if(isLoadingManager || chats.length == 0) return;
 		const defaultChat = chats[0];
-		const isPopup = ([ '/chat/new', '/chat/profile', '/chat/email-confirm' ].includes(location.pathname));
+		const isPopup = ([
+			'/chat/new',
+			'/chat/profile',
+			'/chat/email-confirm',
+			'/chat/delete-account'
+		].includes(location.pathname));
 
 		const isEmailConfirmRoute = location.pathname == '/chat/email-confirm';
 		if(!user.isEmailConfirmed && !isEmailConfirmRoute) {

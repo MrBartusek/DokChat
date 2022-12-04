@@ -3,7 +3,7 @@ import { Tab, Tabs } from 'react-bootstrap';
 import AccountTab from '../AccountTab/AccountTab';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import Popup from '../Popup/Popup';
-import ProfileSettingsTab from '../ProfileSettingsTab/ProfileSettingsTab';
+import ProfileSettings from '../ProfileSettingsTab/ProfileSettingsTab';
 import SettingsTab from '../SettingsTab/SettingsTab';
 
 function SettingsPopup() {
@@ -44,7 +44,7 @@ function SettingsPopup() {
 				onSelect={(k) => setKey(k)}
 			>
 				<Tab eventKey="profile" title="Profile" className='pt-4' disabled={customStatic}>
-					<ProfileSettingsTab
+					<ProfileSettings
 						setCustomFooter={setCustomFooter}
 						setCustomStatic={setCustomStatic}
 						handleClose={handleClose}

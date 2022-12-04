@@ -11,6 +11,7 @@ import { PasswordResetPage } from '../../pages/PasswordResetPage';
 import { PrivacyPolicyPage } from '../../pages/PrivacyPolicy';
 import { RegisterPage } from '../../pages/RegisterPage';
 import ChatDetailsPopup from '../ChatDetailsPopup/ChatDetailsPopup';
+import DeleteAccountPopup from '../DeleteAccountPopup/DeleteAccountPopup';
 import EmailConfirmer from '../EmailConfirmer/EmailConfirmer';
 import EmailConfirmPopup from '../EmailConfirmPopup/EmailConfirmPopup';
 import ErrorPage from '../ErrorPage/ErrorPage';
@@ -65,6 +66,7 @@ function Router() {
 					<Route path="new" element={<NewChatPopup />} />
 					<Route path="profile" element={<SettingsPopup />} />
 					<Route path="email-confirm" element={<EmailConfirmPopup />} />
+					<Route path="delete-account" element={<DeleteAccountPopup />} />
 				</Route>
 				<Route path="suspended" element={
 					<PrivateRoute isSuspendedRoute>

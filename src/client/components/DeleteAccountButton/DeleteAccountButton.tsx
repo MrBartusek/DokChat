@@ -1,28 +1,20 @@
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import { BsTrash } from 'react-icons/bs';
-import { UserContext } from '../../context/UserContext';
+import { Link } from 'react-router-dom';
 import InteractiveButton, { InteractiveButtonProps } from '../InteractiveButton/InteractiveButton';
 
 export interface LogoutButton extends InteractiveButtonProps {}
 
 export default function DeleteAccountButton(props: InteractiveButtonProps) {
-	const [ user, refreshToken, setUser, callLogout ] = useContext(UserContext);
-	const [ isLoading, setLoading ] = useState(false);
-
-	async function handleClick() {
-		setLoading(true);
-		await callLogout();
-	}
-
 	return (
-		<InteractiveButton
-			loading={isLoading}
-			onClick={handleClick}
-			icon={BsTrash}
-			variant="danger"
-			{...props}
-		>
-			Delete Account
-		</InteractiveButton>
+		<Link to='/chat/delete-account'>
+			<InteractiveButton
+				icon={BsTrash}
+				variant="danger"
+				{...props}
+			>
+				Delete Account
+			</InteractiveButton>
+		</Link>
 	);
 }
