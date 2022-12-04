@@ -1,5 +1,6 @@
 import React from 'react';
 import { BsShieldLock, BsUnlockFill } from 'react-icons/bs';
+import DebugInfo from '../DebugInfo/DebugInfo';
 import DeleteAccountButton from '../DeleteAccountButton/DeleteAccountButton';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import LogoutButton from '../LogoutButton/LogoutButton';

@@ -1,7 +1,18 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
+const webpack = require('webpack');
 
 const mode = process.env.NODE_ENV || 'development';
+
+const commitHash = require('child_process')
+	.execSync('git rev-parse HEAD')
+	.toString()
+	.trim();
+
+const branch = require('child_process')
+	.execSync('git rev-parse --abbrev-ref HEAD')
+	.toString()
+	.trim();
 
 console.log(`Building for ${mode}`);
 
@@ -56,6 +67,13 @@ const clientConfig = {
 			}
 		]
 	},
+	plugins: [
+		new webpack.DefinePlugin({
+			COMMIT_HASH: JSON.stringify(commitHash),
+			BRANCH: JSON.stringify(branch),
+			BUILD_MODE: JSON.stringify(mode)
+		})
+	],
 	resolve: {
 		extensions: [ '.tsx', '.ts', '.js', '.css', '.scss' ]
 	},
