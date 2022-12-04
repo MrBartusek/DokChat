@@ -14,18 +14,18 @@ export default function AccountTab() {
 			>
 				<>
 					<InteractiveButton variant='primary' size='sm' icon={BsShieldLock}>
-					Change Password
+						Change Password
 					</InteractiveButton>
 					<p className='small fw-bold text-danger mt-4 mb-2'>
 						<BsUnlockFill className='me-1'/>
-					Two-factor authentication disabled
+						Two-factor authentication disabled
 					</p>
 					<p className='small text-muted mb-2'>
-					Two-factor authentication (2FA for short) is added security layer for your DokChat account.
-					When 2FA is enabled you need to confirm every login attempt.
+						Two-factor authentication (2FA for short) is added security layer for your DokChat account.
+						When 2FA is enabled you need to confirm every login attempt.
 					</p>
 					<InteractiveButton variant='primary' size='sm' icon={BsShieldLock}>
-					Enable 2FA
+						Enable 2FA
 					</InteractiveButton>
 				</>
 			</SettingsRow>

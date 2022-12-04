@@ -5,6 +5,7 @@ import AccountTab from '../AccountTab/AccountTab';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import Popup from '../Popup/Popup';
 import ProfileSettings from '../ProfielSettings/ProfileSettings';
+import SettingsTab from '../SettingsTab/SettingsTab';
 
 function SettingsPopup() {
 	const [ handleClose, setHandleClose ] = useState<() => void>(null);
@@ -52,6 +53,9 @@ function SettingsPopup() {
 				</Tab>
 				<Tab eventKey="account" title="My Account" className='pt-4' disabled={customStatic}>
 					<AccountTab />
+				</Tab>
+				<Tab eventKey="settings" title="Settings" className='pt-4' disabled={customStatic}>
+					<SettingsTab />
 				</Tab>
 			</Tabs>
 		</Popup>
