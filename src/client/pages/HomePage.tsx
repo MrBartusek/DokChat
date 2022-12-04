@@ -29,11 +29,12 @@ export function HomePage() {
 					<div className='text-muted text-center mt-2'>
 						<div className='lead fs-3'>The full release</div>
 						<div className='mt-4'>Social logins using Facebook & Google</div>
-						<div className='mt-1'>GIF support</div>
+						<div className='mt-1'>GIF support via Tenor</div>
 						<div className='mt-1'>Infinite chats & messages scrolling</div>
 						<div className='mt-1'>Link-based group invites</div>
 						<div className='mt-1'>No more account resets</div>
-						<div className='mt-1'>Polished experience</div>
+						<div className='mt-1'>Polished experience and QOL changes</div>
+						<div className='mt-1'>+ Secret customization option</div>
 					</div>
 
 					<h2 className='text-center mt-5'>
