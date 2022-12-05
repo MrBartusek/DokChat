@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
+import './Section.scss';
 
 interface SectionProps {
     variantBackground?: boolean,
@@ -8,7 +9,7 @@ interface SectionProps {
 
 export default function Section({ variantBackground, children }: SectionProps) {
 	return (
-		<div className={variantBackground ? 'bg-light' : ''}>
+		<div className={variantBackground ? 'section-variant' : ''}>
 			<Container className='py-5'>
 				{children}
 			</Container>

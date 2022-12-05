@@ -7,7 +7,7 @@ import { UserContext } from '../../context/UserContext';
 import { useSettings } from '../../hooks/useSettings';
 import { useUpdatingUser } from '../../hooks/useUpdatingUser';
 import Router from '../Router/Router';
-import './DokChat.scss';
+import './DokChatDark.scss';
 
 export default function DokChat() {
 	const [ isUserLoading, user, updateToken, setUser, callLogout ] = useUpdatingUser();

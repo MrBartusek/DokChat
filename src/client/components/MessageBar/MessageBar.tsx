@@ -6,6 +6,7 @@ import { AiOutlineGif } from 'react-icons/ai';
 import { BsEmojiSmileFill, BsImage } from 'react-icons/bs';
 import { MdSend } from 'react-icons/md';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
+import { SettingsContext } from '../../context/ThemeContext';
 import { useForm } from '../../hooks/useForm';
 import { LocalChat } from '../../types/Chat';
 import FileUploader, { FileUploaderResult } from '../FileUploader/FileUploader';
@@ -22,6 +23,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 	const [ isEnabled, setEnabled ] = useState(false);
 	const inputRef = useRef<HTMLInputElement>();
 	const [ fileUploader, setFileUploader ] = useState<FileUploaderResult>({});
+	const [ settings ] = useContext(SettingsContext);
 
 	useEffect(() => {
 		setEnabled(values.content.length > 0);
@@ -54,6 +56,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 					lazyLoadEmojis={true}
 					emojiStyle={EmojiStyle.TWITTER}
 					previewConfig={{showPreview: false}}
+					theme={settings.theme}
 					onEmojiClick={(emoji) => {
 						setValues({ content: values.content + emoji.emoji});
 					}}

@@ -1,6 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Modal, { ModalProps } from 'react-bootstrap/Modal';
 import { useNavigate } from 'react-router-dom';
+import { SettingsContext } from '../../context/ThemeContext';
+import { Theme, useSettings } from '../../hooks/useSettings';
 
 interface PopupProps extends ModalProps {
 	title: string;
@@ -13,6 +15,8 @@ interface PopupProps extends ModalProps {
 function Popup(props: PopupProps) {
 	const navigate = useNavigate();
 	const handleClose = () => navigate('/chat');
+	const [ settings ] = useContext(SettingsContext);
+
 	useEffect(() => {
 		if(!props.setHandleClose) return;
 		props.setHandleClose(() => handleClose);
@@ -24,8 +28,9 @@ function Popup(props: PopupProps) {
 			onHide={handleClose}
 			backdrop={(props.static && 'static') || true}
 			keyboard={!props.static}
+			data-theme={settings.theme}
 		>
-			<Modal.Header closeButton={!props.static}>
+			<Modal.Header closeButton={!props.static} closeVariant={settings.theme == Theme.DARK ? 'white' : null}>
 				<Modal.Title
 					as={'div'}
 					style={!props.static ? {marginLeft: 22.9} : {}} // Even the space with close button

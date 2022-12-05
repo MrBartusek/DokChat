@@ -1,15 +1,26 @@
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/mixins";
+@import '../../scss/dark.scss';
 
 .chat {
     cursor: pointer;
 }
 
-.chat:hover {
-    background-color: mix($gray-100, $gray-200) !important;
-}
-
 .current.chat {
     background-color: $gray-100;
+}
+
+.chat:hover {
+    background-color: mix($gray-100, $gray-200);
+}
+
+#app[data-theme='dark'] {
+    .current.chat {
+        background-color: mix($dark-background, $dark-washed, 80%);
+    }
+
+    .chat:hover {
+        background-color: mix($dark-background, $dark-washed, 50%);
+    }
 }
