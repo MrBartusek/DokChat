@@ -1,8 +1,10 @@
 import React, { useContext, useEffect } from 'react';
 import Modal, { ModalProps } from 'react-bootstrap/Modal';
+import { ErrorBoundary } from 'react-error-boundary';
 import { useNavigate } from 'react-router-dom';
 import { SettingsContext } from '../../context/ThemeContext';
 import { Theme, useSettings } from '../../hooks/useSettings';
+import InteractiveButton from '../InteractiveButton/InteractiveButton';
 
 interface PopupProps extends ModalProps {
 	title: string;
@@ -22,6 +24,8 @@ function Popup(props: PopupProps) {
 		props.setHandleClose(() => handleClose);
 	}, []);
 
+	const closeVariant = settings.theme == Theme.DARK ? 'white' : null;
+
 	return (
 		<Modal
 			show={true}
@@ -30,20 +34,36 @@ function Popup(props: PopupProps) {
 			keyboard={!props.static}
 			data-theme={settings.theme}
 		>
-			<Modal.Header closeButton={!props.static} closeVariant={settings.theme == Theme.DARK ? 'white' : null}>
-				<Modal.Title
-					as={'div'}
-					style={!props.static ? {marginLeft: 22.9} : {}} // Even the space with close button
-				>
-					{props.title}
-				</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
-				{props.children}
-			</Modal.Body>
-			<Modal.Footer>
-				{props.footer}
-			</Modal.Footer>
+			<ErrorBoundary fallbackRender={({error, resetErrorBoundary}) => (
+				<>
+					<Modal.Header closeButton={true} closeVariant={closeVariant}>
+						<Modal.Title>Error</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						Failed to render this popup at this time. Please try again later.
+					</Modal.Body>
+					<Modal.Footer>
+						<InteractiveButton onClick={handleClose}>
+							Close
+						</InteractiveButton>
+					</Modal.Footer>
+				</>
+			)}>
+				<Modal.Header closeButton={!props.static} closeVariant={closeVariant}>
+					<Modal.Title
+						as={'div'}
+						style={!props.static ? {marginLeft: 22.9} : {}} // Even the space with close button
+					>
+						{props.title}
+					</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					{props.children}
+				</Modal.Body>
+				<Modal.Footer>
+					{props.footer}
+				</Modal.Footer>
+			</ErrorBoundary>
 		</Modal>
 	);
 }
