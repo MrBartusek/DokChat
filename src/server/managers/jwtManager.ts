@@ -24,8 +24,14 @@ export default class JWTManager {
 		return token;
 	}
 
-	private static decodeJWT<T = jose.JWTPayload>(token: string): T {
-		return jose.decodeJwt(token) as any as T;
+	private static decodeJWT<T = jose.JWTPayload>(token: string): T | null {
+		try {
+			const data = jose.decodeJwt(token) as any as T;
+			return data;
+		}
+		catch (error) {
+			return null;
+		}
 	}
 
 	private static async verifyJWT<T = jose.JWTPayload>(token: string, tokenType: TokenType, passwordHash = ''): Promise<T> {
@@ -86,14 +92,14 @@ export default class JWTManager {
 	// DECODE
 	// --------------------------
 
-	public static decodeRefreshToken(token: string): string {
-		const id = this.decodeJWT(token).id as string;
-		return id;
+	public static decodeRefreshToken(token: string): string | null {
+		const data = this.decodeJWT<{id: string}>(token);
+		return data ? data.id : null;
 	}
 
-	public static decodePassResetToken(token: string): string {
-		const id = this.decodeJWT(token).id as string;
-		return id;
+	public static decodePassResetToken(token: string): string | null {
+		const data = this.decodeJWT<{id: string}>(token);
+		return data ? data.id : null;
 	}
 
 	// --------------------------

@@ -22,6 +22,9 @@ router.all('/update', allowedMethods('POST'),
 		const token: string = req.body.token;
 
 		const unconfirmedUserId = JWTManager.decodePassResetToken(token);
+		if(!unconfirmedUserId) {
+			return new ApiResponse(res).unauthorized('Invalid token, please try to reset your password once again.');
+		}
 		const user = await UserManager.getUserJwtDataById(unconfirmedUserId);
 		if(!user) return new ApiResponse(res).badRequest('User not found');
 		const passwordHash = await UserManager.getUserHashById(unconfirmedUserId);

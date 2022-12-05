@@ -18,7 +18,9 @@ router.all('/refresh', allowedMethods('POST'), cookie('refreshToken').isString()
 	const refreshToken: string = req.cookies.refreshToken;
 
 	const unconfirmedUserId = JWTManager.decodeRefreshToken(refreshToken);
-	if(!unconfirmedUserId) return new ApiResponse(res).unauthorized('Invalid JWT');
+	if(!unconfirmedUserId) {
+		return new ApiResponse(res).unauthorized('Invalid JWT');
+	}
 
 	const user = await UserManager.getUserJwtDataById(unconfirmedUserId);
 	const passwordHash = await UserManager.getUserHashById(unconfirmedUserId);
