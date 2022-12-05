@@ -12,12 +12,17 @@ export interface Settings {
 	soundNotifications: boolean
 }
 
+export const DEFAULT_SETTINGS: Settings = {
+	soundNotifications: true,
+	theme: Theme.LIGHT
+};
+
 export function useSettings(): [Settings, (settings: Settings) => void] {
 	const [ settings, setSettings ] = useLocalStorage<Settings>('settings', {} as Settings);
 
 	const settingsCopy: Settings = {
-		soundNotifications: settings.soundNotifications ?? true,
-		theme: settings.theme ?? Theme.LIGHT
+		soundNotifications: settings.soundNotifications ?? DEFAULT_SETTINGS.soundNotifications,
+		theme: settings.theme ?? DEFAULT_SETTINGS.theme
 	};
 
 	return [ settingsCopy, setSettings ];
