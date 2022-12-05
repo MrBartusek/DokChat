@@ -26,8 +26,10 @@ function NewChatPopup() {
 	const [ error, setError ] = useState(null);
 	const [ user ] = useContext(UserContext);
 	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
-	const formRef = useRef(null);
 	const [ handleClose, setHandleClose ] = useState<() => void>(null);
+	const formRef = useRef<HTMLFormElement>(null);
+	const usernameRef = useRef<HTMLInputElement>(null);
+	const tagRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
 		const id = searchParams.get('prefill');
@@ -128,6 +130,18 @@ function NewChatPopup() {
 			});
 	}
 
+	function handleChangeWrapper(event: React.ChangeEvent<HTMLInputElement>) {
+		if(event.target == usernameRef.current) {
+			const nativeEvent = event.nativeEvent as InputEvent;
+			console.log(nativeEvent);
+			if(nativeEvent.inputType == 'insertText' && nativeEvent.data == '#') {
+				tagRef.current.focus();
+				return;
+			}
+		}
+		handleChange(event);
+	}
+
 	return (
 		<Popup
 			setHandleClose={setHandleClose}
@@ -158,9 +172,10 @@ function NewChatPopup() {
 						<Form.Control
 							type="text"
 							name="username"
+							ref={usernameRef}
 							placeholder={'DokChat User'}
 							value={values.username}
-							onChange={handleChange}
+							onChange={handleChangeWrapper}
 							maxLength={32}
 							minLength={2}
 							required
@@ -169,10 +184,11 @@ function NewChatPopup() {
 						<Form.Control
 							type="number"
 							name="tag"
+							ref={tagRef}
 							style={{maxWidth: 63}}
 							placeholder={'0000'}
 							value={values.tag}
-							onChange={handleChange}
+							onChange={handleChangeWrapper}
 							maxLength={4}
 							minLength={4}
 							pattern="\d{4}"

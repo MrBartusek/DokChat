@@ -13,6 +13,11 @@ function UserList({ users}: UserListProps) {
 			{users.map((user, i) => (
 				<UserCard user={user} key={i} />
 			))}
+			{users.length == 0 && (
+				<div className='text-secondary py-4 text-center'>
+					Add first user to this conversation
+				</div>
+			)}
 		</Stack>
 	);
 }
