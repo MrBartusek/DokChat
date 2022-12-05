@@ -63,7 +63,7 @@ export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, Rea
 				// If user was never confirmed log them out
 				if(!isConfirmed) {
 					console.error('AUTH: Local user rejected by server! Logging out...');
-					callLogout();
+					callLogout(true);
 				}
 				// If past tries to refresh user failed, just log out the user
 				if(user.isAuthenticated && user.expireIn < 15) {
@@ -73,12 +73,17 @@ export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, Rea
 			});
 	}
 
-	async function callLogout() {
-		const axios = getAxios(user);
-		await axios.post('/auth/logout').catch(() => console.error('Failed to post /auth/logout'));
+	async function callLogout(hideToast = false) {
+		try {
+			const axios = getAxios(user);
+			await axios.post('/auth/logout');
+		}
+		catch {
+			console.error('Failed to post /auth/logout');
+		}
 		googleLogout();
 		removeUser();
-		toast('You have successfully been logged out');
+		if(!hideToast) toast('You have successfully been logged out');
 	}
 
 	async function setUserWrapper(newUser: string | LocalUser) {
