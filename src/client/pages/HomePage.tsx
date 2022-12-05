@@ -55,7 +55,7 @@ export function HomePage() {
 					<h2 className='fs-1 mb-5 text-center'>Ready to start using DokChat?</h2>
 					<Link to='/register'>
 						<InteractiveButton size='lg' icon={BsChatSquareTextFill}>
-						Create Account
+							Create Account
 						</InteractiveButton>
 					</Link>
 				</div>
