@@ -1,22 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { BsExclamationSquare } from 'react-icons/bs';
 import { LocalMessage } from '../../types/Chat';
+import Lightbox from '../Lightbox/Lightbox';
 
 export interface MessageAttachmentProps {
     message: LocalMessage
 }
 
 export default function MessageAttachment({ message } : MessageAttachmentProps) {
+	const [ showLightbox, setShowLightbox ] = useState(false);
 	const isSent = !(message.isPending || message.isFailed);
+	const attachmentUrl = `/api/attachment?id=${message.id}`;
 
 	if(isSent) {
 		return (
-			<img
-				src={`/api/attachment?id=${message.id}`}
-				style={{borderRadius: '1.2rem', maxHeight: 230, width: '100%'}}
-				alt='Message attachment'
-			/>
+			<>
+				<img
+					src={attachmentUrl}
+					style={{borderRadius: '1.2rem', maxHeight: 230, width: '100%'}}
+					alt='Message attachment'
+					onClick={() => setShowLightbox(!showLightbox)}
+				/>
+				<Lightbox
+					type="image"
+					toggler={showLightbox}
+					source={attachmentUrl}
+				/>
+			</>
 		);
 	}
 	else {
