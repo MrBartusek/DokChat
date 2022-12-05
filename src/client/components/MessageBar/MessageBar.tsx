@@ -49,6 +49,21 @@ function MessageBar({ currentChat }: MessageBarProps) {
 		inputRef.current.focus();
 	}
 
+	async function handlePaste(event: React.ClipboardEvent<HTMLInputElement>) {
+		if(!event.clipboardData.files.length) return;
+		const file = event.clipboardData.files[0];
+		if(!file) return;
+		fileUploader.setFile(file);
+	}
+
+	async function handleDrop(event: React.DragEvent<HTMLFormElement>) {
+		if(!event.dataTransfer.files.length) return;
+		const file = event.dataTransfer.files[0];
+		if(!file) return;
+		fileUploader.setFile(file);
+		event.preventDefault();
+	}
+
 	const emojiPicker = (
 		<Popover style={{maxWidth: 500}}>
 			<Popover.Body className='p-0'>
@@ -67,7 +82,11 @@ function MessageBar({ currentChat }: MessageBarProps) {
 
 	return (
 		<div className='d-flex px-1 py-3'>
-			<Form onSubmit={handleSubmit} className='d-flex align-items-center w-100'>
+			<Form
+				onSubmit={handleSubmit}
+				className='d-flex align-items-center w-100'
+				onDrop={handleDrop}
+			>
 				<FileUploader onChange={setFileUploader}/>
 				<Col className='d-flex flex-grow-0 justify-content-center align-items-center px-1 gap-1'>
 					<IconButton icon={AiOutlineGif} size={34} variant='primary' type='button'
@@ -95,6 +114,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 							ref={inputRef}
 							value={values.content}
 							onChange={handleChange}
+							onPaste={handlePaste}
 							onFocus={(e) => e.target.parentElement?.classList.add('focus') }
 							onBlur={(e) => e.target.parentElement?.classList.remove('focus') }
 						/>
