@@ -20,6 +20,7 @@ const InteractiveCard = React.forwardRef((props: InteractiveCardProps, ref: Reac
 	const passProps = Object.assign({}, props);
 	delete passProps.icon;
 	delete passProps.showArrow;
+	delete passProps.iconColor;
 	passProps.className += ` interactiveCard ${props.disabled ? 'disabled' : 'enabled'}`;
 	return (
 		<button ref={ref} {...passProps}>

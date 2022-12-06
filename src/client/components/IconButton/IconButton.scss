@@ -27,7 +27,7 @@
     background-color: $gray-300;
 }
 
-#app[data-theme='dark'] {
+#app[data-theme='dark'], .modal-dialog[data-theme='dark'] {
     .iconButton.enabled:hover {
         background-color: mix($dark-background, $dark-washed, 20%);
     }

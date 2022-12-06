@@ -24,7 +24,7 @@ router.all('/messages',
 		const page = req.query.page as any as number || 0;
 		const chatId = req.query.chat;
 
-		if(!PermissionsManager.hasChatAccess(req.auth, chatId)) {
+		if(!(await PermissionsManager.hasChatAccess(req.auth, chatId))) {
 			return new ApiResponse(res).forbidden();
 		}
 

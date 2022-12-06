@@ -1,10 +1,10 @@
 import React from 'react';
 import { Stack } from 'react-bootstrap';
-import { User } from '../../../types/common';
+import { ChatParticipant, User } from '../../../types/common';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 
 interface UserListProps {
-    users: (User)[]
+    users: (User | ChatParticipant)[]
 }
 
 function UserList({ users}: UserListProps) {
@@ -23,7 +23,7 @@ function UserList({ users}: UserListProps) {
 }
 
 interface UserCardProps {
-    user: User
+    user: User | ChatParticipant
 }
 
 function UserCard({ user }: UserCardProps) {

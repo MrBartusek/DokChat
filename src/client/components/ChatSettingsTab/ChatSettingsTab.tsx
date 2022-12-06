@@ -3,9 +3,11 @@ import { Alert, Stack } from 'react-bootstrap';
 import { ColorResult } from 'react-color';
 import toast from 'react-hot-toast';
 import { BsImage, BsPalette, BsPencil, BsPersonPlus } from 'react-icons/bs';
-import { EndpointResponse } from '../../../types/endpoints';
+import { ChatParticipant } from '../../../types/common';
+import { ChatParticipantsRepose, EndpointResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
+import { useFetch } from '../../hooks/useFetch';
 import { LocalChat } from '../../types/Chat';
 import ChangeableAvatar from '../ChangeableAvatar/ChangeableAvatar';
 import { FileUploaderResult } from '../FileUploader/FileUploader';
@@ -17,6 +19,7 @@ export interface ChatSettingsTabProps {
 	setCustomFooter: React.Dispatch<React.SetStateAction<JSX.Element>>,
 	setCustomStatic: React.Dispatch<React.SetStateAction<boolean>>,
 	handleClose: () => void;
+	participants?: ChatParticipant[];
 }
 
 export default function ChatSettingsTab(props: ChatSettingsTabProps) {
@@ -24,8 +27,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 	const [ error, setError ] = useState<string | null>(null);
 	const [ isEditing, setEditing ] = useState(false);
 	const [ isUnsaved, setUnsaved ] = useState(false);
-	const [ isLoading, setLoading ] = useState(false);
-	const formRef = useRef<HTMLFormElement>(null);
+	const [ isLoading, setLoading ] = useState(true);
 
 	const [ avatarUploader, setAvatarUploader ]  = useState<FileUploaderResult>({});
 	const [ name, setName ] = useState(props.currentChat.name);
@@ -37,7 +39,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 	useEffect(() => {
 		const changed = (
 			name != props.currentChat.name ||
-			color != props.currentChat.color
+			color.name != props.currentChat.color.name
 		);
 		setUnsaved(changed);
 		if(changed && !isEditing) {
@@ -45,11 +47,18 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 		}
 	}, [ name, color, avatarUploader ]);
 
+	useEffect(() => {
+		setLoading(!props.participants);
+	}, [ props.participants ]);
+
 	/**
 	 * Handle footer
 	 */
 	useEffect(() => {
-		if(!isEditing) props.setCustomFooter(null);
+		if(!isEditing) {
+			props.setCustomFooter(null);
+			return;
+		}
 		props.setCustomFooter(
 			<>
 				<InteractiveButton variant='secondary' onClick={handleDiscard}>
@@ -57,7 +66,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 				</InteractiveButton>
 				<InteractiveButton
 					variant='primary'
-					onClick={() => formRef.current.requestSubmit()}
+					onClick={() => handleSubmit}
 					disabled={!isUnsaved}
 					loading={isLoading}
 				>
@@ -71,8 +80,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 		props.setCustomStatic(isEditing);
 	}, [ isEditing ]);
 
-	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-		event.preventDefault();
+	async function handleSubmit() {
 		setLoading(true);
 
 		const formData = new FormData();
@@ -117,7 +125,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 				</span>
 				{props.currentChat.isGroup && (
 					<p className="text-muted">
-						0 participants
+						{(props.participants && props.participants.length) || 0} participants
 					</p>
 				)}
 			</div>
@@ -128,6 +136,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 						title="Change chat name"
 						description={name}
 						icon={BsPencil}
+						disabled={isLoading}
 						showArrow
 					/>
 				)}
@@ -136,6 +145,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 						title="Change chat picture"
 						description='Click here to change current avatar'
 						icon={BsImage}
+						disabled={isLoading}
 						showArrow
 					/>
 				)}
@@ -144,6 +154,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 					iconColor={color.hex}
 					description={color.name}
 					icon={BsPalette}
+					disabled={isLoading}
 					showArrow
 				/>
 			</Stack>

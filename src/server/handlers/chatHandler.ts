@@ -8,7 +8,7 @@ import Utils from '../utils/utils';
 export default function registerMessageHandler(io: DokChatServer, socket: DokChatSocket) {
 	socket.on('message', async (msg, callback) => {
 		// This checks both for chat access and if chat exist
-		if(!PermissionsManager.hasChatAccess(socket.auth, msg.chatId)) {
+		if(!(await PermissionsManager.hasChatAccess(socket.auth, msg.chatId))) {
 			return new ApiResponse({} as any, callback).forbidden();
 		}
 		if(!validateMessage(msg, callback)) {

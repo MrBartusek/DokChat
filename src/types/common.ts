@@ -38,3 +38,8 @@ export interface Message {
     timestamp: string,
     attachment: boolean
 }
+
+export interface ChatParticipant extends User {
+	userId: string
+}
+
