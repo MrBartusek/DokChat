@@ -27,7 +27,7 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 			if(part.isHidden) await ChatManager.setChatHideForParticipant(part, false);
 
 			// Chat is fetched for each user since for DMs name might be different for each participant
-			const chat = await ChatManager.getChat(socket, msg.chatId, part.userId, participants);
+			const chat = await ChatManager.getChat(msg.chatId, part.userId, participants);
 			const serverMsg: ServerMessage = {
 				id: id,
 				content: msg.content?.trim(),

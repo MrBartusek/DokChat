@@ -24,11 +24,13 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 			</div>
 			{currentChat && (
 				<div className='d-flex align-items-center'>
-					<Link to="/chat/new">
-						<IconButton icon={BsPersonPlusFill} variant='primary' />
-					</Link>
+					{!currentChat.isGroup && (
+						<Link to={'/chat/new'}>
+							<IconButton icon={BsPersonPlusFill} color={currentChat.color.hex} />
+						</Link>
+					)}
 					<Link to={`/chat/${currentChat.id}/details`}>
-						<IconButton icon={BsThreeDots} variant='primary' />
+						<IconButton icon={BsThreeDots} color={currentChat.color.hex} />
 					</Link>
 				</div>
 			)}

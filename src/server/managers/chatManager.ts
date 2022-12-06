@@ -2,6 +2,7 @@ import * as DateFns from 'date-fns';
 import { Request } from 'express';
 import { Socket } from 'socket.io/dist/socket';
 import sql from 'sql-template-strings';
+import { CHAT_COLORS } from '../../types/colors';
 import { Chat } from '../../types/common';
 import { UserJWTData } from '../../types/jwt';
 import db from '../db';
@@ -22,17 +23,16 @@ export default class ChatManager {
 	 * @returns Promise with Chat or null if not found
 	 */
 	public static async getChat(
-		requestOrSocket: Request | Socket,
 		chatId: string,
 		displayAs?: string,
 		participants?: InternalChatParticipant[]
 	): Promise<Chat | null> {
-		const req = (requestOrSocket as Socket).handshake || requestOrSocket as Request;
 		const chats = await db.query(sql`
 			SELECT
 				id,
 				name,
 				avatar,
+				color,
 				is_group as "isGroup",
 				creator_id as "creatorId",
 				created_at as "createdAt"
@@ -51,6 +51,7 @@ export default class ChatManager {
 			id: chatId,
 			avatar: avatar,
 			name: name,
+			color: CHAT_COLORS[chat.color] || CHAT_COLORS[0],
 			isGroup: chat.isGroup,
 			createdAt: chat.createdAt,
 			creatorId: chat.creatorId

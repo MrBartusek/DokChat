@@ -96,6 +96,7 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 									/>
 								)}
 								<UserMessage
+									currentChat={currentChat}
 									message={msg}
 									showAvatar={!isAuthor && (msg.author.id != prev?.author?.id || isFirstInBlock)}
 									showAuthor={!isAuthor && (msg.author.id != next?.author?.id || showTimestamp)}
@@ -112,13 +113,14 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 }
 
 interface MessageProps {
+	currentChat: LocalChat,
 	message: LocalMessage,
 	showAvatar?: boolean
 	showAuthor?: boolean
 	showStatus?: boolean
 }
 
-function UserMessage({message, showAvatar, showAuthor, showStatus}: MessageProps) {
+function UserMessage({currentChat, message, showAvatar, showAuthor, showStatus}: MessageProps) {
 	const [ user ] = useContext(UserContext);
 	const isAuthor = message.author.id == user.id;
 
@@ -154,8 +156,11 @@ function UserMessage({message, showAvatar, showAuthor, showStatus}: MessageProps
 				<div className={`d-flex ${isAuthor ? 'flex-row-reverse' : 'flex-row'}`}>
 					<OverlayTrigger placement={isAuthor ? 'left' : 'right'} overlay={timeTooltip} delay={{show: 500, hide: 0}}>
 						<div
-							style={{'opacity': isSent ? '100%' : '50%'}}
-							className={`message text-break ${nonTextMessage ? 'message-emojis' : (isAuthor ? 'bg-primary text-light' : 'bg-gray-200')}`}
+							style={{
+								opacity: isSent ? '100%' : '50%',
+								backgroundColor: (isAuthor ? currentChat.color.hex : 'bg-gray-200')
+							}}
+							className={`message text-break ${nonTextMessage ? 'message-emojis' : (isAuthor ? 'text-light' : '')}`}
 						>
 							{message.attachment ? (
 								<MessageAttachment message={message} />
@@ -168,7 +173,7 @@ function UserMessage({message, showAvatar, showAuthor, showStatus}: MessageProps
 			</div>
 
 			{showStatus
-				? <MessageStatus isPending={message.isPending} isFailed={message.isFailed} />
+				? <MessageStatus color={currentChat.color.hex} isPending={message.isPending} isFailed={message.isFailed} />
 				: <Separator width={18} />}
 		</div>
 	);
@@ -189,16 +194,17 @@ function SystemMessage({ content }: SystemMessageProps) {
 interface MessageStatusProps {
 	isPending?: boolean
 	isFailed?: boolean
+	color: string
 }
 
-function MessageStatus({isPending, isFailed: isError}: MessageStatusProps) {
+function MessageStatus({color, isPending, isFailed: isError}: MessageStatusProps) {
 	let icon = BsCheckCircleFill;
 	if (isPending) icon = BsCheckCircle;
 	if (isError) icon = BsXCircle;
 	const iconEl = React.createElement(
 		icon, {
 			size: 14,
-			color: `var(--bs-${isError ? 'danger' : 'primary'})`
+			color: isError ? 'var(--bs-danger)' : color
 		}
 	);
 	return (

@@ -89,10 +89,10 @@ function MessageBar({ currentChat }: MessageBarProps) {
 			>
 				<FileUploader onChange={setFileUploader}/>
 				<Col className='d-flex flex-grow-0 justify-content-center align-items-center px-1 gap-1'>
-					<IconButton icon={AiOutlineGif} size={34} variant='primary' type='button'
+					<IconButton icon={AiOutlineGif} size={34}  type='button' color={currentChat.color.hex}
 						onClick={() => toast.error('Not Implemented')}
 					/>
-					<IconButton icon={BsImage} size={34} variant='primary' type='button'
+					<IconButton icon={BsImage} size={34} type='button' color={currentChat.color.hex}
 						onClick={() => fileUploader.click()}
 					/>
 				</Col>
@@ -120,7 +120,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 						/>
 						<div className='d-flex align-items-center'>
 							<OverlayTrigger trigger="click" placement="top-end" overlay={emojiPicker} rootClose>
-								<IconButton icon={BsEmojiSmileFill} size={32} variant='primary' type='button'/>
+								<IconButton icon={BsEmojiSmileFill} size={32} type='button' color={currentChat.color.hex} />
 							</OverlayTrigger>
 						</div>
 					</div>
@@ -130,7 +130,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 						icon={MdSend}
 						size={34}
 						type="submit"
-						variant='primary'
+						color={currentChat.color.hex}
 						disabled={!isEnabled}
 					/>
 				</Col>

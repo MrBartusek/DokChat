@@ -18,7 +18,7 @@ export default function MessageAttachment({ message } : MessageAttachmentProps) 
 			<>
 				<img
 					src={attachmentUrl}
-					style={{borderRadius: '1.2rem', maxHeight: 230, width: '100%'}}
+					style={{borderRadius: '1.2rem', maxHeight: 230, width: '100%', cursor: 'pointer'}}
 					alt='Message attachment'
 					onClick={() => setShowLightbox(!showLightbox)}
 				/>

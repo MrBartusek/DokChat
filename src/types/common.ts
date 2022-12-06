@@ -2,6 +2,11 @@
 // They are used internally by server, to communicate via api and
 // stored in frontend.
 
+export interface ChatColor {
+    name: string,
+    hex: string
+}
+
 export interface Chat {
     id: string,
     name: string,
@@ -9,6 +14,7 @@ export interface Chat {
     isGroup: boolean,
     creatorId: string,
     createdAt: string,
+    color: ChatColor,
     lastMessage?: LastMessage
 }
 

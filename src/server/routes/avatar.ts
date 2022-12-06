@@ -32,7 +32,7 @@ router.all('/:id.png', param('id').isString(), allowedMethods('GET'), async (req
 		}
 	}
 	else {
-		const chat = await ChatManager.getChat(req, id);
+		const chat = await ChatManager.getChat(id);
 		if(!chat) return new ApiResponse(res).notFound('User or chat not found');
 		avatar = await chatAvatar(id);
 		if(avatar) {

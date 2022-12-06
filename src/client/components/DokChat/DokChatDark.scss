@@ -22,12 +22,13 @@
         --bs-nav-tabs-link-hover-border-color: #{$dark-border} #{$dark-border} #{$dark-popup};
         --bs-nav-tabs-link-active-border-color: #{$dark-border} #{$dark-border} #{$dark-popup};
         --bs-nav-tabs-link-active-bg: #{$dark-popup};
+        --bs-nav-tabs-link-active-color: $gray-200;
     }
 
     .form-control {
         background-color: $dark-washed;
         border-color: $dark-border;
-        color: $light;
+        color: $gray-200;
     }
 
     .form-control-plaintext {

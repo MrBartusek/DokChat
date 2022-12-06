@@ -15,7 +15,7 @@ function ChatList({ currentChat }: ChatListProps) {
 	const navigate = useNavigate();
 
 	const noChatsInfo = (
-		<span className='text-muted text-center mt-4'>
+		<span className='text-muted text-center mt-4 px-1' style={{width: 320}}>
 			There are no messages yet <br />
 			<Link to='/chat/new' className='link-secondary'>Start a new chat</Link>
 		</span>
@@ -63,7 +63,7 @@ function Chat(props: ChatProps) {
 				className='d-none d-md-flex justify-content-center flex-column py-0 px-1'
 				style={{width: 240}}
 			>
-				<Twemoji className='fw-bol text-truncate text-nowrap' text={props.name} />
+				<Twemoji className='text-truncate text-nowrap' text={props.name} />
 				<div className='text-muted text-truncate' style={{fontSize: '0.85em'}}>
 					{props.lastMessage ? (
 						<Twemoji text={`${props.lastMessage.author}: ${props.lastMessage.content || '[Image]'}`} />

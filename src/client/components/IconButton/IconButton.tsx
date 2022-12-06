@@ -7,21 +7,27 @@ export interface IconButtonProps extends React.DetailedHTMLProps<React.ButtonHTM
 	icon: IconType,
 	size?: number,
 	variant?: Variant,
+	color?: string,
 	onClick?: React.MouseEventHandler<HTMLButtonElement>,
 	disabled?: boolean,
 }
 
 const IconButton = React.forwardRef((props: IconButtonProps, ref: React.ForwardedRef<any>) => {
+	const passProps = Object.assign({}, props);
+	passProps.icon = null; // Icon mess up native button
+	passProps.className += ` iconButton ${props.disabled ? 'disabled' : 'enabled'}`;
+	if(props.disabled) {
+		passProps.variant = 'secondary';
+	}
+
 	const iconEl = React.createElement(
 		props.icon,
 		{
 			size: (props.size || 38) - 16,
-			color: props.variant ? `var(--bs-${props.disabled ? 'secondary' : props.variant})` : 'inherit'
+			color: passProps.variant ? `var(--bs-${passProps.variant})` : passProps.color || 'inherit'
 		}
 	);
-	const passProps = Object.assign({}, props);
-	passProps.icon = null; // Icon mess up native button
-	passProps.className += ` iconButton ${props.disabled ? 'disabled' : 'enabled'}`;
+
 	return (
 		<button ref={ref} {...passProps}>
 			{iconEl}

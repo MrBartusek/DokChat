@@ -30,6 +30,7 @@ export async function initializeDB() {
             is_group boolean NOT NULL,
             name varchar(32),
             avatar varchar(64),
+            color SMALLINT DEFAULT 0,
             creator_id varchar REFERENCES users ON DELETE CASCADE,
             created_at bigint NOT NULL,
             PRIMARY KEY (id)
