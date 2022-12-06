@@ -14,9 +14,14 @@ export default function ChangeableAvatar({ size, fileUploader, setFileUploader, 
 
 	useEffect(() => {
 		(async () => {
-			if(!fileUploader.file) return;
-			const url = await fileUploader.getURL();
-			setUploadedAvatar(url);
+			if(fileUploader.file) {
+				const url = await fileUploader.getURL();
+				setUploadedAvatar(url);
+			}
+			else {
+				setUploadedAvatar(null);
+			}
+
 		})();
 	}, [ fileUploader ]);
 

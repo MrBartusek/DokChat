@@ -59,7 +59,9 @@ export default function FileUploader({ onChange }: FileUploaderProps) {
 			const file = event.target.files[0];
 			setFile(file);
 		}
-		resetHook();
+		else {
+			resetHook();
+		}
 	}
 
 	return (

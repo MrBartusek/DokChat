@@ -100,6 +100,7 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 
 	function handleDiscard(e: React.MouseEvent) {
 		resetForm();
+		avatarUploader.reset();
 		setEditing(false);
 	}
 
