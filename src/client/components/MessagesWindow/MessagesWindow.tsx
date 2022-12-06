@@ -161,7 +161,7 @@ function UserMessage({currentChat, message, showAvatar, showAuthor, showStatus}:
 								opacity: isSent ? '100%' : '50%',
 								backgroundColor: (isAuthor ? currentChat.color.hex : '')
 							}}
-							className={`message text-break ${nonTextMessage ? 'message-emojis' : (isAuthor ? 'text-light' : '')}`}
+							className={`message text-break ${message.attachment ? 'attachment' : ''} ${nonTextMessage ? 'message-emojis' : (isAuthor ? 'text-light' : '')}`}
 						>
 							{message.attachment ? (
 								<MessageAttachment message={message} />

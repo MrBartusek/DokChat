@@ -16,9 +16,14 @@
 	}
 }
 
+.message.attachment {
+	background: none !important;
+}
+
 .message-emojis {
 	padding: 3px 0;
 	font-size: 2.3rem;
+	background-color: none;
 }
 
 #app[data-theme='dark']  {
