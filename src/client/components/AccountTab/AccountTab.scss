@@ -1,3 +1,9 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+@import '../../scss/dark.scss';
+
+
 .account-settings-row + .account-settings-row {
     border-top: 1px solid #dee2e6;
     padding-top: 1.5rem;
@@ -5,4 +11,10 @@
 
 .account-settings-row {
     padding-bottom: 1.5rem;
+}
+
+#app[data-theme='dark'], .modal-dialog[data-theme='dark']  {
+    .account-settings-row + .account-settings-row {
+        border-color: $dark-border;
+    }
 }
