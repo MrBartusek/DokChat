@@ -28,7 +28,8 @@ export function ChatPage() {
 	 * Load current chat
 	 */
 	useEffect(() => {
-		if(isLoadingManager || chats.length == 0) return;
+		if(isLoadingManager || chats.length == 0) return setCurrentChat(null);
+
 		const defaultChat = chats[0];
 		const isPopup = ([
 			'/chat/new',

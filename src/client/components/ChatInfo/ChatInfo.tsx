@@ -13,9 +13,11 @@ export interface ChatInfoProps {
 function ChatInfo({ currentChat }: ChatInfoProps) {
 	return (
 		<div className='d-flex px-3 py-2 border-bottom border-separator'>
-			<div className='d-flex pe-2'>
-				<ProfilePicture src={currentChat && currentChat.avatar} />
-			</div>
+			{currentChat && (
+				<div className='d-flex pe-2'>
+					<ProfilePicture src={currentChat && currentChat.avatar} />
+				</div>
+			)}
 			<div className='d-flex flex-fill justify-content-left p-0 align-items-center'>
 				<Twemoji
 					className='fw-bold text-truncate'

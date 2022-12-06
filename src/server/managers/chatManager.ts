@@ -154,13 +154,23 @@ export default class ChatManager {
 		return participantId.toString();
 	}
 
-	public static async setChatHideForParticipant(participant: InternalChatParticipant, hide: boolean) {
+	public static async setChatHideForParticipant(participant: InternalChatParticipant | string, hide: boolean) {
+		const id = typeof participant == 'string' ? participant : participant.id;
 		await db.query(sql`
 			UPDATE participants
 				SET is_hidden = $1
 			WHERE
 				id = $2
-		`, [ hide, participant.id ]);
+		`, [ hide, id ]);
+	}
+
+	public static async setChatHideForParticipantByUserId(chatId: string, userId: string, hide: boolean) {
+		await db.query(sql`
+			UPDATE participants
+				SET is_hidden = $1
+			WHERE
+				id = $2 AND user_id = $3
+		`, [ hide, chatId, userId ]);
 	}
 
 	public static async publicChatId() {
