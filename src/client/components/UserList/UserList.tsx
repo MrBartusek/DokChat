@@ -32,7 +32,7 @@ function UserCard({ user }: UserCardProps) {
 			<ProfilePicture
 				src={user.avatar}
 				size={36}
-				className="me-2"
+				className="me-3"
 			/>
 			<span>
 				{`${user.username}#${user.tag}`}
