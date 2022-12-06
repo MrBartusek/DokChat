@@ -158,7 +158,7 @@ function UserMessage({currentChat, message, showAvatar, showAuthor, showStatus}:
 						<div
 							style={{
 								opacity: isSent ? '100%' : '50%',
-								backgroundColor: (isAuthor ? currentChat.color.hex : 'bg-gray-200')
+								backgroundColor: (isAuthor ? currentChat.color.hex : '')
 							}}
 							className={`message text-break ${nonTextMessage ? 'message-emojis' : (isAuthor ? 'text-light' : '')}`}
 						>
