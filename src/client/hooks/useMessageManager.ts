@@ -111,7 +111,10 @@ export function useMessageManager(ws: useWebsocketType): [
 		const pendingMessageId = chats[chatId].addMessage({
 			id: '0', // This will be auto-generated
 			isPending: true,
-			attachment: attachment != undefined,
+			attachment: {
+				hasAttachment: attachment != undefined,
+				mimeType: attachment && attachment.type
+			},
 			author: {
 				id: user.id,
 				username: user.username,
@@ -132,7 +135,7 @@ export function useMessageManager(ws: useWebsocketType): [
 			const arrBuffer = await attachment.arrayBuffer();
 			message.attachment = {
 				buffer: Buffer.from(arrBuffer),
-				type: attachment.type
+				mimeType: attachment.type
 			};
 		}
 		ws.socket.emit('message', message, (response) => {

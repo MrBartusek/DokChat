@@ -1,5 +1,5 @@
 import { Server, Socket } from 'socket.io';
-import { Chat } from './common';
+import { Chat, MessageAttachment } from './common';
 import { EndpointResponse } from './endpoints';
 
 export type DokChatServer = Server<ClientToServerEvents, ServerToClientEvents>;
@@ -13,16 +13,16 @@ export interface ClientToServerEvents {
     message: (message: ClientMessage, callback: (response: EventAcknowledgement<{id: string, timestamp: string}>) => void) => void;
 }
 
-export type Attachment = {
+export type ClientAttachment = {
     buffer: Buffer,
-    type: string
+    mimeType: string
 };
 
 export interface ServerMessage {
     id: string,
     content?: string,
     chat: Chat,
-    attachment: boolean,
+    attachment: MessageAttachment
     author: {
         id: string,
         username: string,
@@ -35,7 +35,7 @@ export interface ServerMessage {
 export interface ClientMessage {
     chatId: string,
     content?: string,
-    attachment?: Attachment
+    attachment?: ClientAttachment
 }
 
 export interface EventAcknowledgement<T> extends EndpointResponse<T> { }

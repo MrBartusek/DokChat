@@ -31,12 +31,17 @@ export interface LastMessage {
     timestamp: string,
 }
 
+export interface MessageAttachment {
+    hasAttachment: boolean,
+    mimeType?: string
+}
+
 export interface Message {
     id: string,
     author: User,
     content?: string,
     timestamp: string,
-    attachment: boolean
+    attachment: MessageAttachment
 }
 
 export interface ChatParticipant extends User {

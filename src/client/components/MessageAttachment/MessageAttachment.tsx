@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { SourceType } from 'fslightbox-react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { BsExclamationSquare } from 'react-icons/bs';
 import { LocalMessage } from '../../types/Chat';
@@ -11,19 +12,35 @@ export interface MessageAttachmentProps {
 export default function MessageAttachment({ message } : MessageAttachmentProps) {
 	const [ showLightbox, setShowLightbox ] = useState(false);
 	const isSent = !(message.isPending || message.isFailed);
-	const attachmentUrl = `/api/attachment?id=${message.id}`;
 
 	if(isSent) {
+		const attachmentType = message.attachment.mimeType.split('/')[0];
+		const attachmentUrl = `/api/attachment?id=${message.id}`;
+
 		return (
 			<>
-				<img
-					src={attachmentUrl}
-					style={{borderRadius: '1.2rem', maxHeight: 230, width: '100%', cursor: 'pointer'}}
-					alt='Message attachment'
-					onClick={() => setShowLightbox(!showLightbox)}
-				/>
+				{attachmentType == 'audio' && (
+					<audio src={attachmentUrl} controls>
+						<a href={attachmentUrl}>
+							Download audio
+						</a>
+					</audio>
+				)}
+				{attachmentType == 'video' && (
+					<video width="100%" height={280} controls>
+						<source src={attachmentUrl} type={message.attachment.mimeType} />
+					</video>
+				)}
+				{attachmentType == 'image' && (
+					<img
+						src={attachmentUrl}
+						style={{borderRadius: '1.2rem', maxHeight: 280, width: '100%', cursor: 'pointer'}}
+						alt='Message attachment'
+						onClick={() => setShowLightbox(!showLightbox)}
+					/>
+				)}
 				<Lightbox
-					type="image"
+					type={'image'}
 					toggler={showLightbox}
 					source={attachmentUrl}
 				/>

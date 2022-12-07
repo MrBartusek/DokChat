@@ -138,7 +138,7 @@ function UserMessage({currentChat, message, showAvatar, showAuthor, showStatus}:
 	);
 
 	const onlyEmojisRegex = /^(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])+$/i;
-	const nonTextMessage = (message.attachment && isSent) || onlyEmojisRegex.test(message.content);
+	const nonTextMessage = (message.attachment.hasAttachment && isSent) || onlyEmojisRegex.test(message.content);
 
 	return (
 		<div className='d-flex flex-row align-items-end' style={{marginBottom: 3}}>
@@ -161,9 +161,9 @@ function UserMessage({currentChat, message, showAvatar, showAuthor, showStatus}:
 								opacity: isSent ? '100%' : '50%',
 								backgroundColor: (isAuthor ? currentChat.color.hex : '')
 							}}
-							className={`message text-break ${message.attachment ? 'attachment' : ''} ${nonTextMessage ? 'message-emojis' : (isAuthor ? 'text-light' : '')}`}
+							className={`message text-break ${message.attachment.hasAttachment ? 'attachment' : ''} ${nonTextMessage ? 'message-emojis' : (isAuthor ? 'text-light' : '')}`}
 						>
-							{message.attachment ? (
+							{message.attachment.hasAttachment ? (
 								<MessageAttachment message={message} />
 							): (
 								<Twemoji text={message.content || ''} onlyEmojiClassName={nonTextMessage ? 'large-emojis' : ''} />

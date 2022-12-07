@@ -1,4 +1,5 @@
-import { ClientMessage, DokChatServer, DokChatSocket, ServerMessage } from '../../types/websocket';
+import { MessageAttachment } from '../../types/common';
+import { ClientAttachment, ClientMessage, DokChatServer, DokChatSocket, ServerMessage } from '../../types/websocket';
 import { ApiResponse } from '../apiResponse';
 import s3Client from '../aws/s3';
 import ChatManager from '../managers/chatManager';
@@ -16,8 +17,14 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 		}
 
 		// Add message to db
-		const attachment = msg.attachment ? await s3Client.uploadAttachment(msg.attachment.buffer, msg.attachment.type) : null;
-		const [ id, timestamp ] = await ChatManager.saveMessage(socket.auth, msg.chatId, msg.content, attachment);
+		const [ attachmentKey, attachment ] = await uploadAttachment(msg.attachment);
+		const [ id, timestamp ] = await ChatManager.saveMessage(
+			socket.auth,
+			msg.chatId,
+			msg.content,
+			attachmentKey,
+			attachment.mimeType
+		);
 
 		// Send message to every participant expect sender
 		const participants = await ChatManager.listParticipants(msg.chatId);
@@ -33,7 +40,7 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 				content: msg.content?.trim(),
 				chat: chat,
 				timestamp: timestamp.toString(),
-				attachment: msg.attachment != undefined,
+				attachment: attachment,
 				author: {
 					id: socket.auth.id,
 					username: socket.auth.username,
@@ -55,6 +62,20 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 	});
 }
 
+async function uploadAttachment(attachment?: ClientAttachment): Promise<[string, MessageAttachment]> {
+	if(!attachment) {
+		return [ null, {
+			hasAttachment: false
+		} ];
+	}
+	const mimeType = attachment.mimeType;
+	const key = await s3Client.uploadAttachment(attachment.buffer, mimeType);
+	return [ key, {
+		hasAttachment: true,
+		mimeType: mimeType
+	} ];
+}
+
 function validateMessage(msg: ClientMessage, callback: (response: any) => void): boolean {
 	if(msg.content && msg.attachment || !msg.content && !msg.attachment) {
 		new ApiResponse({} as any, callback).badRequest('Message content invalid');
@@ -72,9 +93,11 @@ function validateMessage(msg: ClientMessage, callback: (response: any) => void):
 	}
 	else if(msg.attachment) {
 		const allowedFormats = [
-			'image/bmp', 'image/gif', 'image/jpeg', 'image/svg+xml', 'image/png'
+			'image/bmp', 'image/gif', 'image/jpeg', 'image/svg+xml', 'image/png', 'image/vnd.microsoft.icon', 'image/webp',
+			'video/mp4', 'video/mpeg', 'video/ogg', 'video/webm',
+			'audio/aac', 'video/x-msvideo', 'audio/mpeg', 'audio/ogg', 'audio/opus', 'audio/wav', 'audio/webm'
 		];
-		if(!allowedFormats.includes(msg.attachment.type)) {
+		if(!allowedFormats.includes(msg.attachment.mimeType)) {
 			return false;
 		}
 		if(!Buffer.isBuffer(msg.attachment.buffer)) {

@@ -11,6 +11,10 @@ export default class Utils {
 		return Utils.apiUrl() + `avatar/${id}.png`;
 	}
 
+	public static attachmentUrl(id: string) {
+		return Utils.apiUrl() + `attachment?id=${id}`;
+	}
+
 	public static userDiscriminator(user: UserJWTData | User) {
 		return `${user.username}#${user.tag}`;
 	}
