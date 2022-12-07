@@ -4,6 +4,7 @@ import { ApiResponse } from '../../apiResponse';
 import emailClient from '../../aws/ses';
 import db from '../../db';
 import AuthManager from '../../managers/authManager';
+import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 
@@ -21,8 +22,7 @@ router.all('/delete',
 
 		AuthManager.authenticateUser(req.auth.email, password)
 			.then(async ([ jwtData, passwordHash ]) =>  {
-				await db.query('DELETE FROM users WHERE id=$1', [ req.auth.id ]);
-				await emailClient.sendAccountDeletedEmail(req.auth);
+				await UserManager.deleteUser(jwtData);
 				return new ApiResponse(res).success();
 			})
 			.catch((reason) => {

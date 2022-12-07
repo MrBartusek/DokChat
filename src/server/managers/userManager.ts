@@ -9,6 +9,8 @@ import { snowflakeGenerator } from '../utils/snowflakeGenerator';
 import Utils from '../utils/utils';
 import ChatManager from './chatManager';
 import EmailBlacklistManager from './emailBlacklistManager';
+import emailClient from './../aws/ses';
+import s3Client from './../aws/s3';
 
 export default class UserManager {
 	public static async createUser(username: string, email: string, password?: string, socialLogin = false): Promise<[UserJWTData, string]> {
@@ -66,6 +68,20 @@ export default class UserManager {
 			isEmailConfirmed: socialLogin
 		};
 		return [ jwtData, passwordHash ];
+	}
+
+	public static async deleteUser(userData: UserJWTData): Promise<void> {
+		// Delete all attachments from S3
+		const attachmentsQuery = await db.query(sql`
+			SELECT attachment FROM messages WHERE author_id=$1 AND attachment IS NOT NULL
+		`, [ userData.id ]);
+		for await(const row of attachmentsQuery.rows) {
+			await s3Client.deleteFile(row.attachment);
+		}
+
+		// Delete user
+		await db.query('DELETE FROM users WHERE id=$1', [ userData.id ]);
+		await emailClient.sendAccountDeletedEmail(userData);
 	}
 
 	private static async usersWithUsernameCount(username: string): Promise<number> {

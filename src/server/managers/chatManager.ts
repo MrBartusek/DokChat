@@ -107,9 +107,13 @@ export default class ChatManager {
 		}
 		else {
 			const user = participants.find(u => u.userId != displayAs);
+			if(!user) {
+				const defaultAvatar = '/img/avatars/0.png';
+				return [ defaultAvatar, 'DokChat User' ];
+			}
 			return [
 				rawAvatar || Utils.avatarUrl(user.userId),
-				rawName|| `${user.username}#${user.tag}`
+				rawName || `${user.username}#${user.tag}`
 			];
 
 		}
