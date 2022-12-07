@@ -27,14 +27,14 @@ export default function MessageAttachment({ message } : MessageAttachmentProps) 
 					</audio>
 				)}
 				{attachmentType == 'video' && (
-					<video width="100%" height={280} controls>
+					<video width="100%" height={260} controls>
 						<source src={attachmentUrl} type={message.attachment.mimeType} />
 					</video>
 				)}
 				{attachmentType == 'image' && (
 					<img
 						src={attachmentUrl}
-						style={{borderRadius: '1.2rem', maxHeight: 280, width: '100%', cursor: 'pointer'}}
+						style={{borderRadius: '1.2rem', maxHeight: 260, width: '100%', cursor: 'pointer'}}
 						alt='Message attachment'
 						onClick={() => setShowLightbox(!showLightbox)}
 					/>
