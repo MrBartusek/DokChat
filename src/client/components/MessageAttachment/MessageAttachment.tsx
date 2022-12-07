@@ -18,7 +18,7 @@ export default function MessageAttachment({ message } : MessageAttachmentProps) 
 		const attachmentUrl = `/api/attachment?id=${message.id}`;
 
 		return (
-			<>
+			<div className='my-1'>
 				{attachmentType == 'audio' && (
 					<audio src={attachmentUrl} controls>
 						<a href={attachmentUrl}>
@@ -44,7 +44,7 @@ export default function MessageAttachment({ message } : MessageAttachmentProps) 
 					toggler={showLightbox}
 					source={attachmentUrl}
 				/>
-			</>
+			</div>
 		);
 	}
 	else {
