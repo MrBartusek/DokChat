@@ -1,10 +1,12 @@
 import React, { useContext, useLayoutEffect, useRef, useState } from 'react';
 import { Alert, Form } from 'react-bootstrap';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { Link, useNavigate } from 'react-router-dom';
 import { EndpointResponse, UserLoginResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import { useForm } from '../../hooks/useForm';
+import DokChatCaptcha from '../DokChatCaptcha/DokChatCaptcha';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import SocialLogin from '../SocialLogin/SocialLogin';
 
@@ -14,9 +16,10 @@ function RegisterForm() {
 	const [ loading, setLoading ] = useState(false);
 	const [ values, handleChange ] = useForm({ email: '', username: '', password: '', confirmPassword: '', terms: false });
 	const [ error, setError ] = useState<string | null>(null);
+	const [ user, updateToken, setUser ] = useContext(UserContext);
+	const captchaRef = useRef<ReCAPTCHA>(null!);
 	const passwordConfirmRef = useRef<HTMLInputElement>(null!);
 	const navigate = useNavigate();
-	const [ user, updateToken, setUser ] = useContext(UserContext);
 
 	useLayoutEffect(() => {
 		if(values.password != values.confirmPassword) {
@@ -121,17 +124,23 @@ function RegisterForm() {
 				</div>
 			</Form>
 			<SocialLogin setError={setError} setLoading={setLoading} loading={loading} />
+			<DokChatCaptcha ref={captchaRef} />
 		</>
 	);
 
 	async function onSubmit(event: React.FormEvent) {
 		event.preventDefault();
 		setLoading(true);
+		const recaptchaResponse = await captchaRef.current.executeAsync().catch(() => {
+			setError('Failed to get ReCAPTCHA token');
+		});
+		if(!recaptchaResponse) return;
 		await axios.post('auth/register',
 			{
 				email: values.email,
 				username: values.username,
-				password: values.password
+				password: values.password,
+				recaptchaResponse
 			})
 			.then((r: any) => {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;

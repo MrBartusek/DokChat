@@ -4,6 +4,7 @@ import { ApiResponse } from '../../apiResponse';
 import AuthManager from '../../managers/authManager';
 import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
+import ensureCaptcha from '../../middlewares/ensureCaptcha';
 import { isValidPassword } from '../../validators/password';
 import { isValidUsername } from '../../validators/username';
 
@@ -11,6 +12,7 @@ const router = express.Router();
 
 router.all('/register',
 	allowedMethods('POST'),
+	ensureCaptcha(),
 	body('username').custom(isValidUsername),
 	body('password').custom(isValidPassword),
 	body('email').isEmail().normalizeEmail(),

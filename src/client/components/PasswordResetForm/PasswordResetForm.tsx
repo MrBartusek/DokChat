@@ -1,9 +1,11 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useRef, useState } from 'react';
 import { Alert, Button, Form } from 'react-bootstrap';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { Link } from 'react-router-dom';
 import { EndpointResponse } from '../../../types/endpoints';
 import getAxios from '../../helpers/axios';
 import { useForm } from '../../hooks/useForm';
+import DokChatCaptcha from '../DokChatCaptcha/DokChatCaptcha';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 
 const axios = getAxios();
@@ -13,6 +15,7 @@ function PasswordResetForm() {
 	const [ values, handleChange ] = useForm({ email: '' });
 	const [ error, setError ] = useState<string | null>(null);
 	const [ success, setSuccess ] = useState<boolean>(false);
+	const captchaRef = useRef<ReCAPTCHA>(null!);
 
 	if(success) {
 		return (
@@ -77,6 +80,7 @@ function PasswordResetForm() {
 						Send password reset link
 					</InteractiveButton>
 				</div>
+				<DokChatCaptcha ref={captchaRef} />
 			</Form>
 		</>
 	);
@@ -84,7 +88,15 @@ function PasswordResetForm() {
 	async function onSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 		setLoading(true);
-		await axios.post('/auth/password-reset/start', values)
+
+		const recaptchaResponse = await captchaRef.current.executeAsync().catch(() => {
+			setError('Failed to get ReCAPTCHA token');
+		});
+		if(!recaptchaResponse) return;
+		await axios.post('/auth/password-reset/start', {
+			...values,
+			recaptchaResponse
+		})
 			.then(() => {
 				setSuccess(true);
 				setLoading(false);
