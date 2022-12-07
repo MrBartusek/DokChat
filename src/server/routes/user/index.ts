@@ -1,8 +1,8 @@
 import * as express from 'express';
+import deleteRouter from './delete';
 import getRoute from './get';
 import meRoute from './me';
 import updateProfileRouter from './update-profile';
-import deleteRouter from './delete';
 
 const router = express.Router();
 

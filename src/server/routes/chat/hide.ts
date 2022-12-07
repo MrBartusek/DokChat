@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { body, query, validationResult } from 'express-validator';
+import { body, validationResult } from 'express-validator';
 import { ApiResponse } from '../../apiResponse';
 import ChatManager from '../../managers/chatManager';
 import PermissionsManager from '../../managers/permissionsManager';

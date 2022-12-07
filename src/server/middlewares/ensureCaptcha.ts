@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { ApiResponse } from '../apiResponse';
-import JWTManager from '../managers/JWTManager';
 import { RecaptchaV2 } from 'express-recaptcha';
+import { ApiResponse } from '../apiResponse';
 
 const recaptcha = new RecaptchaV2(process.env.RECAPTCHA_SITE_KEY, process.env.RECAPTCHA_SECRET);
 

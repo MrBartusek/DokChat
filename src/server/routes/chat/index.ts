@@ -1,10 +1,10 @@
 import * as express from 'express';
 import createRouter from './create';
+import leaveRouter from './hide';
+import hideRouter from './leave';
 import listRouter from './list';
 import messagesRouter from './messages';
 import participantsRouter from './participants';
-import hideRouter from './leave';
-import leaveRouter from './hide';
 
 const router = express.Router();
 

@@ -3,7 +3,7 @@ import Modal, { ModalProps } from 'react-bootstrap/Modal';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useNavigate } from 'react-router-dom';
 import { SettingsContext } from '../../context/ThemeContext';
-import { Theme, useSettings } from '../../hooks/useSettings';
+import { Theme } from '../../hooks/useSettings';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 
 interface PopupProps extends ModalProps {

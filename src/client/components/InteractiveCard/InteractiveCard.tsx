@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconType } from 'react-icons';
-import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
+import { BsChevronRight } from 'react-icons/bs';
 import './InteractiveCard.scss';
 
 export interface InteractiveCardProps extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {

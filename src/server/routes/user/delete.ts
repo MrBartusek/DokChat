@@ -1,8 +1,6 @@
 import * as express from 'express';
 import { body, validationResult } from 'express-validator';
 import { ApiResponse } from '../../apiResponse';
-import emailClient from '../../aws/ses';
-import db from '../../db';
 import AuthManager from '../../managers/authManager';
 import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';

@@ -1,13 +1,11 @@
-import { default as React, FormEvent, useContext, useEffect, useRef, useState } from 'react';
+import { default as React, useContext, useEffect, useState } from 'react';
 import { Alert, Stack } from 'react-bootstrap';
-import { ColorResult } from 'react-color';
 import toast from 'react-hot-toast';
-import { BsImage, BsPalette, BsPencil, BsPersonPlus } from 'react-icons/bs';
+import { BsImage, BsPalette, BsPencil } from 'react-icons/bs';
 import { ChatParticipant } from '../../../types/common';
-import { ChatParticipantsRepose, EndpointResponse } from '../../../types/endpoints';
+import { EndpointResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
-import { useFetch } from '../../hooks/useFetch';
 import { LocalChat } from '../../types/Chat';
 import ChangeableAvatar from '../ChangeableAvatar/ChangeableAvatar';
 import { FileUploaderResult } from '../FileUploader/FileUploader';

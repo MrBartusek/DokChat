@@ -6,7 +6,6 @@ import { ApiResponse } from '../../../apiResponse';
 import db from '../../../db';
 import JWTManager from '../../../managers/JWTManager';
 import allowedMethods from '../../../middlewares/allowedMethods';
-import ensureCaptcha from '../../../middlewares/ensureCaptcha';
 import { EmailConfirmJWTData } from '../../../types/jwt';
 
 const router = express.Router();

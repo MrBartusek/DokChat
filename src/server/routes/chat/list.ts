@@ -2,13 +2,13 @@ import * as express from 'express';
 import { query, validationResult } from 'express-validator';
 import { QueryResult } from 'pg';
 import sql from 'sql-template-strings';
+import { CHAT_COLORS } from '../../../types/colors';
 import { ChatListResponse } from '../../../types/endpoints';
 import { ApiResponse } from '../../apiResponse';
 import db from '../../db';
 import ChatManager from '../../managers/chatManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
-import { CHAT_COLORS } from '../../../types/colors';
 
 const router = express.Router();
 

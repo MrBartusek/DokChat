@@ -4,14 +4,11 @@ import { useOutletContext } from 'react-router-dom';
 import { ChatParticipantsRepose, EndpointResponse } from '../../../types/endpoints';
 import { useFetch } from '../../hooks/useFetch';
 import { LocalChat } from '../../types/Chat';
-import AccountTab from '../AccountTab/AccountTab';
 import ChatParticipantsTab from '../ChatParticipantsTab/ChatParticipantsTab';
 import ChatPrivacyTab from '../ChatPrivacyTab/ChatPrivacyTab';
 import ChatSettingsTab from '../ChatSettingsTab/ChatSettingsTab';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import Popup from '../Popup/Popup';
-import ProfileSettingsTab from '../ProfileSettingsTab/ProfileSettingsTab';
-import SettingsTab from '../SettingsTab/SettingsTab';
 
 function ChatDetailsPopup() {
 	const currentChat = useOutletContext<LocalChat>();

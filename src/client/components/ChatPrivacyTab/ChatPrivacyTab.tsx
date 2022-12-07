@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Stack } from 'react-bootstrap';
+import { Alert, Stack } from 'react-bootstrap';
 import { BsBoxArrowLeft, BsEyeSlashFill, BsSlashCircle } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { EndpointResponse } from '../../../types/endpoints';
@@ -8,7 +8,6 @@ import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import { LocalChat } from '../../types/Chat';
 import InteractiveCard from '../InteractiveCard/InteractiveCard';
-import { Alert } from 'react-bootstrap';
 
 export interface ChatPrivacyTabProps {
 	currentChat: LocalChat,
