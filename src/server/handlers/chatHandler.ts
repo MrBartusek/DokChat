@@ -1,4 +1,5 @@
 import { MessageAttachment } from '../../types/common';
+import { ALLOWED_ATTACHMENT_FORMAT } from '../../types/const';
 import { ClientAttachment, ClientMessage, DokChatServer, DokChatSocket, ServerMessage } from '../../types/websocket';
 import { ApiResponse } from '../apiResponse';
 import s3Client from '../aws/s3';
@@ -92,12 +93,7 @@ function validateMessage(msg: ClientMessage, callback: (response: any) => void):
 		}
 	}
 	else if(msg.attachment) {
-		const allowedFormats = [
-			'image/bmp', 'image/gif', 'image/jpeg', 'image/svg+xml', 'image/png', 'image/vnd.microsoft.icon', 'image/webp',
-			'video/mp4', 'video/mpeg', 'video/ogg', 'video/webm',
-			'audio/aac', 'video/x-msvideo', 'audio/mpeg', 'audio/ogg', 'audio/opus', 'audio/wav', 'audio/webm'
-		];
-		if(!allowedFormats.includes(msg.attachment.mimeType)) {
+		if(!ALLOWED_ATTACHMENT_FORMAT.includes(msg.attachment.mimeType)) {
 			return false;
 		}
 		if(!Buffer.isBuffer(msg.attachment.buffer)) {

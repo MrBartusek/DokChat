@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { AiOutlineGif } from 'react-icons/ai';
 import { BsEmojiSmileFill, BsImage } from 'react-icons/bs';
 import { MdSend } from 'react-icons/md';
+import { ALLOWED_ATTACHMENT_FORMAT } from '../../../types/const';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { SettingsContext } from '../../context/ThemeContext';
 import { useForm } from '../../hooks/useForm';
@@ -87,7 +88,10 @@ function MessageBar({ currentChat }: MessageBarProps) {
 				className='d-flex align-items-center w-100'
 				onDrop={handleDrop}
 			>
-				<FileUploader onChange={setFileUploader}/>
+				<FileUploader
+					onChange={setFileUploader}
+					accept={ALLOWED_ATTACHMENT_FORMAT.join(',')}
+				/>
 				<Col className='d-flex flex-grow-0 justify-content-center align-items-center px-1 gap-1'>
 					<IconButton icon={AiOutlineGif} size={34}  type='button' color={currentChat.color.hex}
 						onClick={() => toast.error('Not Implemented')}

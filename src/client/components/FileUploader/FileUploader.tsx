@@ -10,10 +10,11 @@ export interface FileUploaderResult {
 }
 
 interface FileUploaderProps {
-    onChange: React.Dispatch<React.SetStateAction<FileUploaderResult>>
+    onChange: React.Dispatch<React.SetStateAction<FileUploaderResult>>,
+	accept?: string
 }
 
-export default function FileUploader({ onChange }: FileUploaderProps) {
+export default function FileUploader({ onChange, accept }: FileUploaderProps) {
 	const uploaderRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => resetHook(), []);
@@ -67,7 +68,7 @@ export default function FileUploader({ onChange }: FileUploaderProps) {
 	return (
 		<input
 			type="file"
-			accept="image/*"
+			accept={accept || 'image/*'}
 			ref={uploaderRef}
 			style={{display: 'none'}}
 			onChange={onInputChange}
