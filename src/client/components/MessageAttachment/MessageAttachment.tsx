@@ -20,14 +20,14 @@ export default function MessageAttachment({ message } : MessageAttachmentProps) 
 		return (
 			<div className='my-1'>
 				{attachmentType == 'audio' && (
-					<audio src={attachmentUrl} controls>
+					<audio src={attachmentUrl} controls className='mw-100'>
 						<a href={attachmentUrl}>
 							Download audio
 						</a>
 					</audio>
 				)}
 				{attachmentType == 'video' && (
-					<video width="100%" height={260} controls>
+					<video style={{maxHeight: 260, width: '100%'}} className='mw-100' controls>
 						<source src={attachmentUrl} type={message.attachment.mimeType} />
 					</video>
 				)}
