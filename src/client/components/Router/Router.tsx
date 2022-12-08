@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Alert } from 'react-bootstrap';
+import { Alert, Modal } from 'react-bootstrap';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import { AccountBannedPage } from '../../pages/AccountBannedPage';
@@ -10,24 +10,49 @@ import { LoginPage } from '../../pages/LoginPage';
 import { PasswordResetPage } from '../../pages/PasswordResetPage';
 import { PrivacyPolicyPage } from '../../pages/PrivacyPolicy';
 import { RegisterPage } from '../../pages/RegisterPage';
-import ChatDetailsPopup from '../ChatDetailsPopup/ChatDetailsPopup';
-import DeleteAccountPopup from '../DeleteAccountPopup/DeleteAccountPopup';
 import EmailConfirmer from '../EmailConfirmer/EmailConfirmer';
-import EmailConfirmPopup from '../EmailConfirmPopup/EmailConfirmPopup';
 import ErrorPage from '../ErrorPage/ErrorPage';
-import NewChatPopup from '../NewChatPopup/NewChatPopup';
 import NewPasswordDialog from '../NewPasswordDialog/NewPasswordDialog';
 import PasswordResetForm from '../PasswordResetForm/PasswordResetForm';
 import ScrollToTop from '../ScrollToTop/ScrollToTop';
-import SettingsPopup from '../SettingsPopup/SettingsPopup';
+
+const ChatDetailsPopupLazy = React.lazy(() => import('../ChatDetailsPopup/ChatDetailsPopup'));
+const NewChatPopupLazy = React.lazy(() => import('../NewChatPopup/NewChatPopup'));
+const SettingsPopupLazy = React.lazy(() => import('../SettingsPopup/SettingsPopup'));
+const EmailConfirmPopupLazy = React.lazy(() => import('../EmailConfirmPopup/EmailConfirmPopup'));
+const DeleteAccountPopupLazy = React.lazy(() => import('../DeleteAccountPopup/DeleteAccountPopup'));
 
 function Router() {
 	return (
 		<BrowserRouter>
 			<ScrollToTop />
 			<Routes>
+				<Route path="chat" element={
+					<PrivateRoute>
+						<ChatPage />
+					</PrivateRoute>
+				}>
+					<Route path=":chatId" element={null} />
+					<Route path=":chatId/details" element={
+						<React.Suspense fallback={null}><ChatDetailsPopupLazy /></React.Suspense>
+					} />
+					<Route path="new" element={
+						<React.Suspense fallback={null}><NewChatPopupLazy /></React.Suspense>
+					} />
+					<Route path="profile" element={
+						<React.Suspense fallback={null}><SettingsPopupLazy /></React.Suspense>
+					} />
+					<Route path="email-confirm" element={
+						<React.Suspense fallback={null}><EmailConfirmPopupLazy /></React.Suspense>
+					} />
+					<Route path="delete-account" element={
+						<React.Suspense fallback={null}><DeleteAccountPopupLazy /></React.Suspense>
+					} />
+				</Route>
+
 				<Route path="/" element={<HomePage />} />
 				<Route path="privacy-policy" element={<PrivacyPolicyPage />} />
+
 				<Route path="login" element={
 					<PublicOnlyRoute>
 						<LoginPage />
@@ -56,18 +81,6 @@ function Router() {
 					<Route path=":token" element={<EmailConfirmer />} />
 				</Route>
 
-				<Route path="chat" element={
-					<PrivateRoute>
-						<ChatPage />
-					</PrivateRoute>
-				}>
-					<Route path=":chatId" element={null} />
-					<Route path=":chatId/details" element={<ChatDetailsPopup />} />
-					<Route path="new" element={<NewChatPopup />} />
-					<Route path="profile" element={<SettingsPopup />} />
-					<Route path="email-confirm" element={<EmailConfirmPopup />} />
-					<Route path="delete-account" element={<DeleteAccountPopup />} />
-				</Route>
 				<Route path="suspended" element={
 					<PrivateRoute isSuspendedRoute>
 						<AccountBannedPage />
