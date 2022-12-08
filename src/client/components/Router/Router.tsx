@@ -34,19 +34,29 @@ function Router() {
 				}>
 					<Route path=":chatId" element={null} />
 					<Route path=":chatId/details" element={
-						<React.Suspense fallback={null}><ChatDetailsPopupLazy /></React.Suspense>
+						<React.Suspense fallback={null}>
+							<ChatDetailsPopupLazy />
+						</React.Suspense>
 					} />
 					<Route path="new" element={
-						<React.Suspense fallback={null}><NewChatPopupLazy /></React.Suspense>
+						<React.Suspense fallback={null}>
+							<NewChatPopupLazy />
+						</React.Suspense>
 					} />
 					<Route path="profile" element={
-						<React.Suspense fallback={null}><SettingsPopupLazy /></React.Suspense>
+						<React.Suspense fallback={null}>
+							<SettingsPopupLazy />
+						</React.Suspense>
 					} />
 					<Route path="email-confirm" element={
-						<React.Suspense fallback={null}><EmailConfirmPopupLazy /></React.Suspense>
+						<React.Suspense fallback={null}>
+							<EmailConfirmPopupLazy />
+						</React.Suspense>
 					} />
 					<Route path="delete-account" element={
-						<React.Suspense fallback={null}><DeleteAccountPopupLazy /></React.Suspense>
+						<React.Suspense fallback={null}>
+							<DeleteAccountPopupLazy />
+						</React.Suspense>
 					} />
 				</Route>
 
