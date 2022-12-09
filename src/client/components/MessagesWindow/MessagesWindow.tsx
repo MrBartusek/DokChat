@@ -1,11 +1,12 @@
 import * as DateFns from 'date-fns';
-import React, { useContext, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { OverlayTrigger, Tooltip, TooltipProps } from 'react-bootstrap';
 import { Twemoji } from 'react-emoji-render';
 import { BsCheckCircle, BsCheckCircleFill, BsXCircle } from 'react-icons/bs';
 import { EndpointResponse, MessageListResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
+import getAxios from '../../helpers/axios';
 import { useFetch } from '../../hooks/useFetch';
 import { LocalChat, LocalMessage } from '../../types/Chat';
 import MessageAttachment from '../MessageAttachment/MessageAttachment';
@@ -22,30 +23,48 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
 	const [ user ] = useContext(UserContext);
 	const messageWindowRef = useRef<HTMLDivElement>();
-	const messagesFetch = useFetch<EndpointResponse<MessageListResponse>>(null, true);
 
-	useLayoutEffect(() => {
-		if(!messageWindowRef.current) return;
-		messageWindowRef.current.scrollTo(0, messageWindowRef.current.scrollHeight);
-	}, [ chats, messageWindowRef ]);
+	const [ hasMore, setHasMore ] = useState(true);
+	const [ isLoading, setLoading ] = useState(false);
 
-	/**
-	 * Fetch chat messages if window is targeting not initialized chat
-	 */
 	useEffect(() => {
 		if(currentChat.isInitialized) return;
-		messagesFetch.setUrl(`/chat/messages?chat=${currentChat.id}`);
+		fetchMoreMessages(50);
 	}, [ currentChat ]);
-	/**
-	 * Load fetched data
-	 */
-	useEffect(() => {
-		if(!messagesFetch.res) return;
-		const chatId = chats.findIndex(c => c.id == currentChat.id);
-		const chatsCopy = [ ...chats ];
-		chatsCopy[chatId] = chatsCopy[chatId].addMessagesList(messagesFetch.res.data);
-		setChatList(chatsCopy);
-	}, [ messagesFetch.res ]);
+
+	async function handleScroll() {
+		if(isLoading || !hasMore) return;
+		const { scrollTop, scrollHeight, clientHeight } = messageWindowRef.current;
+		const shouldUpdate = -scrollTop + clientHeight > scrollHeight * 0.8;
+		if(shouldUpdate) await fetchMoreMessages();
+	}
+
+	async function fetchMoreMessages(count = 25) {
+		console.log('f');
+		setLoading(true);
+		const axios = getAxios(user);
+		let url = `/chat/messages?chat=${currentChat.id}&count=${count}`;
+		if(currentChat.isInitialized && currentChat.messages.length > 0) {
+			const lastMessage = currentChat.messages[currentChat.messages.length - 1];
+			url += `&lastMessageTimestamp=${lastMessage.timestamp}`;
+		}
+		await axios.get(url)
+			.then((r) => {
+				const resp: EndpointResponse<MessageListResponse> = r.data;
+				const messages = resp.data;
+				if(messages.length < count) {
+					setHasMore(false);
+				}
+				const chatId = chats.findIndex(c => c.id == currentChat.id);
+				const chatsCopy = [ ...chats ];
+				chatsCopy[chatId] = chatsCopy[chatId].addMessagesList(resp.data);
+				setChatList(chatsCopy);
+			}).catch((error) => {
+				console.error('Failed to load more messages', error);
+			}).finally(() => {
+				setLoading(false);
+			});
+	}
 
 	function timestampDiffInHours(a: string, b: string) {
 		return Math.abs(DateFns.differenceInHours(
@@ -53,61 +72,61 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 			DateFns.fromUnixTime(Number(b))));
 	}
 
-	const isLoading = !currentChat.isInitialized || messagesFetch.loading;
-
 	const noMessagesInfo = (
 		<span className='text-muted text-center mb-2'>
 			Send anything to start the chat
 		</span>
 	);
 	return (
-		<div className='d-flex px-3 flex-column-reverse' ref={messageWindowRef} style={{overflowY: 'scroll', flex: '1 0 0'}}>
-			{isLoading ? <SimpleLoading /> : (
-				<>
-					{currentChat.messages.length == 0 && noMessagesInfo }
-					{currentChat.messages.map((msg, index, elements) => {
-						const BLOCK_SEPARATION_HOURS = 1;
+		<div
+			className='d-flex px-3 flex-column-reverse'
+			ref={messageWindowRef}
+			onScroll={handleScroll}
+			style={{overflowY: 'scroll', flex: '1 0 0'}}
+		>
+			{currentChat.isInitialized && currentChat.messages.length == 0 && noMessagesInfo }
+			{currentChat.isInitialized && currentChat.messages.map((msg, index, elements) => {
+				const BLOCK_SEPARATION_HOURS = 1;
 
-						const prev: LocalMessage | undefined = elements[index - 1];
-						const next: LocalMessage | undefined = elements[index + 1];
-						const isAuthor = msg.author.id == user.id;
-						const timestampDiffNext = next ? timestampDiffInHours(msg.timestamp, next.timestamp) : 0;
-						const timestampDiffPrev = prev ? timestampDiffInHours(msg.timestamp, prev.timestamp) : 0;
-						const showTimestamp = timestampDiffNext >= BLOCK_SEPARATION_HOURS || !next;
+				const prev: LocalMessage | undefined = elements[index - 1];
+				const next: LocalMessage | undefined = elements[index + 1];
+				const isAuthor = msg.author.id == user.id;
+				const timestampDiffNext = next ? timestampDiffInHours(msg.timestamp, next.timestamp) : 0;
+				const timestampDiffPrev = prev ? timestampDiffInHours(msg.timestamp, prev.timestamp) : 0;
+				const showTimestamp = timestampDiffNext >= BLOCK_SEPARATION_HOURS || !next;
 
-						const msgTimestamp = DateFns.fromUnixTime(Number(msg.timestamp));
-						const sendAgoInHours = Math.abs(DateFns.differenceInHours(msgTimestamp, new Date()));
+				const msgTimestamp = DateFns.fromUnixTime(Number(msg.timestamp));
+				const sendAgoInHours = Math.abs(DateFns.differenceInHours(msgTimestamp, new Date()));
 
-						let format = 'HH:mm';
-						if(sendAgoInHours > 24 * 7) {
-							format = 'd LLLL yyyy, HH:mm';
-						}
-						else if(!DateFns.isToday(msgTimestamp)) {
-							format = 'EEE, HH:mm';
-						}
+				let format = 'HH:mm';
+				if(sendAgoInHours > 24 * 7) {
+					format = 'd LLLL yyyy, HH:mm';
+				}
+				else if(!DateFns.isToday(msgTimestamp)) {
+					format = 'EEE, HH:mm';
+				}
 
-						const isFirstInBlock = timestampDiffPrev >= BLOCK_SEPARATION_HOURS;
+				const isFirstInBlock = timestampDiffPrev >= BLOCK_SEPARATION_HOURS;
 
-						return (
-							<div className='d-flex flex-column' key={msg.id}>
-								{(showTimestamp) && (
-									<SystemMessage
-										content={DateFns.format(DateFns.fromUnixTime(Number(msg.timestamp)), format)}
-									/>
-								)}
-								<UserMessage
-									currentChat={currentChat}
-									message={msg}
-									showAvatar={!isAuthor && (msg.author.id != prev?.author?.id || isFirstInBlock)}
-									showAuthor={!isAuthor && (msg.author.id != next?.author?.id || showTimestamp)}
-									showStatus={isAuthor && msg.author.id != prev?.author?.id}
-								/>
-								{(prev && msg.author.id != prev.author.id) && <Separator height={12} />}
-							</div>
-						);
-					})}
-				</>
-			)}
+				return (
+					<div className='d-flex flex-column' key={msg.id}>
+						{(showTimestamp) && (
+							<SystemMessage
+								content={DateFns.format(DateFns.fromUnixTime(Number(msg.timestamp)), format)}
+							/>
+						)}
+						<UserMessage
+							currentChat={currentChat}
+							message={msg}
+							showAvatar={!isAuthor && (msg.author.id != prev?.author?.id || isFirstInBlock)}
+							showAuthor={!isAuthor && (msg.author.id != next?.author?.id || showTimestamp)}
+							showStatus={isAuthor && msg.author.id != prev?.author?.id}
+						/>
+						{(prev && msg.author.id != prev.author.id) && <Separator height={12} />}
+					</div>
+				);
+			})}
+			{isLoading ? <SimpleLoading /> : hasMore && <Separator height={60} /> }
 		</div>
 	);
 }

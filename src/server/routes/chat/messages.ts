@@ -15,20 +15,22 @@ const router = express.Router();
 router.all('/messages',
 	allowedMethods('GET'),
 	ensureAuthenticated(true),
-	query('page').optional().isNumeric(),
+	query('lastMessageTimestamp').optional().isInt(),
+	query('count').optional().isInt({max: 50, min: 10}),
 	query('chat').isString(),
 	async (req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 
-		const page = req.query.page as any as number || 0;
+		const lastMessageTimestamp = Number(req.query.lastMessageTimestamp) || Number.MAX_SAFE_INTEGER;
+		const count = Number(req.query.count) || 25;
 		const chatId = req.query.chat;
 
 		if(!(await PermissionsManager.hasChatAccess(req.auth, chatId))) {
 			return new ApiResponse(res).forbidden();
 		}
 
-		const messagesQuery = await queryMessages(chatId, page);
+		const messagesQuery = await queryMessages(chatId, lastMessageTimestamp, count);
 		const messages: MessageListResponse = messagesQuery.rows.map((msg) => {
 			return {
 				id: msg.id,
@@ -61,7 +63,8 @@ type MessagesQuery = QueryResult<{
 	attachment: string,
 	attachmentType: string
 }>
-async function queryMessages(chatId: string, page: number): Promise<MessagesQuery> {
+async function queryMessages(chatId: string, lastMessageTimestamp: number, count = 25): Promise<MessagesQuery> {
+	console.log(lastMessageTimestamp);
 	return db.query(sql`
 		SELECT
 			messages.id,
@@ -75,11 +78,11 @@ async function queryMessages(chatId: string, page: number): Promise<MessagesQuer
 		FROM messages
 		INNER JOIN users ON users.id = messages.author_id
 		WHERE
-			chat_id = $1
+			chat_id = $1 AND messages.created_at < $2
 		ORDER BY 
 			messages.created_at DESC
-		LIMIT 25 OFFSET $2;
-	`, [ chatId, page ]);
+		LIMIT $3;
+	`, [ chatId, lastMessageTimestamp, count ]);
 }
 
 export default router;

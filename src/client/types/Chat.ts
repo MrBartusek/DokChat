@@ -50,7 +50,10 @@ export class LocalChat implements Chat {
 	 * Load messages list from API
 	 */
 	public addMessagesList(messages: Message[]): LocalChat {
-		this._messages = messages;
+		if(!Array.isArray(this._messages)) {
+			this._messages = [];
+		}
+		(this._messages as Message[]).push(...messages);
 		this.isInitialized = true;
 		return this;
 	}
