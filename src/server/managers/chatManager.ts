@@ -1,7 +1,7 @@
 import * as DateFns from 'date-fns';
 import sql from 'sql-template-strings';
 import { CHAT_COLORS } from '../../types/colors';
-import { Chat } from '../../types/common';
+import { Chat, MessageAttachment } from '../../types/common';
 import { UserJWTData } from '../../types/jwt';
 import db from '../db';
 import { InternalChatParticipant } from '../types/common';
@@ -190,7 +190,7 @@ export default class ChatManager {
 		sender: UserJWTData | 'SYSTEM',
 		chatId: string, content?: string,
 		attachmentKey?: string,
-		attachmentType?: string
+		attachment?: MessageAttachment
 	): Promise<[string, string]> {
 		const senderId = sender == 'SYSTEM' ? await UserManager.systemUserId() : sender.id;
 		const id = snowflakeGenerator.getUniqueID().toString();
@@ -198,11 +198,13 @@ export default class ChatManager {
 
 		await db.query(sql`
 			INSERT INTO messages 
-				(id, chat_id, author_id, content, created_at, attachment, attachment_type)
+				(id, chat_id, author_id, content, created_at, attachment,
+				attachment_type, attachment_height)
 			VALUES (
-				$1, $2, $3, $4, $5, $6, $7
+				$1, $2, $3, $4, $5, $6, $7, $8
 			);
-		`, [ id, chatId, senderId, content, timestamp, attachmentKey, attachmentType ]);
+		`, [ id, chatId, senderId, content, timestamp, attachmentKey,
+			attachment.mimeType, attachment.height ]);
 		return [ id, timestamp ];
 	}
 }

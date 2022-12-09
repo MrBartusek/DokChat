@@ -44,6 +44,7 @@ export async function initializeDB() {
             created_at bigint NOT NULL,
             attachment varchar(64),
             attachment_type varchar(16),
+            attachment_height smallint,
             is_system boolean NOT NULL DEFAULT FALSE,
             PRIMARY KEY (id)
         );

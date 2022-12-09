@@ -6,6 +6,7 @@ import s3Client from '../aws/s3';
 import ChatManager from '../managers/chatManager';
 import PermissionsManager from '../managers/permissionsManager';
 import Utils from '../utils/utils';
+import * as sizeOf from 'buffer-image-size';
 
 export default function registerMessageHandler(io: DokChatServer, socket: DokChatSocket) {
 	socket.on('message', async (msg, callback) => {
@@ -24,7 +25,7 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 			msg.chatId,
 			msg.content,
 			attachmentKey,
-			attachment.mimeType
+			attachment
 		);
 
 		// Send message to every participant expect sender
@@ -71,8 +72,14 @@ async function uploadAttachment(attachment?: ClientAttachment): Promise<[string,
 	}
 	const mimeType = attachment.mimeType;
 	const key = await s3Client.uploadAttachment(attachment.buffer, mimeType);
+	let dimensions = null;
+	if(mimeType.startsWith('image/')) {
+		dimensions = sizeOf(attachment.buffer);
+	}
+
 	return [ key, {
 		hasAttachment: true,
+		height: dimensions?.height || 230,
 		mimeType: mimeType
 	} ];
 }

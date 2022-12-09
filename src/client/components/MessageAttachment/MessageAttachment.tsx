@@ -13,28 +13,32 @@ export default function MessageAttachment({ message } : MessageAttachmentProps) 
 	const [ showLightbox, setShowLightbox ] = useState(false);
 	const isSent = !(message.isPending || message.isFailed);
 
+	const MAX_ATTACHMENT_HEIGHT = 230;
+	const attachmentHeight = Math.min(message.attachment.height || MAX_ATTACHMENT_HEIGHT, MAX_ATTACHMENT_HEIGHT);
+
 	if(isSent) {
 		const attachmentType = message.attachment.mimeType.split('/')[0];
 		const attachmentUrl = `/api/attachment?id=${message.id}`;
 
 		return (
-			<div className='my-1'>
+			<div className='mw-100' style={{height: attachmentHeight}}>
 				{attachmentType == 'audio' && (
-					<audio src={attachmentUrl} controls className='mw-100'>
+					<audio src={attachmentUrl} controls>
 						<a href={attachmentUrl}>
 							Download audio
 						</a>
 					</audio>
 				)}
 				{attachmentType == 'video' && (
-					<video style={{maxHeight: 260, width: '100%'}} className='mw-100' controls>
+					<video controls className='h-100 mw-100' style={{borderRadius: '1.2rem'}}>
 						<source src={attachmentUrl} type={message.attachment.mimeType} />
 					</video>
 				)}
 				{attachmentType == 'image' && (
 					<img
 						src={attachmentUrl}
-						style={{borderRadius: '1.2rem', maxHeight: 260, width: '100%', cursor: 'pointer'}}
+						style={{cursor: 'pointer', borderRadius: '1.2rem', maxHeight: '200px', maxWidth: '100%' }}
+						className='h-100 w-100'
 						alt='Message attachment'
 						onClick={() => setShowLightbox(!showLightbox)}
 					/>

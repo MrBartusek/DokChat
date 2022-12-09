@@ -25,6 +25,7 @@
     "axios": "^1.2.0",
     "bcrypt": "^5.1.0",
     "bootstrap": "^5.2.3",
+    "buffer-image-size": "^0.6.4",
     "cookie-parser": "^1.4.6",
     "copy-to-clipboard": "^3.3.3",
     "css-loader": "^6.7.2",

@@ -76,7 +76,7 @@ export function useMessageManager(ws: useWebsocketType): [
 		};
 	});
 
-	function ackMessage(chat: LocalChat, pendingId: string, newId: string, timestamp: string, attachment?: string) {
+	function ackMessage(chat: LocalChat, pendingId: string, newId: string, timestamp: string) {
 		const chats = [ ...chatList ];
 		const chatId = chats.findIndex((c) => c.id == chat.id);
 		if(chatId == -1) return;
