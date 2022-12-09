@@ -219,4 +219,9 @@ export default class UserManager {
 			UPDATE users SET is_email_confirmed = 'true' WHERE id = $1
 		`, [ userData.id ]);
 	}
+
+	public static async bumpLastSeen(userId: string): Promise<void> {
+		const timestamp = DateFns.getUnixTime(new Date());
+		await db.query(sql`UPDATE users SET last_seen=$1 WHERE id=$2`, [ timestamp, userId ]);
+	}
 }

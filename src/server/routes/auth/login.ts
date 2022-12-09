@@ -2,6 +2,7 @@ import * as express from 'express';
 import { body, validationResult } from 'express-validator';
 import { ApiResponse } from '../../apiResponse';
 import AuthManager from '../../managers/authManager';
+import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import { isValidPassword } from '../../validators/password';
 
@@ -22,6 +23,7 @@ router.all('/login',
 
 		AuthManager.authenticateUser(email, password)
 			.then(async ([ jwtData, passwordHash ]) =>  {
+				await UserManager.bumpLastSeen(jwtData.id);
 				AuthManager.sendAuthResponse(res, jwtData, passwordHash, rememberMe);
 			})
 			.catch((reason) => {

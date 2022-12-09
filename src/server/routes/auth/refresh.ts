@@ -27,10 +27,7 @@ router.all('/refresh', allowedMethods('POST'), cookie('refreshToken').isString()
 
 	await JWTManager.verifyRefreshToken(refreshToken, passwordHash)
 		.then(async (userId: string) => {
-			// Update last seen
-			const timestamp = DateFns.getUnixTime(new Date());
-			await db.query(sql`UPDATE users SET last_seen=$1 WHERE id=$2`, [ timestamp, userId ]);
-
+			await UserManager.bumpLastSeen(userId);
 			AuthManager.sendAuthResponse(res, user, passwordHash);
 		})
 		.catch((error) => {

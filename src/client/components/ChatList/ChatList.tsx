@@ -47,7 +47,6 @@ interface ChatProps {
 function Chat(props: ChatProps) {
 	const [ user ] = useContext(UserContext);
 	const [ isOnline, setOnline ] = useState(false);
-
 	const getOnlineStatus = useContext(OnlineManagerContext);
 
 	useEffect(() => {

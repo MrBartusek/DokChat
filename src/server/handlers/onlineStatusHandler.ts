@@ -13,10 +13,11 @@ export default function registerOnlineStatusHandler(io: DokChatServer, socket: D
 			const lastSeenDiff = DateFns.differenceInMinutes(new Date(), lastSeen);
 			const isOnline = lastSeenDiff <= 5;
 			const lastSeenFormatted = DateFns.formatDistance(lastSeen, new Date(), { addSuffix: true });
+			const isVeryOld = DateFns.differenceInDays(new Date(), lastSeen) > 30;
 			return {
 				id: user.userId,
 				isOnline: isOnline,
-				lastSeen: isOnline ? null : lastSeenFormatted
+				lastSeen: (isOnline || isVeryOld) ? null : lastSeenFormatted
 			};
 		});
 		new ApiResponse({} as any, callback).success(onlineStatus);
@@ -35,7 +36,7 @@ type OnlineQuery = QueryResult<{
  */
 async function queryOnline(as: string ): Promise<OnlineQuery> {
 	return db.query(sql`
-		SELECT
+		SELECT DISTINCT
 			p.user_id as "userId",
 			users.last_seen as "lastSeen"
 		FROM
