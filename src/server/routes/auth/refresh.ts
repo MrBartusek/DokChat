@@ -1,9 +1,6 @@
-import * as DateFns from 'date-fns';
 import * as express from 'express';
 import { cookie, validationResult } from 'express-validator';
-import sql from 'sql-template-strings';
 import { ApiResponse } from '../../apiResponse';
-import db from '../../db';
 import AuthManager from '../../managers/authManager';
 import JWTManager from '../../managers/JWTManager';
 import UserManager from '../../managers/userManager';

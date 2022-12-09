@@ -1,6 +1,4 @@
 import * as DateFns from 'date-fns';
-import { Request } from 'express';
-import { Socket } from 'socket.io/dist/socket';
 import sql from 'sql-template-strings';
 import { CHAT_COLORS } from '../../types/colors';
 import { Chat } from '../../types/common';
