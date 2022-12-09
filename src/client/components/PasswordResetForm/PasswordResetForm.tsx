@@ -60,6 +60,7 @@ function PasswordResetForm() {
 						name="email"
 						disabled={loading}
 						required
+						autoFocus
 						value={values.email}
 						onChange={handleChange}
 					/>
