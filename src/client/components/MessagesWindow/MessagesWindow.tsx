@@ -35,7 +35,6 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 	useEffect(() => {
 		if(currentChat.isInitialized) return;
 		messagesFetch.setUrl(`/chat/messages?chat=${currentChat.id}`);
-		console.log('set fetch');
 	}, [ currentChat ]);
 	/**
 	 * Load fetched data

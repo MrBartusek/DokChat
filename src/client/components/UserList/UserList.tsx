@@ -32,9 +32,10 @@ function UserCard({ user }: UserCardProps) {
 			<ProfilePicture
 				src={user.avatar}
 				size={36}
-				className="me-3"
+				showStatus
+				userId={(user as any).userId || user.id}
 			/>
-			<span>
+			<span className="ms-3">
 				{`${user.username}#${user.tag}`}
 			</span>
 		</div>

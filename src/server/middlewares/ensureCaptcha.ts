@@ -13,8 +13,6 @@ const ensureCaptcha = () => async (req: Request, res: Response, next: NextFuncti
 	req.body['g-recaptcha-response'] = recaptchaResponse;
 	return recaptcha.verify(req, (error, data) => {
 		if(!error) {
-			console.log(data);
-			console.log('recaptha ok');
 			return next();
 		}
 		return new ApiResponse(res, next).badRequest(`Invalid ReCAPTCHA response (${error})`);

@@ -133,7 +133,6 @@ function NewChatPopup() {
 	function handleChangeWrapper(event: React.ChangeEvent<HTMLInputElement>) {
 		if(event.target == usernameRef.current) {
 			const nativeEvent = event.nativeEvent as InputEvent;
-			console.log(nativeEvent);
 			if(nativeEvent.inputType == 'insertText' && nativeEvent.data == '#') {
 				tagRef.current.focus();
 				return;

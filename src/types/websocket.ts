@@ -11,6 +11,7 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {
     message: (message: ClientMessage, callback: (response: EventAcknowledgement<{id: string, timestamp: string}>) => void) => void;
+    onlineStatus: (callback: (response: EventAcknowledgement<OnlineStatusResponse>) => void) => void;
 }
 
 export type ClientAttachment = {
@@ -39,3 +40,9 @@ export interface ClientMessage {
 }
 
 export interface EventAcknowledgement<T> extends EndpointResponse<T> { }
+
+export type OnlineStatusResponse = ({
+    id: string,
+    isOnline: boolean,
+    lastSeen: string | null
+})[];

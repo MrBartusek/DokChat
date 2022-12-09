@@ -28,7 +28,6 @@ router.all('/facebook', body('token').isString(), async (req, res, next) => {
 			return true;
 		})
 		.catch((error) => {
-			console.log(error);
 			new ApiResponse(res).unauthorized('Provided Facebook token is not valid');
 		});
 	if(!token_debug) return;

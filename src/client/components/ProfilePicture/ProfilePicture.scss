@@ -1,3 +1,8 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+@import '../../scss/dark.scss';
+
 .clickable-profile-picture {
 	cursor: pointer;
 	filter: brightness(100%);
@@ -6,4 +11,21 @@
 .clickable-profile-picture:hover {
 	filter: brightness(90%);
 	transition: all 0.5 ease;
+}
+
+.online-dot {
+	position: absolute;
+	bottom: -2px;
+	right: -2px;
+	border-radius: 50em;
+	height: 0.9em;
+	width: 0.9em;
+	background-color: #5AD539;
+	border: solid 3px #fff;
+}
+
+#app[data-theme='dark'], .modal-dialog[data-theme='dark']  {
+	.online-dot {
+		border-color: $dark-background;
+	}
 }

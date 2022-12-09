@@ -2,9 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import MainLoading from '../components/MainLoading/MainLoading';
 import { MessageManagerContext } from '../context/MessageManagerContext';
+import { OnlineManagerContext } from '../context/OnlineManagerContext';
 import { UserContext } from '../context/UserContext';
 import { useDocumentReady } from '../hooks/useDocumentReady';
 import { useMessageManager } from '../hooks/useMessageManager';
+import { useOnlineManager } from '../hooks/useOnlineManager';
 import { useWebsocket } from '../hooks/useWebsocket';
 import { LocalChat } from '../types/Chat';
 
@@ -14,6 +16,7 @@ export function ChatPage() {
 	const { chatId } = useParams();
 	const ws = useWebsocket();
 	const [ isLoadingMessagesManager, chats, sendMessage, setChatList ] = useMessageManager(ws);
+	const getOnlineStatus = useOnlineManager(ws);
 	const [ currentChat, setCurrentChat ] = useState<LocalChat>(null);
 	const [ user ] = useContext(UserContext);
 	const documentReady = useDocumentReady();
@@ -60,20 +63,22 @@ export function ChatPage() {
 	const isLoading = (
 		isLoadingMessagesManager || !documentReady || !ChatWindowLazy
 	);
-	console.log(
-		'isLoading:', isLoading,
-		'manager:', isLoadingMessagesManager,
-		'ready:', documentReady
-	);
+	// console.log(
+	// 	'isLoading:', isLoading,
+	// 	'manager:', isLoadingMessagesManager,
+	// 	'ready:', documentReady
+	// );
 
 	if(isLoading) return (<MainLoading />);
 
 	return (
 		<React.Suspense fallback={<MainLoading />}>
-			<MessageManagerContext.Provider value={[ chats, sendMessage, setChatList ]}>
-				<ChatWindowLazy currentChat={currentChat} />
-				<Outlet context={currentChat} />
-			</MessageManagerContext.Provider>
+			<OnlineManagerContext.Provider value={getOnlineStatus}>
+				<MessageManagerContext.Provider value={[ chats, sendMessage, setChatList ]}>
+					<ChatWindowLazy currentChat={currentChat} />
+					<Outlet context={currentChat} />
+				</MessageManagerContext.Provider>
+			</OnlineManagerContext.Provider>
 		</React.Suspense>
 	);
 }
