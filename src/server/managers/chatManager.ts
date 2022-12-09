@@ -54,7 +54,8 @@ export default class ChatManager {
 			color: CHAT_COLORS[chat.color] || CHAT_COLORS[0],
 			isGroup: chat.isGroup,
 			createdAt: chat.createdAt,
-			creatorId: chat.creatorId
+			creatorId: chat.creatorId,
+			participants: []
 		};
 	}
 

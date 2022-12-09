@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Stack } from 'react-bootstrap';
 import { ChatParticipant, User } from '../../../types/common';
+import { OnlineManagerContext } from '../../context/OnlineManagerContext';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 
 interface UserListProps {
@@ -27,13 +28,20 @@ interface UserCardProps {
 }
 
 function UserCard({ user }: UserCardProps) {
+	const getOnlineStatus = useContext(OnlineManagerContext);
+	const [ isOnline, setOnline ] = useState(false);
+
+	useEffect(() => {
+		const [ online ] = getOnlineStatus((user as any).userId || user.id);
+		setOnline(online);
+	}, [ getOnlineStatus ]);
+
 	return (
 		<div className='d-flex flex-row my-2 align-items-center'>
 			<ProfilePicture
 				src={user.avatar}
 				size={36}
-				showStatus
-				userId={(user as any).userId || user.id}
+				isOnline={isOnline}
 			/>
 			<span className="ms-3">
 				{`${user.username}#${user.tag}`}

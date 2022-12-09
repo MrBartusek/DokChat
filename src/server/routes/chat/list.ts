@@ -40,7 +40,11 @@ router.all('/list',
 					content: chat.messageContent || '',
 					author: chat.messageAuthor,
 					timestamp: chat.messageCreatedAt
-				}: null
+				}: null,
+				participants: participant.map(p => ({
+					id: p.id,
+					userId: p.userId
+				}))
 			};
 		}));
 		const result: ChatListResponse = chats;

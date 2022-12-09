@@ -7,24 +7,15 @@ interface ProfilePictureProps extends ImageProps {
     src: string,
     size?: string | number,
 	userId?: string,
-	showStatus?: boolean
+	isOnline?: boolean
 	onClick?: React.MouseEventHandler<HTMLImageElement>
 }
 
 function ProfilePicture(props: ProfilePictureProps) {
 	const pictureSize = props.size || 38;
-	const getOnlineStatus = useContext(OnlineManagerContext);
-	const [ isOnline, setOnline ] = useState(false);
-
-	useEffect(() => {
-		if(!props.showStatus) return setOnline(false);
-		const [ online ] = getOnlineStatus(props.userId);
-		setOnline(online);
-	}, [ getOnlineStatus, props.showStatus ]);
 
 	const passProps = Object.assign({}, props);
-	delete passProps.showStatus;
-	delete passProps.userId;
+	delete passProps.isOnline;
 
 	return (
 		<div className='position-relative'>
@@ -39,7 +30,7 @@ function ProfilePicture(props: ProfilePictureProps) {
 				onClick={props.onClick}
 				{...passProps}
 			/>
-			{isOnline && <div className='online-dot' aria-hidden="true"></div>}
+			{props.isOnline && <div className='online-dot' aria-hidden="true"></div>}
 		</div>
 	);
 }

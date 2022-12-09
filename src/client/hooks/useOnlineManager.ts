@@ -1,22 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { OnlineStatusResponse } from '../../types/websocket';
+import { UserContext } from '../context/UserContext';
 import { useFetch } from './useFetch';
 import { useWebsocketType } from './useWebsocket';
 
 export function useOnlineManager(ws: useWebsocketType): ((userId: string) => [ boolean, string | null ]) {
+	const [ user ] = useContext(UserContext);
 	const [ onlineStatus, setOnlineStatus ] = useState<OnlineStatusResponse>([]);
 	const [ isInitialized, setInitialized ] = useState(false);
 
 	useEffect(() => {
-		const time = 3 * 60 * 1000;
-		const interval = setInterval(refreshList, time);
+		if(!ws.isConnected) return;
+		if(!isInitialized) refreshList();
+		const interval = setInterval(() => refreshList(), 60 * 1000);
 		return () => clearInterval(interval);
-	}, []);
-
-	useEffect(() => {
-		if(ws.isConnected && !isInitialized) {
-			refreshList();
-		}
 	}, [ ws.isConnected ]);
 
 	function refreshList() {
@@ -27,6 +24,7 @@ export function useOnlineManager(ws: useWebsocketType): ((userId: string) => [ b
 	}
 
 	function getOnlineStatus(userId: string): [ boolean, string | null ] {
+		if(userId == user.id) return [ true, null ];
 		const status = onlineStatus.find(x => x.id == userId);
 		if(!status) return [ false, null ];
 		return [ status.isOnline, status.lastSeen ];

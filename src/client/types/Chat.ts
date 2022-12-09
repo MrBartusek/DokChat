@@ -1,5 +1,5 @@
 import * as DateFns from 'date-fns';
-import { Chat, ChatColor, LastMessage, Message } from '../../types/common';
+import { Chat, ChatColor, LastMessage, Message, SimpleChatParticipant } from '../../types/common';
 
 /**
  * Local client version of message with additional properties
@@ -31,6 +31,7 @@ export class LocalChat implements Chat {
 	public createdAt: string;
 	public creatorId: string;
 	public color: ChatColor;
+	public participants: SimpleChatParticipant[];
 
 	constructor(chat: Chat) {
 		this.isInitialized = false;
@@ -42,6 +43,7 @@ export class LocalChat implements Chat {
 		this.createdAt = chat.createdAt;
 		this.creatorId = chat.creatorId;
 		this._messages = chat.lastMessage || [];
+		this.participants = chat.participants;
 	}
 
 	/**

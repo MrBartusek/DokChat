@@ -7,6 +7,11 @@ export interface ChatColor {
     hex: string
 }
 
+export interface SimpleChatParticipant {
+    id: string,
+    userId: string
+}
+
 export interface Chat {
     id: string,
     name: string,
@@ -16,6 +21,7 @@ export interface Chat {
     createdAt: string,
     color: ChatColor,
     lastMessage?: LastMessage
+    participants: SimpleChatParticipant[]
 }
 
 export interface User {
