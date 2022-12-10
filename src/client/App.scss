@@ -15,13 +15,12 @@ $spacers: (
 
 body {
 	font-family: 'Roboto', sans-serif;
+	overflow: hidden;
 }
 
 * { 
 	box-sizing: border-box
 }
-
-/* From: https://gomakethings.com/how-to-break-an-image-out-of-its-parent-container-with-css/ */
 
 .btn {
 	border-radius: 9999px;
