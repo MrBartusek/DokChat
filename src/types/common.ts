@@ -40,6 +40,7 @@ export interface LastMessage {
 export interface MessageAttachment {
     hasAttachment: boolean,
     height?: number,
+    width?: number,
     mimeType?: string
 }
 

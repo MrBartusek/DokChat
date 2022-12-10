@@ -40,7 +40,8 @@ router.all('/messages',
 				attachment:  {
 					hasAttachment: msg.attachment != undefined,
 					mimeType: msg.attachmentType,
-					height: msg.attachmentHeight
+					height: msg.attachmentHeight,
+					width: msg.attachmentWidth
 				},
 				author: {
 					id: msg.authorId,
@@ -63,6 +64,7 @@ type MessagesQuery = QueryResult<{
 	createdAt: string,
 	attachment: string,
 	attachmentType: string,
+	attachmentWidth: number,
 	attachmentHeight: number
 }>
 async function queryMessages(chatId: string, lastMessageTimestamp: number, count = 25): Promise<MessagesQuery> {
@@ -76,6 +78,7 @@ async function queryMessages(chatId: string, lastMessageTimestamp: number, count
 			messages.created_at as "createdAt",
 			messages.attachment,
 			messages.attachment_type as "attachmentType",
+			messages.attachment_width as "attachmentWidth",
 			messages.attachment_height as "attachmentHeight"
 		FROM messages
 		INNER JOIN users ON users.id = messages.author_id

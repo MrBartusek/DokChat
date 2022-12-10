@@ -29,7 +29,7 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 
 	useEffect(() => {
 		if(currentChat.isInitialized) return;
-		fetchMoreMessages(50);
+		fetchMoreMessages(40);
 	}, [ currentChat ]);
 
 	async function handleScroll() {
@@ -39,8 +39,7 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 		if(shouldUpdate) await fetchMoreMessages();
 	}
 
-	async function fetchMoreMessages(count = 25) {
-		console.log('f');
+	async function fetchMoreMessages(count = 15) {
 		setLoading(true);
 		const axios = getAxios(user);
 		let url = `/chat/messages?chat=${currentChat.id}&count=${count}`;

@@ -199,12 +199,12 @@ export default class ChatManager {
 		await db.query(sql`
 			INSERT INTO messages 
 				(id, chat_id, author_id, content, created_at, attachment,
-				attachment_type, attachment_height)
+				attachment_type, attachment_height, attachment_width)
 			VALUES (
-				$1, $2, $3, $4, $5, $6, $7, $8
+				$1, $2, $3, $4, $5, $6, $7, $8, $9
 			);
 		`, [ id, chatId, senderId, content, timestamp, attachmentKey,
-			attachment.mimeType, attachment.height ]);
+			attachment.mimeType, attachment.height, attachment.width ]);
 		return [ id, timestamp ];
 	}
 }

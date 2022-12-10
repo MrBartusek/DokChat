@@ -13,15 +13,12 @@ export default function MessageAttachment({ message } : MessageAttachmentProps) 
 	const [ showLightbox, setShowLightbox ] = useState(false);
 	const isSent = !(message.isPending || message.isFailed);
 
-	const MAX_ATTACHMENT_HEIGHT = 230;
-	const attachmentHeight = Math.min(message.attachment.height || MAX_ATTACHMENT_HEIGHT, MAX_ATTACHMENT_HEIGHT);
-
 	if(isSent) {
 		const attachmentType = message.attachment.mimeType.split('/')[0];
 		const attachmentUrl = `/api/attachment?id=${message.id}`;
 
 		return (
-			<div className='mw-100' style={{height: attachmentHeight}}>
+			<div className='mw-100 fs-6 d-flex' style={{maxHeight: '200px'}}>
 				{attachmentType == 'audio' && (
 					<audio src={attachmentUrl} controls>
 						<a href={attachmentUrl}>
@@ -30,16 +27,24 @@ export default function MessageAttachment({ message } : MessageAttachmentProps) 
 					</audio>
 				)}
 				{attachmentType == 'video' && (
-					<video controls className='h-100 mw-100' style={{borderRadius: '1.2rem'}}>
+					<video
+						controls
+						style={{borderRadius: '1.2rem', maxHeight: '200px'}}
+						height={200}
+						className='h-100 w-100'
+					>
 						<source src={attachmentUrl} type={message.attachment.mimeType} />
 					</video>
 				)}
 				{attachmentType == 'image' && (
 					<img
 						src={attachmentUrl}
-						style={{cursor: 'pointer', borderRadius: '1.2rem', maxHeight: '200px', maxWidth: '100%' }}
+						loading='lazy'
+						style={{cursor: 'pointer', borderRadius: '1.2rem', maxHeight: '200px'}}
+						height={message.attachment.height}
+						width={message.attachment.width}
 						className='h-100 w-100'
-						alt='Message attachment'
+						alt='Message attachment failed to load'
 						onClick={() => setShowLightbox(!showLightbox)}
 					/>
 				)}

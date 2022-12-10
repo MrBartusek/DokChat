@@ -79,7 +79,8 @@ async function uploadAttachment(attachment?: ClientAttachment): Promise<[string,
 
 	return [ key, {
 		hasAttachment: true,
-		height: dimensions?.height || 230,
+		width: dimensions?.width,
+		height: dimensions?.height,
 		mimeType: mimeType
 	} ];
 }
