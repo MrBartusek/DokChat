@@ -37,6 +37,7 @@
     "express-recaptcha": "^5.1.0",
     "express-validator": "^6.14.2",
     "fslightbox-react": "^1.6.2-2",
+    "gif-picker-react": "^0.6.0",
     "google-auth-library": "^8.7.0",
     "jose": "^4.11.1",
     "morgan": "^1.10.0",
