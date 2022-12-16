@@ -83,7 +83,6 @@ function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
 					onError={() => {
 						setError('Failed to get authorization response from Google');
 					}}
-					useOneTap
 					width={buttonWidth}
 					logo_alignment='center'
 					locale='en_US'
