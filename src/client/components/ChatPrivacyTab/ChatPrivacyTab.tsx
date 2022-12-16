@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Alert, Stack } from 'react-bootstrap';
 import { BsBoxArrowLeft, BsEyeSlashFill, BsSlashCircle } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { EndpointResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
@@ -34,24 +34,6 @@ export default function ChatPrivacyTab({ currentChat, setCustomStatic }: ChatPri
 			});
 	}
 
-	async function handleLeave(e: React.MouseEvent) {
-		const axios = getAxios(user);
-
-		setLoading(true);
-		setCustomStatic(true);
-		await axios.post('chat/leave', { chat: currentChat.id })
-			.then(() => {
-				const chatsCopy = [ ...chats ];
-				setChatList(chatsCopy.filter(c => c.id !== currentChat.id));
-				navigate('/chat');
-			})
-			.catch((error) => {
-				const resp: EndpointResponse<null> = error.response?.data;
-				setError(resp?.message || 'Failed to delete your account at this time. Please try again later.');
-				setLoading(false);
-			});
-	}
-
 	return (
 		<>
 			{error && <Alert variant='danger'>{error}</Alert>}
@@ -77,7 +59,7 @@ export default function ChatPrivacyTab({ currentChat, setCustomStatic }: ChatPri
 						description='Leave this group'
 						icon={BsBoxArrowLeft}
 						disabled={loading}
-						onClick={handleLeave}
+						onClick={() => navigate(`/chat/${currentChat.id}/leave`)}
 					/>
 				)}
 			</Stack>
