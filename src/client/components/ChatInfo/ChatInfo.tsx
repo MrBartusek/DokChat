@@ -39,7 +39,7 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 	return (
 		<div className='d-flex px-3 py-2 border-bottom border-separator'>
 			{currentChat && (
-				<div className='d-flex pe-2'>
+				<div className='d-flex pe-3'>
 					<ProfilePicture src={currentChat && currentChat.avatar} isOnline={isOnline} />
 				</div>
 			)}
