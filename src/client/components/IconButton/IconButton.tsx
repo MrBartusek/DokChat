@@ -24,7 +24,7 @@ const IconButton = React.forwardRef((props: IconButtonProps, ref: React.Forwarde
 		props.icon,
 		{
 			size: (props.size || 38) - 16,
-			color: passProps.variant ? `var(--bs-${passProps.variant})` : passProps.color || 'inherit'
+			color: passProps.variant ? `var(--bs-${passProps.variant})` : passProps.color || null
 		}
 	);
 
