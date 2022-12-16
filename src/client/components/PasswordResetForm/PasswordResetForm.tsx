@@ -59,6 +59,8 @@ function PasswordResetForm() {
 						type="email"
 						name="email"
 						disabled={loading}
+						autoComplete="username"
+						id="username"
 						required
 						autoFocus
 						value={values.email}

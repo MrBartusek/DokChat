@@ -26,6 +26,8 @@ function LoginForm() {
 					<Form.Control
 						type="email"
 						name="email"
+						autoComplete="username"
+						id="username"
 						disabled={loading}
 						required
 						autoFocus
@@ -39,6 +41,8 @@ function LoginForm() {
 					<Form.Control
 						type="password"
 						name="password"
+						autoComplete="current-password"
+						id="current-password"
 						required
 						disabled={loading}
 						value={values.password}

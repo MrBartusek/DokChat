@@ -39,6 +39,8 @@ function RegisterForm() {
 					<Form.Control
 						type="email"
 						name="email"
+						autoComplete="username"
+						id="username"
 						disabled={loading}
 						required
 						autoFocus
@@ -67,6 +69,8 @@ function RegisterForm() {
 					<Form.Control
 						type="password"
 						name="password"
+						autoComplete="new-password"
+						id="new-password"
 						required
 						disabled={loading}
 						value={values.password}
@@ -79,6 +83,8 @@ function RegisterForm() {
 					<Form.Control
 						type="password"
 						name="confirmPassword"
+						autoComplete="new-password"
+						id="new-password"
 						ref={passwordConfirmRef}
 						required
 						disabled={loading}
