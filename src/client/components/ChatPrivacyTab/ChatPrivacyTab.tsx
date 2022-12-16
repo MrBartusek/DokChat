@@ -1,56 +1,31 @@
-import React, { useContext, useState } from 'react';
-import { Alert, Stack } from 'react-bootstrap';
+import React from 'react';
+import { Stack } from 'react-bootstrap';
 import { BsBoxArrowLeft, BsEyeSlashFill, BsSlashCircle } from 'react-icons/bs';
-import { Link, useNavigate } from 'react-router-dom';
-import { EndpointResponse } from '../../../types/endpoints';
-import { MessageManagerContext } from '../../context/MessageManagerContext';
-import { UserContext } from '../../context/UserContext';
-import getAxios from '../../helpers/axios';
+import { useNavigate } from 'react-router-dom';
 import { LocalChat } from '../../types/Chat';
 import InteractiveCard from '../InteractiveCard/InteractiveCard';
 
 export interface ChatPrivacyTabProps {
-	currentChat: LocalChat,
-	setCustomStatic: React.Dispatch<React.SetStateAction<boolean>>,
+	currentChat: LocalChat
 }
 
-export default function ChatPrivacyTab({ currentChat, setCustomStatic }: ChatPrivacyTabProps) {
-	const [ user ] = useContext(UserContext);
-	const [ loading, setLoading ] = useState(false);
-	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
-	const [ error, setError ] = useState(null);
+export default function ChatPrivacyTab({ currentChat }: ChatPrivacyTabProps) {
 	const navigate = useNavigate();
-
-	async function handleHide(e: React.MouseEvent) {
-		const axios = getAxios(user);
-
-		setLoading(true);
-		setCustomStatic(true);
-		await axios.post('chat/hide', { chat: currentChat.id })
-			.then(() => {
-				const chatsCopy = [ ...chats ];
-				setChatList(chatsCopy.filter(c => c.id !== currentChat.id));
-				navigate('/chat');
-			});
-	}
 
 	return (
 		<>
-			{error && <Alert variant='danger'>{error}</Alert>}
 			<Stack gap={3}>
 				<InteractiveCard
 					title="Hide this conversation"
 					description='Temporarily remove this chat from chats list'
 					icon={BsEyeSlashFill}
-					disabled={loading}
-					onClick={handleHide}
+					onClick={() => navigate(`/chat/${currentChat.id}/hide`)}
 				/>
 				{!currentChat.isGroup && (
 					<InteractiveCard
 						title="Block"
 						description='Block this user'
 						icon={BsSlashCircle}
-						disabled={loading}
 					/>
 				)}
 				{currentChat.isGroup && (
@@ -58,7 +33,6 @@ export default function ChatPrivacyTab({ currentChat, setCustomStatic }: ChatPri
 						title="Leave group"
 						description='Leave this group'
 						icon={BsBoxArrowLeft}
-						disabled={loading}
 						onClick={() => navigate(`/chat/${currentChat.id}/leave`)}
 					/>
 				)}
