@@ -68,7 +68,7 @@ function ChatDetailsPopup() {
 					<ChatParticipantsTab participants={participants.res?.data || []} />
 				</Tab>
 				<Tab eventKey="privacy" title="Privacy" className='pt-4' disabled={customStatic}>
-					<ChatPrivacyTab currentChat={currentChat} />
+					<ChatPrivacyTab currentChat={currentChat} participants={participants.res?.data || []} />
 				</Tab>
 			</Tabs>
 		</Popup>

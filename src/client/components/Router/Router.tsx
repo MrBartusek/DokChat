@@ -23,6 +23,7 @@ const EmailConfirmPopupLazy = React.lazy(() => import('../EmailConfirmPopup/Emai
 const DeleteAccountPopupLazy = React.lazy(() => import('../DeleteAccountPopup/DeleteAccountPopup'));
 const GroupLeavePopupLazy = React.lazy(() => import('../GroupLeavePopup/GroupLeavePopup'));
 const ChatHidePopupLazy = React.lazy(() => import('../ChatHidePopup/ChatHidePopup'));
+const UserBlockPopupLazy = React.lazy(() => import('../UserBlockPopup/UserBlockPopup'));
 
 function Router() {
 	return (
@@ -48,6 +49,11 @@ function Router() {
 					<Route path=":chatId/hide" element={
 						<React.Suspense fallback={null}>
 							<ChatHidePopupLazy />
+						</React.Suspense>
+					} />
+					<Route path="user/:userId/block" element={
+						<React.Suspense fallback={null}>
+							<UserBlockPopupLazy />
 						</React.Suspense>
 					} />
 					<Route path="new" element={

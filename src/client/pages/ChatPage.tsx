@@ -31,8 +31,9 @@ export function ChatPage() {
 			'/chat/new',
 			'/chat/profile',
 			'/chat/email-confirm',
-			'/chat/delete-account'
-		].includes(location.pathname));
+			'/chat/delete-account',
+			'/chat/user'
+		].find(x => location.pathname.startsWith(x))) !== undefined;
 
 		const isEmailConfirmRoute = location.pathname == '/chat/email-confirm';
 		if(!user.isEmailConfirmed && !isEmailConfirmRoute) {
