@@ -20,7 +20,7 @@ function GifButton({ fileUploader, color }: EmojiButtonProps) {
 	}
 
 	const gifPicker = (
-		<Popover style={{maxWidth: 500}}>
+		<Popover style={{maxWidth: 500}} className="bg-transparent">
 			<Popover.Body className='p-0'>
 				<GifPicker tenorApiKey={TENOR_API_KEY} onGifClick={handleGifClick} />
 			</Popover.Body>

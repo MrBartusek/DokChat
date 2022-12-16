@@ -14,7 +14,7 @@ function EmojiButton({ onEmojiClick, color }: EmojiButtonProps) {
 	const [ settings ] = useContext(SettingsContext);
 
 	const emojiPicker = (
-		<Popover style={{maxWidth: 500}}>
+		<Popover style={{maxWidth: 500}} className="bg-transparent">
 			<Popover.Body className='p-0'>
 				<EmojiPicker
 					lazyLoadEmojis={true}
