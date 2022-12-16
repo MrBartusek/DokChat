@@ -12,7 +12,7 @@ export default function registerOnlineStatusHandler(io: DokChatServer, socket: D
 			const lastSeen = DateFns.fromUnixTime(user.lastSeen);
 			const lastSeenDiff = DateFns.differenceInMinutes(new Date(), lastSeen);
 			const isOnline = lastSeenDiff <= 5;
-			const lastSeenFormatted = DateFns.formatDistance(lastSeen, new Date(), { addSuffix: true });
+			const lastSeenFormatted = 'Last seen ' +  DateFns.formatDistance(lastSeen, new Date(), { addSuffix: true });
 			const isVeryOld = DateFns.differenceInDays(new Date(), lastSeen) > 30;
 			return {
 				id: user.userId,
