@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Alert } from 'react-bootstrap';
+import toast from 'react-hot-toast';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { EndpointResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
@@ -30,6 +31,7 @@ function GroupLeavePopup() {
 			.then(() => {
 				const chatsCopy = [ ...chats ];
 				setChatList(chatsCopy.filter(c => c.id !== currentChat.id));
+				toast('You have just left this group');
 				navigate('/chat');
 			})
 			.catch((error) => {

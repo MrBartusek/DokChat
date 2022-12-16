@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Alert } from 'react-bootstrap';
+import toast from 'react-hot-toast';
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { User } from '../../../types/common';
 import { EndpointResponse } from '../../../types/endpoints';
@@ -28,6 +29,7 @@ function UserBlockPopup() {
 		setLoading(true);
 		await axios.post('user/block', { userId })
 			.then(() => {
+				toast('This user has been blocked');
 				navigate('/chat');
 			})
 			.catch((error) => {
