@@ -1,5 +1,5 @@
 import * as DateFns from 'date-fns';
-import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { OverlayTrigger, Tooltip, TooltipProps } from 'react-bootstrap';
 import { Twemoji } from 'react-emoji-render';
 import { BsCheckCircle, BsCheckCircleFill, BsXCircle } from 'react-icons/bs';
@@ -7,7 +7,6 @@ import { EndpointResponse, MessageListResponse } from '../../../types/endpoints'
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
-import { useFetch } from '../../hooks/useFetch';
 import { LocalChat, LocalMessage } from '../../types/Chat';
 import MessageAttachment from '../MessageAttachment/MessageAttachment';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';

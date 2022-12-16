@@ -1,5 +1,4 @@
-import { SourceType } from 'fslightbox-react';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { BsExclamationSquare } from 'react-icons/bs';
 import { LocalMessage } from '../../types/Chat';

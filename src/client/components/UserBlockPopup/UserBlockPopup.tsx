@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Alert } from 'react-bootstrap';
 import toast from 'react-hot-toast';
-import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { User } from '../../../types/common';
 import { EndpointResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import { useFetch } from '../../hooks/useFetch';
-import { LocalChat } from '../../types/Chat';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import Popup from '../Popup/Popup';
 import SimpleLoading from '../SimpleLoadng/SimpleLoading';

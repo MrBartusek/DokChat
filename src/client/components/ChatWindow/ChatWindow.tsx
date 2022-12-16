@@ -1,5 +1,4 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
 import { LocalChat } from '../../types/Chat';
 import ChatInfo from '../ChatInfo/ChatInfo';
 import ChatList from '../ChatList/ChatList';

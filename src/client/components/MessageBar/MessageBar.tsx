@@ -1,12 +1,9 @@
 import { EmojiClickData } from 'emoji-picker-react';
-import GifPicker, { TenorImage } from 'gif-picker-react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Col, Form, OverlayTrigger, Popover } from 'react-bootstrap';
-import { AiOutlineGif } from 'react-icons/ai';
+import { Col, Form } from 'react-bootstrap';
 import { BsImage } from 'react-icons/bs';
 import { MdSend } from 'react-icons/md';
 import { ALLOWED_ATTACHMENT_FORMAT } from '../../../types/const';
-import { TENOR_API_KEY } from '../../config';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { useForm } from '../../hooks/useForm';
 import { LocalChat } from '../../types/Chat';

@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext } from 'react';
 import ReCAPTCHA, { ReCAPTCHAProps } from 'react-google-recaptcha';
 import { RECAPTCHA_SITE_KEY } from '../../config';
 import { SettingsContext } from '../../context/ThemeContext';

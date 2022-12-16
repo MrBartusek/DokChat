@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React from 'react';
 import Image, { ImageProps } from 'react-bootstrap/Image';
-import { OnlineManagerContext } from '../../context/OnlineManagerContext';
 import './ProfilePicture.scss';
 
 interface ProfilePictureProps extends ImageProps {

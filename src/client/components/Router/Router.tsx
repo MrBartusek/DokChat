@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Alert, Modal } from 'react-bootstrap';
+import { Alert } from 'react-bootstrap';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import { AccountBannedPage } from '../../pages/AccountBannedPage';
