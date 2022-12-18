@@ -51,13 +51,13 @@ router.all('/update',
 			await db.query(sql`UPDATE chats SET avatar = $1 WHERE id=$2`, [ fileName, id ]);
 		}
 
-		if(color) {
+		if(name) {
 			await db.query(sql`
 				UPDATE chats SET name = $1 WHERE id=$2`,
 			[ name, id ]);
 		}
 
-		if(name) {
+		if(color) {
 			await db.query(sql`
 				UPDATE chats SET color = $1 WHERE id=$2`,
 			[ CHAT_COLORS.find(c => c.hex == color).id, id ]);
