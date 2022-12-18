@@ -1,5 +1,5 @@
 import * as DateFns from 'date-fns';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { OverlayTrigger, Tooltip, TooltipProps } from 'react-bootstrap';
 import { Twemoji } from 'react-emoji-render';
 import { BsCheckCircle, BsCheckCircleFill, BsXCircle } from 'react-icons/bs';
@@ -30,6 +30,12 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 		if(currentChat.isInitialized) return;
 		fetchMoreMessages(40);
 	}, [ currentChat ]);
+
+	useLayoutEffect(() => {
+		if(!messageWindowRef.current) return;
+		if(messageWindowRef.current.scrollTop <= -300) return;
+		messageWindowRef.current.scrollTo(0, messageWindowRef.current.scrollHeight);
+	}, [ chats, messageWindowRef ]);
 
 	async function handleScroll() {
 		if(isLoading || !hasMore) return;

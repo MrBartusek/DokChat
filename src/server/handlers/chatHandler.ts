@@ -19,10 +19,7 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 		}
 
 		// Add message to db
-		let attachmentKey = undefined, attachment = undefined;
-		if(msg.attachment) {
-			[ attachmentKey, attachment ] = await uploadAttachment(msg.attachment);
-		}
+		const [ attachmentKey, attachment ] = await uploadAttachment(msg.attachment);
 
 		const [ id, timestamp ] = await ChatManager.saveMessage(
 			socket.auth,
