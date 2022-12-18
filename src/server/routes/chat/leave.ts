@@ -3,6 +3,7 @@ import { body, validationResult } from 'express-validator';
 import sql from 'sql-template-strings';
 import { ApiResponse } from '../../apiResponse';
 import db from '../../db';
+import { systemMessageHandler } from '../../handlers/systemMessageHandler';
 import ChatManager from '../../managers/chatManager';
 import PermissionsManager from '../../managers/permissionsManager';
 import allowedMethods from '../../middlewares/allowedMethods';
@@ -29,10 +30,8 @@ router.all('/leave',
 			return new ApiResponse(res).badRequest('Cannot leave chat that is not a group');
 		}
 
-		await db.query(sql`
-            DELETE FROM participants WHERE user_id = $1 AND chat_id=$2
-        `, [ req.auth.id, chatId ]);
-
+		ChatManager.removeUserFromChat(chatId, req.auth.id);
+		systemMessageHandler.sendChatLeave(chatId, req.auth);
 		new ApiResponse(res).success();
 	});
 

@@ -43,8 +43,18 @@ class SystemMessageHandler {
 	}
 
 	public sendChatUpdated(chatId: string, user: UserJWTData) {
-		const discriminator = `${user.username}#${user.tag}`;
+		const discriminator = Utils.userDiscriminator(user);
 		this.sendSystemMessage(chatId, `${discriminator} has updated this chat`);
+	}
+
+	public sendChatLeave(chatId: string, user: UserJWTData) {
+		const discriminator = Utils.userDiscriminator(user);
+		this.sendSystemMessage(chatId, `${discriminator} has left this group`);
+	}
+
+	public sendChatJoin(chatId: string, user: UserJWTData) {
+		const discriminator = Utils.userDiscriminator(user);
+		this.sendSystemMessage(chatId, `${discriminator} was added to this chat`);
 	}
 }
 

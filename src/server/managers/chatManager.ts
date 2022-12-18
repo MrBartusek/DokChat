@@ -146,6 +146,12 @@ export default class ChatManager {
 		return participantId.toString();
 	}
 
+	public static async removeUserFromChat(userId: string, chatId: string): Promise<void> {
+		await db.query(sql`
+            DELETE FROM participants WHERE user_id = $1 AND chat_id=$2
+        `, [ userId, chatId ]);
+	}
+
 	public static async setChatHideForParticipant(participant: InternalChatParticipant | string, hide: boolean) {
 		const id = typeof participant == 'string' ? participant : participant.id;
 		await db.query(sql`
