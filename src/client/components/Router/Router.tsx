@@ -4,6 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import { AccountBannedPage } from '../../pages/AccountBannedPage';
 import { ChatPage } from '../../pages/ChatPage';
+import { DownloadPage } from '../../pages/DownloadPage';
 import { EmailConfirmPage } from '../../pages/EmailConfirmPage';
 import { HomePage } from '../../pages/HomePage';
 import { LoginPage } from '../../pages/LoginPage';
@@ -28,7 +29,6 @@ const UserBlockPopupLazy = React.lazy(() => import('../UserBlockPopup/UserBlockP
 function Router() {
 	return (
 		<BrowserRouter>
-			<ScrollToTop />
 			<Routes>
 				<Route path="chat" element={
 					<PrivateRoute>
@@ -79,7 +79,9 @@ function Router() {
 				</Route>
 
 				<Route path="/" element={<HomePage />} />
+				<Route path="/about" element={<HomePage scrollToAbout />} />
 				<Route path="privacy-policy" element={<PrivacyPolicyPage />} />
+				<Route path="download" element={<DownloadPage />} />
 
 				<Route path="login" element={
 					<PublicOnlyRoute>

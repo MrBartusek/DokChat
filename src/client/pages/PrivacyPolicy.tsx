@@ -1,10 +1,12 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
 import Layout from '../components/Layout/Layout';
+import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
 
 export function PrivacyPolicyPage() {
 	return (
 		<Layout>
+			<ScrollToTop />
 			<Container className='my-5'>
 				<h1 className='mb-3'>Privacy Policy for DokChat</h1>
 

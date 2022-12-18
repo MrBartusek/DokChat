@@ -1,17 +1,30 @@
-import React from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { BsChatSquareTextFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import HomeSection from '../components/HomeSection/HomeSection';
 import InteractiveButton from '../components/InteractiveButton/InteractiveButton';
 import Layout from '../components/Layout/Layout';
+import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
 import Section from '../components/Section/Section';
 
-export function HomePage() {
+export interface HomePageProps {
+	scrollToAbout?: boolean;
+}
+
+export function HomePage({ scrollToAbout }: HomePageProps) {
+	const aboutRef = useRef<HTMLDivElement>(null!);
+
+	useLayoutEffect(() => {
+		if(!scrollToAbout) return;
+		aboutRef.current.scrollIntoView({ behavior: 'smooth' });
+	}, [ scrollToAbout ]);
+
 	return (
 		<Layout zeroHeightNavbar={true}>
+			{!scrollToAbout && <ScrollToTop />}
 			<Header />
-			<div id='features'></div>
+			<div ref={aboutRef}></div>
 			<HomeSection
 				img="/img/undraw_ask_me_anything.svg"
 				title="Connect with anyone"
