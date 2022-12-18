@@ -9,6 +9,7 @@ import db from '../../db';
 import ChatManager from '../../managers/chatManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
+import Utils from '../../utils/utils';
 
 const router = express.Router();
 
@@ -24,14 +25,12 @@ router.all('/list',
 		const chatsQuery = await queryChats(req, page);
 		const chats = await Promise.all(chatsQuery.rows.map(async (chat) => {
 			const participant = await ChatManager.listParticipants(chat.chatId);
-			const [ avatar, chatName ] = await ChatManager.generateAvatarAndName(
-				chat.chatId, chat.name, chat.avatar, participant, req.auth.id
-			);
+			const chatName = await ChatManager.generateChatName(chat.name, participant, req.auth.id);
 
 			return {
 				id: chat.chatId,
 				name: chatName,
-				avatar: avatar,
+				avatar: Utils.avatarUrl(chat.chatId),
 				color: CHAT_COLORS[chat.color] || CHAT_COLORS[0],
 				isGroup: chat.isGroup,
 				createdAt: chat.createdAt,

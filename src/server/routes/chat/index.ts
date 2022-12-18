@@ -5,6 +5,7 @@ import hideRouter from './leave';
 import listRouter from './list';
 import messagesRouter from './messages';
 import participantsRouter from './participants';
+import updateRouter from './update';
 
 const router = express.Router();
 
@@ -14,5 +15,7 @@ router.use(createRouter);
 router.use(participantsRouter);
 router.use(hideRouter);
 router.use(leaveRouter);
+router.use(leaveRouter);
+router.use(updateRouter);
 
 export default router;

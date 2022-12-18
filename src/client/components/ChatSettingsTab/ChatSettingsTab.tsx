@@ -74,7 +74,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 				</InteractiveButton>
 			</>
 		);
-	}, [ isEditing, isUnsaved, tab ]);
+	}, [ isEditing, isUnsaved, tab, name, color ]);
 
 	useEffect(() => {
 		setLoading(!props.participants);
@@ -89,7 +89,8 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 
 		const formData = new FormData();
 		formData.append('name', name);
-		formData.append('color', color.name);
+		formData.append('color', color.hex);
+		formData.append('id', props.currentChat.id);
 
 		const avatarUpdated = avatarUploader.file != undefined;
 		if(avatarUpdated) {
