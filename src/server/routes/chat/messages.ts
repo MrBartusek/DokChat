@@ -59,7 +59,7 @@ router.all('/messages',
 type MessagesQuery = QueryResult<{
 	id: string,
 	content: string,
-	isSystem: string,
+	isSystem: boolean,
 	authorId: string,
 	authorUsername: string,
 	authorTag: string,
