@@ -118,11 +118,13 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 		setTab(tab);
 	}
 
+	const participantsCount = (props.participants && props.participants.length) || 0;
+
 	return (
 		<>
 			<ObjectEditHero
 				title={<Twemoji text={name || props.currentChat.name} />}
-				subTitle={`${(props.participants && props.participants.length) || 0} participants`}
+				subTitle={!props.currentChat.isGroup ? 'Private Conversation' : `${participantsCount} participants`}
 				currentAvatar={props.currentChat.avatar}
 				avatarUploader={avatarUploader}
 				setAvatarUploader={setAvatarUploader}
@@ -165,7 +167,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 			)}
 
 			{tab == 'name' && (
-				<Form autoComplete='off' className='py-4' onSubmit={(e) => {
+				<Form autoComplete='off' className='py-3' onSubmit={(e) => {
 					e.preventDefault();
 					setTab('home');
 				}}>
@@ -174,6 +176,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 							autoFocus
 							type="text"
 							name="Chat name"
+							className='pb-3'
 							value={name}
 							onChange={(e) => setName(e.target.value)}
 							required
@@ -185,7 +188,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 			)}
 
 			{tab == 'color' && (
-				<div className='py-4 d-flex align-items-center flex-column'>
+				<div className='py-3 d-flex align-items-center flex-column'>
 					<div className='text-muted pb-3'>
 						Select chat color
 					</div>
@@ -195,6 +198,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 						circleSize={30}
 						circleSpacing={18}
 						width='240px'
+						className='pb-3'
 						onChangeComplete={(c) => setColor(CHAT_COLORS.find(x => c.hex == x.hex))}
 					/>
 				</div>
