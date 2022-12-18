@@ -4,7 +4,6 @@ import { CHAT_COLORS } from '../../types/colors';
 import { Chat, MessageAttachment } from '../../types/common';
 import { UserJWTData } from '../../types/jwt';
 import db from '../db';
-import { systemMessageHandler } from '../handlers/systemMessageHandler';
 import { InternalChatParticipant } from '../types/common';
 import { snowflakeGenerator } from '../utils/snowflakeGenerator';
 import Utils from '../utils/utils';

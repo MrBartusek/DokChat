@@ -15,7 +15,6 @@ import EmailConfirmer from '../EmailConfirmer/EmailConfirmer';
 import ErrorPage from '../ErrorPage/ErrorPage';
 import NewPasswordDialog from '../NewPasswordDialog/NewPasswordDialog';
 import PasswordResetForm from '../PasswordResetForm/PasswordResetForm';
-import ScrollToTop from '../ScrollToTop/ScrollToTop';
 
 const ChatDetailsPopupLazy = React.lazy(() => import('../ChatDetailsPopup/ChatDetailsPopup'));
 const NewChatPopupLazy = React.lazy(() => import('../NewChatPopup/NewChatPopup'));
