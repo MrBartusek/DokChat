@@ -176,6 +176,11 @@ export default class ChatManager {
 		return chatQuery.rows[0].id;
 	}
 
+	public static async isGroup(chatId: string): Promise<boolean> {
+		const chatQuery = await db.query(sql`SELECT is_group as "isGroup" FROM chats WHERE id = $1;`, [ chatId ]);
+		return chatQuery.rows[0].isGroup;
+	}
+
 	/**
 	 * Save message to database
 	 * @returns [ id, timestamp]

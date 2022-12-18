@@ -88,9 +88,13 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 		setLoading(true);
 
 		const formData = new FormData();
-		formData.append('name', name);
-		formData.append('color', color.hex);
 		formData.append('id', props.currentChat.id);
+		if(name != props.currentChat.name) {
+			formData.append('name', name);
+		}
+		if(color.name != props.currentChat.color.name) {
+			formData.append('color', color.hex);
+		}
 
 		const avatarUpdated = avatarUploader.file != undefined;
 		if(avatarUpdated) {
@@ -127,8 +131,8 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 				title={<Twemoji text={name || props.currentChat.name} />}
 				subTitle={!props.currentChat.isGroup ? 'Private Conversation' : `${participantsCount} participants`}
 				currentAvatar={props.currentChat.avatar}
-				avatarUploader={avatarUploader}
-				setAvatarUploader={setAvatarUploader}
+				avatarUploader={props.currentChat.isGroup && avatarUploader}
+				setAvatarUploader={props.currentChat.isGroup && setAvatarUploader}
 			/>
 
 			{error && <Alert variant='danger'>{error}</Alert>}

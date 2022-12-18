@@ -7,6 +7,7 @@ import { ApiResponse } from '../../apiResponse';
 import s3Client from '../../aws/s3';
 import db from '../../db';
 import { systemMessageHandler } from '../../handlers/systemMessageHandler';
+import ChatManager from '../../managers/chatManager';
 import PermissionsManager from '../../managers/permissionsManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
@@ -21,8 +22,8 @@ router.all('/update',
 	allowedMethods('PUT'),
 	upload.single('avatar'),
 	body('id').isString(),
-	body('name').isString().isLength({max: 32, min: 2}),
-	body('color').custom(isValidColor),
+	body('name').optional().isLength({max: 32, min: 2}),
+	body('color').optional().custom(isValidColor),
 	async (req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
@@ -36,6 +37,12 @@ router.all('/update',
 			return new ApiResponse(res).forbidden();
 		}
 
+		const isGroup = await ChatManager.isGroup(id);
+
+		if(!isGroup && (avatar || name)) {
+			return new ApiResponse(res).badRequest('This chat is not a group');
+		}
+
 		// Upload avatar to S3
 		if(avatar) {
 			const oldAvatar = await getChatAvatar(id);
@@ -44,11 +51,25 @@ router.all('/update',
 			await db.query(sql`UPDATE chats SET avatar = $1 WHERE id=$2`, [ fileName, id ]);
 		}
 
-		await db.query(sql`
-			UPDATE chats SET name = $1, color = $2 WHERE id=$3`,
-		[ name, CHAT_COLORS.find(c => c.hex == color).id, id ]);
+		if(color) {
+			await db.query(sql`
+				UPDATE chats SET name = $1 WHERE id=$2`,
+			[ name, id ]);
+		}
 
-		systemMessageHandler.sendChatUpdated(id, req.auth);
+		if(name) {
+			await db.query(sql`
+				UPDATE chats SET color = $1 WHERE id=$2`,
+			[ CHAT_COLORS.find(c => c.hex == color).id, id ]);
+		}
+
+		systemMessageHandler.sendChatUpdated(
+			id,
+			req.auth,
+			name != undefined,
+			avatar != undefined,
+			color != undefined
+		);
 		return new ApiResponse(res).success();
 	});
 

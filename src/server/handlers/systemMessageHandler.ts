@@ -42,9 +42,25 @@ class SystemMessageHandler {
 		}
 	}
 
-	public sendChatUpdated(chatId: string, user: UserJWTData) {
+	public sendChatUpdated(chatId: string, user: UserJWTData, name: boolean, avatar: boolean, color: boolean) {
 		const discriminator = Utils.userDiscriminator(user);
-		this.sendSystemMessage(chatId, `${discriminator} has updated this chat`);
+		const updatedThings = [];
+
+		if(name) updatedThings.push('name');
+		if(avatar) updatedThings.push('avatar');
+		if(color) updatedThings.push('color');
+
+		let updatedString = '';
+
+		if(updatedThings.length == 1) {
+			updatedString = updatedThings[0];
+		}
+		else {
+			const lastEl = updatedThings.pop();
+			updatedString = `${updatedThings.join(', ')} and ${lastEl}`;
+		}
+
+		this.sendSystemMessage(chatId, `${discriminator} has updated this chat ${updatedString}`);
 	}
 
 	public sendChatLeave(chatId: string, user: UserJWTData) {
