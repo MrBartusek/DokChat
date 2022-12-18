@@ -47,6 +47,7 @@ export interface MessageAttachment {
 export interface Message {
     id: string,
     author: User,
+    isSystem: boolean;
     content?: string,
     timestamp: string,
     attachment: MessageAttachment

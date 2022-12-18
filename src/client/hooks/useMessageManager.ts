@@ -67,9 +67,10 @@ export function useMessageManager(ws: useWebsocketType): [
 				chat.addMessage(msg);
 				chat.avatar = msg.chat.avatar;
 				chat.name = msg.chat.name;
+				chat.color = msg.chat.color;
 			}
 			setChatList(chats);
-			if(settings.soundNotifications) playPing();
+			if(settings.soundNotifications && !msg.isSystem) playPing();
 		});
 		return () => {
 			ws.socket.off('message');
@@ -111,6 +112,7 @@ export function useMessageManager(ws: useWebsocketType): [
 		const pendingMessageId = chats[chatId].addMessage({
 			id: '0', // This will be auto-generated
 			isPending: true,
+			isSystem: false,
 			attachment: {
 				hasAttachment: attachment != undefined,
 				mimeType: attachment && attachment.type

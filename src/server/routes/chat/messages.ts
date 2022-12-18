@@ -35,6 +35,7 @@ router.all('/messages',
 			return {
 				id: msg.id,
 				content: msg.content,
+				isSystem: msg.isSystem,
 				timestamp: msg.createdAt,
 				avatar: Utils.avatarUrl(msg.authorId),
 				attachment:  {
@@ -58,6 +59,7 @@ router.all('/messages',
 type MessagesQuery = QueryResult<{
 	id: string,
 	content: string,
+	isSystem: string,
 	authorId: string,
 	authorUsername: string,
 	authorTag: string,
@@ -72,6 +74,7 @@ async function queryMessages(chatId: string, lastMessageTimestamp: number, count
 		SELECT
 			messages.id,
 			messages.content,
+			messages.is_system as "isSystem",
 			messages.author_id as "authorId",
 			users.username as "authorUsername",
 			users.tag as "authorTag",

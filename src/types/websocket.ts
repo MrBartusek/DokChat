@@ -22,6 +22,7 @@ export type ClientAttachment = {
 export interface ServerMessage {
     id: string,
     content?: string,
+    isSystem: boolean,
     chat: Chat,
     attachment: MessageAttachment
     author: {

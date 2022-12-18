@@ -8,6 +8,7 @@ import { ApiResponse } from '../../apiResponse';
 import s3Client from '../../aws/s3';
 import emailClient from '../../aws/ses';
 import db from '../../db';
+import { systemMessageHandler } from '../../handlers/systemMessageHandler';
 import AuthManager from '../../managers/authManager';
 import PermissionsManager from '../../managers/permissionsManager';
 import UserManager from '../../managers/userManager';
@@ -51,6 +52,7 @@ router.all('/update',
 			UPDATE chats SET name = $1, color = $2 WHERE id=$3`,
 		[ name, CHAT_COLORS.find(c => c.hex == color).id, id ]);
 
+		systemMessageHandler.sendChatUpdated(id, req.auth);
 		return new ApiResponse(res).success();
 	});
 

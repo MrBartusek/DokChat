@@ -4,6 +4,7 @@ import { CHAT_COLORS } from '../../types/colors';
 import { Chat, MessageAttachment } from '../../types/common';
 import { UserJWTData } from '../../types/jwt';
 import db from '../db';
+import { systemMessageHandler } from '../handlers/systemMessageHandler';
 import { InternalChatParticipant } from '../types/common';
 import { snowflakeGenerator } from '../utils/snowflakeGenerator';
 import Utils from '../utils/utils';
@@ -186,13 +187,13 @@ export default class ChatManager {
 
 		await db.query(sql`
 			INSERT INTO messages 
-				(id, chat_id, author_id, content, created_at, attachment,
+				(id, chat_id, author_id, content, created_at, is_system, attachment,
 				attachment_type, attachment_height, attachment_width)
 			VALUES (
-				$1, $2, $3, $4, $5, $6, $7, $8, $9
+				$1, $2, $3, $4, $5, $6, $7, $8, $9, $10
 			);
-		`, [ id, chatId, senderId, content, timestamp, attachmentKey,
-			attachment.mimeType, attachment.height, attachment.width ]);
+		`, [ id, chatId, senderId, content, timestamp, sender == 'SYSTEM', attachmentKey,
+			attachment?.mimeType, attachment?.height, attachment?.width ]);
 		return [ id, timestamp ];
 	}
 }

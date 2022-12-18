@@ -108,19 +108,26 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 
 				return (
 					<div className='d-flex flex-column' key={msg.id}>
-						{(showTimestamp) && (
-							<SystemMessage
-								content={DateFns.format(DateFns.fromUnixTime(Number(msg.timestamp)), format)}
-							/>
+						{msg.isSystem ? (
+							<SystemMessage content={msg.content}/>
+						) : (
+							<>
+								{(showTimestamp) && (
+									<SystemMessage
+										content={DateFns.format(DateFns.fromUnixTime(Number(msg.timestamp)), format)}
+									/>
+								)}
+								<UserMessage
+									currentChat={currentChat}
+									message={msg}
+									showAvatar={!isAuthor && (msg.author.id != prev?.author?.id || isFirstInBlock)}
+									showAuthor={!isAuthor && (msg.author.id != next?.author?.id || showTimestamp)}
+									showStatus={isAuthor && msg.author.id != prev?.author?.id}
+								/>
+								{(prev && msg.author.id != prev.author.id) && <Separator height={12} />}
+							</>
 						)}
-						<UserMessage
-							currentChat={currentChat}
-							message={msg}
-							showAvatar={!isAuthor && (msg.author.id != prev?.author?.id || isFirstInBlock)}
-							showAuthor={!isAuthor && (msg.author.id != next?.author?.id || showTimestamp)}
-							showStatus={isAuthor && msg.author.id != prev?.author?.id}
-						/>
-						{(prev && msg.author.id != prev.author.id) && <Separator height={12} />}
+
 					</div>
 				);
 			})}
