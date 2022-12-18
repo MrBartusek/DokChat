@@ -12,6 +12,7 @@ import CopyButton from '../CopyButton/CopyButton';
 import { FileUploaderResult } from '../FileUploader/FileUploader';
 import IconButton from '../IconButton/IconButton';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
+import ObjectEditHero from '../ObjectEditHero/ObjectEditHero';
 
 export interface ProfileSettingsProps {
 	setCustomFooter: React.Dispatch<React.SetStateAction<JSX.Element>>,
@@ -108,24 +109,16 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 		<>
 			{error && <Alert variant='danger'>{error}</Alert>}
 
-			<div className='d-flex align-items-center flex-column mb-2'>
-				<ChangeableAvatar
-					size={90}
-					currentAvatar={user.avatar}
-					fileUploader={avatarUploader}
-					setFileUploader={setAvatarUploader}
-				/>
-				<span className='lead fw-bold mt-2 d-flex align-items-center'>
-					<span className='mx-1' style={{paddingLeft: 32}}>
-						{user.username}
-						<span className="text-muted">#{user.tag}</span>
-					</span>
-					<CopyButton copyText={user.discriminator} />
-				</span>
-				<p className="text-muted">
-					Online
-				</p>
-			</div>
+			<ObjectEditHero
+				title={(<>
+					{user.username}
+					<span className="text-muted">#{user.tag}</span>
+				</>)}
+				subTitle="Online"
+				currentAvatar={user.avatar}
+				avatarUploader={avatarUploader}
+				setAvatarUploader={setAvatarUploader}
+			/>
 
 			<Form ref={formRef} onSubmit={handleSubmit}>
 				<div className="position-relative">

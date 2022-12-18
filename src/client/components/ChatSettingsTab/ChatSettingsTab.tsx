@@ -11,6 +11,7 @@ import ChangeableAvatar from '../ChangeableAvatar/ChangeableAvatar';
 import { FileUploaderResult } from '../FileUploader/FileUploader';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import InteractiveCard from '../InteractiveCard/InteractiveCard';
+import ObjectEditHero from '../ObjectEditHero/ObjectEditHero';
 
 export interface ChatSettingsTabProps {
 	currentChat: LocalChat;
@@ -21,11 +22,11 @@ export interface ChatSettingsTabProps {
 }
 
 export default function ChatSettingsTab(props: ChatSettingsTabProps) {
-	const [ user, updateToken ] = useContext(UserContext);
+	const [ user ] = useContext(UserContext);
 	const [ error, setError ] = useState<string | null>(null);
+	const [ isLoading, setLoading ] = useState(true);
 	const [ isEditing, setEditing ] = useState(false);
 	const [ isUnsaved, setUnsaved ] = useState(false);
-	const [ isLoading, setLoading ] = useState(true);
 
 	const [ avatarUploader, setAvatarUploader ]  = useState<FileUploaderResult>({});
 	const [ name, setName ] = useState(props.currentChat.name);
@@ -44,10 +45,6 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 			setEditing(true);
 		}
 	}, [ name, color, avatarUploader ]);
-
-	useEffect(() => {
-		setLoading(!props.participants);
-	}, [ props.participants ]);
 
 	/**
 	 * Handle footer
@@ -75,6 +72,10 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 	}, [ isEditing, isUnsaved ]);
 
 	useEffect(() => {
+		setLoading(!props.participants);
+	}, [ props.participants ]);
+
+	useEffect(() => {
 		props.setCustomStatic(isEditing);
 	}, [ isEditing ]);
 
@@ -83,25 +84,24 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 
 		const formData = new FormData();
 		formData.append('name', name);
-		formData.append('color', color.hex);
+		formData.append('color', color.name);
 
 		const avatarUpdated = avatarUploader.file != undefined;
 		if(avatarUpdated) {
 			formData.append('avatar', avatarUploader.file);
 		}
 
-		await getAxios(user).put('/user/update-profile', formData, { headers: {'Content-Type': 'multipart/form-data'}})
-			.then(() => updateToken(avatarUpdated))
+		await getAxios(user).put('/chat/update', formData, { headers: {'Content-Type': 'multipart/form-data'}})
 			.then(() => props.handleClose())
-			.then(() => toast('Your profile has been updated'))
+			.then(() => toast('This chat has been updated'))
 			.catch((e) => {
 				const resp: EndpointResponse<null> = e.response?.data;
-				setError(resp?.message || 'Failed to update profile at this time. Please try again later.');
+				setError(resp?.message || 'Failed to update this chat at this time. Please try again later.');
 				setLoading(false);
 			});
 	}
 
-	function handleDiscard(e: React.MouseEvent) {
+	function handleDiscard() {
 		setName(props.currentChat.name);
 		setColor(null);
 		setEditing(false);
@@ -111,22 +111,13 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 		<>
 			{error && <Alert variant='danger'>{error}</Alert>}
 
-			<div className='d-flex align-items-center flex-column mb-3'>
-				<ChangeableAvatar
-					size={90}
-					currentAvatar={props.currentChat.avatar}
-					fileUploader={avatarUploader}
-					setFileUploader={setAvatarUploader}
-				/>
-				<span className='lead fw-bold mt-2 mx-1 d-flex align-items-center'>
-					{props.currentChat.name}
-				</span>
-				{props.currentChat.isGroup && (
-					<p className="text-muted">
-						{(props.participants && props.participants.length) || 0} participants
-					</p>
-				)}
-			</div>
+			<ObjectEditHero
+				title={props.currentChat.name}
+				subTitle={`${(props.participants && props.participants.length) || 0} participants`}
+				currentAvatar={props.currentChat.avatar}
+				avatarUploader={avatarUploader}
+				setAvatarUploader={setAvatarUploader}
+			/>
 
 			<Stack gap={3}>
 				{props.currentChat.isGroup && (
@@ -144,6 +135,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 						description='Click here to change current avatar'
 						icon={BsImage}
 						disabled={isLoading}
+						onClick={avatarUploader.click}
 						showArrow
 					/>
 				)}
