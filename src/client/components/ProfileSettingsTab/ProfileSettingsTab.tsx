@@ -118,6 +118,7 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 				currentAvatar={user.avatar}
 				avatarUploader={avatarUploader}
 				setAvatarUploader={setAvatarUploader}
+				copyText={user.discriminator}
 			/>
 
 			<Form ref={formRef} onSubmit={handleSubmit}>
