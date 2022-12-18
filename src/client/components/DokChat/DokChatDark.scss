@@ -26,9 +26,13 @@
     }
 
     .form-control {
-        background-color: $dark-washed;
+        background-color: $dark-very-washed;
         border-color: $dark-border;
         color: $gray-200;
+    }
+
+    .form-control[readonly] {
+        background-color: $dark-washed !important;
     }
 
     .form-control-plaintext {
@@ -40,7 +44,7 @@
     }
     
     .input-group-text {
-        background-color: $dark-very-washed;
+        background-color: mix($dark-very-washed, #fff, 80%);
         border-color: $dark-border;
         color: $dark-text;
     }

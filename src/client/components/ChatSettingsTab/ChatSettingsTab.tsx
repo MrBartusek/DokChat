@@ -1,13 +1,15 @@
 import { default as React, useContext, useEffect, useState } from 'react';
-import { Alert, Stack } from 'react-bootstrap';
+import { Alert, FloatingLabel, Form, Stack } from 'react-bootstrap';
+import { CirclePicker } from 'react-color';
+import { Twemoji } from 'react-emoji-render';
 import toast from 'react-hot-toast';
 import { BsImage, BsPalette, BsPencil } from 'react-icons/bs';
+import { CHAT_COLORS } from '../../../types/colors';
 import { ChatParticipant } from '../../../types/common';
 import { EndpointResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import { LocalChat } from '../../types/Chat';
-import ChangeableAvatar from '../ChangeableAvatar/ChangeableAvatar';
 import { FileUploaderResult } from '../FileUploader/FileUploader';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import InteractiveCard from '../InteractiveCard/InteractiveCard';
@@ -32,13 +34,16 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 	const [ name, setName ] = useState(props.currentChat.name);
 	const [ color, setColor ] = useState(props.currentChat.color);
 
+	const [ tab, setTab ] = useState('home');
+
 	/**
 	 * Handle isUnsaved hook
 	 */
 	useEffect(() => {
 		const changed = (
 			name != props.currentChat.name ||
-			color.name != props.currentChat.color.name
+			color.name != props.currentChat.color.name ||
+			avatarUploader.file != undefined
 		);
 		setUnsaved(changed);
 		if(changed && !isEditing) {
@@ -57,11 +62,11 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 		props.setCustomFooter(
 			<>
 				<InteractiveButton variant='secondary' onClick={handleDiscard}>
-					{isUnsaved ? 'Discard changes' : 'Cancel'}
+					{tab != 'home' ? 'Back' : (isUnsaved ? 'Discard changes' : 'Cancel')}
 				</InteractiveButton>
 				<InteractiveButton
 					variant='primary'
-					onClick={() => handleSubmit}
+					onClick={handleSubmit}
 					disabled={!isUnsaved}
 					loading={isLoading}
 				>
@@ -69,7 +74,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 				</InteractiveButton>
 			</>
 		);
-	}, [ isEditing, isUnsaved ]);
+	}, [ isEditing, isUnsaved, tab ]);
 
 	useEffect(() => {
 		setLoading(!props.participants);
@@ -102,52 +107,98 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 	}
 
 	function handleDiscard() {
+		if(tab !== 'home') return setTab('home');
 		setName(props.currentChat.name);
-		setColor(null);
+		setColor(props.currentChat.color);
 		setEditing(false);
+	}
+
+	function handleTabChange(tab: string) {
+		setEditing(true);
+		setTab(tab);
 	}
 
 	return (
 		<>
-			{error && <Alert variant='danger'>{error}</Alert>}
-
 			<ObjectEditHero
-				title={props.currentChat.name}
+				title={<Twemoji text={name || props.currentChat.name} />}
 				subTitle={`${(props.participants && props.participants.length) || 0} participants`}
 				currentAvatar={props.currentChat.avatar}
 				avatarUploader={avatarUploader}
 				setAvatarUploader={setAvatarUploader}
 			/>
 
-			<Stack gap={3}>
-				{props.currentChat.isGroup && (
+			{error && <Alert variant='danger'>{error}</Alert>}
+
+			{tab == 'home' && (
+				<Stack gap={3}>
+					{props.currentChat.isGroup && (
+						<InteractiveCard
+							title="Change chat name"
+							description={name}
+							icon={BsPencil}
+							disabled={isLoading}
+							showArrow
+							onClick={() => handleTabChange('name')}
+						/>
+					)}
+					{props.currentChat.isGroup && (
+						<InteractiveCard
+							title="Change chat picture"
+							description='Click here to change current avatar'
+							icon={BsImage}
+							disabled={isLoading}
+							onClick={avatarUploader.click}
+							showArrow
+						/>
+					)}
 					<InteractiveCard
-						title="Change chat name"
-						description={name}
-						icon={BsPencil}
+						title="Change chat color"
+						iconColor={color.hex}
+						description={color.name}
+						icon={BsPalette}
 						disabled={isLoading}
 						showArrow
+						onClick={() => handleTabChange('color')}
 					/>
-				)}
-				{props.currentChat.isGroup && (
-					<InteractiveCard
-						title="Change chat picture"
-						description='Click here to change current avatar'
-						icon={BsImage}
-						disabled={isLoading}
-						onClick={avatarUploader.click}
-						showArrow
+				</Stack>
+			)}
+
+			{tab == 'name' && (
+				<Form autoComplete='off' className='py-4' onSubmit={(e) => {
+					e.preventDefault();
+					setTab('home');
+				}}>
+					<FloatingLabel label={'Chat name'}>
+						<Form.Control
+							autoFocus
+							type="text"
+							name="Chat name"
+							value={name}
+							onChange={(e) => setName(e.target.value)}
+							required
+							maxLength={32}
+							minLength={2}
+						/>
+					</FloatingLabel>
+				</Form>
+			)}
+
+			{tab == 'color' && (
+				<div className='py-4 d-flex align-items-center flex-column'>
+					<div className='text-muted pb-3'>
+						Select chat color
+					</div>
+					<CirclePicker
+						colors={CHAT_COLORS.map(c => c.hex)}
+						color={color.hex}
+						circleSize={30}
+						circleSpacing={18}
+						width='240px'
+						onChangeComplete={(c) => setColor(CHAT_COLORS.find(x => c.hex == x.hex))}
 					/>
-				)}
-				<InteractiveCard
-					title="Change chat color"
-					iconColor={color.hex}
-					description={color.name}
-					icon={BsPalette}
-					disabled={isLoading}
-					showArrow
-				/>
-			</Stack>
+				</div>
+			)}
 		</>
 	);
 }
