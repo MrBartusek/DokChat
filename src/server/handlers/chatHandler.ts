@@ -8,6 +8,12 @@ import BlockManager from '../managers/blockManager';
 import ChatManager from '../managers/chatManager';
 import PermissionsManager from '../managers/permissionsManager';
 import Utils from '../utils/utils';
+import { RateLimiterMemory } from 'rate-limiter-flexible';
+
+const messageLimiter = new RateLimiterMemory({
+	points: 15,
+	duration: 15
+});
 
 export default function registerMessageHandler(io: DokChatServer, socket: DokChatSocket) {
 	socket.on('message', async (msg, callback) => {
@@ -18,6 +24,12 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 		if(!validateMessage(msg, callback)) {
 			return new ApiResponse({} as any, callback).badRequest('Invalid message');
 		}
+
+		const limiterRes = await messageLimiter.consume(socket.handshake.address, msg.attachment ? 3 : 1)
+			.catch(() => {
+				return new ApiResponse({} as any, callback).tooManyRequests();
+			});
+		if(!limiterRes) return;
 
 		// Add message to db
 		const [ attachmentKey, attachment ] = await uploadAttachment(msg.attachment);

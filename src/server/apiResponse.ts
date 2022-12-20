@@ -64,7 +64,7 @@ export class ApiResponse {
 	}
 
 	public tooManyRequests(message?: string) {
-		return this.error(429, message || '429 Forbidden');
+		return this.error(429, message || '429 Too Many Requests');
 	}
 
 	public validationError(errors: Result<ValidationError>) {
