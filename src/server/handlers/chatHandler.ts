@@ -4,6 +4,7 @@ import { ALLOWED_ATTACHMENT_FORMAT } from '../../types/const';
 import { ClientAttachment, ClientMessage, DokChatServer, DokChatSocket, ServerMessage } from '../../types/websocket';
 import { ApiResponse } from '../apiResponse';
 import s3Client from '../aws/s3';
+import BlockManager from '../managers/blockManager';
 import ChatManager from '../managers/chatManager';
 import PermissionsManager from '../managers/permissionsManager';
 import Utils from '../utils/utils';
@@ -20,7 +21,6 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 
 		// Add message to db
 		const [ attachmentKey, attachment ] = await uploadAttachment(msg.attachment);
-
 		const [ id, timestamp ] = await ChatManager.saveMessage(
 			socket.auth,
 			msg.chatId,
@@ -29,9 +29,17 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 			attachment
 		);
 
-		// Send message to every participant expect sender
-		const participants = await ChatManager.listParticipants(msg.chatId);
-		participants.filter(p => p.userId != socket.auth.id);
+		let participants = await ChatManager.listParticipants(msg.chatId);
+		participants = participants.filter(p => p.userId != socket.auth.id);
+
+		const isGroup = await ChatManager.isGroup(msg.chatId);
+		if(!isGroup && participants.length == 1) {
+			const isBlocked = await BlockManager.isBlockedAny(socket.auth.id, participants[0].userId);
+			if(isBlocked) {
+				return new ApiResponse({} as any, callback).forbidden('Cannot send message to blocked user');
+			}
+		}
+
 		for await(const part of participants) {
 			// If chat is hidden by specific participant it will show up on message
 			if(part.isHidden) await ChatManager.setChatHideForParticipant(part, false);

@@ -26,7 +26,10 @@ function UserBlockPopup() {
 		const axios = getAxios(user);
 
 		setLoading(true);
-		await axios.post('user/block', { userId })
+		await axios.post('user/block', {
+			id: userId,
+			blockStatus: true
+		})
 			.then(() => {
 				toast('This user has been blocked');
 				navigate('/chat');

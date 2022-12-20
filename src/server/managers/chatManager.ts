@@ -166,7 +166,7 @@ export default class ChatManager {
 			UPDATE participants
 				SET is_hidden = $1
 			WHERE
-				id = $2 AND user_id = $3
+				chat_id = $2 AND user_id = $3
 		`, [ hide, chatId, userId ]);
 	}
 

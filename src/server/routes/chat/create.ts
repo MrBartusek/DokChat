@@ -6,11 +6,14 @@ import sql from 'sql-template-strings';
 import { Chat, User } from '../../../types/common';
 import { ApiResponse } from '../../apiResponse';
 import db from '../../db';
+import BlockManager from '../../managers/blockManager';
 import ChatManager from '../../managers/chatManager';
 import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 import { snowflakeGenerator } from '../../utils/snowflakeGenerator';
+import Utils from '../../utils/utils';
+import user from '../user';
 
 const router = express.Router();
 
@@ -35,6 +38,14 @@ router.all('/create',
 		if(dmId !== false) {
 			const chat = await ChatManager.getChat(dmId, req.auth.id);
 			return new ApiResponse(res).respond(true, 409, 'This DM already exist', chat);
+		}
+
+		// Check if blocked
+		for await(const partId of participantIds) {
+			if(BlockManager.isBlockedAny(req.auth.id, partId)) {
+				const user = await UserManager.getUserById(partId);
+				return new ApiResponse(res).forbidden(`${Utils.userDiscriminator(user)} has blocked you or, you are blocking this user`);
+			}
 		}
 
 		// Fetch participants

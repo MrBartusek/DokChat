@@ -50,6 +50,14 @@ export async function initializeDB() {
             PRIMARY KEY (id)
         );
 
+        CREATE TABLE IF NOT EXISTS blocks (
+            id varchar NOT NULL,
+            blocker_id varchar REFERENCES users ON DELETE CASCADE,
+            target_id varchar REFERENCES users ON DELETE CASCADE,
+            created_at bigint NOT NULL,
+            PRIMARY KEY (id)
+        );
+
         CREATE TABLE IF NOT EXISTS participants (
             id varchar NOT NULL,
             user_id varchar REFERENCES users ON DELETE CASCADE,
