@@ -1,10 +1,8 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Alert } from 'react-bootstrap';
-import ReCAPTCHA from 'react-google-recaptcha';
 import { EndpointResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
-import DokChatCaptcha from '../DokChatCaptcha/DokChatCaptcha';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import LogoutButton from '../LogoutButton/LogoutButton';
 import MaskedText from '../MaskedText/MaskedText';
@@ -16,7 +14,6 @@ function EmailConfirmPopup() {
 	const [ error, setError ] = useState<string | null>(null);
 	const [ isLoading, setLoading ] = useState(false);
 	const [ success, setSuccess ] = useState<boolean>(false);
-	const captchaRef = useRef<ReCAPTCHA>(null!);
 
 	async function handleSubmit(event: React.MouseEvent<HTMLInputElement>) {
 		event.preventDefault();
@@ -24,12 +21,7 @@ function EmailConfirmPopup() {
 		setError(null);
 		setSuccess(false);
 
-		const recaptchaResponse = await captchaRef.current.executeAsync().catch(() => {
-			setError('Failed to get ReCAPTCHA response');
-		});
-		if(!recaptchaResponse) return;
-
-		await getAxios(user).post('/auth/email-confirm/start', { recaptchaResponse })
+		await getAxios(user).post('/auth/email-confirm/start')
 			.then(() => {
 				setLoading(false);
 				setSuccess(true);
@@ -75,7 +67,6 @@ function EmailConfirmPopup() {
 					<MaskedText text={user.email} masked={user.emailMasked} />
 				</p>
 			</div>
-			<DokChatCaptcha ref={captchaRef} />
 		</Popup>
 	);
 }

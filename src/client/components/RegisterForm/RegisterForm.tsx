@@ -141,7 +141,7 @@ function RegisterForm() {
 		const recaptchaResponse = await captchaRef.current.executeAsync().catch(() => {
 			setError('Failed to get ReCAPTCHA token');
 		});
-		if(!recaptchaResponse) return;
+		if(!recaptchaResponse) return setLoading(false);
 		await axios.post('auth/register',
 			{
 				email: values.email,

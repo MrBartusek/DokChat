@@ -6,13 +6,11 @@ import emailClient from '../../../aws/ses';
 import db from '../../../db';
 import allowedMethods from '../../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../../middlewares/ensureAuthenticated';
-import ensureCaptcha from '../../../middlewares/ensureCaptcha';
 
 const router = express.Router();
 
 router.all('/start',
 	allowedMethods('POST'),
-	ensureCaptcha(),
 	ensureAuthenticated(true),
 	async (req, res, next) => {
 		const query = await db.query(sql`
