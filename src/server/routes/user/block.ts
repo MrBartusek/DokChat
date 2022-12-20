@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { body, validationResult } from 'express-validator';
+import { body, query, validationResult } from 'express-validator';
 import { BlockStatusResponse } from '../../../types/endpoints';
 import { ApiResponse } from '../../apiResponse';
 import BlockManager from '../../managers/blockManager';
@@ -12,14 +12,19 @@ const router = express.Router();
 router.all('/block',
 	ensureAuthenticated(),
 	allowedMethods([ 'POST', 'GET' ]),
-	body('id').isString(),
+	body('id').optional().isString(),
+	query('id').optional().isString(),
 	body('blockStatus').optional().isBoolean(),
 	async (req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 
-		const targetId = req.body.id;
+		const targetId = req.body.id || req.query.id;
 		const shouldBlock = req.body.blockStatus;
+
+		if(typeof targetId !== 'string') {
+			return new ApiResponse(res).badRequest('Invalid id provided');
+		}
 
 		if(req.method == 'POST' && typeof shouldBlock !== 'boolean') {
 			return new ApiResponse(res).badRequest('blockStatus is required for POST');

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Alert } from 'react-bootstrap';
 import toast from 'react-hot-toast';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { User } from '../../../types/common';
 import { EndpointResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
@@ -18,9 +18,11 @@ function UserBlockPopup() {
 	const [ isLoading, setLoading ] = useState(false);
 	const [ error, setError ] = useState<string | null>(null);
 	const [ user ] = useContext(UserContext);
-	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
 	const userFetch = useFetch<EndpointResponse<User>>(`/user/get?id=${userId}`, true);
+	const [ searchParams  ] = useSearchParams({});
 	const navigate = useNavigate();
+
+	const blockStatus = searchParams.get('status') == 'true';
 
 	async function handleHide() {
 		const axios = getAxios(user);
@@ -28,10 +30,10 @@ function UserBlockPopup() {
 		setLoading(true);
 		await axios.post('user/block', {
 			id: userId,
-			blockStatus: true
+			blockStatus
 		})
 			.then(() => {
-				toast('This user has been blocked');
+				toast(`This user has been ${blockStatus ? 'blocked' : 'unblocked'}`);
 				navigate('/chat');
 			})
 			.catch((error) => {
@@ -49,14 +51,18 @@ function UserBlockPopup() {
 
 	return (
 		<Popup
-			title={`Block ${userFetch.res?.data.username || ''}`}
+			title={`${blockStatus ? 'Block' : 'Unblock'} ${userFetch.res?.data.username || ''}`}
 			footer={(
 				<>
 					<InteractiveButton variant='secondary' onClick={handleClose} disabled={isLoading}>
 						Cancel
 					</InteractiveButton>
-					<InteractiveButton variant='danger' onClick={handleHide} loading={isLoading || userFetch.loading || userFetch.error} >
-						Block
+					<InteractiveButton
+						variant={blockStatus ? 'danger' : 'primary'}
+						onClick={handleHide}
+						loading={isLoading || userFetch.loading || userFetch.error}
+					>
+						{blockStatus ? 'Block' : 'Unblock'}
 					</InteractiveButton>
 				</>
 			)}
@@ -67,14 +73,19 @@ function UserBlockPopup() {
 				{error && <Alert variant='danger'>{error}</Alert>}
 				{userFetch.loading && <SimpleLoading />}
 				{!userFetch.loading && !userFetch.error && (
-					<p>
-						You are about to block <b>{userFetch.res.data.username}#{userFetch.res.data.tag}</b>.
-						<ul>
-							<li>This user won&apos;t be able to communicate with you directly.</li>
-							<li>This user won&apos;t be able to add you to groups.</li>
-							<li>The current groups where you and this user are won&apos;t change. You can leave them manually.</li>
-						</ul>
-					</p>
+					<>
+						<p>
+							You are about to {blockStatus ? 'block' : 'unblock'} {' '}
+							<b>{userFetch.res.data.username}#{userFetch.res.data.tag}</b>.
+						</p>
+						{blockStatus && (
+							<ul>
+								<li>This user won&apos;t be able to communicate with you directly.</li>
+								<li>This user won&apos;t be able to add you to groups.</li>
+								<li>The current groups where you and this user are won&apos;t change. You can leave them manually.</li>
+							</ul>
+						)}
+					</>
 				)}
 
 			</>

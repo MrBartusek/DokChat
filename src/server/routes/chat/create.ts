@@ -42,7 +42,8 @@ router.all('/create',
 
 		// Check if blocked
 		for await(const partId of participantIds) {
-			if(BlockManager.isBlockedAny(req.auth.id, partId)) {
+			const isBlocked = await BlockManager.isBlockedAny(req.auth.id, partId);
+			if(isBlocked) {
 				const user = await UserManager.getUserById(partId);
 				return new ApiResponse(res).forbidden(`${Utils.userDiscriminator(user)} has blocked you or, you are blocking this user`);
 			}

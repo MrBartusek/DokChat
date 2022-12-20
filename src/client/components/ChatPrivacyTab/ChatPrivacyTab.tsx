@@ -1,9 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Stack } from 'react-bootstrap';
-import { BsBoxArrowLeft, BsEyeSlashFill, BsSlashCircle } from 'react-icons/bs';
+import { BsBoxArrowLeft, BsCheckCircle, BsEyeSlashFill, BsSlashCircle } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { ChatParticipant } from '../../../types/common';
+import { BlockStatusResponse, EndpointResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
+import getAxios from '../../helpers/axios';
 import { LocalChat } from '../../types/Chat';
 import InteractiveCard from '../InteractiveCard/InteractiveCard';
 
@@ -15,12 +17,30 @@ export interface ChatPrivacyTabProps {
 export default function ChatPrivacyTab({ currentChat, participants }: ChatPrivacyTabProps) {
 	const [ user ] = useContext(UserContext);
 	const navigate = useNavigate();
+	const otherParticipant = useMemo(() => participants.find(x => x.userId != user.id), [ participants ]);
+
+	const [ blocked, setBlocked ] = useState(null);
+	const [ isLoading, setLoading ] = useState(!currentChat.isGroup);
+
+	useEffect(() => {
+		if(!otherParticipant) return;
+		setLoading(false);
+		if(currentChat.isGroup) return;
+		setLoading(true);
+		const axios = getAxios(user);
+		axios.get(`user/block?id=${otherParticipant.userId}`)
+			.then((r) => {
+				const resp: EndpointResponse<BlockStatusResponse> = r.data;
+				setBlocked(resp.data.blocked);
+				setLoading(false);
+			})
+			.catch(console.error);
+
+	}, [ otherParticipant, currentChat ]);
 
 	function handleBlock() {
-		if(!participants) return;
-		const otherParticipants = participants.find(x => x.userId != user.id);
-		if(!otherParticipants) return;
-		navigate(`/chat/user/${otherParticipants.userId}/block`);
+		if(!otherParticipant) return;
+		navigate(`/chat/user/${otherParticipant.userId}/block?status=${!blocked}`);
 	}
 
 	return (
@@ -34,10 +54,11 @@ export default function ChatPrivacyTab({ currentChat, participants }: ChatPrivac
 				/>
 				{!currentChat.isGroup && (
 					<InteractiveCard
-						title="Block"
-						description='Block this user'
-						icon={BsSlashCircle}
+						title={blocked ? 'Unblock' : 'Block'}
+						description={`${blocked ? 'Unblock' : 'Block'} this user`}
+						icon={blocked ? BsCheckCircle : BsSlashCircle}
 						onClick={handleBlock}
+						disabled={isLoading}
 					/>
 				)}
 				{currentChat.isGroup && (
