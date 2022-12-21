@@ -21,7 +21,7 @@ function LoginForm() {
 		<>
 			{error && <Alert variant='danger'>{error}</Alert>}
 			<Form onSubmit={onSubmit}>
-				<Form.Group className="mb-3" controlId="formBasicEmail">
+				<Form.Group className="mb-3">
 					<Form.Label>Email address</Form.Label>
 					<Form.Control
 						type="email"
@@ -36,7 +36,7 @@ function LoginForm() {
 					/>
 				</Form.Group>
 
-				<Form.Group className="mb-3" controlId="formBasicPassword">
+				<Form.Group className="mb-3">
 					<Form.Label>Password</Form.Label>
 					<Form.Control
 						type="password"
@@ -54,7 +54,7 @@ function LoginForm() {
 						</Link>
 					</Form.Text>
 				</Form.Group>
-				<Form.Group className="mb-3" controlId="formBasicCheckbox">
+				<Form.Group className="mb-3" controlId="formRememberMe">
 					<Form.Check
 						type="checkbox"
 						label="Remember me"

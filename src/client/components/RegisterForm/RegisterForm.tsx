@@ -34,7 +34,7 @@ function RegisterForm() {
 		<>
 			{error && <Alert variant='danger'>{error}</Alert>}
 			<Form onSubmit={onSubmit}>
-				<Form.Group className="mb-3" controlId="formEmail">
+				<Form.Group className="mb-3">
 					<Form.Label>Email address</Form.Label>
 					<Form.Control
 						type="email"
@@ -64,7 +64,7 @@ function RegisterForm() {
 					/>
 				</Form.Group>
 
-				<Form.Group className="mb-3" controlId="formPassword">
+				<Form.Group className="mb-3">
 					<Form.Label>Password</Form.Label>
 					<Form.Control
 						type="password"
@@ -78,13 +78,12 @@ function RegisterForm() {
 					/>
 				</Form.Group>
 
-				<Form.Group className="mb-3" controlId="formConfirmPassword">
+				<Form.Group className="mb-3">
 					<Form.Label>Confirm Password</Form.Label>
 					<Form.Control
 						type="password"
 						name="confirmPassword"
 						autoComplete="new-password"
-						id="new-password"
 						ref={passwordConfirmRef}
 						required
 						disabled={loading}
@@ -92,7 +91,7 @@ function RegisterForm() {
 						onChange={handleChange}
 					/>
 				</Form.Group>
-				<Form.Group className="mb-3" controlId="formBasicCheckbox">
+				<Form.Group className="mb-3" controlId="formTerms">
 					<Form.Check
 						type="checkbox"
 						name='terms'
