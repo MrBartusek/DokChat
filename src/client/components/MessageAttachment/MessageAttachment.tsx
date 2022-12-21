@@ -38,7 +38,6 @@ export default function MessageAttachment({ message } : MessageAttachmentProps) 
 				{attachmentType == 'image' && (
 					<img
 						src={attachmentUrl}
-						loading='lazy'
 						style={{cursor: 'pointer', borderRadius: '1.2rem', maxHeight: '200px'}}
 						height={message.attachment.height}
 						width={message.attachment.width}
