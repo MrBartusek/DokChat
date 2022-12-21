@@ -95,7 +95,7 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 					loader={null}
 					inverse={true}
 					scrollableTarget='scrollableTarget'
-					scrollThreshold={100}
+					scrollThreshold={200}
 				>
 					{currentChat.messages.map((msg, index, elements) => {
 						const BLOCK_SEPARATION_HOURS = 1;
