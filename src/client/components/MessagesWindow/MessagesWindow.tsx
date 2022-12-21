@@ -8,6 +8,7 @@ import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import { LocalChat, LocalMessage } from '../../types/Chat';
+import DokChatMarkdown from '../DokChatMarkdown/DokChatMarkdown';
 import MessageAttachment from '../MessageAttachment/MessageAttachment';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 import Separator from '../Separator/Separator';
@@ -195,7 +196,7 @@ function UserMessage({currentChat, message, showAvatar, showAuthor, showStatus}:
 							{message.attachment.hasAttachment ? (
 								<MessageAttachment message={message} />
 							): (
-								<Twemoji text={message.content || ''} onlyEmojiClassName={nonTextMessage ? 'large-emojis' : ''} />
+								<DokChatMarkdown text={message.content || ''} className={nonTextMessage ? 'large-emojis' : ''} />
 							)}
 						</div>
 					</OverlayTrigger>
