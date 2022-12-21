@@ -20,8 +20,8 @@ function DownloadHeader() {
 				</p>
 
 				<div className='d-flex justify-content-center mt-3 mx-4 gap-3 flex-column flex-lg-row stretch'>
-					<Button variant='dark' size='lg' className='d-flex justify-content-center align-items-center w-100'>
-						<BsCloudArrowDown className='me-2' /> Download for Windows
+					<Button variant='light' disabled size='lg' className='d-flex justify-content-center align-items-center w-100'>
+						<BsCloudArrowDown className='me-2' /> Coming Soon
 					</Button>
 				</div>
 

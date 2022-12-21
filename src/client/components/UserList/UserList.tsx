@@ -5,7 +5,7 @@ import { OnlineManagerContext } from '../../context/OnlineManagerContext';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 
 interface UserListProps {
-    users: (User | ChatParticipant)[]
+    users: (User | ChatParticipant)[];
 }
 
 function UserList({ users}: UserListProps) {
@@ -23,11 +23,12 @@ function UserList({ users}: UserListProps) {
 	);
 }
 
-interface UserCardProps {
-    user: User | ChatParticipant
+export interface UserCardProps {
+    user: User | ChatParticipant;
+	icons?: React.ReactNode;
 }
 
-function UserCard({ user }: UserCardProps) {
+export function UserCard({ user, icons }: UserCardProps) {
 	const getOnlineStatus = useContext(OnlineManagerContext);
 	const [ isOnline, setOnline ] = useState(false);
 
@@ -43,9 +44,10 @@ function UserCard({ user }: UserCardProps) {
 				size={36}
 				isOnline={isOnline}
 			/>
-			<span className="ms-3">
+			<span className="ms-3 flex-fill">
 				{`${user.username}#${user.tag}`}
 			</span>
+			{icons}
 		</div>
 	);
 }
