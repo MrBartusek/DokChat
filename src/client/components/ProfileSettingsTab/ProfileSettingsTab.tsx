@@ -115,7 +115,7 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 					<span className="text-muted">#{user.tag}</span>
 				</>)}
 				subTitle="Online"
-				currentAvatar={user.avatar}
+				currentAvatar={user.avatar + '?' + Date.now()}
 				avatarUploader={avatarUploader}
 				setAvatarUploader={setAvatarUploader}
 				copyText={user.discriminator}
