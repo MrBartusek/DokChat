@@ -51,7 +51,7 @@ export default class UserManager {
 			passwordHash,
 			timestamp,
 			timestamp,
-			socialLogin /* confirm email for social logins */
+			true /* confirm email for social logins */
 		]);
 
 		// Add to public chat
@@ -65,7 +65,7 @@ export default class UserManager {
 			email: email,
 			avatar: Utils.avatarUrl(userId),
 			isBanned: false,
-			isEmailConfirmed: socialLogin
+			isEmailConfirmed: true
 		};
 		return [ jwtData, passwordHash ];
 	}

@@ -138,16 +138,16 @@ function RegisterForm() {
 	async function onSubmit(event: React.FormEvent) {
 		event.preventDefault();
 		setLoading(true);
-		const recaptchaResponse = await captchaRef.current.executeAsync().catch(() => {
-			setError('Failed to get ReCAPTCHA token');
-		});
-		if(!recaptchaResponse) return setLoading(false);
+		// const recaptchaResponse = await captchaRef.current.executeAsync().catch(() => {
+		// 	setError('Failed to get ReCAPTCHA token');
+		// });
+		// if(!recaptchaResponse) return setLoading(false);
 		await axios.post('auth/register',
 			{
 				email: values.email,
 				username: values.username,
-				password: values.password,
-				recaptchaResponse
+				password: values.password
+				// recaptchaResponse
 			})
 			.then((r: any) => {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
