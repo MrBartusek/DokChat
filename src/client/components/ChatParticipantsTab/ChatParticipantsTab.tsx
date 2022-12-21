@@ -21,7 +21,7 @@ export default function ChatParticipantsTab({ participants, currentChat }: ChatP
 	return (
 		<Stack>
 			{participants.map((part, i) => (
-				<UserCard user={part} key={i} icons={part.userId !== user.id && !currentChat.isGroup ? (
+				<UserCard user={part} key={i} icons={part.userId !== user.id && currentChat.isGroup ? (
 					<span className='d-flex flex-row gap-2'>
 						<IconButton icon={BsDoorClosed} size={34} />
 					</span>
