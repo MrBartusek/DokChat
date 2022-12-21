@@ -1,8 +1,8 @@
 import * as DateFns from 'date-fns';
 import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { OverlayTrigger, Tooltip, TooltipProps } from 'react-bootstrap';
-import { Twemoji } from 'react-emoji-render';
 import { BsCheckCircle, BsCheckCircleFill, BsXCircle } from 'react-icons/bs';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { EndpointResponse, MessageListResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
@@ -30,6 +30,8 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 	useEffect(() => {
 		if(currentChat.isInitialized) return;
 		fetchMoreMessages(40);
+		setHasMore(true);
+		setLoading(false);
 	}, [ currentChat ]);
 
 	useLayoutEffect(() => {
@@ -38,14 +40,8 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 		messageWindowRef.current.scrollTo(0, messageWindowRef.current.scrollHeight);
 	}, [ chats, messageWindowRef ]);
 
-	async function handleScroll() {
-		if(isLoading || !hasMore) return;
-		const { scrollTop, scrollHeight, clientHeight } = messageWindowRef.current;
-		const shouldUpdate = -scrollTop + clientHeight > scrollHeight * 0.8;
-		if(shouldUpdate) await fetchMoreMessages();
-	}
-
-	async function fetchMoreMessages(count = 15) {
+	async function fetchMoreMessages(count = 20) {
+		console.log('f');
 		setLoading(true);
 		const axios = getAxios(user);
 		let url = `/chat/messages?chat=${currentChat.id}&count=${count}`;
@@ -67,7 +63,7 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 			}).catch((error) => {
 				console.error('Failed to load more messages', error);
 			}).finally(() => {
-				setLoading(false);
+				setTimeout(() => setLoading(false), 300);
 			});
 	}
 
@@ -84,60 +80,73 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 	);
 	return (
 		<div
-			className='d-flex px-3 flex-column-reverse'
+			className='d-flex px-3 flex-row flex-column-reverse'
 			ref={messageWindowRef}
-			onScroll={handleScroll}
 			style={{overflowY: 'scroll', flex: '1 0 0'}}
+			id='scrollableTarget'
 		>
 			{currentChat.isInitialized && currentChat.messages.length == 0 && noMessagesInfo }
-			{currentChat.isInitialized && currentChat.messages.map((msg, index, elements) => {
-				const BLOCK_SEPARATION_HOURS = 1;
+			{currentChat.isInitialized && (
+				<InfiniteScroll
+					dataLength={currentChat.messages.length}
+					className='d-flex flex-column-reverse'
+					next={fetchMoreMessages}
+					hasMore={hasMore}
+					loader={null}
+					inverse={true}
+					scrollableTarget='scrollableTarget'
+					scrollThreshold={100}
+				>
+					{currentChat.messages.map((msg, index, elements) => {
+						const BLOCK_SEPARATION_HOURS = 1;
 
-				const prev: LocalMessage | undefined = elements[index - 1];
-				const next: LocalMessage | undefined = elements[index + 1];
-				const isAuthor = msg.author.id == user.id;
-				const timestampDiffNext = next ? timestampDiffInHours(msg.timestamp, next.timestamp) : 0;
-				const timestampDiffPrev = prev ? timestampDiffInHours(msg.timestamp, prev.timestamp) : 0;
-				const showTimestamp = timestampDiffNext >= BLOCK_SEPARATION_HOURS || !next;
+						const prev: LocalMessage | undefined = elements[index - 1];
+						const next: LocalMessage | undefined = elements[index + 1];
+						const isAuthor = msg.author.id == user.id;
+						const timestampDiffNext = next ? timestampDiffInHours(msg.timestamp, next.timestamp) : 0;
+						const timestampDiffPrev = prev ? timestampDiffInHours(msg.timestamp, prev.timestamp) : 0;
+						const showTimestamp = timestampDiffNext >= BLOCK_SEPARATION_HOURS || !next;
 
-				const msgTimestamp = DateFns.fromUnixTime(Number(msg.timestamp));
-				const sendAgoInHours = Math.abs(DateFns.differenceInHours(msgTimestamp, new Date()));
+						const msgTimestamp = DateFns.fromUnixTime(Number(msg.timestamp));
+						const sendAgoInHours = Math.abs(DateFns.differenceInHours(msgTimestamp, new Date()));
 
-				let format = 'HH:mm';
-				if(sendAgoInHours > 24 * 7) {
-					format = 'd LLLL yyyy, HH:mm';
-				}
-				else if(!DateFns.isToday(msgTimestamp)) {
-					format = 'EEE, HH:mm';
-				}
+						let format = 'HH:mm';
+						if(sendAgoInHours > 24 * 7) {
+							format = 'd LLLL yyyy, HH:mm';
+						}
+						else if(!DateFns.isToday(msgTimestamp)) {
+							format = 'EEE, HH:mm';
+						}
 
-				const isFirstInBlock = timestampDiffPrev >= BLOCK_SEPARATION_HOURS;
+						const isFirstInBlock = timestampDiffPrev >= BLOCK_SEPARATION_HOURS;
 
-				return (
-					<div className='d-flex flex-column' key={msg.id}>
-						{msg.isSystem ? (
-							<SystemMessage content={msg.content}/>
-						) : (
-							<>
-								{(showTimestamp) && (
-									<SystemMessage
-										content={DateFns.format(DateFns.fromUnixTime(Number(msg.timestamp)), format)}
-									/>
+						return (
+							<div className='d-flex flex-column' key={msg.id}>
+								{msg.isSystem ? (
+									<SystemMessage content={msg.content}/>
+								) : (
+									<>
+										{(showTimestamp) && (
+											<SystemMessage
+												content={DateFns.format(DateFns.fromUnixTime(Number(msg.timestamp)), format)}
+											/>
+										)}
+										<UserMessage
+											currentChat={currentChat}
+											message={msg}
+											showAvatar={!isAuthor && (msg.author.id != prev?.author?.id || isFirstInBlock)}
+											showAuthor={!isAuthor && (msg.author.id != next?.author?.id || showTimestamp)}
+											showStatus={isAuthor && msg.author.id != prev?.author?.id}
+										/>
+										{(prev && msg.author.id != prev.author.id) && <Separator height={12} />}
+									</>
 								)}
-								<UserMessage
-									currentChat={currentChat}
-									message={msg}
-									showAvatar={!isAuthor && (msg.author.id != prev?.author?.id || isFirstInBlock)}
-									showAuthor={!isAuthor && (msg.author.id != next?.author?.id || showTimestamp)}
-									showStatus={isAuthor && msg.author.id != prev?.author?.id}
-								/>
-								{(prev && msg.author.id != prev.author.id) && <Separator height={12} />}
-							</>
-						)}
 
-					</div>
-				);
-			})}
+							</div>
+						);
+					})}
+				</InfiniteScroll>
+			)}
 			{isLoading ? <SimpleLoading /> : hasMore && <Separator height={60} /> }
 		</div>
 	);
