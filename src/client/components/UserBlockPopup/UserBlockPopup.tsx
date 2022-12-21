@@ -3,7 +3,7 @@ import { Alert } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { User } from '../../../types/common';
-import { EndpointResponse } from '../../../types/endpoints';
+import { BlockStatusResponse, EndpointResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
@@ -15,14 +15,25 @@ import SimpleLoading from '../SimpleLoadng/SimpleLoading';
 function UserBlockPopup() {
 	const { userId } = useParams();
 	const [ handleClose, setHandleClose ] = useState<() => void>(null);
-	const [ isLoading, setLoading ] = useState(false);
+	const [ isLoading, setLoading ] = useState(true);
 	const [ error, setError ] = useState<string | null>(null);
 	const [ user ] = useContext(UserContext);
 	const userFetch = useFetch<EndpointResponse<User>>(`/user/get?id=${userId}`, true);
-	const [ searchParams  ] = useSearchParams({});
 	const navigate = useNavigate();
 
-	const blockStatus = searchParams.get('status') == 'true';
+	const [ blocked, setBlocked ] = useState(false);
+
+	useEffect(() => {
+		setLoading(true);
+		const axios = getAxios(user);
+		axios.get(`user/block?id=${userId}`)
+			.then((r) => {
+				const resp: EndpointResponse<BlockStatusResponse> = r.data;
+				setBlocked(resp.data.blocked);
+				setLoading(false);
+			})
+			.catch(console.error);
+	}, [ userId ]);
 
 	async function handleHide() {
 		const axios = getAxios(user);
@@ -30,10 +41,10 @@ function UserBlockPopup() {
 		setLoading(true);
 		await axios.post('user/block', {
 			id: userId,
-			blockStatus
+			blockStatus: !blocked
 		})
 			.then(() => {
-				toast(`This user has been ${blockStatus ? 'blocked' : 'unblocked'}`);
+				toast(`This user has been ${blocked ? 'unblocked' : 'blocked'}`);
 				navigate('/chat');
 			})
 			.catch((error) => {
@@ -51,18 +62,18 @@ function UserBlockPopup() {
 
 	return (
 		<Popup
-			title={`${blockStatus ? 'Block' : 'Unblock'} ${userFetch.res?.data.username || ''}`}
+			title={`${blocked ? 'Unblock' : 'Block'} ${userFetch.res?.data.username || ''}`}
 			footer={(
 				<>
 					<InteractiveButton variant='secondary' onClick={handleClose} disabled={isLoading}>
 						Cancel
 					</InteractiveButton>
 					<InteractiveButton
-						variant={blockStatus ? 'danger' : 'primary'}
+						variant={blocked ? 'primary' : 'danger'}
 						onClick={handleHide}
 						loading={isLoading || userFetch.loading || userFetch.error}
 					>
-						{blockStatus ? 'Block' : 'Unblock'}
+						{blocked ? 'Unblock' : 'Block'}
 					</InteractiveButton>
 				</>
 			)}
@@ -75,10 +86,10 @@ function UserBlockPopup() {
 				{!userFetch.loading && !userFetch.error && (
 					<>
 						<p>
-							You are about to {blockStatus ? 'block' : 'unblock'} {' '}
+							You are about to {blocked ? 'unblock' : 'block'} {' '}
 							<b>{userFetch.res.data.username}#{userFetch.res.data.tag}</b>.
 						</p>
-						{blockStatus && (
+						{!blocked && (
 							<ul>
 								<li>This user won&apos;t be able to communicate with you directly.</li>
 								<li>This user won&apos;t be able to add you to groups.</li>

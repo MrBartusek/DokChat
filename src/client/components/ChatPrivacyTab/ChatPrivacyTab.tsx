@@ -35,12 +35,11 @@ export default function ChatPrivacyTab({ currentChat, participants }: ChatPrivac
 				setLoading(false);
 			})
 			.catch(console.error);
-
 	}, [ otherParticipant, currentChat ]);
 
 	function handleBlock() {
 		if(!otherParticipant) return;
-		navigate(`/chat/user/${otherParticipant.userId}/block?status=${!blocked}`);
+		navigate(`/chat/user/${otherParticipant.userId}/block`);
 	}
 
 	return (
