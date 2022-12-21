@@ -25,7 +25,7 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 			return new ApiResponse({} as any, callback).badRequest('Invalid message');
 		}
 
-		const limiterRes = await messageLimiter.consume(socket.handshake.address, msg.attachment ? 3 : 1)
+		const limiterRes = await messageLimiter.consume(socket.auth.id, msg.attachment ? 3 : 1)
 			.catch(() => {
 				return new ApiResponse({} as any, callback).tooManyRequests();
 			});
