@@ -1,8 +1,28 @@
 # DokChat
 
-DokChat is fully fledged instant messaging application. It supports users authentication, groups, attachment, GIFs, emojis.
-Frontend is made with React and Typescript. Backend runs on Express, Typescript and Postgres. Live communication is made with Socket.io.
-Whole thing is hosted on AWS (EC2, S3, SES).
+![hero](https://i.imgur.com/FT5WBjf.png)
+
+DokChat is fully fledged instant messaging application. It supports all of the common chatting features like groups, attachment, GIFs and emojis.
+
+## Tech Stack
+
+This project uses **PERN** tech stack.
+
+- [![Node.js](https://img.shields.io/badge/-Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=fff)](https://nodejs.org)
+- [![React](https://img.shields.io/badge/-React-61DAFB?style=flat-square&logo=react&logoColor=333)](https://reactjs.org)
+- [![Express](https://img.shields.io/badge/-Express-000000?style=flat-square&logo=express&logoColor=fff)](https://expressjs.com)
+- [![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=fff)](https://postgresql.org)
+- [![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=fff)](https://typescriptlang.org)
+- [![Socket.io](https://img.shields.io/badge/-Socket.io-010101?style=flat-square&logo=socketdotio&logoColor=fff)](https://socket.io)
+  
+### Hosting
+
+This project is designed to run on AWS.
+
+- [EC2](https://aws.amazon.com/ec2/) - for hosting server
+- [S3](https://aws.amazon.com/s3/) - for attachments and profile pictures
+- [SES](https://aws.amazon.com/ses/) - for email sending
+- [SQS](https://aws.amazon.com/sqs/), [SNS](https://aws.amazon.com/sns/) - for email bounces and complaints handling
 
 ## Database Design
 
