@@ -12,6 +12,7 @@ import { useFetch } from '../../hooks/useFetch';
 import BlockUserCard from '../BlockUserCard/BlockUserCard';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import ObjectHero from '../ObjectHero/ObjectHero';
+import OpenDMCard from '../OpenDMCard/OpenDMCard';
 import Popup from '../Popup/Popup';
 import SimpleLoading from '../SimpleLoadng/SimpleLoading';
 
@@ -60,6 +61,7 @@ function UserPopup() {
 					</>
 				)}
 				<Stack gap={3}>
+					<OpenDMCard userId={userId} />
 					<BlockUserCard userId={userId} />
 				</Stack>
 			</>
