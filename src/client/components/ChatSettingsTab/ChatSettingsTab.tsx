@@ -129,7 +129,9 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 		<>
 			<ObjectHero
 				title={<Twemoji text={name || props.currentChat.name} />}
-				subTitle={!props.currentChat.isGroup ? 'Private Conversation' : `${participantsCount} participants`}
+				subTitle={!props.currentChat.isGroup
+					? 'Private Conversation'
+					: `${participantsCount} participant${ participantsCount > 1 ? 's' : ''}`}
 				currentAvatar={props.currentChat.avatar}
 				avatarUploader={props.currentChat.isGroup && avatarUploader}
 				setAvatarUploader={props.currentChat.isGroup && setAvatarUploader}

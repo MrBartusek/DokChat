@@ -1,0 +1,25 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+@import '../../scss/dark.scss';
+
+.participant-card {
+    border: 0;
+    font: inherit;
+    outline: inherit;
+    background: none;
+    padding: 0 0.6em;
+    border-radius: 0.5em;
+    cursor: pointer;
+    text-align: inherit;
+}
+
+.participant-card:hover {
+    background-color: $gray-200;
+}
+
+#app[data-theme='dark'], .modal-dialog[data-theme='dark']  {
+    .participant-card:hover {
+        background-color: mix($dark-background, $dark-washed, 50%);
+    }
+}

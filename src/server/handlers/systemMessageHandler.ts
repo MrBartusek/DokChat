@@ -1,3 +1,4 @@
+import { ChatParticipant, User } from '../../types/common';
 import { UserJWTData } from '../../types/jwt';
 import { DokChatServer, DokChatSocket, ServerMessage } from '../../types/websocket';
 import ChatManager from '../managers/chatManager';
@@ -63,12 +64,18 @@ class SystemMessageHandler {
 		this.sendSystemMessage(chatId, `${discriminator} has updated this chat ${updatedString}`);
 	}
 
-	public sendChatLeave(chatId: string, user: UserJWTData) {
+	public sendChatLeave(chatId: string, user: User) {
 		const discriminator = Utils.userDiscriminator(user);
 		this.sendSystemMessage(chatId, `${discriminator} has left this group`);
 	}
 
-	public sendChatJoin(chatId: string, user: UserJWTData) {
+	public sendChatRemoved(chatId: string, user: User, removedBy: UserJWTData) {
+		const discriminator = Utils.userDiscriminator(user);
+		const discriminatorRemovedBy = Utils.userDiscriminator(removedBy);
+		this.sendSystemMessage(chatId, `${discriminator} was removed from this group by ${discriminatorRemovedBy}`);
+	}
+
+	public sendChatJoin(chatId: string, user: User) {
 		const discriminator = Utils.userDiscriminator(user);
 		this.sendSystemMessage(chatId, `${discriminator} was added to this chat`);
 	}

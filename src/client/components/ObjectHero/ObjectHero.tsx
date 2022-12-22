@@ -29,7 +29,6 @@ export default function ObjectHero({ currentAvatar, avatarUploader, setAvatarUpl
 				<ProfilePicture
 					size={90}
 					src={currentAvatar}
-					isOnline={isOnline}
 				/>
 			)}
 			<span className='lead fw-bold mt-2 mx-1 d-flex align-items-center'>

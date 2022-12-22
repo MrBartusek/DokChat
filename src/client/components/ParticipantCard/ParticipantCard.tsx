@@ -9,6 +9,7 @@ import getAxios from '../../helpers/axios';
 import { LocalChat } from '../../types/Chat';
 import IconButton from '../IconButton/IconButton';
 import { UserCard } from '../UserList/UserList';
+import './ParticipantCard.scss';
 
 export interface ParticipantCardProps {
     currentChat: LocalChat,
@@ -25,13 +26,15 @@ export default function ParticipantCard({ currentChat, participant }: Participan
 		const axios = getAxios(user);
 
 		setLoading(true);
-		await axios.post('chat/remove-user', { chat: currentChat.id, id: participant.id })
+		await axios.delete('chat/modify-participants', { data: { chat: currentChat.id, participant: participant.id }})
 			.then(() => {
 				toast('This user was removed from this group');
 				setRemoved(true);
 				setLoading(false);
 			})
-			.catch((error) => {
+			.catch((e) => {
+				const resp: EndpointResponse<null> = e.response?.data as any;
+				toast.error(resp.message || 'Something went wrong');
 				setLoading(false);
 			});
 	}
@@ -41,7 +44,7 @@ export default function ParticipantCard({ currentChat, participant }: Participan
 	}
 
 	return (
-		<div style={{opacity: removed ? 0.25 : 1}}>
+		<button style={{opacity: removed ? 0.25 : 1}} className='participant-card' onClick={handleInfo}>
 			<UserCard user={participant} icons={(
 				<span className='d-flex flex-row'>
 					<IconButton icon={BsInfoCircle} size={34} disabled={isLoading || removed} onClick={handleInfo} />
@@ -50,6 +53,6 @@ export default function ParticipantCard({ currentChat, participant }: Participan
 					)}
 				</span>
 			)} />
-		</div>
+		</button>
 	);
 }

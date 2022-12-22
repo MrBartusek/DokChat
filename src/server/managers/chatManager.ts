@@ -55,6 +55,34 @@ export default class ChatManager {
 		};
 	}
 
+	public static async getParticipant(chatId: string, participantId: string) : Promise<InternalChatParticipant | null> {
+		const query = await db.query(sql`
+			SELECT
+				participants.id,
+				participants.user_id as "userId",
+				participants.is_hidden as "isHidden",
+				users.username,
+				users.tag
+			FROM
+				participants
+			JOIN users ON users.id = participants.user_id
+			WHERE chat_id = $1 AND participants.id = $2;
+		`, [ chatId, participantId ]);
+
+		if(query.rowCount == 0) return null;
+		const part = query.rows[0];
+
+		const result: InternalChatParticipant = {
+			id: part.id,
+			userId: part.userId,
+			username: part.username,
+			tag: part.tag,
+			avatar: Utils.avatarUrl(part.userId),
+			isHidden: part.isHidden
+		};
+		return result;
+	}
+
 	public static async listParticipants(chatId: string): Promise<InternalChatParticipant[]> {
 		const query = await db.query(sql`
 			SELECT
@@ -99,7 +127,7 @@ export default class ChatManager {
 		else {
 			const user = participants.find(u => u.userId != displayAs);
 			if(!user) {
-				return 'DokChat User';
+				return 'Only you';
 			}
 			return rawName || `${user.username}#${user.tag}`;
 
