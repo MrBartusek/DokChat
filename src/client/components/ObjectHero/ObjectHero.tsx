@@ -4,8 +4,9 @@ import CopyButton from '../CopyButton/CopyButton';
 import { FileUploaderResult } from '../FileUploader/FileUploader';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 
-export interface ObjectEditHeroProps {
+export interface OObjectHeroProps {
     currentAvatar: string;
+	isOnline?: boolean;
     avatarUploader?: FileUploaderResult;
     setAvatarUploader?: React.Dispatch<React.SetStateAction<FileUploaderResult>>;
     title: string | React.ReactNode;
@@ -13,7 +14,7 @@ export interface ObjectEditHeroProps {
 	copyText?: string;
 }
 
-export default function ObjectEditHero({ currentAvatar, avatarUploader, setAvatarUploader, title, subTitle, copyText }: ObjectEditHeroProps) {
+export default function ObjectHero({ currentAvatar, avatarUploader, setAvatarUploader, title, subTitle, copyText, isOnline }: OObjectHeroProps) {
 	return (
 		<div className='d-flex align-items-center flex-column mb-3'>
 			{avatarUploader && setAvatarUploader ? (
@@ -27,6 +28,7 @@ export default function ObjectEditHero({ currentAvatar, avatarUploader, setAvata
 				<ProfilePicture
 					size={90}
 					src={currentAvatar}
+					isOnline={isOnline}
 				/>
 			)}
 			<span className='lead fw-bold mt-2 mx-1 d-flex align-items-center'>

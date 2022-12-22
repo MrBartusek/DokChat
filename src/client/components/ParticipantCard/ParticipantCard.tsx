@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import toast from 'react-hot-toast';
 import { BsDoorClosed, BsInfoCircle } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
 import { ChatParticipant } from '../../../types/common';
 import { EndpointResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
@@ -18,6 +19,7 @@ export default function ParticipantCard({ currentChat, participant }: Participan
 	const [ user ] = useContext(UserContext);
 	const [ isLoading, setLoading ] = useState(false);
 	const [ removed, setRemoved ] = useState(false);
+	const navigate = useNavigate();
 
 	async function handleRemove() {
 		const axios = getAxios(user);
@@ -35,11 +37,7 @@ export default function ParticipantCard({ currentChat, participant }: Participan
 	}
 
 	function handleInfo() {
-		toast.error(
-			<span>
-                Not implemented. See: <a href="https://github.com/MrBartusek/DokChat/issues/31" target="_blank" rel="noopener noreferrer">#31</a>
-			</span>
-		);
+		navigate(`/chat/user/${participant.userId}`);
 	}
 
 	return (

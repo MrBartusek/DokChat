@@ -14,7 +14,6 @@ import SimpleLoading from '../SimpleLoadng/SimpleLoading';
 
 function UserBlockPopup() {
 	const { userId } = useParams();
-	const [ handleClose, setHandleClose ] = useState<() => void>(null);
 	const [ isLoading, setLoading ] = useState(true);
 	const [ error, setError ] = useState<string | null>(null);
 	const [ user ] = useContext(UserContext);
@@ -54,6 +53,10 @@ function UserBlockPopup() {
 			});
 	}
 
+	function handleBack() {
+		navigate(`/chat/user/${userId}`);
+	}
+
 	useEffect(() => {
 		if(userFetch.error) {
 			setError('Failed to fetch user data');
@@ -65,8 +68,8 @@ function UserBlockPopup() {
 			title={`${blocked ? 'Unblock' : 'Block'} ${userFetch.res?.data.username || ''}`}
 			footer={(
 				<>
-					<InteractiveButton variant='secondary' onClick={handleClose} disabled={isLoading}>
-						Cancel
+					<InteractiveButton variant='secondary' onClick={handleBack} disabled={isLoading}>
+						Back
 					</InteractiveButton>
 					<InteractiveButton
 						variant={blocked ? 'primary' : 'danger'}
@@ -77,7 +80,6 @@ function UserBlockPopup() {
 					</InteractiveButton>
 				</>
 			)}
-			setHandleClose={setHandleClose}
 			static={isLoading}
 		>
 			<>

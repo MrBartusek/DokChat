@@ -13,7 +13,7 @@ import { LocalChat } from '../../types/Chat';
 import { FileUploaderResult } from '../FileUploader/FileUploader';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import InteractiveCard from '../InteractiveCard/InteractiveCard';
-import ObjectEditHero from '../ObjectEditHero/ObjectEditHero';
+import ObjectHero from '../ObjectHero/ObjectHero';
 
 export interface ChatSettingsTabProps {
 	currentChat: LocalChat;
@@ -127,7 +127,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 
 	return (
 		<>
-			<ObjectEditHero
+			<ObjectHero
 				title={<Twemoji text={name || props.currentChat.name} />}
 				subTitle={!props.currentChat.isGroup ? 'Private Conversation' : `${participantsCount} participants`}
 				currentAvatar={props.currentChat.avatar}

@@ -12,7 +12,7 @@ import CopyButton from '../CopyButton/CopyButton';
 import { FileUploaderResult } from '../FileUploader/FileUploader';
 import IconButton from '../IconButton/IconButton';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
-import ObjectEditHero from '../ObjectEditHero/ObjectEditHero';
+import ObjectHero from '../ObjectHero/ObjectHero';
 
 export interface ProfileSettingsProps {
 	setCustomFooter: React.Dispatch<React.SetStateAction<JSX.Element>>,
@@ -109,7 +109,7 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 		<>
 			{error && <Alert variant='danger'>{error}</Alert>}
 
-			<ObjectEditHero
+			<ObjectHero
 				title={(<>
 					{user.username}
 					<span className="text-muted">#{user.tag}</span>

@@ -7,6 +7,7 @@ import { BlockStatusResponse, EndpointResponse } from '../../../types/endpoints'
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import { LocalChat } from '../../types/Chat';
+import BlockUserCard from '../BlockUserCard/BlockUserCard';
 import InteractiveCard from '../InteractiveCard/InteractiveCard';
 
 export interface ChatPrivacyTabProps {
@@ -19,29 +20,6 @@ export default function ChatPrivacyTab({ currentChat, participants }: ChatPrivac
 	const navigate = useNavigate();
 	const otherParticipant = useMemo(() => participants.find(x => x.userId != user.id), [ participants ]);
 
-	const [ blocked, setBlocked ] = useState(null);
-	const [ isLoading, setLoading ] = useState(!currentChat.isGroup);
-
-	useEffect(() => {
-		if(!otherParticipant) return;
-		setLoading(false);
-		if(currentChat.isGroup) return;
-		setLoading(true);
-		const axios = getAxios(user);
-		axios.get(`user/block?id=${otherParticipant.userId}`)
-			.then((r) => {
-				const resp: EndpointResponse<BlockStatusResponse> = r.data;
-				setBlocked(resp.data.blocked);
-				setLoading(false);
-			})
-			.catch(console.error);
-	}, [ otherParticipant, currentChat ]);
-
-	function handleBlock() {
-		if(!otherParticipant) return;
-		navigate(`/chat/user/${otherParticipant.userId}/block`);
-	}
-
 	return (
 		<>
 			<Stack gap={3}>
@@ -51,14 +29,8 @@ export default function ChatPrivacyTab({ currentChat, participants }: ChatPrivac
 					icon={BsEyeSlashFill}
 					onClick={() => navigate(`/chat/${currentChat.id}/hide`)}
 				/>
-				{!currentChat.isGroup && (
-					<InteractiveCard
-						title={blocked ? 'Unblock' : 'Block'}
-						description={`${blocked ? 'Unblock' : 'Block'} this user`}
-						icon={blocked ? BsCheckCircle : BsSlashCircle}
-						onClick={handleBlock}
-						disabled={isLoading}
-					/>
+				{!currentChat.isGroup && otherParticipant && (
+					<BlockUserCard userId={otherParticipant.userId} />
 				)}
 				{currentChat.isGroup && (
 					<InteractiveCard
