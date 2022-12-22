@@ -19,10 +19,6 @@ function ChatHidePopup() {
 	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		if(!currentChat.isGroup) navigate(`/chat/${currentChat.id}`);
-	}, [ currentChat ]);
-
 	async function handleHide() {
 		const axios = getAxios(user);
 

@@ -25,18 +25,12 @@ router.all('/list',
 		const chatsQuery = await queryChats(req, page);
 		const chats = await Promise.all(chatsQuery.rows.map(async (chat) => {
 			const participant = await ChatManager.listParticipants(chat.chatId);
-			const chatName = await ChatManager.generateChatName(chat.name, participant, req.auth.id);
-
-			let avatar = Utils.avatarUrl(chat.chatId);
-			if(!chat.isGroup) {
-				const otherParticipant = participant.find(p => p.userId != req.auth.id);
-				avatar = Utils.avatarUrl(otherParticipant?.userId || req.auth.id);
-			}
+			const [ name, avatar ] = await ChatManager.generateChatNameAndAvatar(chat.chatId, chat.name, participant, req.auth.id);
 
 			return {
 				id: chat.chatId,
-				name: chatName,
-				avatar: avatar,
+				name,
+				avatar,
 				color: CHAT_COLORS[chat.color] || CHAT_COLORS[0],
 				isGroup: chat.isGroup,
 				createdAt: chat.createdAt,
