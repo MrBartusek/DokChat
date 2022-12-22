@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Twemoji } from 'react-emoji-render';
-import { BsPersonPlusFill, BsThreeDots } from 'react-icons/bs';
-import { Link } from 'react-router-dom';
+import { BsPerson, BsPersonPlusFill, BsThreeDots } from 'react-icons/bs';
+import { Link, useNavigate } from 'react-router-dom';
 import { OnlineManagerContext } from '../../context/OnlineManagerContext';
 import { UserContext } from '../../context/UserContext';
 import { LocalChat } from '../../types/Chat';
@@ -16,6 +16,7 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 	const [ user ] = useContext(UserContext);
 	const [ [ isOnline, statusText ], setOnlineStatus ] = useState<[ boolean, string | null]>([ false, null ]);
 	const getOnlineStatus = useContext(OnlineManagerContext);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		if(!currentChat) return;
@@ -40,7 +41,11 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 		<div className='d-flex px-3 py-2 border-bottom border-separator'>
 			{currentChat && (
 				<div className='d-flex pe-3'>
-					<ProfilePicture src={currentChat && currentChat.avatar} isOnline={isOnline} />
+					<ProfilePicture
+						src={currentChat && currentChat.avatar}
+						isOnline={isOnline}
+						onClick={() => navigate(`/chat/${currentChat.id}/details`)}
+					/>
 				</div>
 			)}
 			<div className='d-flex flex-fill justify-content-center p-0 flex-column' style={{lineHeight: 1.3}}>
@@ -56,11 +61,6 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 			</div>
 			{currentChat && (
 				<div className='d-flex align-items-center'>
-					{!currentChat.isGroup && (
-						<Link to={'/chat/new'}>
-							<IconButton icon={BsPersonPlusFill} color={currentChat.color.hex} />
-						</Link>
-					)}
 					<Link to={`/chat/${currentChat.id}/details`}>
 						<IconButton icon={BsThreeDots} color={currentChat.color.hex} />
 					</Link>

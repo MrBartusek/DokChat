@@ -83,9 +83,11 @@ function ChatDetailsPopup() {
 						</div>
 					)}
 				</Tab>
-				<Tab eventKey="invite" title="Invite" className='pt-4' disabled={customStatic}>
-					<ChatInviteTab currentChat={currentChat} />
-				</Tab>
+				{currentChat.isGroup && (
+					<Tab eventKey="invite" title="Invite" className='pt-4' disabled={customStatic}>
+						<ChatInviteTab currentChat={currentChat} />
+					</Tab>
+				)}
 				<Tab eventKey="privacy" title="Privacy" className='pt-4' disabled={customStatic}>
 					<ChatPrivacyTab currentChat={currentChat} participants={participants.res?.data || []} />
 				</Tab>

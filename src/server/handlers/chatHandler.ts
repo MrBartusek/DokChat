@@ -41,18 +41,18 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 			attachment
 		);
 
-		let participants = await ChatManager.listParticipants(msg.chatId);
-		participants = participants.filter(p => p.userId != socket.auth.id);
+		const participants = await ChatManager.listParticipants(msg.chatId);
+		const otherParticipants = participants.filter(p => p.userId != socket.auth.id);
 
 		const isGroup = await ChatManager.isGroup(msg.chatId);
-		if(!isGroup && participants.length == 1) {
-			const isBlocked = await BlockManager.isBlockedAny(socket.auth.id, participants[0].userId);
+		if(!isGroup && otherParticipants.length == 1) {
+			const isBlocked = await BlockManager.isBlockedAny(socket.auth.id, otherParticipants[0].userId);
 			if(isBlocked) {
 				return new ApiResponse({} as any, callback).forbidden('Cannot send message to blocked user');
 			}
 		}
 
-		for await(const part of participants) {
+		for await(const part of otherParticipants) {
 			// If chat is hidden by specific participant it will show up on message
 			if(part.isHidden) await ChatManager.setChatHideForParticipant(part, false);
 
