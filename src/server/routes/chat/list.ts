@@ -27,10 +27,16 @@ router.all('/list',
 			const participant = await ChatManager.listParticipants(chat.chatId);
 			const chatName = await ChatManager.generateChatName(chat.name, participant, req.auth.id);
 
+			let avatar = Utils.avatarUrl(chat.chatId);
+			if(!chat.isGroup) {
+				const otherParticipant = participant.find(p => p.userId != req.auth.id);
+				avatar = Utils.avatarUrl(otherParticipant?.userId || req.auth.id);
+			}
+
 			return {
 				id: chat.chatId,
 				name: chatName,
-				avatar: Utils.avatarUrl(chat.chatId),
+				avatar: avatar,
 				color: CHAT_COLORS[chat.color] || CHAT_COLORS[0],
 				isGroup: chat.isGroup,
 				createdAt: chat.createdAt,
@@ -53,7 +59,6 @@ router.all('/list',
 type ChatsQuery = QueryResult<{
 	chatId: string,
 	name: string,
-	avatar: string,
 	messageContent: string,
 	messageAuthor: string,
 	messageCreatedAt: string,
@@ -66,7 +71,6 @@ async function queryChats(req: express.Request, page: number): Promise<ChatsQuer
 	return db.query(sql`
         SELECT
             chat.name,
-			chat.avatar,
 			chat.color,
             chat.is_group as "isGroup",
 			chat.creator_id as "creatorId",
