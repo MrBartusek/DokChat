@@ -38,12 +38,13 @@ router.all('/update-profile',
 		const avatar = req.file;
 
 		// Authenticate user with password
-		const [ user ] = await AuthManager.authenticateUser(req.auth.email, password)
+		const authData = await AuthManager.authenticateUser(req.auth.email, password)
 			.catch((reason) => {
 				if(typeof reason !== 'string') throw reason;
-				return new ApiResponse(res).badRequest('Provided password is not valid');
-			}) as [UserJWTData, string];
-		if(!user) return;
+				new ApiResponse(res).badRequest('Provided password is not valid');
+			});
+		if(!authData) return;
+		const [ user ] = authData;
 
 		const discriminatorChanged = user.username != username || user.tag != tag;
 		const emailChanged = user.email != email;
