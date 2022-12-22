@@ -3,6 +3,7 @@ import ChangeableAvatar from '../ChangeableAvatar/ChangeableAvatar';
 import CopyButton from '../CopyButton/CopyButton';
 import { FileUploaderResult } from '../FileUploader/FileUploader';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
+import Separator from '../Separator/Separator';
 
 export interface OObjectHeroProps {
     currentAvatar: string;
@@ -32,6 +33,7 @@ export default function ObjectHero({ currentAvatar, avatarUploader, setAvatarUpl
 				/>
 			)}
 			<span className='lead fw-bold mt-2 mx-1 d-flex align-items-center'>
+				{copyText && <Separator width={32} />}
 				{title}
 				{copyText && <CopyButton copyText={copyText} />}
 			</span>
