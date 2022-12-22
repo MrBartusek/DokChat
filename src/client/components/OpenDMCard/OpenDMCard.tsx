@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { BsChatSquareFill, BsCheckCircle, BsSlashCircle } from 'react-icons/bs';
+import { BsChatSquareFill, BsChatSquareText, BsCheckCircle, BsSlashCircle } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { BlockStatusResponse, ChatCreateResponse, EndpointResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
@@ -36,6 +36,7 @@ export default function OpenDMCard({ userId }: OpenDMCardProps) {
 					chatsCopy.push(new LocalChat(resp.data));
 					setChatList(chatsCopy);
 				}
+				toast(`You are now chatting with ${resp.data.name}`);
 				navigate(`/chat/${resp.data.id}`);
 			}).catch((e: AxiosError) => {
 				const resp: EndpointResponse<ChatCreateResponse> = e.response?.data as any;
@@ -48,9 +49,9 @@ export default function OpenDMCard({ userId }: OpenDMCardProps) {
 		<InteractiveCard
 			title='Open chat'
 			description='Open private conversation with this user'
-			icon={BsChatSquareFill}
+			icon={BsChatSquareText}
 			onClick={handleOpenDm}
-			disabled={isLoading}
+			disabled={isLoading || user.id == userId}
 		/>
 	);
 }

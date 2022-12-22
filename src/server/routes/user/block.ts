@@ -33,6 +33,10 @@ router.all('/block',
 		const isBlocked = await BlockManager.isBlocked(targetId, req.auth.id);
 
 		if(req.method == 'POST') {
+			if(targetId == req.auth.id) {
+				return new ApiResponse(res).badRequest('Cannot block authenticated user');
+			}
+
 			if(isBlocked == shouldBlock) {
 				return new ApiResponse(res).badRequest(`This user is ${shouldBlock ? 'already blocked' : 'not blocked'}`);
 			}

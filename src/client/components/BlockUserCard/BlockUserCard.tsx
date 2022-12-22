@@ -17,8 +17,8 @@ export default function BlockUserCard({ userId }: BlockUserCardProps) {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		setLoading(false);
 		setLoading(true);
+		if(user.id == userId) return;
 		const axios = getAxios(user);
 		axios.get(`user/block?id=${userId}`)
 			.then((r) => {
