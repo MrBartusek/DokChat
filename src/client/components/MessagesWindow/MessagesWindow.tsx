@@ -3,10 +3,12 @@ import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 
 import { OverlayTrigger, Tooltip, TooltipProps } from 'react-bootstrap';
 import { BsCheckCircle, BsCheckCircleFill, BsXCircle } from 'react-icons/bs';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { Link } from 'react-router-dom';
 import { EndpointResponse, MessageListResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
+import Utils from '../../helpers/utils';
 import { LocalChat, LocalMessage } from '../../types/Chat';
 import DokChatMarkdown from '../DokChatMarkdown/DokChatMarkdown';
 import MessageAttachment from '../MessageAttachment/MessageAttachment';
@@ -176,6 +178,12 @@ function UserMessage({currentChat, message, showAvatar, showAuthor, showStatus}:
 		</Tooltip>
 	);
 
+	const authorTooltip = (props: TooltipProps) => (
+		<Tooltip {...props}>
+			{Utils.userDiscriminator(message.author)}
+		</Tooltip>
+	);
+
 	const onlyEmojisRegex = /^(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])+$/i;
 	const nonTextMessage = (message.attachment.hasAttachment && isSent) || onlyEmojisRegex.test(message.content);
 
@@ -183,7 +191,13 @@ function UserMessage({currentChat, message, showAvatar, showAuthor, showStatus}:
 		<div className='d-flex flex-row align-items-end' style={{marginBottom: 3}}>
 			<div className='me-2'>
 				{showAvatar
-					? <ProfilePicture src={message.author.avatar} size={32}/>
+					? (
+						<OverlayTrigger placement='left' overlay={authorTooltip} delay={{show: 500, hide: 0}}>
+							<Link to={`/chat/user/${message.author.id}`}>
+								<ProfilePicture src={message.author.avatar} size={32} onClick={() => true}/>
+							</Link>
+						</OverlayTrigger>
+					)
 					: <Separator width={32} />}
 			</div>
 
