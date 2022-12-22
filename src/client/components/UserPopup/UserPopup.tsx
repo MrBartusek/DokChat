@@ -54,9 +54,13 @@ function UserPopup() {
 					<>
 						<ObjectHero
 							currentAvatar={userFetch.res.data.avatar}
-							title={`${userFetch.res.data.username}#${userFetch.res.data.tag}`}
+							title={(<>
+								{userFetch.res.data.username}
+								<span className="text-muted">#{userFetch.res.data.tag}</span>
+							</>)}
 							subTitle={onlineStatus}
 							isOnline={isOnline}
+							copyText={`${userFetch.res.data.username}#${userFetch.res.data.tag}`}
 						/>
 					</>
 				)}
