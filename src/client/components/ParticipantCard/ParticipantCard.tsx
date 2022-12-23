@@ -44,7 +44,7 @@ export default function ParticipantCard({ currentChat, participant }: Participan
 	}
 
 	return (
-		<button style={{opacity: removed ? 0.25 : 1}} className='participant-card' onClick={handleInfo}>
+		<div role="button" style={{opacity: removed ? 0.25 : 1}} className='participant-card' onClick={handleInfo}>
 			<UserCard user={participant} icons={(
 				<span className='d-flex flex-row'>
 					<IconButton icon={BsInfoCircle} size={34} disabled={isLoading || removed} onClick={handleInfo} />
@@ -53,6 +53,6 @@ export default function ParticipantCard({ currentChat, participant }: Participan
 					)}
 				</span>
 			)} />
-		</button>
+		</div>
 	);
 }
