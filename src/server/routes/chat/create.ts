@@ -13,14 +13,14 @@ import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 import { snowflakeGenerator } from '../../utils/snowflakeGenerator';
 import Utils from '../../utils/utils';
-import user from '../user';
+import { isUniqueArray } from '../../validators/isUniqueArray';
 
 const router = express.Router();
 
 router.all('/create',
 	allowedMethods('POST'),
 	ensureAuthenticated(),
-	body('participants').isArray({ min: 1, max: 25 }),
+	body('participants').isArray({ min: 1, max: 25 }).custom(isUniqueArray),
 	async (req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
