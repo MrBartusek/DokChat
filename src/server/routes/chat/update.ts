@@ -11,7 +11,7 @@ import ChatManager from '../../managers/chatManager';
 import PermissionsManager from '../../managers/permissionsManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
-import { isValidColor } from '../../validators/color';
+import { isValidColor } from '../../validators/isValidColor';
 
 const router = express.Router();
 const storage = multer.memoryStorage();

@@ -6,8 +6,8 @@ import AuthManager from '../../managers/authManager';
 import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureCaptcha from '../../middlewares/ensureCaptcha';
-import { isValidPassword } from '../../validators/password';
-import { isValidUsername } from '../../validators/username';
+import { isValidPassword } from '../../validators/isValidPassword';
+import { isValidUsername } from '../../validators/isValidUsername';
 
 const router = express.Router();
 

@@ -11,9 +11,9 @@ import AuthManager from '../../managers/authManager';
 import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
-import { isValidPassword } from '../../validators/password';
-import { isValidTag } from '../../validators/tag';
-import { isValidUsername } from '../../validators/username';
+import { isValidPassword } from '../../validators/isValidPassword';
+import { isValidTag } from '../../validators/isValidTag';
+import { isValidUsername } from '../../validators/isValidUsername';
 
 const router = express.Router();
 const storage = multer.memoryStorage();

@@ -4,7 +4,7 @@ import { ApiResponse } from '../../apiResponse';
 import AuthManager from '../../managers/authManager';
 import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
-import { isValidPassword } from '../../validators/password';
+import { isValidPassword } from '../../validators/isValidPassword';
 
 const router = express.Router();
 
