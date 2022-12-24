@@ -4,13 +4,14 @@ import { snowflakeGenerator } from '../utils/snowflakeGenerator';
 import * as DateFns from 'date-fns';
 import { ChatInvite } from '../../types/common';
 import * as crypto from 'crypto';
+import { QueryResult } from 'pg';
 
 const INVITE_BASE_URL = 'https://dokchat.dokurno.dev/i/';
 const INVITE_TIME_DAYS = 7;
 
 class InviteManager {
 	public static async createOrGetInvite(chatId: string, participantId: string): Promise<ChatInvite> {
-		const invite = await this.getInvite(chatId, participantId);
+		const invite = await this.getInviteByParticipant(chatId, participantId);
 		let tooOld = false;
 		if(invite) {
 			const createdAt =  DateFns.fromUnixTime(Number(invite.createdAt));
@@ -22,7 +23,7 @@ class InviteManager {
 		return await this.generateInvite(chatId, participantId);
 	}
 
-	private static async getInvite(chatId: string, participantId: string): Promise<ChatInvite | null> {
+	public static async getInviteByParticipant(chatId: string, participantId: string): Promise<ChatInvite | null> {
 		const inviteQuery = await db.query(sql`
 			SELECT
 				id, chat_id as "chatId", author_id as "authorId", created_at as "createdAt", invite_key as "key"
@@ -31,9 +32,24 @@ class InviteManager {
 			WHERE
 				chat_id = $1 AND author_id = $2;
 		`, [ chatId, participantId ]);
+		return this.praseInvite(inviteQuery);
+	}
 
-		if(inviteQuery.rowCount == 0) return null;
-		const invite = inviteQuery.rows[0];
+	public static async getInviteByKey(key: string): Promise<ChatInvite | null> {
+		const inviteQuery = await db.query(sql`
+			SELECT
+				id, chat_id as "chatId", author_id as "authorId", created_at as "createdAt", invite_key as "key"
+			FROM
+				invites
+			WHERE
+				key = $1
+		`, [ key ]);
+		return this.praseInvite(inviteQuery);
+	}
+
+	private static praseInvite(queryResult: QueryResult): ChatInvite | null {
+		if(queryResult.rowCount == 0) return null;
+		const invite = queryResult.rows[0];
 		const created = DateFns.fromUnixTime(invite.createdAt);
 		const expire = DateFns.getUnixTime(DateFns.addDays(created, INVITE_TIME_DAYS));
 		return {

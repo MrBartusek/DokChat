@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.all('/leave',
 	allowedMethods('POST'),
-	ensureAuthenticated(true),
+	ensureAuthenticated(),
 	body('chat').isString(),
 	async (req, res, next) => {
 		const errors = validationResult(req);

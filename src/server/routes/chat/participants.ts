@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.all('/participants',
 	allowedMethods('GET'),
-	ensureAuthenticated(true),
+	ensureAuthenticated(),
 	query('chat').isNumeric(),
 	async (req, res, next) => {
 		const errors = validationResult(req);
