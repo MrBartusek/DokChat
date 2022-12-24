@@ -72,6 +72,15 @@ export async function initializeDB() {
             email varchar(255) NOT NULL UNIQUE,
             PRIMARY KEY (id)
         );
+
+        CREATE TABLE IF NOT EXISTS invites (
+            id varchar NOT NULL,
+            chat_id varchar REFERENCES chats ON DELETE CASCADE,
+            author_id varchar REFERENCES participants ON DELETE CASCADE,
+            invite_key varchar(8) NOT NULL,
+            created_at bigint NOT NULL,
+            PRIMARY KEY (id)
+        );
     `);
 
 	const existQuery = await db.query(sql`SELECT EXISTS(SELECT 1 FROM users WHERE is_system = 'true')`);

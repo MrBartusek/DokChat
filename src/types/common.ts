@@ -57,3 +57,11 @@ export interface ChatParticipant extends User {
 	userId: string
 }
 
+export interface ChatInvite {
+    id: string,
+    chatId: string,
+    invite: string,
+    createdAt: string
+    expireAt: string
+}
+

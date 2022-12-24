@@ -55,7 +55,7 @@ export default class ChatManager {
 		};
 	}
 
-	public static async getParticipant(chatId: string, participantId: string) : Promise<InternalChatParticipant | null> {
+	public static async getParticipant(chatId: string, participantId?: string, userId?: string) : Promise<InternalChatParticipant | null> {
 		const query = await db.query(sql`
 			SELECT
 				participants.id,
@@ -66,8 +66,8 @@ export default class ChatManager {
 			FROM
 				participants
 			JOIN users ON users.id = participants.user_id
-			WHERE chat_id = $1 AND participants.id = $2;
-		`, [ chatId, participantId ]);
+			WHERE chat_id = $1 AND (participants.id = $2 OR users.id = $3);
+		`, [ chatId, participantId, userId ]);
 
 		if(query.rowCount == 0) return null;
 		const part = query.rows[0];

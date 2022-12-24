@@ -46,15 +46,17 @@ router.all('/modify-participants',
 		if(req.method == 'PUT') {
 			const user = await UserManager.getUserById(userId);
 			if(!user) return new ApiResponse(res).badRequest('This user does not exist');
+			const part = await ChatManager.getParticipant(chatId, null, userId);
+			if(part) return new ApiResponse(res).badRequest('This user is already part of this group');
 
-			systemMessageHandler.sendChatLeave(chatId, user);
+			await ChatManager.addUserToChat(userId, chatId);
+			systemMessageHandler.sendChatJoin(chatId, user);
 		}
 		else if (req.method == 'DELETE') {
 			const participant = await ChatManager.getParticipant(chatId, participantId);
 			if(!participant) return new ApiResponse(res).badRequest('This participant is not part of this group');
 
 			await ChatManager.removeUserFromChat(participant.userId, chatId);
-
 			systemMessageHandler.sendChatRemoved(chatId, participant, req.auth);
 		}
 

@@ -7,6 +7,7 @@ import messagesRouter from './messages';
 import participantsRouter from './participants';
 import updateRouter from './update';
 import modifyParticipantsRouter from './modifyParticipants';
+import inviteRouter from './invite';
 
 const router = express.Router();
 
@@ -19,5 +20,6 @@ router.use(leaveRouter);
 router.use(leaveRouter);
 router.use(updateRouter);
 router.use(modifyParticipantsRouter);
+router.use(inviteRouter);
 
 export default router;

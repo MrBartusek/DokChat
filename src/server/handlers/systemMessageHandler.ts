@@ -77,7 +77,7 @@ class SystemMessageHandler {
 
 	public sendChatJoin(chatId: string, user: User) {
 		const discriminator = Utils.userDiscriminator(user);
-		this.sendSystemMessage(chatId, `${discriminator} was added to this chat`);
+		this.sendSystemMessage(chatId, `${discriminator} has joined this group`);
 	}
 }
 
