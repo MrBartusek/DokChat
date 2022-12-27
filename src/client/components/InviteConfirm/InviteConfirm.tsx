@@ -1,6 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Alert } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { ChatCreateResponse, EndpointResponse, InviteResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
@@ -55,6 +56,9 @@ function InviteConfirm({ inviteKey, handleClose }: InviteConfirmProps) {
 	}
 	else {
 		const invite = inviteFetch.res.data;
+		if(chats.find(c => c.id == invite.chat.id)) {
+			return <Navigate to={`/chat/${invite.chat.id}`} />;
+		}
 		return (
 			<div className='d-flex flex-column justify-content-center text-center' style={{minHeight: 380}}>
 				{error && <Alert variant='danger' className='mb-3'>{error}</Alert>}
@@ -76,6 +80,7 @@ function InviteConfirm({ inviteKey, handleClose }: InviteConfirmProps) {
                         No Thanks
 					</InteractiveButton>
 				</div>
+
 			</div>
 		);
 	}

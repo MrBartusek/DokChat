@@ -6,6 +6,7 @@ import AccountBannedPage from '../../pages/AccountBannedPage';
 import DownloadPage from '../../pages/DownloadPage';
 import EmailConfirmPage from '../../pages/EmailConfirmPage';
 import HomePage from '../../pages/HomePage';
+import InvitePage from '../../pages/InvitePage';
 import LoginPage from '../../pages/LoginPage';
 import PasswordResetPage from '../../pages/PasswordResetPage';
 import PrivacyPolicyPage from '../../pages/PrivacyPolicy';
@@ -92,9 +93,14 @@ function Router() {
 				</Route>
 
 				<Route path="/" element={<HomePage />} />
-				<Route path="/about" element={<HomePage scrollToAbout />} />
+				<Route path="about" element={<HomePage scrollToAbout />} />
 				<Route path="privacy-policy" element={<PrivacyPolicyPage />} />
 				<Route path="download" element={<DownloadPage />} />
+				<Route path="i/:key" element={
+					<PrivateRoute>
+						<InvitePage />
+					</PrivateRoute>
+				} />
 
 				<Route path="login" element={
 					<PublicOnlyRoute>
