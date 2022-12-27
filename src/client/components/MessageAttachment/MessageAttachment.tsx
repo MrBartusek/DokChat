@@ -30,7 +30,7 @@ export default function MessageAttachment({ message } : MessageAttachmentProps) 
 						controls
 						style={{borderRadius: '1.2rem', maxHeight: '200px'}}
 						height={200}
-						className='h-100 w-auto'
+						className='w-auto'
 					>
 						<source src={attachmentUrl} type={message.attachment.mimeType} />
 					</video>
@@ -41,7 +41,7 @@ export default function MessageAttachment({ message } : MessageAttachmentProps) 
 						style={{cursor: 'pointer', borderRadius: '1.2rem', maxHeight: '200px'}}
 						height={message.attachment.height}
 						width={message.attachment.width}
-						className='h-100 w-auto'
+						className='w-auto'
 						alt='Message attachment failed to load'
 						onClick={() => setShowLightbox(!showLightbox)}
 					/>
