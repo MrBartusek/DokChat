@@ -11,6 +11,7 @@ const router = express.Router();
 
 router.all('/invite',
 	allowedMethods('GET'),
+	ensureAuthenticated(),
 	query('chat').isString(),
 	async (req, res, next) => {
 		const errors = validationResult(req);
