@@ -5,7 +5,7 @@ import Layout from '../components/Layout/Layout';
 import LoginForm from '../components/LoginForm/LoginForm';
 import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
 
-export function LoginPage() {
+function LoginPage() {
 	return (
 		<Layout>
 			<ScrollToTop />
@@ -16,6 +16,7 @@ export function LoginPage() {
 				</FormPage>
 			</Container>
 		</Layout>
-
 	);
 }
+
+export default LoginPage;

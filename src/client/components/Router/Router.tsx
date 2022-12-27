@@ -2,15 +2,14 @@ import React, { useContext } from 'react';
 import { Alert } from 'react-bootstrap';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
-import { AccountBannedPage } from '../../pages/AccountBannedPage';
-import { ChatPage } from '../../pages/ChatPage';
-import { DownloadPage } from '../../pages/DownloadPage';
-import { EmailConfirmPage } from '../../pages/EmailConfirmPage';
-import { HomePage } from '../../pages/HomePage';
-import { LoginPage } from '../../pages/LoginPage';
-import { PasswordResetPage } from '../../pages/PasswordResetPage';
-import { PrivacyPolicyPage } from '../../pages/PrivacyPolicy';
-import { RegisterPage } from '../../pages/RegisterPage';
+import AccountBannedPage from '../../pages/AccountBannedPage';
+import DownloadPage from '../../pages/DownloadPage';
+import EmailConfirmPage from '../../pages/EmailConfirmPage';
+import HomePage from '../../pages/HomePage';
+import LoginPage from '../../pages/LoginPage';
+import PasswordResetPage from '../../pages/PasswordResetPage';
+import PrivacyPolicyPage from '../../pages/PrivacyPolicy';
+import RegisterPage from '../../pages/RegisterPage';
 import EmailConfirmer from '../EmailConfirmer/EmailConfirmer';
 import ErrorPage from '../ErrorPage/ErrorPage';
 import NewPasswordDialog from '../NewPasswordDialog/NewPasswordDialog';
@@ -25,6 +24,7 @@ const GroupLeavePopupLazy = React.lazy(() => import('../GroupLeavePopup/GroupLea
 const ChatHidePopupLazy = React.lazy(() => import('../ChatHidePopup/ChatHidePopup'));
 const UserPopupLazy = React.lazy(() => import('../UserPopup/UserPopup'));
 const UserBlockPopupLazy = React.lazy(() => import('../UserBlockPopup/UserBlockPopup'));
+const ChatPageLazy = React.lazy(() => import('../../pages/ChatPage'));
 
 function Router() {
 	return (
@@ -32,7 +32,9 @@ function Router() {
 			<Routes>
 				<Route path="chat" element={
 					<PrivateRoute>
-						<ChatPage />
+						<React.Suspense fallback={null}>
+							<ChatPageLazy />
+						</React.Suspense>
 					</PrivateRoute>
 				}>
 					<Route path=":chatId" element={null} />

@@ -5,7 +5,7 @@ import Layout from '../components/Layout/Layout';
 import RegisterForm from '../components/RegisterForm/RegisterForm';
 import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
 
-export function RegisterPage() {
+function RegisterPage() {
 	return (
 		<Layout>
 			<ScrollToTop />
@@ -19,3 +19,5 @@ export function RegisterPage() {
 
 	);
 }
+
+export default RegisterPage;

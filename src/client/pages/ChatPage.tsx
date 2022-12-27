@@ -12,7 +12,7 @@ import { LocalChat } from '../types/Chat';
 
 const ChatWindowLazy = React.lazy(() => import('../components/ChatWindow/ChatWindow'));
 
-export function ChatPage() {
+function ChatPage() {
 	const { chatId } = useParams();
 	const ws = useWebsocket();
 	const [ isLoadingMessagesManager, chats, sendMessage, setChatList ] = useMessageManager(ws);
@@ -83,3 +83,5 @@ export function ChatPage() {
 		</React.Suspense>
 	);
 }
+
+export default ChatPage;

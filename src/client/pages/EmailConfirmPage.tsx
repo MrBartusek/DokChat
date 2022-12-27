@@ -5,7 +5,7 @@ import FormPage from '../components/FormPage/FormPage';
 import Layout from '../components/Layout/Layout';
 import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
 
-export function EmailConfirmPage() {
+function EmailConfirmPage() {
 	return (
 		<Layout>
 			<ScrollToTop />
@@ -15,6 +15,7 @@ export function EmailConfirmPage() {
 				</FormPage>
 			</Container>
 		</Layout>
-
 	);
 }
+
+export default EmailConfirmPage;

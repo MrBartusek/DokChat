@@ -3,7 +3,7 @@ import { Container } from 'react-bootstrap';
 import Layout from '../components/Layout/Layout';
 import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
 
-export function PrivacyPolicyPage() {
+function PrivacyPolicyPage() {
 	return (
 		<Layout>
 			<ScrollToTop />
@@ -150,3 +150,5 @@ export function PrivacyPolicyPage() {
 
 	);
 }
+
+export default PrivacyPolicyPage;

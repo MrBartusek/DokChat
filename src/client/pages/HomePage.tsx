@@ -12,7 +12,7 @@ export interface HomePageProps {
 	scrollToAbout?: boolean;
 }
 
-export function HomePage({ scrollToAbout }: HomePageProps) {
+function HomePage({ scrollToAbout }: HomePageProps) {
 	const aboutRef = useRef<HTMLDivElement>(null!);
 
 	useLayoutEffect(() => {
@@ -76,3 +76,5 @@ export function HomePage({ scrollToAbout }: HomePageProps) {
 		</Layout>
 	);
 }
+
+export default HomePage;

@@ -3,7 +3,7 @@ import DownloadHeader from '../components/DownloadHeader/DownloadHeader';
 import Layout from '../components/Layout/Layout';
 import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
 
-export function DownloadPage() {
+function DownloadPage() {
 	return (
 		<Layout zeroHeightNavbar>
 			<ScrollToTop />
@@ -11,3 +11,5 @@ export function DownloadPage() {
 		</Layout>
 	);
 }
+
+export default DownloadPage;

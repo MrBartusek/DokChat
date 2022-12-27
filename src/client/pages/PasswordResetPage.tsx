@@ -18,3 +18,5 @@ export function PasswordResetPage() {
 
 	);
 }
+
+export default PasswordResetPage;
