@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { OnlineManagerContext } from '../../context/OnlineManagerContext';
 import { UserContext } from '../../context/UserContext';
+import useBreakpoint from '../../hooks/useBreakpoint';
 import { LocalChat } from '../../types/Chat';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 import './ChatList.scss';
@@ -15,9 +16,10 @@ export interface ChatListProps {
 function ChatList({ currentChat }: ChatListProps) {
 	const [ chats ] = useContext(MessageManagerContext);
 	const navigate = useNavigate();
+	const breakpoint = useBreakpoint();
 
 	const noChatsInfo = (
-		<span className='text-muted text-center mt-4 px-1' style={{width: 320}}>
+		<span className='text-muted text-center mt-5 px-1' style={{ width: [ 'xs', 'sm' ].includes(breakpoint) ? 150 : 320 }}>
 			There are no messages yet <br />
 			<Link to='/chat/new' className='link-secondary'>Start a new chat</Link>
 		</span>

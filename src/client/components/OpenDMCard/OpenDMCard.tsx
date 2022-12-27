@@ -1,9 +1,9 @@
 import { AxiosError } from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { BsChatSquareFill, BsChatSquareText, BsCheckCircle, BsSlashCircle } from 'react-icons/bs';
+import { BsChatSquareTextFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
-import { BlockStatusResponse, ChatCreateResponse, EndpointResponse } from '../../../types/endpoints';
+import { ChatCreateResponse, EndpointResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
@@ -49,7 +49,7 @@ export default function OpenDMCard({ userId }: OpenDMCardProps) {
 		<InteractiveCard
 			title='Open chat'
 			description='Open private conversation with this user'
-			icon={BsChatSquareText}
+			icon={BsChatSquareTextFill}
 			onClick={handleOpenDm}
 			disabled={isLoading || user.id == userId}
 		/>

@@ -1,6 +1,4 @@
-import * as DateFns from 'date-fns';
 import sql from 'sql-template-strings';
-import { snowflakeGenerator } from '../utils/snowflakeGenerator';
 import db from './index';
 
 export async function initializeDB() {
@@ -82,33 +80,4 @@ export async function initializeDB() {
             PRIMARY KEY (id)
         );
     `);
-
-	const existQuery = await db.query(sql`SELECT EXISTS(SELECT 1 FROM users WHERE is_system = 'true')`);
-	if(!existQuery.rows[0].exists) {
-		const systemUserId = snowflakeGenerator.getUniqueID().toString();
-		const chatID = snowflakeGenerator.getUniqueID().toString();
-		const timestamp = DateFns.getUnixTime(new Date());
-		await db.query(sql`
-            INSERT INTO users
-                (id, password_hash, username, tag, email, last_seen, created_at, is_system)
-            VALUES
-                (
-                    $1, 'x', 'DokChat', '0001', 'dokchat-admin@dokurno.dev', $2, $2, 'true'
-                );
-         `, [ systemUserId, timestamp ]);
-
-		await db.query(sql`
-            INSERT INTO chats
-                (id, name, creator_id, created_at, is_group)
-            VALUES
-                ($3, 'DokChat General', $1, $2, 'true');
-        `, [ systemUserId, timestamp, chatID ]);
-
-		await db.query(sql`
-            INSERT INTO participants
-                (id, user_id, chat_id, created_at)
-            VALUES
-                ($3, $1, $3, $2);
-        `, [ systemUserId, timestamp, chatID ]);
-	}
 }

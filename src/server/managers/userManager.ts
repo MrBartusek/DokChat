@@ -54,10 +54,6 @@ export default class UserManager {
 			true /* confirm email for social logins */
 		]);
 
-		// Add to public chat
-		const publicChatId = await ChatManager.publicChatId();
-		await ChatManager.addUserToChat(userId, publicChatId);
-
 		const jwtData: UserJWTData = {
 			id: userId,
 			username: username,
@@ -138,11 +134,6 @@ export default class UserManager {
 			tag: tag,
 			avatar: Utils.avatarUrl(user.id)
 		};
-	}
-
-	public static async systemUserId() {
-		const query = await db.query(sql`SELECT id FROM users WHERE is_system = 'true'`);
-		return query.rows[0].id;
 	}
 
 	public static async getUserJwtDataById(id: string): Promise<UserJWTData | null> {

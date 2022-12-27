@@ -38,7 +38,7 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 	}, [ getOnlineStatus, currentChat ]);
 
 	return (
-		<div className='d-flex px-3 py-2 border-bottom border-separator'>
+		<div className='d-flex px-3 py-2 border-bottom border-separator' style={{ height: 56 }}>
 			{currentChat && (
 				<div className='d-flex pe-3'>
 					<ProfilePicture
@@ -51,7 +51,7 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 			<div className='d-flex flex-fill justify-content-center p-0 flex-column' style={{lineHeight: 1.3}}>
 				<Twemoji
 					className='fw-bold text-truncate'
-					text={currentChat?.name || 'No chat selected'}
+					text={currentChat?.name || 'Welcome to DokChat!'}
 				/>
 				{(isOnline || statusText) && (
 					<span className='text-muted small'>

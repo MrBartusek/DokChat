@@ -211,12 +211,6 @@ export default class ChatManager {
 		`, [ hide, chatId, userId ]);
 	}
 
-	public static async publicChatId() {
-		const systemId = await UserManager.systemUserId();
-		const chatQuery = await db.query(sql`SELECT id FROM chats WHERE creator_id = $1;`, [ systemId ]);
-		return chatQuery.rows[0].id;
-	}
-
 	public static async isGroup(chatId: string): Promise<boolean> {
 		const chatQuery = await db.query(sql`SELECT is_group as "isGroup" FROM chats WHERE id = $1;`, [ chatId ]);
 		return chatQuery.rows[0].isGroup;
@@ -232,7 +226,7 @@ export default class ChatManager {
 		attachmentKey?: string,
 		attachment?: MessageAttachment
 	): Promise<[string, string]> {
-		const senderId = sender == 'SYSTEM' ? await UserManager.systemUserId() : sender.id;
+		const senderId = sender == 'SYSTEM' ? null : sender.id;
 		const id = snowflakeGenerator.getUniqueID().toString();
 		const timestamp = DateFns.getUnixTime(new Date()).toString();
 

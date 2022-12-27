@@ -3,6 +3,7 @@ import { Alert } from 'react-bootstrap';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import AccountBannedPage from '../../pages/AccountBannedPage';
+import ChatPage from '../../pages/ChatPage';
 import DownloadPage from '../../pages/DownloadPage';
 import EmailConfirmPage from '../../pages/EmailConfirmPage';
 import HomePage from '../../pages/HomePage';
@@ -25,7 +26,6 @@ const GroupLeavePopupLazy = React.lazy(() => import('../GroupLeavePopup/GroupLea
 const ChatHidePopupLazy = React.lazy(() => import('../ChatHidePopup/ChatHidePopup'));
 const UserPopupLazy = React.lazy(() => import('../UserPopup/UserPopup'));
 const UserBlockPopupLazy = React.lazy(() => import('../UserBlockPopup/UserBlockPopup'));
-const ChatPageLazy = React.lazy(() => import('../../pages/ChatPage'));
 const InvitePopupLazy = React.lazy(() => import('../InvitePopup/InvitePopup'));
 
 function Router() {
@@ -34,9 +34,7 @@ function Router() {
 			<Routes>
 				<Route path="chat" element={
 					<PrivateRoute>
-						<React.Suspense fallback={null}>
-							<ChatPageLazy />
-						</React.Suspense>
+						<ChatPage />
 					</PrivateRoute>
 				}>
 					<Route path=":chatId" element={null} />
