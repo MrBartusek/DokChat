@@ -42,7 +42,7 @@ class InviteManager {
 			FROM
 				invites
 			WHERE
-				key = $1
+				invite_key = $1
 		`, [ key ]);
 		return this.praseInvite(inviteQuery);
 	}
@@ -86,7 +86,6 @@ class InviteManager {
 
 	private static async pruneOldInvites(): Promise<number> {
 		const tooOld =  DateFns.getUnixTime(DateFns.subDays(new Date(), INVITE_TIME_DAYS));
-		console.log(tooOld);
 		const query = await db.query(sql`
 			DELETE FROM
 				invites

@@ -8,7 +8,7 @@ import InteractiveButton from '../InteractiveButton/InteractiveButton';
 
 interface PopupProps extends ModalProps {
 	title: string;
-	footer: JSX.Element | JSX.Element[];
+	footer?: JSX.Element | JSX.Element[];
 	static?: boolean;
 	setHandleClose?: (func: () => void) => void;
 	children: JSX.Element | JSX.Element[];
@@ -60,9 +60,11 @@ function Popup(props: PopupProps) {
 				<Modal.Body>
 					{props.children}
 				</Modal.Body>
-				<Modal.Footer>
-					{props.footer}
-				</Modal.Footer>
+				{props.footer && (
+					<Modal.Footer>
+						{props.footer}
+					</Modal.Footer>
+				)}
 			</ErrorBoundary>
 		</Modal>
 	);

@@ -33,4 +33,7 @@ export interface BlockStatusResponse {
     blocked: boolean
 }
 
-export type InviteResponse = ChatInvite;
+export type InviteResponse = {
+    invite: ChatInvite;
+    chat: Chat;
+}

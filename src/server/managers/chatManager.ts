@@ -51,7 +51,10 @@ export default class ChatManager {
 			isGroup: chat.isGroup,
 			createdAt: chat.createdAt,
 			creatorId: chat.creatorId,
-			participants: []
+			participants: participants.map(p => ({
+				id: p.id,
+				userId: p.userId
+			}))
 		};
 	}
 

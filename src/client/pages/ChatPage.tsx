@@ -32,7 +32,8 @@ function ChatPage() {
 			'/chat/profile',
 			'/chat/email-confirm',
 			'/chat/delete-account',
-			'/chat/user'
+			'/chat/user',
+			'/chat/invite/'
 		].find(x => location.pathname.startsWith(x))) !== undefined;
 
 		const isEmailConfirmRoute = location.pathname == '/chat/email-confirm';

@@ -28,7 +28,7 @@ router.all('/leave',
 			return new ApiResponse(res).badRequest('Cannot leave chat that is not a group');
 		}
 
-		ChatManager.removeUserFromChat(chatId, req.auth.id);
+		await ChatManager.removeUserFromChat(req.auth.id, chatId);
 		systemMessageHandler.sendChatLeave(chatId, req.auth);
 		new ApiResponse(res).success();
 	});
