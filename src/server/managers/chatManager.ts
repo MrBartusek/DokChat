@@ -135,12 +135,12 @@ export default class ChatManager {
 			const user = participants.find(u => u.userId != displayAs);
 			if(!user) {
 				return [
-					rawName || 'Only you',
+					rawName ?? participants[0].username,
 					Utils.avatarUrl(displayAs)
 				];
 			}
 			return [
-				rawName || `${user.username}#${user.tag}`,
+				rawName ?? user.username,
 				Utils.avatarUrl(user.userId)
 			];
 
