@@ -31,7 +31,7 @@ function WelcomePage() {
 				<p className='lead w-100 mb-2 d-flex align-items-center'>
 					<BsPeopleFill color={'var(--bs-secondary'} className='me-3' />
 					<div>
-						Tell your friends about DokChat and, ask them about their user tag
+						Tell your friends about DokChat and ask them about their user tag
 					</div>
 				</p>
 
