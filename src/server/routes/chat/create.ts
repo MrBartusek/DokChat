@@ -27,20 +27,22 @@ router.all('/create',
 
 		const participantIds = req.body.participants as string[];
 
-		// Add req.auth user to participants
 		if(participantIds.includes(req.auth.id)) {
 			return new ApiResponse(res).badRequest('Authenticated user is included in participants');
 		}
-		participantIds.push(req.auth.id);
 
 		// Check if specific DM already exist
-		const dmId = await ChatManager.dmExist(participantIds[0], participantIds[1]);
-		if(dmId !== false) {
-			const chat = await ChatManager.getChat(dmId, req.auth.id);
-			return new ApiResponse(res).respond(true, 409, 'This DM already exist', chat);
+		const isDm = participantIds.length == 1;
+		console.log(participantIds);
+		if(isDm) {
+			const dmId = await ChatManager.dmExist(participantIds[0], req.auth.id);
+			if(dmId !== false) {
+				const chat = await ChatManager.getChat(dmId, req.auth.id);
+				return new ApiResponse(res).respond(true, 409, 'This DM already exist', chat);
+			}
 		}
 
-		// Check if blocked
+		// Check if requesting user is blocking any of the participant and vice versa
 		for await(const partId of participantIds) {
 			const isBlocked = await BlockManager.isBlockedAny(req.auth.id, partId);
 			if(isBlocked) {
@@ -48,6 +50,9 @@ router.all('/create',
 				return new ApiResponse(res).forbidden(`${Utils.userDiscriminator(user)} has blocked you or, you are blocking this user`);
 			}
 		}
+
+		// Add req.auth user to participants
+		participantIds.push(req.auth.id);
 
 		// Fetch participants
 		const participants = await convertIdsToUsers(participantIds);
