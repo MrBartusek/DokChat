@@ -61,7 +61,6 @@ router.all('/block',
 
 async function hideDMForTargets(blockerId: string, targetId: string) {
 	const chatId = await ChatManager.dmExist(blockerId, targetId);
-	console.log(chatId);
 	if(chatId) {
 		await ChatManager.setChatHideForParticipantByUserId(chatId, blockerId, true);
 		await ChatManager.setChatHideForParticipantByUserId(chatId, targetId, true);
