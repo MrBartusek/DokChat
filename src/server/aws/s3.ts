@@ -5,8 +5,8 @@ import * as sharp from 'sharp';
 
 export const bucketName = process.env.AWS_BUCKET_NAME;
 const region = process.env.AWS_REGION;
-const CACHE_TIME = 4 * 30 * 30; // 4 hours (match cloduflare)
-const SINGED_URL_EXPIRE = 5 * 30 * 30; // 5 hours (slighty more than cache)
+const CACHE_TIME = 2 * 60 * 60;
+const SINGED_URL_EXPIRE = 12 * 60 * 60;
 
 class DokChatS3Client {
 	private client: S3Client;
