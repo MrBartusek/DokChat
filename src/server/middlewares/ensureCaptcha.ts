@@ -5,7 +5,6 @@ import { ApiResponse } from '../apiResponse';
 const recaptcha = new RecaptchaV2(process.env.RECAPTCHA_SITE_KEY, process.env.RECAPTCHA_SECRET);
 
 const ensureCaptcha = () => async (req: Request, res: Response, next: NextFunction) => {
-	return next();
 	const recaptchaResponse: string | undefined = req.body.recaptchaResponse;
 	if(!recaptchaResponse) {
 		return new ApiResponse(res, next).badRequest('Missing ReCAPTCHA response');

@@ -51,7 +51,7 @@ export default class UserManager {
 			passwordHash,
 			timestamp,
 			timestamp,
-			true /* confirm email for social logins */
+			socialLogin /* confirm email for social logins */
 		]);
 
 		const jwtData: UserJWTData = {
@@ -61,7 +61,7 @@ export default class UserManager {
 			email: email,
 			avatar: Utils.avatarUrl(userId),
 			isBanned: false,
-			isEmailConfirmed: true
+			isEmailConfirmed: socialLogin
 		};
 		return [ jwtData, passwordHash ];
 	}
