@@ -65,11 +65,12 @@ function ChatPage() {
 	const isLoading = (
 		isLoadingMessagesManager || !documentReady || !ChatWindowLazy
 	);
-	// console.log(
-	// 	'isLoading:', isLoading,
-	// 	'manager:', isLoadingMessagesManager,
-	// 	'ready:', documentReady
-	// );
+	console.log(
+		'isLoading(main):', isLoading,
+		'isLoadingMessagesManager:', isLoadingMessagesManager,
+		'documentReady:', documentReady,
+		'ChatWindowLazy:', ChatWindowLazy != null
+	);
 
 	if(isLoading) return (<MainLoading />);
 

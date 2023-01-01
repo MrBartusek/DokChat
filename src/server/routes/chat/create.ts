@@ -33,7 +33,6 @@ router.all('/create',
 
 		// Check if specific DM already exist
 		const isDm = participantIds.length == 1;
-		console.log(participantIds);
 		if(isDm) {
 			const dmId = await ChatManager.dmExist(participantIds[0], req.auth.id);
 			if(dmId !== false) {
