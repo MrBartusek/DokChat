@@ -76,7 +76,12 @@ function Chat(props: ChatProps) {
 				<Twemoji className='text-truncate text-nowrap' text={props.chat.name} />
 				<div className='text-muted text-truncate' style={{fontSize: '0.85em'}}>
 					{props.chat.lastMessage ? (
-						<Twemoji text={`${props.chat.lastMessage.author}: ${props.chat.lastMessage.content || '[Image]'}`} />
+						<Twemoji
+							text={`
+								${props.chat.lastMessage.author ? props.chat.lastMessage.author + ': ' : ''} 
+								${props.chat.lastMessage.content || '[Image]'}
+							`}
+						/>
 					): 'Click to start the chat!'}
 
 				</div>

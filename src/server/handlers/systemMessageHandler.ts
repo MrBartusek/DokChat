@@ -34,7 +34,7 @@ class SystemMessageHandler {
 				attachment: { hasAttachment: false },
 				author: {
 					id: 'SYSTEM',
-					username: 'SYSTEM',
+					username: null,
 					avatar: Utils.avatarUrl('1'),
 					tag: '0001'
 				}
