@@ -1,9 +1,6 @@
-import * as DateFns from 'date-fns';
 import * as express from 'express';
 import { cookie, validationResult } from 'express-validator';
-import sql from 'sql-template-strings';
 import { ApiResponse } from '../../apiResponse';
-import db from '../../db';
 import AuthManager from '../../managers/authManager';
 import JWTManager from '../../managers/JWTManager';
 import UserManager from '../../managers/userManager';
@@ -18,17 +15,16 @@ router.all('/refresh', allowedMethods('POST'), cookie('refreshToken').isString()
 	const refreshToken: string = req.cookies.refreshToken;
 
 	const unconfirmedUserId = JWTManager.decodeRefreshToken(refreshToken);
-	if(!unconfirmedUserId) return new ApiResponse(res).unauthorized('Invalid JWT');
+	if(!unconfirmedUserId) {
+		return new ApiResponse(res).unauthorized('Invalid JWT');
+	}
 
 	const user = await UserManager.getUserJwtDataById(unconfirmedUserId);
 	const passwordHash = await UserManager.getUserHashById(unconfirmedUserId);
 
 	await JWTManager.verifyRefreshToken(refreshToken, passwordHash)
 		.then(async (userId: string) => {
-			// Update last seen
-			const timestamp = DateFns.getUnixTime(new Date());
-			await db.query(sql`UPDATE users SET last_seen=$1 WHERE id=$2`, [ timestamp, userId ]);
-
+			await UserManager.bumpLastSeen(userId);
 			AuthManager.sendAuthResponse(res, user, passwordHash);
 		})
 		.catch((error) => {

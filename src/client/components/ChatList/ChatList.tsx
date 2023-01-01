@@ -1,7 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Twemoji } from 'react-emoji-render';
 import { Link, useNavigate } from 'react-router-dom';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
+import { OnlineManagerContext } from '../../context/OnlineManagerContext';
+import { UserContext } from '../../context/UserContext';
+import useBreakpoint from '../../hooks/useBreakpoint';
 import { LocalChat } from '../../types/Chat';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 import './ChatList.scss';
@@ -13,9 +16,10 @@ export interface ChatListProps {
 function ChatList({ currentChat }: ChatListProps) {
 	const [ chats ] = useContext(MessageManagerContext);
 	const navigate = useNavigate();
+	const breakpoint = useBreakpoint();
 
 	const noChatsInfo = (
-		<span className='text-muted text-center mt-4'>
+		<span className='text-muted text-center mt-5 px-1' style={{ width: [ 'xs', 'sm' ].includes(breakpoint) ? 150 : 320 }}>
 			There are no messages yet <br />
 			<Link to='/chat/new' className='link-secondary'>Start a new chat</Link>
 		</span>
@@ -26,9 +30,7 @@ function ChatList({ currentChat }: ChatListProps) {
 			{chats.map((chat) => (
 				<Chat
 					key={chat.id}
-					avatar={chat.avatar}
-					name={chat.name}
-					lastMessage={chat.lastMessage}
+					chat={chat}
 					isCurrent={chat.id == currentChat?.id}
 					onClick={() => navigate(`/chat/${chat.id}`)}
 				/>
@@ -39,17 +41,25 @@ function ChatList({ currentChat }: ChatListProps) {
 }
 
 interface ChatProps {
-    avatar: string,
-	name: string,
-	lastMessage: {
-		content: string,
-		author: string
-	},
+    chat: LocalChat,
 	isCurrent?: boolean
 	onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
 function Chat(props: ChatProps) {
+	const [ user ] = useContext(UserContext);
+	const [ isOnline, setOnline ] = useState(false);
+	const getOnlineStatus = useContext(OnlineManagerContext);
+
+	useEffect(() => {
+		const online = props.chat.participants.some(p => {
+			if(p.userId == user.id) return false;
+			const [ online ] = getOnlineStatus(p.userId);
+			return online;
+		});
+		setOnline(online);
+	}, [ getOnlineStatus ]);
+
 	return (
 		<div
 			className={`d-flex px-2 chat flex-row rounded-3 flex-nowrap ${props.isCurrent ? 'current' : ''}`}
@@ -57,16 +67,21 @@ function Chat(props: ChatProps) {
 			onClick={props.onClick}
 		>
 			<div className="d-flex align-items-center pe-md-3">
-				<ProfilePicture src={props.avatar} size={48} />
+				<ProfilePicture src={props.chat.avatar} size={48} isOnline={isOnline} />
 			</div>
 			<div
 				className='d-none d-md-flex justify-content-center flex-column py-0 px-1'
 				style={{width: 240}}
 			>
-				<Twemoji className='fw-bol text-truncate text-nowrap' text={props.name} />
+				<Twemoji className='text-truncate text-nowrap' text={props.chat.name} />
 				<div className='text-muted text-truncate' style={{fontSize: '0.85em'}}>
-					{props.lastMessage ? (
-						<Twemoji text={`${props.lastMessage.author}: ${props.lastMessage.content || '[Image]'}`} />
+					{props.chat.lastMessage ? (
+						<Twemoji
+							text={`
+								${props.chat.lastMessage.author ? props.chat.lastMessage.author + ': ' : ''} 
+								${props.chat.lastMessage.content || '[Image]'}
+							`}
+						/>
 					): 'Click to start the chat!'}
 
 				</div>

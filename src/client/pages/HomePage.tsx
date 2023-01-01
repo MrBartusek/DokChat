@@ -1,17 +1,30 @@
-import React from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { BsChatSquareTextFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import HomeSection from '../components/HomeSection/HomeSection';
 import InteractiveButton from '../components/InteractiveButton/InteractiveButton';
 import Layout from '../components/Layout/Layout';
+import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
 import Section from '../components/Section/Section';
 
-export function HomePage() {
+export interface HomePageProps {
+	scrollToAbout?: boolean;
+}
+
+function HomePage({ scrollToAbout }: HomePageProps) {
+	const aboutRef = useRef<HTMLDivElement>(null!);
+
+	useLayoutEffect(() => {
+		if(!scrollToAbout) return;
+		aboutRef.current.scrollIntoView({ behavior: 'smooth' });
+	}, [ scrollToAbout ]);
+
 	return (
 		<Layout zeroHeightNavbar={true}>
+			{!scrollToAbout && <ScrollToTop />}
 			<Header />
-			<div id='features'></div>
+			<div ref={aboutRef}></div>
 			<HomeSection
 				img="/img/undraw_ask_me_anything.svg"
 				title="Connect with anyone"
@@ -55,7 +68,7 @@ export function HomePage() {
 					<h2 className='fs-1 mb-5 text-center'>Ready to start using DokChat?</h2>
 					<Link to='/register'>
 						<InteractiveButton size='lg' icon={BsChatSquareTextFill}>
-						Create Account
+							Create Account
 						</InteractiveButton>
 					</Link>
 				</div>
@@ -63,3 +76,5 @@ export function HomePage() {
 		</Layout>
 	);
 }
+
+export default HomePage;

@@ -15,6 +15,8 @@ import processEmailBounces from './jobs/processBounces';
 import processEmailComplaints from './jobs/processComplaints';
 import ensureAuthenticatedSocket from './middlewares/ensureAuthenticatedSocket';
 import apiRouter from './routes';
+import registerOnlineStatusHandler from './handlers/onlineStatusHandler';
+import { systemMessageHandler } from './handlers/systemMessageHandler';
 
 const isProduction = (process.env['NODE' + '_ENV'] || 'development') == 'production';
 
@@ -44,6 +46,8 @@ async function main() {
 	io.use(ensureAuthenticatedSocket());
 	io.on('connection', (socket) => {
 		registerMessageHandler(io, socket);
+		registerOnlineStatusHandler(io, socket);
+		systemMessageHandler.connect(io, socket);
 	});
 
 	// Schedule jobs

@@ -64,15 +64,8 @@ export class LocalUser {
 		return DateFns.differenceInSeconds(this.expiryDate, new Date());
 	}
 
-	/**
-	 * Is this client ready to make authenticated requests
-	*/
-	public get ready(): boolean {
-		return this.isAuthenticated && this.expired;
-	}
-
 	public getAuthHeader(): { [header: string]: string; } {
-		if(this.ready) throw new Error('User is not ready');
+		if(!this.isAuthenticated) throw new Error('User is not authenticated');
 		return {
 			'Authorization': `Bearer ${this.token}`
 		};

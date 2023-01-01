@@ -3,7 +3,7 @@
     "compilerOptions": {
       "outDir": "./public/js/",
       "noImplicitAny": true,
-      "module": "es6",
+      "module": "ESNext",
       "moduleResolution": "node",
       "target": "es5",
       "jsx": "react",

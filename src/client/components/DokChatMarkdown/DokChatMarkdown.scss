@@ -1,0 +1,29 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+.dokchat-markdown-element {
+    display: inline-block;
+}
+
+.dokchat-markdown-element a {
+	color: inherit;
+}
+
+.dokchat-markdown-element code {
+	color: #fff;
+    background-color: $dark;
+    padding: 4px 8px;
+    border-radius: 0.5em;
+    overflow: hidden;
+}
+
+.dokchat-markdown-element blockquote {
+    margin-bottom: 0;
+    border-left: 6px rgba(black, 0.4) solid;
+    padding-left: 8px;
+}
+
+.dokchat-markdown-element pre {
+    margin-bottom: 0;
+}

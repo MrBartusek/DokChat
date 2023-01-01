@@ -1,0 +1,77 @@
+<mjml>
+  <mj-head>
+    <mj-title>Account has been deleted</mj-title>
+    <mj-font name="Roboto" href="https://fonts.googleapis.com/css?family=Roboto:300,500"></mj-font>
+    <mj-attributes>
+      <mj-all font-family="Roboto, Helvetica, sans-serif"></mj-all>
+      <mj-text font-weight="300" font-size="16px" color="#000000" line-height="24px"></mj-text>
+      <mj-section padding="0px"></mj-section>
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#F2F2F2">
+    <!-- Logo section -->
+    <mj-section background-color="#e6e6e6">
+      <mj-column>
+        <mj-image padding="20px 20px 0 20px" align="center" width="150px" src="https://dokchat.dokurno.dev/img/logo/dokchat-logo-blue.png"></mj-image>
+        <mj-image src="https://dokchat.dokurno.dev/img/email/lineshadow.png" alt="" align="center" border="none" padding="0px"></mj-image>
+      </mj-column>
+    </mj-section>
+    <!-- Title section -->
+    </mj-section>
+    <mj-section padding="20px 20px 0 20px" background-color="#FFFFFF">
+      <mj-column>
+        <mj-text align="center" font-weight="400" padding="30px 40px 10px 40px" font-size="32px" line-height="40px" color="#0061f2">
+          Your DokChat account has been deleted.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <!-- Devider -->
+    <mj-section padding="10px 20px" background-color="#FFFFFF">
+      <mj-column>
+        <mj-divider width="30px" border-width="3px" border-color="#9B9B9B"></mj-divider>
+      </mj-column>
+    </mj-section>
+
+    <!-- Content -->
+    <mj-section padding="0 20px 20px 20px" background-color="#FFFFFF">
+      <mj-column width="80%">
+        <mj-text align="left" padding="10px 0px">
+          Hello, <br />
+          <br />
+          We've recently received a request to permanently delete DokChat account associated with
+          this e-mail. All of the account information has been permamently deleted.<br />
+          <br />
+          You are free to create a new DokChat account by following this link:
+          <a href="https://dokchat.dokurno.dev/register" style="color: #0061f2">
+            https://dokchat.dokurno.dev/register
+          </a>
+        </mj-text>
+        <mj-text align="left" padding="10px 0px">
+          Thanks,<br />
+          DokChat Team
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <!-- Footer -->
+  
+     <mj-section background-color="#e6e6e6">
+      <mj-column>
+        <mj-text align="center" color="#9B9B9B" font-size="11px" line-height="21px">
+          This is automated messaage sent by <a href="https://dokchat.dokurno.dev" style="color: #9B9B9B;">DokChat</a>. Please do not reply to this email.
+          <br />
+          If you  recived this email by mistake or belive it is a spam, please forward it to <a href="mailto:dokchat@dokurno.dev" style="color: #9B9B9B;">dokchat@dokurno.dev</a>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-section>
+      <mj-column>
+        <mj-text align="center" color="#9B9B9B" font-size="11px">
+          © 2022 DokChat All rights reserved.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

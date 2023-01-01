@@ -6,7 +6,7 @@ import DokChatLogo from '../components/DokChatLogo/DokChatLogo';
 import LogoutButton from '../components/LogoutButton/LogoutButton';
 import { UserContext } from '../context/UserContext';
 
-export function AccountBannedPage() {
+function AccountBannedPage() {
 	const [ user ] = useContext(UserContext);
 
 	return (
@@ -33,3 +33,5 @@ export function AccountBannedPage() {
 		</Container>
 	);
 }
+
+export default AccountBannedPage;

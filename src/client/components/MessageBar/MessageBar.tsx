@@ -1,14 +1,15 @@
-import EmojiPicker, { EmojiStyle } from 'emoji-picker-react';
+import { EmojiClickData } from 'emoji-picker-react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Col, Form, OverlayTrigger, Popover } from 'react-bootstrap';
-import toast from 'react-hot-toast';
-import { AiOutlineGif } from 'react-icons/ai';
-import { BsEmojiSmileFill, BsImage } from 'react-icons/bs';
+import { Col, Form } from 'react-bootstrap';
+import { BsImage } from 'react-icons/bs';
 import { MdSend } from 'react-icons/md';
+import { ALLOWED_ATTACHMENT_FORMAT } from '../../../types/const';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { useForm } from '../../hooks/useForm';
 import { LocalChat } from '../../types/Chat';
+import EmojiButton from '../EmojiButton/EmojiButton';
 import FileUploader, { FileUploaderResult } from '../FileUploader/FileUploader';
+import GifButton from '../GifButton/GifButton';
 import IconButton from '../IconButton/IconButton';
 import './MessageBar.scss';
 
@@ -47,30 +48,39 @@ function MessageBar({ currentChat }: MessageBarProps) {
 		inputRef.current.focus();
 	}
 
-	const emojiPicker = (
-		<Popover style={{maxWidth: 500}}>
-			<Popover.Body className='p-0'>
-				<EmojiPicker
-					lazyLoadEmojis={true}
-					emojiStyle={EmojiStyle.TWITTER}
-					previewConfig={{showPreview: false}}
-					onEmojiClick={(emoji) => {
-						setValues({ content: values.content + emoji.emoji});
-					}}
-				/>
-			</Popover.Body>
-		</Popover>
-	);
+	async function handlePaste(event: React.ClipboardEvent<HTMLInputElement>) {
+		if(!event.clipboardData.files.length) return;
+		const file = event.clipboardData.files[0];
+		if(!file) return;
+		fileUploader.setFile(file);
+	}
+
+	async function handleDrop(event: React.DragEvent<HTMLFormElement>) {
+		if(!event.dataTransfer.files.length) return;
+		const file = event.dataTransfer.files[0];
+		if(!file) return;
+		fileUploader.setFile(file);
+		event.preventDefault();
+	}
+
+	function handleEmojiClick(emoji: EmojiClickData) {
+		setValues({ content: values.content + emoji.emoji});
+	}
 
 	return (
 		<div className='d-flex px-1 py-3'>
-			<Form onSubmit={handleSubmit} className='d-flex align-items-center w-100'>
-				<FileUploader onChange={setFileUploader}/>
+			<Form
+				onSubmit={handleSubmit}
+				className='d-flex align-items-center w-100'
+				onDrop={handleDrop}
+			>
+				<FileUploader
+					onChange={setFileUploader}
+					accept={ALLOWED_ATTACHMENT_FORMAT.join(',')}
+				/>
 				<Col className='d-flex flex-grow-0 justify-content-center align-items-center px-1 gap-1'>
-					<IconButton icon={AiOutlineGif} size={34} variant='primary' type='button'
-						onClick={() => toast.error('Not Implemented')}
-					/>
-					<IconButton icon={BsImage} size={34} variant='primary' type='button'
+					<GifButton fileUploader={fileUploader} color={currentChat.color.hex} />
+					<IconButton icon={BsImage} size={34} type='button' color={currentChat.color.hex}
 						onClick={() => fileUploader.click()}
 					/>
 				</Col>
@@ -92,13 +102,12 @@ function MessageBar({ currentChat }: MessageBarProps) {
 							ref={inputRef}
 							value={values.content}
 							onChange={handleChange}
+							onPaste={handlePaste}
 							onFocus={(e) => e.target.parentElement?.classList.add('focus') }
 							onBlur={(e) => e.target.parentElement?.classList.remove('focus') }
 						/>
 						<div className='d-flex align-items-center'>
-							<OverlayTrigger trigger="click" placement="top-end" overlay={emojiPicker} rootClose>
-								<IconButton icon={BsEmojiSmileFill} size={32} variant='primary' type='button'/>
-							</OverlayTrigger>
+							<EmojiButton onEmojiClick={handleEmojiClick} color={currentChat.color.hex} />
 						</div>
 					</div>
 				</Col>
@@ -107,7 +116,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 						icon={MdSend}
 						size={34}
 						type="submit"
-						variant='primary'
+						color={currentChat.color.hex}
 						disabled={!isEnabled}
 					/>
 				</Col>

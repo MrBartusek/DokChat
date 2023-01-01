@@ -1,0 +1,51 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+@import '../../scss/dark.scss';
+
+.border-separator {
+	border-color: rgba(0, 0, 0, 0.1);
+}
+
+#app[data-theme='dark'], .modal-dialog[data-theme='dark']  {
+
+    & {
+        background-color: $dark-background;
+        color: $dark-text;
+        color-scheme: dark;
+        --bs-modal-bg: #{$dark-popup};
+        --bs-modal-color: #{$dark-text};
+    }
+
+    .nav-tabs {
+        --bs-nav-tabs-border-color: #{$dark-border};
+        --bs-nav-tabs-link-hover-border-color: #{$dark-border} #{$dark-border} #{$dark-popup};
+        --bs-nav-tabs-link-active-border-color: #{$dark-border} #{$dark-border} #{$dark-popup};
+        --bs-nav-tabs-link-active-bg: #{$dark-popup};
+        --bs-nav-tabs-link-active-color: $gray-200;
+    }
+
+    .form-control {
+        background-color: $dark-very-washed;
+        border-color: $dark-border;
+        color: $gray-200;
+    }
+
+    .form-control[readonly] {
+        background-color: $dark-washed !important;
+    }
+
+    .form-control-plaintext {
+        border: none !important;
+    }
+
+    .border-separator {
+        border-color: $dark-border !important;
+    }
+    
+    .input-group-text {
+        background-color: mix($dark-very-washed, #fff, 80%);
+        border-color: $dark-border;
+        color: $dark-text;
+    }
+}

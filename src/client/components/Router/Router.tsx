@@ -2,87 +2,142 @@ import React, { useContext } from 'react';
 import { Alert } from 'react-bootstrap';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
-import { useUpdatingUser } from '../../hooks/useUpdatingUser';
-import { AboutPage } from '../../pages/AboutPage';
-import { AccountBannedPage } from '../../pages/AccountBannedPage';
-import { ChatPage } from '../../pages/ChatPage';
-import { EmailConfirmPage } from '../../pages/EmailConfirmPage';
-import { HomePage } from '../../pages/HomePage';
-import { LoginPage } from '../../pages/LoginPage';
-import { PasswordResetPage } from '../../pages/PasswordResetPage';
-import { RegisterPage } from '../../pages/RegisterPage';
-import ChatDetailsPopup from '../ChatDetailsPopup/ChatDetailsPopup';
+import AccountBannedPage from '../../pages/AccountBannedPage';
+import ChatPage from '../../pages/ChatPage';
+import DownloadPage from '../../pages/DownloadPage';
+import EmailConfirmPage from '../../pages/EmailConfirmPage';
+import HomePage from '../../pages/HomePage';
+import InvitePage from '../../pages/InvitePage';
+import LoginPage from '../../pages/LoginPage';
+import PasswordResetPage from '../../pages/PasswordResetPage';
+import PrivacyPolicyPage from '../../pages/PrivacyPolicy';
+import RegisterPage from '../../pages/RegisterPage';
 import EmailConfirmer from '../EmailConfirmer/EmailConfirmer';
-import EmailConfirmPopup from '../EmailConfirmPopup/EmailConfirmPopup';
 import ErrorPage from '../ErrorPage/ErrorPage';
-import NewChatPopup from '../NewChatPopup/NewChatPopup';
 import NewPasswordDialog from '../NewPasswordDialog/NewPasswordDialog';
 import PasswordResetForm from '../PasswordResetForm/PasswordResetForm';
-import ScrollToTop from '../ScrollToTop/ScrollToTop';
-import SettingsPopup from '../SettingsPopup/SettingsPopup';
+
+const ChatDetailsPopupLazy = React.lazy(() => import('../ChatDetailsPopup/ChatDetailsPopup'));
+const NewChatPopupLazy = React.lazy(() => import('../NewChatPopup/NewChatPopup'));
+const SettingsPopupLazy = React.lazy(() => import('../SettingsPopup/SettingsPopup'));
+const EmailConfirmPopupLazy = React.lazy(() => import('../EmailConfirmPopup/EmailConfirmPopup'));
+const DeleteAccountPopupLazy = React.lazy(() => import('../DeleteAccountPopup/DeleteAccountPopup'));
+const GroupLeavePopupLazy = React.lazy(() => import('../GroupLeavePopup/GroupLeavePopup'));
+const ChatHidePopupLazy = React.lazy(() => import('../ChatHidePopup/ChatHidePopup'));
+const UserPopupLazy = React.lazy(() => import('../UserPopup/UserPopup'));
+const UserBlockPopupLazy = React.lazy(() => import('../UserBlockPopup/UserBlockPopup'));
+const InvitePopupLazy = React.lazy(() => import('../InvitePopup/InvitePopup'));
 
 function Router() {
-	const [ isUserLoading, user, updateToken, setUser, removeUser ] = useUpdatingUser();
-
-	if(isUserLoading) return <></>;
-
 	return (
-		<UserContext.Provider value={[ user, updateToken, setUser, removeUser ]}>
-			<BrowserRouter>
-				<ScrollToTop />
-				<Routes>
-					<Route path="/" element={<HomePage />} />
-					<Route path="about" element={<AboutPage />} />
-					<Route path="login" element={
-						<PublicOnlyRoute>
-							<LoginPage />
-						</PublicOnlyRoute>
+		<BrowserRouter>
+			<Routes>
+				<Route path="chat" element={
+					<PrivateRoute>
+						<ChatPage />
+					</PrivateRoute>
+				}>
+					<Route path=":chatId" element={null} />
+					<Route path=":chatId/details" element={
+						<React.Suspense fallback={null}>
+							<ChatDetailsPopupLazy />
+						</React.Suspense>
 					} />
-
-					<Route path="register" element={
-						<PublicOnlyRoute>
-							<RegisterPage />
-						</PublicOnlyRoute>
+					<Route path=":chatId/leave" element={
+						<React.Suspense fallback={null}>
+							<GroupLeavePopupLazy />
+						</React.Suspense>
 					} />
-
-					<Route path="forgot-password" element={
-						<PublicOnlyRoute>
-							<PasswordResetPage />
-						</PublicOnlyRoute>
-					}>
-						<Route path="" element={<PasswordResetForm />} />
-						<Route path=":token" element={<NewPasswordDialog />} />
-					</Route>
-
+					<Route path=":chatId/hide" element={
+						<React.Suspense fallback={null}>
+							<ChatHidePopupLazy />
+						</React.Suspense>
+					} />
+					<Route path="user/:userId" element={
+						<React.Suspense fallback={null}>
+							<UserPopupLazy />
+						</React.Suspense>
+					} />
+					<Route path="user/:userId/block" element={
+						<React.Suspense fallback={null}>
+							<UserBlockPopupLazy />
+						</React.Suspense>
+					} />
+					<Route path="new" element={
+						<React.Suspense fallback={null}>
+							<NewChatPopupLazy />
+						</React.Suspense>
+					} />
+					<Route path="profile" element={
+						<React.Suspense fallback={null}>
+							<SettingsPopupLazy />
+						</React.Suspense>
+					} />
 					<Route path="email-confirm" element={
-						<EmailConfirmPage />
-					}>
-						<Route path="" element={<Alert variant='danger'>No token provided</Alert>} />
-						<Route path=":token" element={<EmailConfirmer />} />
-					</Route>
-
-					<Route path="chat" element={
-						<PrivateRoute>
-							<ChatPage />
-						</PrivateRoute>
-					}>
-						<Route path=":chatId" element={null} />
-						<Route path=":chatId/details" element={<ChatDetailsPopup />} />
-						<Route path="new" element={<NewChatPopup />} />
-						<Route path="profile" element={<SettingsPopup />} />
-						<Route path="email-confirm" element={<EmailConfirmPopup />} />
-					</Route>
-					<Route path="suspended" element={
-						<PrivateRoute isSuspendedRoute>
-							<AccountBannedPage />
-						</PrivateRoute>
+						<React.Suspense fallback={null}>
+							<EmailConfirmPopupLazy />
+						</React.Suspense>
 					} />
+					<Route path="delete-account" element={
+						<React.Suspense fallback={null}>
+							<DeleteAccountPopupLazy />
+						</React.Suspense>
+					} />
+					<Route path="invite/:key" element={
+						<React.Suspense fallback={null}>
+							<InvitePopupLazy />
+						</React.Suspense>
+					} />
+				</Route>
 
-					{/* 404 */}
-					<Route path="*" element={<ErrorPage title="404" message="This page was not found" />} />
-				</Routes>
-			</BrowserRouter>
-		</UserContext.Provider>
+				<Route path="/" element={<HomePage />} />
+				<Route path="about" element={<HomePage scrollToAbout />} />
+				<Route path="privacy-policy" element={<PrivacyPolicyPage />} />
+				<Route path="download" element={<DownloadPage />} />
+				<Route path="i/:key" element={
+					<PrivateRoute>
+						<InvitePage />
+					</PrivateRoute>
+				} />
+
+				<Route path="login" element={
+					<PublicOnlyRoute>
+						<LoginPage />
+					</PublicOnlyRoute>
+				} />
+
+				<Route path="register" element={
+					<PublicOnlyRoute>
+						<RegisterPage />
+					</PublicOnlyRoute>
+				} />
+
+				<Route path="forgot-password" element={
+					<PublicOnlyRoute>
+						<PasswordResetPage />
+					</PublicOnlyRoute>
+				}>
+					<Route path="" element={<PasswordResetForm />} />
+					<Route path=":token" element={<NewPasswordDialog />} />
+				</Route>
+
+				<Route path="email-confirm" element={
+					<EmailConfirmPage />
+				}>
+					<Route path="" element={<Alert variant='danger'>No token provided</Alert>} />
+					<Route path=":token" element={<EmailConfirmer />} />
+				</Route>
+
+				<Route path="suspended" element={
+					<PrivateRoute isSuspendedRoute>
+						<AccountBannedPage />
+					</PrivateRoute>
+				} />
+
+				{/* 404 */}
+				<Route path="*" element={<ErrorPage title="404" message="This page was not found" />} />
+			</Routes>
+		</BrowserRouter>
 	);
 }
 

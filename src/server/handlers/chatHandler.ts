@@ -1,39 +1,70 @@
-import { ClientMessage, DokChatServer, DokChatSocket, ServerMessage } from '../../types/websocket';
+import * as sizeOf from 'buffer-image-size';
+import { MessageAttachment } from '../../types/common';
+import { ALLOWED_ATTACHMENT_FORMAT } from '../../types/const';
+import { ClientAttachment, ClientMessage, DokChatServer, DokChatSocket, ServerMessage } from '../../types/websocket';
 import { ApiResponse } from '../apiResponse';
 import s3Client from '../aws/s3';
+import BlockManager from '../managers/blockManager';
 import ChatManager from '../managers/chatManager';
 import PermissionsManager from '../managers/permissionsManager';
 import Utils from '../utils/utils';
+import { RateLimiterMemory } from 'rate-limiter-flexible';
+
+const messageLimiter = new RateLimiterMemory({
+	points: 15,
+	duration: 15
+});
 
 export default function registerMessageHandler(io: DokChatServer, socket: DokChatSocket) {
 	socket.on('message', async (msg, callback) => {
 		// This checks both for chat access and if chat exist
-		if(!PermissionsManager.hasChatAccess(socket.auth, msg.chatId)) {
+		if(!(await PermissionsManager.hasChatAccess(socket.auth, msg.chatId))) {
 			return new ApiResponse({} as any, callback).forbidden();
 		}
 		if(!validateMessage(msg, callback)) {
 			return new ApiResponse({} as any, callback).badRequest('Invalid message');
 		}
 
-		// Add message to db
-		const attachment = msg.attachment ? await s3Client.uploadAttachment(msg.attachment.buffer, msg.attachment.type) : null;
-		const [ id, timestamp ] = await ChatManager.saveMessage(socket.auth, msg.chatId, msg.content, attachment);
+		const limiterRes = await messageLimiter.consume(socket.auth.id, msg.attachment ? 3 : 1)
+			.catch(() => {
+				return new ApiResponse({} as any, callback).tooManyRequests();
+			});
+		if(!limiterRes) return;
 
-		// Send message to every participant expect sender
+		// Add message to db
+		const [ attachmentKey, attachment ] = await uploadAttachment(msg.attachment);
+		const [ id, timestamp ] = await ChatManager.saveMessage(
+			socket.auth,
+			msg.chatId,
+			msg.content,
+			attachmentKey,
+			attachment
+		);
+
 		const participants = await ChatManager.listParticipants(msg.chatId);
-		participants.filter(p => p.userId != socket.auth.id);
-		for await(const part of participants) {
+		const otherParticipants = participants.filter(p => p.userId != socket.auth.id);
+
+		const isGroup = await ChatManager.isGroup(msg.chatId);
+		if(!isGroup && otherParticipants.length == 1) {
+			const isBlocked = await BlockManager.isBlockedAny(socket.auth.id, otherParticipants[0].userId);
+			if(isBlocked) {
+				return new ApiResponse({} as any, callback).forbidden('Cannot send message to blocked user');
+			}
+		}
+
+		for await(const part of otherParticipants) {
 			// If chat is hidden by specific participant it will show up on message
 			if(part.isHidden) await ChatManager.setChatHideForParticipant(part, false);
 
 			// Chat is fetched for each user since for DMs name might be different for each participant
-			const chat = await ChatManager.getChat(socket, msg.chatId, part.userId, participants);
+			const chat = await ChatManager.getChat(msg.chatId, part.userId, participants);
 			const serverMsg: ServerMessage = {
 				id: id,
 				content: msg.content?.trim(),
+				isSystem: false,
 				chat: chat,
 				timestamp: timestamp.toString(),
-				attachment: msg.attachment != undefined,
+				attachment: attachment,
 				author: {
 					id: socket.auth.id,
 					username: socket.auth.username,
@@ -55,6 +86,27 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 	});
 }
 
+async function uploadAttachment(attachment?: ClientAttachment): Promise<[string, MessageAttachment]> {
+	if(!attachment) {
+		return [ null, {
+			hasAttachment: false
+		} ];
+	}
+	const mimeType = attachment.mimeType;
+	const key = await s3Client.uploadAttachment(attachment.buffer, mimeType);
+	let dimensions = null;
+	if(mimeType.startsWith('image/')) {
+		dimensions = sizeOf(attachment.buffer);
+	}
+
+	return [ key, {
+		hasAttachment: true,
+		width: dimensions?.width,
+		height: dimensions?.height,
+		mimeType: mimeType
+	} ];
+}
+
 function validateMessage(msg: ClientMessage, callback: (response: any) => void): boolean {
 	if(msg.content && msg.attachment || !msg.content && !msg.attachment) {
 		new ApiResponse({} as any, callback).badRequest('Message content invalid');
@@ -71,10 +123,7 @@ function validateMessage(msg: ClientMessage, callback: (response: any) => void):
 		}
 	}
 	else if(msg.attachment) {
-		const allowedFormats = [
-			'image/bmp', 'image/gif', 'image/jpeg', 'image/svg+xml', 'image/png'
-		];
-		if(!allowedFormats.includes(msg.attachment.type)) {
+		if(!ALLOWED_ATTACHMENT_FORMAT.includes(msg.attachment.mimeType)) {
 			return false;
 		}
 		if(!Buffer.isBuffer(msg.attachment.buffer)) {

@@ -2,8 +2,9 @@ import * as express from 'express';
 import { body, validationResult } from 'express-validator';
 import { ApiResponse } from '../../apiResponse';
 import AuthManager from '../../managers/authManager';
+import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
-import { isValidPassword } from '../../validators/password';
+import { isValidPassword } from '../../validators/isValidPassword';
 
 const router = express.Router();
 
@@ -22,11 +23,12 @@ router.all('/login',
 
 		AuthManager.authenticateUser(email, password)
 			.then(async ([ jwtData, passwordHash ]) =>  {
+				await UserManager.bumpLastSeen(jwtData.id);
 				AuthManager.sendAuthResponse(res, jwtData, passwordHash, rememberMe);
 			})
 			.catch((reason) => {
 				if(typeof reason == 'string') {
-					return new ApiResponse(res).badRequest(reason);
+					return new ApiResponse(res).unauthorized(reason);
 				}
 				throw reason;
 			});

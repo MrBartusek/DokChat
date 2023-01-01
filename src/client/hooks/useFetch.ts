@@ -1,5 +1,6 @@
 // Stolen from https://github.com/benawad/react-hooks-tutorial/blob/7_useContext/src/useFetch.js
 
+import { AxiosError } from 'axios';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { UserContext } from '../context/UserContext';
 import getAxios from '../helpers/axios';
@@ -36,13 +37,13 @@ export function useFetch<T>(initialUrl: string | null, useAuth = false): useFetc
 					setState({ res: res.data, loading: false, setUrl: setUrl });
 				}
 			})
-			.catch((error) => {
-				setState(state => ({
-					res: state.res,
+			.catch((error: AxiosError) => {
+				setState({
+					res: error.response?.data as T,
 					loading: false,
 					error: true,
 					setUrl: setUrl
-				}));
+				});
 			});
 	}, [ url, setState ]);
 

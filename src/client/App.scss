@@ -21,8 +21,6 @@ body {
 	box-sizing: border-box
 }
 
-/* From: https://gomakethings.com/how-to-break-an-image-out-of-its-parent-container-with-css/ */
-
 .btn {
 	border-radius: 9999px;
 }
@@ -43,10 +41,6 @@ body {
 	padding: 0 !important;
 }
 
-.border-separator {
-	border-color: rgba(0, 0, 0, 0.1);
-}
-
 .form-control.focus {
     color: #212529;
     background-color: #fff;
@@ -62,6 +56,10 @@ body {
 .tooltip {
 	// For some reason this doesn't work with $variable
 	--bs-tooltip-bg: var(--bs-gray-900);
+}
+
+.modal-dialog {
+	--bs-modal-width: 550px;
 }
 
 .modal-title {
@@ -95,4 +93,8 @@ input::-webkit-inner-spin-button {
 
 input[type=number] {
 	-moz-appearance: textfield;
+}
+
+p {
+	max-width: 1000px;
 }

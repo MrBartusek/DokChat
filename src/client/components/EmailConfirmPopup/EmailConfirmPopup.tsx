@@ -67,7 +67,6 @@ function EmailConfirmPopup() {
 					<MaskedText text={user.email} masked={user.emailMasked} />
 				</p>
 			</div>
-
 		</Popup>
 	);
 }

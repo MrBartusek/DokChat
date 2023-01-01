@@ -5,9 +5,7 @@ export default function SimpleLoading() {
 	return (
 		<div
 			className='d-flex justify-content-center align-items-center'
-			// Spinners centered on high elements looks out of place
-			// This shifts them higher
-			style={{maxHeight: 700}}
+			style={{ height: 60 }}
 		>
 			<Spinner
 				animation="border"

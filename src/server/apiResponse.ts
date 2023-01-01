@@ -36,7 +36,7 @@ export class ApiResponse {
 	}
 
 	public success(data?: object): Response {
-		return this.respond(false, 200, 'This request was successful', data);
+		return this.respond(false, 200, '200 OK', data);
 	}
 
 	public error(status: number, message: string): Response {
@@ -44,7 +44,7 @@ export class ApiResponse {
 	}
 
 	public badRequest(message?: string) {
-		return this.error(400, message || 'Bad Request');
+		return this.error(400, message || '400 Bad Request');
 	}
 
 	public methodNotAllowed(req: Request) {
@@ -52,19 +52,19 @@ export class ApiResponse {
 	}
 
 	public notFound(message?: string) {
-		return this.error(404, message || 'Not found');
+		return this.error(404, message || '404 Not found');
 	}
 
 	public unauthorized(message?: string) {
-		return this.error(401, message || 'Unauthorized');
+		return this.error(401, message || '401 Unauthorized');
 	}
 
 	public forbidden(message?: string) {
-		return this.error(403, message || 'Forbidden');
+		return this.error(403, message || '403 Forbidden');
 	}
 
 	public tooManyRequests(message?: string) {
-		return this.error(429, message || 'Forbidden');
+		return this.error(429, message || '429 Too Many Requests');
 	}
 
 	public validationError(errors: Result<ValidationError>) {

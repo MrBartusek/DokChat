@@ -5,4 +5,4 @@ export const UserContext = createContext<[
     LocalUser,
     (refreshAvatar?: boolean) => Promise<void>,
     React.Dispatch<string>,
-    React.Dispatch<void>]>(null as any);
+    () => Promise<void>]>(null as any);

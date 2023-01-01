@@ -5,10 +5,10 @@ import JWTManager from '../managers/JWTManager';
 const ensureAuthenticated = (allowUnconfirmedEmail = false) => async (req: Request, res: Response, next: NextFunction) => {
 	let token: string | undefined = req.headers.authorization;
 	if(!token) {
-		return new ApiResponse(res, next).unauthorized('User is not authenticated');
+		return new ApiResponse(res, next).unauthorized('Authorization token is required for this route');
 	}
 	if(!token.startsWith('Bearer ')) {
-		return new ApiResponse(res, next).badRequest();
+		return new ApiResponse(res, next).badRequest('Invalid authorization token format');
 	}
 	token = token.replace('Bearer ', '');
 

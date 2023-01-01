@@ -62,6 +62,10 @@ class EmailClient {
 	public async sendEmailChangedEmail(user: UserJWTData) {
 		return this.sendTemplatedEmail('dokchat-email-changed', '{}', user.email);
 	}
+
+	public async sendAccountDeletedEmail(user: UserJWTData) {
+		return this.sendTemplatedEmail('dokchat-account-deleted', '{}', user.email);
+	}
 }
 
 const client = new EmailClient();

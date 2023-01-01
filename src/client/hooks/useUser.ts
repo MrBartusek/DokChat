@@ -9,12 +9,14 @@ export function useUser(): [LocalUser, {token?: any }, React.Dispatch<string | L
 	const [ user, setUser ] = useState(LocalUser.empty());
 	const [ cookies, setCookie, removeCookie ] = useCookies([ 'token' ]);
 
+	const isDevelopment = location.hostname == 'localhost';
+
 	return [
 		user,
 		cookies,
 		(token: string | LocalUser) => {
 			const user = token instanceof LocalUser ? token : LocalUser.fromJWT(token);
-			setCookie('token', user.token, { secure: false, sameSite: 'strict'});
+			setCookie('token', user.token, { secure: !isDevelopment, sameSite: 'strict'});
 			setUser(user);
 		},
 		() => {

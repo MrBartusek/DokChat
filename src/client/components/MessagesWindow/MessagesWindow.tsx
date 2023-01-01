@@ -1,13 +1,17 @@
 import * as DateFns from 'date-fns';
-import React, { useContext, useEffect, useLayoutEffect, useRef } from 'react';
-import { OverlayTrigger, Spinner, Tooltip, TooltipProps } from 'react-bootstrap';
-import { Twemoji } from 'react-emoji-render';
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { OverlayTrigger, Tooltip, TooltipProps } from 'react-bootstrap';
 import { BsCheckCircle, BsCheckCircleFill, BsXCircle } from 'react-icons/bs';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { Link } from 'react-router-dom';
 import { EndpointResponse, MessageListResponse } from '../../../types/endpoints';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
-import { useFetch } from '../../hooks/useFetch';
+import getAxios from '../../helpers/axios';
+import Utils from '../../helpers/utils';
 import { LocalChat, LocalMessage } from '../../types/Chat';
+import DokChatMarkdown from '../DokChatMarkdown/DokChatMarkdown';
+import MessageAttachment from '../MessageAttachment/MessageAttachment';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 import Separator from '../Separator/Separator';
 import SimpleLoading from '../SimpleLoadng/SimpleLoading';
@@ -21,30 +25,49 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
 	const [ user ] = useContext(UserContext);
 	const messageWindowRef = useRef<HTMLDivElement>();
-	const messagesFetch = useFetch<EndpointResponse<MessageListResponse>>(null, true);
+
+	const [ hasMore, setHasMore ] = useState(true);
+	const [ isLoading, setLoading ] = useState(false);
+
+	useEffect(() => {
+		if(currentChat.isInitialized) return;
+		fetchMoreMessages(40);
+		setHasMore(true);
+		setLoading(false);
+	}, [ currentChat ]);
 
 	useLayoutEffect(() => {
 		if(!messageWindowRef.current) return;
+		if(messageWindowRef.current.scrollTop <= -300) return;
 		messageWindowRef.current.scrollTo(0, messageWindowRef.current.scrollHeight);
 	}, [ chats, messageWindowRef ]);
 
-	/**
-	 * Fetch chat messages if window is targeting not initialized chat
-	 */
-	useEffect(() => {
-		if(currentChat.isInitialized) return;
-		messagesFetch.setUrl(`/chat/messages?chat=${currentChat.id}`);
-	}, [ currentChat ]);
-	/**
-	 * Load fetched data
-	 */
-	useEffect(() => {
-		if(!messagesFetch.res) return;
-		const chatId = chats.findIndex(c => c.id == currentChat.id);
-		const chatsCopy = [ ...chats ];
-		chatsCopy[chatId] = chatsCopy[chatId].addMessagesList(messagesFetch.res.data);
-		setChatList(chatsCopy);
-	}, [ messagesFetch.res ]);
+	async function fetchMoreMessages(count = 20) {
+		console.log('f');
+		setLoading(true);
+		const axios = getAxios(user);
+		let url = `/chat/messages?chat=${currentChat.id}&count=${count}`;
+		if(currentChat.isInitialized && currentChat.messages.length > 0) {
+			const lastMessage = currentChat.messages[currentChat.messages.length - 1];
+			url += `&lastMessageTimestamp=${lastMessage.timestamp}`;
+		}
+		await axios.get(url)
+			.then((r) => {
+				const resp: EndpointResponse<MessageListResponse> = r.data;
+				const messages = resp.data;
+				if(messages.length < count) {
+					setHasMore(false);
+				}
+				const chatId = chats.findIndex(c => c.id == currentChat.id);
+				const chatsCopy = [ ...chats ];
+				chatsCopy[chatId] = chatsCopy[chatId].addMessagesList(resp.data);
+				setChatList(chatsCopy);
+			}).catch((error) => {
+				console.error('Failed to load more messages', error);
+			}).finally(() => {
+				setTimeout(() => setLoading(false), 300);
+			});
+	}
 
 	function timestampDiffInHours(a: string, b: string) {
 		return Math.abs(DateFns.differenceInHours(
@@ -52,18 +75,30 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 			DateFns.fromUnixTime(Number(b))));
 	}
 
-	const isLoading = !currentChat.isInitialized || messagesFetch.loading;
-
 	const noMessagesInfo = (
 		<span className='text-muted text-center mb-2'>
 			Send anything to start the chat
 		</span>
 	);
 	return (
-		<div className='d-flex px-3 flex-column-reverse' ref={messageWindowRef} style={{overflowY: 'scroll', flex: '1 0 0'}}>
-			{isLoading ? <SimpleLoading /> : (
-				<>
-					{currentChat.messages.length == 0 && noMessagesInfo }
+		<div
+			className='d-flex px-3 flex-row flex-column-reverse'
+			ref={messageWindowRef}
+			style={{overflowY: 'scroll', flex: '1 0 0'}}
+			id='scrollableTarget'
+		>
+			{currentChat.isInitialized && currentChat.messages.length == 0 && noMessagesInfo }
+			{currentChat.isInitialized && (
+				<InfiniteScroll
+					dataLength={currentChat.messages.length}
+					className='d-flex flex-column-reverse'
+					next={fetchMoreMessages}
+					hasMore={hasMore}
+					loader={null}
+					inverse={true}
+					scrollableTarget='scrollableTarget'
+					scrollThreshold={100}
+				>
 					{currentChat.messages.map((msg, index, elements) => {
 						const BLOCK_SEPARATION_HOURS = 1;
 
@@ -89,35 +124,45 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 
 						return (
 							<div className='d-flex flex-column' key={msg.id}>
-								{(showTimestamp) && (
-									<SystemMessage
-										content={DateFns.format(DateFns.fromUnixTime(Number(msg.timestamp)), format)}
-									/>
+								{msg.isSystem ? (
+									<SystemMessage content={msg.content}/>
+								) : (
+									<>
+										{(showTimestamp) && (
+											<SystemMessage
+												content={DateFns.format(DateFns.fromUnixTime(Number(msg.timestamp)), format)}
+											/>
+										)}
+										<UserMessage
+											currentChat={currentChat}
+											message={msg}
+											showAvatar={!isAuthor && (msg.author.id != prev?.author?.id || isFirstInBlock)}
+											showAuthor={!isAuthor && (msg.author.id != next?.author?.id || showTimestamp)}
+											showStatus={isAuthor && msg.author.id != prev?.author?.id}
+										/>
+										{(prev && msg.author.id != prev.author.id) && <Separator height={12} />}
+									</>
 								)}
-								<UserMessage
-									message={msg}
-									showAvatar={!isAuthor && (msg.author.id != prev?.author?.id || isFirstInBlock)}
-									showAuthor={!isAuthor && (msg.author.id != next?.author?.id || showTimestamp)}
-									showStatus={isAuthor && msg.author.id != prev?.author?.id}
-								/>
-								{(prev && msg.author.id != prev.author.id) && <Separator height={12} />}
+
 							</div>
 						);
 					})}
-				</>
+				</InfiniteScroll>
 			)}
+			{isLoading ? <SimpleLoading /> : hasMore && <Separator height={60} /> }
 		</div>
 	);
 }
 
 interface MessageProps {
+	currentChat: LocalChat,
 	message: LocalMessage,
 	showAvatar?: boolean
 	showAuthor?: boolean
 	showStatus?: boolean
 }
 
-function UserMessage({message, showAvatar, showAuthor, showStatus}: MessageProps) {
+function UserMessage({currentChat, message, showAvatar, showAuthor, showStatus}: MessageProps) {
 	const [ user ] = useContext(UserContext);
 	const isAuthor = message.author.id == user.id;
 
@@ -133,14 +178,26 @@ function UserMessage({message, showAvatar, showAuthor, showStatus}: MessageProps
 		</Tooltip>
 	);
 
+	const authorTooltip = (props: TooltipProps) => (
+		<Tooltip {...props}>
+			{Utils.userDiscriminator(message.author)}
+		</Tooltip>
+	);
+
 	const onlyEmojisRegex = /^(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])+$/i;
-	const nonTextMessage = (message.attachment && isSent) || onlyEmojisRegex.test(message.content);
+	const nonTextMessage = (message.attachment.hasAttachment && isSent) || onlyEmojisRegex.test(message.content);
 
 	return (
 		<div className='d-flex flex-row align-items-end' style={{marginBottom: 3}}>
 			<div className='me-2'>
 				{showAvatar
-					? <ProfilePicture src={message.author.avatar} size={32}/>
+					? (
+						<OverlayTrigger placement='left' overlay={authorTooltip} delay={{show: 500, hide: 0}}>
+							<Link to={`/chat/user/${message.author.id}`}>
+								<ProfilePicture src={message.author.avatar} size={32} onClick={() => true}/>
+							</Link>
+						</OverlayTrigger>
+					)
 					: <Separator width={32} />}
 			</div>
 
@@ -151,40 +208,18 @@ function UserMessage({message, showAvatar, showAuthor, showStatus}: MessageProps
 					</span>)
 				}
 				<div className={`d-flex ${isAuthor ? 'flex-row-reverse' : 'flex-row'}`}>
-					<OverlayTrigger
-						placement={isAuthor ? 'left' : 'right'}
-						overlay={timeTooltip}
-						delay={{show: 500, hide: 0}}
-					>
+					<OverlayTrigger placement={isAuthor ? 'left' : 'right'} overlay={timeTooltip} delay={{show: 500, hide: 0}}>
 						<div
-							style={{'opacity': isSent ? '100%' : '50%'}}
-							className={`message text-break ${nonTextMessage ? 'message-emojis' : (isAuthor ? 'bg-primary text-light' : 'bg-gray-200')}`}
+							style={{
+								opacity: isSent ? '100%' : '50%',
+								backgroundColor: (isAuthor ? currentChat.color.hex : '')
+							}}
+							className={`message text-break ${nonTextMessage ? 'message-no-text' : (isAuthor ? 'text-light' : '')}`}
 						>
-							{message.attachment ? (
-								<>
-									{isSent ? (
-										<img
-											src={`/api/attachment?id=${message.id}`}
-											style={{borderRadius: '1.2rem', maxHeight: 230, width: '100%'}}
-											alt='Message attachment'
-										/>
-									): (
-										<>
-											{message.isPending ? (
-												<>
-													<Spinner size='sm' variant='light' animation='border' className='me-2' />
-													<span>
-														Uploading Attachment
-													</span>
-												</>
-											) : 'Attachment upload failed'}
-										</>
-
-									)}
-
-								</>
+							{message.attachment.hasAttachment ? (
+								<MessageAttachment message={message} />
 							): (
-								<Twemoji text={message.content || ''} onlyEmojiClassName={nonTextMessage ? 'large-emojis' : ''} />
+								<DokChatMarkdown text={message.content || ''} className={nonTextMessage ? 'large-emojis' : ''} />
 							)}
 						</div>
 					</OverlayTrigger>
@@ -192,7 +227,7 @@ function UserMessage({message, showAvatar, showAuthor, showStatus}: MessageProps
 			</div>
 
 			{showStatus
-				? <MessageStatus isPending={message.isPending} isFailed={message.isFailed} />
+				? <MessageStatus color={currentChat.color.hex} isPending={message.isPending} isFailed={message.isFailed} />
 				: <Separator width={18} />}
 		</div>
 	);
@@ -213,16 +248,17 @@ function SystemMessage({ content }: SystemMessageProps) {
 interface MessageStatusProps {
 	isPending?: boolean
 	isFailed?: boolean
+	color: string
 }
 
-function MessageStatus({isPending, isFailed: isError}: MessageStatusProps) {
+function MessageStatus({color, isPending, isFailed: isError}: MessageStatusProps) {
 	let icon = BsCheckCircleFill;
 	if (isPending) icon = BsCheckCircle;
 	if (isError) icon = BsXCircle;
 	const iconEl = React.createElement(
 		icon, {
 			size: 14,
-			color: `var(--bs-${isError ? 'danger' : 'primary'})`
+			color: isError ? 'var(--bs-danger)' : color
 		}
 	);
 	return (

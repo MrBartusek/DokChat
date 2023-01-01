@@ -1,11 +1,13 @@
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/mixins";
+@import '../../scss/dark.scss';
 
 .message {
     padding: 8px 12px;
 	border-radius: 1.2rem;
 	overflow: hidden;
+	background-color: $gray-200;
 }
 
 @include media-breakpoint-up(md) {
@@ -14,7 +16,14 @@
 	}
 }
 
-.message-emojis {
+.message-no-text {
 	padding: 3px 0;
 	font-size: 2.3rem;
+	background: none !important;
+}
+
+#app[data-theme='dark']  {
+	.message {
+		background-color: mix($dark-background, $dark-washed, 20%)
+	}
 }

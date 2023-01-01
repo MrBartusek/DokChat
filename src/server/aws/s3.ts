@@ -5,8 +5,8 @@ import * as sharp from 'sharp';
 
 export const bucketName = process.env.AWS_BUCKET_NAME;
 const region = process.env.AWS_REGION;
-const SINGED_URL_EXPIRE = 60 * 60; // 60 minutes
-const CACHE_TIME = 60 * 30; // 30 minutes
+const CACHE_TIME = 4 * 30 * 30; // 4 hours (match cloduflare)
+const SINGED_URL_EXPIRE = 5 * 30 * 30; // 5 hours (slighty more than cache)
 
 class DokChatS3Client {
 	private client: S3Client;
@@ -43,7 +43,7 @@ class DokChatS3Client {
      * @param avatar Raw avatar sent by user
      * @returns Resource key
      */
-	public async uploadAvatar(avatar: Express.Multer.File): Promise<string> {
+	public async uploadAvatar(avatar: Express.Multer.File | Buffer): Promise<string> {
 		const buffer = await this.imageToBuffer(avatar);
 		const formatted = await this.formatAvatar(buffer);
 		return await this.uploadBuffer(formatted, 'image/png');
@@ -88,7 +88,10 @@ class DokChatS3Client {
 		await this.client.send(new DeleteObjectCommand(deleteParams));
 	}
 
-	private async imageToBuffer(file: Express.Multer.File | File): Promise<Buffer> {
+	private async imageToBuffer(file: Express.Multer.File | File | Buffer): Promise<Buffer> {
+		if(file instanceof Buffer) {
+			return file;
+		}
 		if((file as any).buffer) {
 			return (file as Express.Multer.File).buffer;
 		}

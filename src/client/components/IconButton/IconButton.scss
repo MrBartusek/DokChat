@@ -1,6 +1,7 @@
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/mixins";
+@import '../../scss/dark.scss';
 
 .iconButton {
     padding: 8px;
@@ -8,6 +9,7 @@
     border: 0;
     margin: 0;
     background: none;
+    display: flex;
 }
 
 .iconButton.enabled {
@@ -24,4 +26,18 @@
 
 .iconButton.enabled:active {
     background-color: $gray-300;
+}
+
+#app[data-theme='dark'], .modal-dialog[data-theme='dark'] {
+    .iconButton svg {
+        color: $secondary;
+    }
+
+    .iconButton.enabled:hover {
+        background-color: mix($dark-background, $dark-washed, 20%);
+    }
+    
+    .iconButton.enabled:active {
+        background-color: $dark-washed;
+    }
 }

@@ -11,9 +11,9 @@ import AuthManager from '../../managers/authManager';
 import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
-import { isValidPassword } from '../../validators/password';
-import { isValidTag } from '../../validators/tag';
-import { isValidUsername } from '../../validators/username';
+import { isValidPassword } from '../../validators/isValidPassword';
+import { isValidTag } from '../../validators/isValidTag';
+import { isValidUsername } from '../../validators/isValidUsername';
 
 const router = express.Router();
 const storage = multer.memoryStorage();
@@ -38,12 +38,13 @@ router.all('/update-profile',
 		const avatar = req.file;
 
 		// Authenticate user with password
-		const [ user ] = await AuthManager.authenticateUser(req.auth.email, password)
+		const authData = await AuthManager.authenticateUser(req.auth.email, password)
 			.catch((reason) => {
 				if(typeof reason !== 'string') throw reason;
-				return new ApiResponse(res).badRequest('Provided password is not valid');
-			}) as [UserJWTData, string];
-		if(!user) return;
+				new ApiResponse(res).badRequest('Provided password is not valid');
+			});
+		if(!authData) return;
+		const [ user ] = authData;
 
 		const discriminatorChanged = user.username != username || user.tag != tag;
 		const emailChanged = user.email != email;

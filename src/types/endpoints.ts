@@ -1,4 +1,4 @@
-import { Chat, Message, User } from './common';
+import { Chat, ChatInvite, ChatParticipant, Message, User } from './common';
 
 /**
  * Base class for all endpoint responses
@@ -25,3 +25,15 @@ export type MessageListResponse = Message[];
 export type UserGetResponse = User;
 
 export type ChatCreateResponse = Chat;
+
+export type ChatParticipantsRepose = ChatParticipant[];
+
+export interface BlockStatusResponse {
+    id: string,
+    blocked: boolean
+}
+
+export type InviteResponse = {
+    invite: ChatInvite;
+    chat: Chat;
+}

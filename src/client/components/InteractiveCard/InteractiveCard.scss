@@ -1,0 +1,61 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+@import '../../scss/dark.scss';
+
+.interactiveCard {
+    padding: 9px 12px;
+    border-radius: 1em;
+    border: 0;
+    margin: 0;
+    background: none;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    background-color: mix($gray-100, $gray-200, 80%);
+    gap: 1em;
+}
+
+.interactiveCard.enabled {
+    cursor: pointer;
+}
+
+.interactiveCard .icon {
+    transition: color 0.5s ease;
+    background-color: $gray-300;
+    border-radius: 50em;
+    padding: 0.5em;
+    color: $secondary;
+    display: flex;
+}
+
+.interactiveCard .arrow-right {
+    color: $secondary;
+    padding-right: 2px;
+}
+
+.interactiveCard:hover {
+    background-color: $gray-200;
+}
+
+.interactiveCard:active {
+    background-color: $gray-300;
+}
+
+#app[data-theme='dark'], .modal-dialog[data-theme='dark'] {
+    .interactiveCard {
+        background-color: mix($dark-background, $dark-washed, 40%);
+    }
+
+    .interactiveCard .icon {
+        background-color: mix($dark-background, $dark-washed, 90%);
+    }
+
+    .interactiveCard.enabled:hover {
+        background-color: mix($dark-background, $dark-washed, 70%);
+    }
+    
+    .interactiveCard.enabled:active {
+        background-color: $dark-background;
+    }
+}

@@ -2,12 +2,14 @@ import * as express from 'express';
 import { query, validationResult } from 'express-validator';
 import { QueryResult } from 'pg';
 import sql from 'sql-template-strings';
+import { CHAT_COLORS } from '../../../types/colors';
 import { ChatListResponse } from '../../../types/endpoints';
 import { ApiResponse } from '../../apiResponse';
 import db from '../../db';
 import ChatManager from '../../managers/chatManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
+import Utils from '../../utils/utils';
 
 const router = express.Router();
 
@@ -23,14 +25,13 @@ router.all('/list',
 		const chatsQuery = await queryChats(req, page);
 		const chats = await Promise.all(chatsQuery.rows.map(async (chat) => {
 			const participant = await ChatManager.listParticipants(chat.chatId);
-			const [ avatar, chatName ] = await ChatManager.generateAvatarAndName(
-				chat.chatId, chat.name, chat.avatar, participant, req.auth.id
-			);
+			const [ name, avatar ] = await ChatManager.generateChatNameAndAvatar(chat.chatId, chat.name, participant, chat.isGroup, req.auth.id);
 
 			return {
 				id: chat.chatId,
-				name: chatName,
-				avatar: avatar,
+				name,
+				avatar,
+				color: CHAT_COLORS[chat.color] || CHAT_COLORS[0],
 				isGroup: chat.isGroup,
 				createdAt: chat.createdAt,
 				creatorId: chat.creatorId,
@@ -38,7 +39,11 @@ router.all('/list',
 					content: chat.messageContent || '',
 					author: chat.messageAuthor,
 					timestamp: chat.messageCreatedAt
-				}: null
+				}: null,
+				participants: participant.map(p => ({
+					id: p.id,
+					userId: p.userId
+				}))
 			};
 		}));
 		const result: ChatListResponse = chats;
@@ -48,19 +53,19 @@ router.all('/list',
 type ChatsQuery = QueryResult<{
 	chatId: string,
 	name: string,
-	avatar: string,
 	messageContent: string,
 	messageAuthor: string,
 	messageCreatedAt: string,
     isGroup: boolean,
 	creatorId: string,
 	createdAt: string,
+	color: number
 }>
 async function queryChats(req: express.Request, page: number): Promise<ChatsQuery> {
 	return db.query(sql`
         SELECT
             chat.name,
-			chat.avatar,
+			chat.color,
             chat.is_group as "isGroup",
 			chat.creator_id as "creatorId",
 			chat.created_at as "createdAt",
@@ -89,6 +94,7 @@ async function queryChats(req: express.Request, page: number): Promise<ChatsQuer
 				chats.id,
 				chats.name,
 				chats.avatar,
+				chats.color,
 				chats.is_group,
 				chats.creator_id,
 				chats.created_at

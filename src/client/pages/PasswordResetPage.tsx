@@ -3,11 +3,12 @@ import { Container } from 'react-bootstrap';
 import { Outlet } from 'react-router-dom';
 import FormPage from '../components/FormPage/FormPage';
 import Layout from '../components/Layout/Layout';
-import PasswordResetForm from '../components/PasswordResetForm/PasswordResetForm';
+import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
 
 export function PasswordResetPage() {
 	return (
 		<Layout>
+			<ScrollToTop />
 			<Container>
 				<FormPage img='/img/undraw_forgot_password.svg'>
 					<Outlet />
@@ -17,3 +18,5 @@ export function PasswordResetPage() {
 
 	);
 }
+
+export default PasswordResetPage;

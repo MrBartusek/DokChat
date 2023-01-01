@@ -1,9 +1,9 @@
 import * as axios from 'axios';
-import { Axios, AxiosRequestHeaders } from 'axios';
+import { Axios } from 'axios';
 import { LocalUser } from '../types/User';
 
 function getAxios(user?: LocalUser): Axios {
-	let headers: AxiosRequestHeaders = {};
+	let headers: axios.RawAxiosRequestHeaders  = {};
 	if(user) {
 		headers = user.getAuthHeader();
 	}
@@ -14,7 +14,7 @@ function getAxios(user?: LocalUser): Axios {
 		validateStatus: function (status) {
 			return status >= 200 && status < 300;
 		},
-		timeout: 15 * 1000
+		timeout: 30 * 1000
 	});
 }
 
