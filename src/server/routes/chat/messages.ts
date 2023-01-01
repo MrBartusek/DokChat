@@ -84,7 +84,7 @@ async function queryMessages(chatId: string, lastMessageTimestamp: number, count
 			messages.attachment_width as "attachmentWidth",
 			messages.attachment_height as "attachmentHeight"
 		FROM messages
-		INNER JOIN users ON users.id = messages.author_id
+		LEFT JOIN users ON users.id = messages.author_id
 		WHERE
 			chat_id = $1 AND messages.created_at < $2
 		ORDER BY 
