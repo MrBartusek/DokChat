@@ -18,6 +18,10 @@ DokChat is complete, fully fledged instant messaging application. It supports al
 - Current online status with green dots
 - reCAPTCHA and ratelimit protections against bots.
 
+## Local Setup
+
+See [`SETUP.MD`](SETUP.md) for local setup guide.
+
 ## Tech Stack
 
 - **PostgreSQL** - Postgress is used as database without any ORM. You can see database visualization in [Database Design](#database-design) section.
