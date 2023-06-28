@@ -21,8 +21,15 @@ import { systemMessageHandler } from './handlers/systemMessageHandler';
 const isProduction = (process.env['NODE' + '_ENV'] || 'development') == 'production';
 
 async function main() {
+	console.log('Starting DokChat...');
+
 	// Initialize database
-	await initializeDB();
+	await initializeDB()
+		.catch((error) => {
+			console.log('Failed to initialize database, program will now close');
+			console.log(error);
+			process.exit(1);
+		});
 
 	// Setup web and websocket server
 	const app = express();
