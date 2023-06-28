@@ -12,7 +12,7 @@ const DokChatCaptcha = React.forwardRef((props, ref) => {
 		<ReCAPTCHA
 			sitekey={RECAPTCHA_SITE_KEY}
 			size="invisible"
-			theme={settings.theme}
+			theme={settings.theme as any}
 			type="image"
 			badge="bottomright"
 			ref={ref as any}

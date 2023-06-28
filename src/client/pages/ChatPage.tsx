@@ -65,11 +65,6 @@ function ChatPage() {
 	const isLoading = (
 		isLoadingMessagesManager || !documentReady
 	);
-	console.log(
-		'isLoading(main):', isLoading,
-		'isLoadingMessagesManager:', isLoadingMessagesManager,
-		'documentReady:', documentReady
-	);
 
 	if(isLoading) return (<MainLoading />);
 

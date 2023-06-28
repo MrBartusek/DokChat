@@ -9,15 +9,15 @@ export default function SettingsTab() {
 	const [ settings, setSettings ] = useContext(SettingsContext);
 
 	function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-		const id = event.target.id;
+		const name = event.target.name;
 		const checked = event.target.checked;
 		const settingsCopy = Object.assign({}, settings);
 
-		if(id == 'sound-notifications') {
+		if(name == 'sound-notifications') {
 			settingsCopy.soundNotifications = checked;
 		}
-		else if(id == 'dark-theme') {
-			settingsCopy.theme = checked ? Theme.DARK : Theme.LIGHT;
+		else if(name == 'theme') {
+			settingsCopy.themeRaw = event.target.id as Theme;
 		}
 
 		setSettings(settingsCopy);
@@ -26,21 +26,49 @@ export default function SettingsTab() {
 	return (
 		<>
 			<Form>
+				<Form.Label className='d-block'>
+					Sound
+				</Form.Label>
 				<Form.Check
 					type="switch"
 					className='mb-2'
-					id="sound-notifications"
-					label="Sound notifications"
+					name="sound-notifications"
+					label="New Message Sound"
 					onChange={handleChange}
 					checked={settings.soundNotifications}
 				/>
+				<Form.Label className='d-block'>
+					Theme
+				</Form.Label>
 				<Form.Check
-					type="switch"
+					type="radio"
+					name="theme"
 					className='mb-2'
-					id="dark-theme"
-					label="Dark theme"
 					onChange={handleChange}
-					checked={settings.theme == Theme.DARK}
+					inline
+					id={Theme.AUTO}
+					label="Auto"
+					checked={settings.themeRaw == Theme.AUTO}
+				/>
+				<Form.Check
+					type="radio"
+					name="theme"
+					className='mb-2'
+					onChange={handleChange}
+					inline
+					id={Theme.LIGHT}
+					label="Light"
+					checked={settings.themeRaw == Theme.LIGHT}
+				/>
+				<Form.Check
+					type="radio"
+					name="theme"
+					className='mb-2'
+					onChange={handleChange}
+					inline
+					id={Theme.DARK}
+					label="Dark"
+					checked={settings.themeRaw == Theme.DARK}
 				/>
 			</Form>
 			<DebugInfo />
