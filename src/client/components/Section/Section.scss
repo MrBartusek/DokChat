@@ -1,15 +1,11 @@
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/mixins";
-@import '../../scss/dark.scss';
+
+.section {
+    background-color: $white;
+}
 
 .section-variant {
     background-color: $light;
-}
-
-#app[data-theme='dark'] {
-    .section-variant {
-        background-color: $dark-washed;
-    }
-    
 }

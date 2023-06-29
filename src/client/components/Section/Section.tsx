@@ -9,7 +9,7 @@ interface SectionProps {
 
 export default function Section({ variantBackground, children }: SectionProps) {
 	return (
-		<div className={variantBackground ? 'section-variant' : ''}>
+		<div className={'text-black ' + (variantBackground ? 'section-variant' : 'section')}>
 			<Container className='py-5'>
 				{children}
 			</Container>
