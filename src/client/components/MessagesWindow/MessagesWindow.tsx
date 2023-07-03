@@ -43,7 +43,6 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 	}, [ chats, messageWindowRef ]);
 
 	async function fetchMoreMessages(count = 20) {
-		console.log('f');
 		setLoading(true);
 		const axios = getAxios(user);
 		let url = `/chat/messages?chat=${currentChat.id}&count=${count}`;
