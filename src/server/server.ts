@@ -72,6 +72,7 @@ async function main() {
 					],
 					'img-src': [
 						'\'self\'',
+						'data',
 						`https://${s3Client.bucketName}.s3.eu-central-1.amazonaws.com`
 					]
 				}
