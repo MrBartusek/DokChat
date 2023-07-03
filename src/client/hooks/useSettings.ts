@@ -9,14 +9,14 @@ export enum Theme {
 }
 
 export interface Settings {
-	theme: Theme,
+	theme: Omit<Theme, Theme.AUTO>,
 	themeRaw: Theme,
 	soundNotifications: boolean
 }
 
 export const DEFAULT_SETTINGS: Settings = {
 	soundNotifications: true,
-	theme: Theme.AUTO,
+	theme: Theme.LIGHT,
 	themeRaw: Theme.AUTO
 };
 

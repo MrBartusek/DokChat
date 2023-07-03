@@ -20,7 +20,7 @@ function EmojiButton({ onEmojiClick, color }: EmojiButtonProps) {
 					lazyLoadEmojis={true}
 					emojiStyle={EmojiStyle.TWITTER}
 					previewConfig={{showPreview: false}}
-					theme={settings.theme}
+					theme={settings.theme as any}
 					onEmojiClick={onEmojiClick}
 				/>
 			</Popover.Body>
