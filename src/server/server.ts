@@ -60,14 +60,25 @@ async function main() {
 					'https://recaptcha.google.com/recaptcha/', // reCAPTCHA
 					'https://accounts.google.com/gsi/' // Google Sign-In
 				],
-				'content-src': [
-					'https://www.facebook.com/platform/', // Facebook SDK
-					'https://www.facebook.com/x/oauth/' // Facebook SDK
+				'connect-src': [
+					'\'self\'',
+					'https://www.facebook.com/' // Facebook SDK
+				],
+				'image-src': [
+					'\'self\'',
+					'amazonaws.com'
+				],
+				'media-src': [
+					'\'self\'',
+					'amazonaws.com'
 				]
 			}
 		},
 		referrerPolicy: {
 			policy: 'strict-origin-when-cross-origin' //  Google Sign-In - https://stackoverflow.com/a/70739451
+		},
+		crossOriginOpenerPolicy: {
+			policy: 'same-origin-allow-popups'
 		}
 	}));
 
