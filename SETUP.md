@@ -22,8 +22,11 @@ This is extensive guide how to run your own DokChat instance.
 - Google Cloud [Tenor V2 API](https://console.cloud.google.com/marketplace/product/google/tenor.googleapis.com) Token
 
 ## Using Docker
-
-Soon™
+1. Clone this repository
+1. Copy and rename `.example.env` file to `.env` and fill it with AWS, Facebook, Google and reCAPTCHA tokens
+1. Update client-side tokens in [src/client/config.ts](./src/client/config.ts)
+1. Install [Docker](https://www.docker.com)
+1. run `docker-compose up -d`
 
 ## Manual Setup
 
@@ -38,4 +41,5 @@ Soon™
     - port: `5432`
     - All of these can be altered with environmental variables `DB_USER`, `DB_PASS`, `DB_HOST`, `DB_NAME` and `DB_PORT`
 1. run `npm install`
+1. run `npm run build` 
 1. run `npm start`

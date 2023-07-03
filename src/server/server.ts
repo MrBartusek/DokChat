@@ -26,12 +26,20 @@ async function main() {
 	console.log('Starting DokChat...');
 
 	// Initialize database
-	await initializeDB()
-		.catch((error) => {
-			console.log('Failed to initialize database, program will now close');
+	let retries = 5;
+	while (retries) {
+		try {
+			await initializeDB();
+			break;
+		}
+		catch(error) {
+			console.log('Failed to initialize database, retry in 3 seconds...');
 			console.log(error);
-			process.exit(1);
-		});
+			retries -= 1;
+			await new Promise(res => setTimeout(res, 3000));
+		}
+	}
+	if (retries == 0) process.exit(1);
 
 	// Setup web and websocket server
 	const app = express();

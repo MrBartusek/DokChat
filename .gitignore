@@ -1,8 +1,5 @@
-# dependencies
 node_modules/
-
-# production bundles
 dist/
 public/js/*
-
 .env
+pgdata
