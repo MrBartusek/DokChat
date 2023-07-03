@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { ApiResponse } from '../apiResponse';
-import JWTManager from '../managers/JWTManager';
+import jwtManager from '../managers/jwtManager';
 
 const ensureAuthenticated = (allowUnconfirmedEmail = false) => async (req: Request, res: Response, next: NextFunction) => {
 	let token: string | undefined = req.headers.authorization;
@@ -12,7 +12,7 @@ const ensureAuthenticated = (allowUnconfirmedEmail = false) => async (req: Reque
 	}
 	token = token.replace('Bearer ', '');
 
-	return JWTManager.verifyUserToken(token)
+	return jwtManager.verifyUserToken(token)
 		.then((data) => {
 			if(data.isBanned) return new ApiResponse(res, next).forbidden('Account is suspended');
 			if(!data.isEmailConfirmed && !allowUnconfirmedEmail) return new ApiResponse(res, next).forbidden('E-mail not confirmed');

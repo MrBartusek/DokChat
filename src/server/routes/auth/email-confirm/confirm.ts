@@ -4,7 +4,7 @@ import { QueryResult } from 'pg';
 import sql from 'sql-template-strings';
 import { ApiResponse } from '../../../apiResponse';
 import db from '../../../db';
-import JWTManager from '../../../managers/JWTManager';
+import jwtManager from '../../../managers/jwtManager';
 import allowedMethods from '../../../middlewares/allowedMethods';
 import { EmailConfirmJWTData } from '../../../types/jwt';
 
@@ -19,7 +19,7 @@ router.all('/confirm',
 
 		const token: string = req.body.token;
 
-		await JWTManager.verifyEmailConfirmToken(token)
+		await jwtManager.verifyEmailConfirmToken(token)
 			.then(async (tokenData: EmailConfirmJWTData) => {
 				if(!(await isTokenValid(tokenData))) {
 					return new ApiResponse(res).unauthorized('Invalid token, please try to reset your password once again.');

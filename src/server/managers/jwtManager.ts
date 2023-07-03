@@ -14,7 +14,7 @@ export enum TokenType {
 	EMAIL_CONFIRM_TOKEN
 }
 
-export default class JWTManager {
+export default class jwtManager {
 	private static async signJWT(data: jose.JWTPayload, tokenType: TokenType, passwordHash = '') {
 		const token = await new jose.SignJWT(data)
 			.setProtectedHeader({ alg: 'HS256' })

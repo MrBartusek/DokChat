@@ -4,7 +4,7 @@ import { body, validationResult } from 'express-validator';
 import sql from 'sql-template-strings';
 import { ApiResponse } from '../../../apiResponse';
 import db from '../../../db';
-import JWTManager from '../../../managers/JWTManager';
+import jwtManager from '../../../managers/jwtManager';
 import UserManager from '../../../managers/userManager';
 import allowedMethods from '../../../middlewares/allowedMethods';
 import { isValidPassword } from '../../../validators/isValidPassword';
@@ -21,14 +21,14 @@ router.all('/update', allowedMethods('POST'),
 		const password: string = req.body.password;
 		const token: string = req.body.token;
 
-		const unconfirmedUserId = JWTManager.decodePassResetToken(token);
+		const unconfirmedUserId = jwtManager.decodePassResetToken(token);
 		if(!unconfirmedUserId) {
 			return new ApiResponse(res).unauthorized('Invalid token, please try to reset your password once again.');
 		}
 		const user = await UserManager.getUserJwtDataById(unconfirmedUserId);
 		if(!user) return new ApiResponse(res).badRequest('User not found');
 		const passwordHash = await UserManager.getUserHashById(unconfirmedUserId);
-		await JWTManager.verifyPassResetToken(token, user.email, passwordHash)
+		await jwtManager.verifyPassResetToken(token, user.email, passwordHash)
 			.then(async (userId: string) => {
 				if(bcrypt.compareSync(password, passwordHash)) {
 					return new ApiResponse(res).badRequest('New password cannot be same as the old one');

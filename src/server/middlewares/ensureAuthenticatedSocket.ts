@@ -1,7 +1,7 @@
 import { NextFunction } from 'express';
 import { Socket } from 'socket.io';
 import { ApiResponse } from '../apiResponse';
-import JWTManager from '../managers/JWTManager';
+import jwtManager from '../managers/jwtManager';
 
 const ensureAuthenticatedSocket = () => async (socket: Socket, next: NextFunction) => {
 	let token: string | undefined = socket.handshake.auth['Authorization'];
@@ -13,7 +13,7 @@ const ensureAuthenticatedSocket = () => async (socket: Socket, next: NextFunctio
 	}
 	token = token.replace('Bearer ', '');
 
-	return JWTManager.verifyUserToken(token)
+	return jwtManager.verifyUserToken(token)
 		.then(async(data) => {
 			if(data.isBanned) return new ApiResponse(socket, next).forbidden('Account is suspended');
 			if(!data.isEmailConfirmed) return new ApiResponse(socket, next).forbidden('E-mail not confirmed');

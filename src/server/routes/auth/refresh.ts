@@ -2,7 +2,7 @@ import * as express from 'express';
 import { cookie, validationResult } from 'express-validator';
 import { ApiResponse } from '../../apiResponse';
 import AuthManager from '../../managers/authManager';
-import JWTManager from '../../managers/JWTManager';
+import jwtManager from '../../managers/jwtManager';
 import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 
@@ -14,7 +14,7 @@ router.all('/refresh', allowedMethods('POST'), cookie('refreshToken').isString()
 
 	const refreshToken: string = req.cookies.refreshToken;
 
-	const unconfirmedUserId = JWTManager.decodeRefreshToken(refreshToken);
+	const unconfirmedUserId = jwtManager.decodeRefreshToken(refreshToken);
 	if(!unconfirmedUserId) {
 		return new ApiResponse(res).unauthorized('Invalid JWT');
 	}
@@ -22,7 +22,7 @@ router.all('/refresh', allowedMethods('POST'), cookie('refreshToken').isString()
 	const user = await UserManager.getUserJwtDataById(unconfirmedUserId);
 	const passwordHash = await UserManager.getUserHashById(unconfirmedUserId);
 
-	await JWTManager.verifyRefreshToken(refreshToken, passwordHash)
+	await jwtManager.verifyRefreshToken(refreshToken, passwordHash)
 		.then(async (userId: string) => {
 			await UserManager.bumpLastSeen(userId);
 			AuthManager.sendAuthResponse(res, user, passwordHash);

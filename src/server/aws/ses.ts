@@ -4,7 +4,7 @@ import { User } from '../../types/common';
 import { UserJWTData } from '../../types/jwt';
 import db from '../db';
 import EmailBlacklistManager from '../managers/emailBlacklistManager';
-import JWTManager from '../managers/JWTManager';
+import jwtManager from '../managers/jwtManager';
 import Utils from '../utils/utils';
 
 const region = process.env.AWS_REGION;
@@ -39,7 +39,7 @@ class EmailClient {
 	}
 
 	public async sendEmailConfirmEmail(user: UserJWTData | User, email: string) {
-		const confirmToken = await JWTManager.generateEmailConfirmToken(user.id, email);
+		const confirmToken = await jwtManager.generateEmailConfirmToken(user.id, email);
 		const confirmUrl = `https://dokchat.dokurno.dev/email-confirm/${confirmToken}`;
 
 		// eslint-disable-next-line no-useless-escape
@@ -51,7 +51,7 @@ class EmailClient {
 		const query = await db.query(sql`SELECT id, password_hash as "passwordHash" FROM users WHERE email = $1;`, [ email ]);
 		const passwordHash = query.rows[0].passwordHash;
 		const id = query.rows[0].id;
-		const resetToken = await JWTManager.generatePassResetToken(id, email, passwordHash);
+		const resetToken = await jwtManager.generatePassResetToken(id, email, passwordHash);
 		const resetUrl = `https://dokchat.dokurno.dev/forgot-password/${resetToken}`;
 
 		// eslint-disable-next-line no-useless-escape
