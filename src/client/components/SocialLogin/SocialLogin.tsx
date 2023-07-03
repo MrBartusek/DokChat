@@ -91,13 +91,9 @@ function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
 					appId={FACEBOOK_CLIENT_ID}
 					onSuccess={onFacebookLogin}
 					onFail={(res) => {
-						if(res.status == 'loginCancelled') {
-							setError('Facebook authorization was canceled');
-						}
-						else {
+						if(res.status != 'loginCancelled') {
 							setError('Failed to get authorization response from Facebook');
 						}
-
 					}}
 					scope='public_profile, email'
 					style={{
