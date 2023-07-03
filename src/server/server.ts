@@ -59,6 +59,10 @@ async function main() {
 					'https://www.google.com/recaptcha/', // reCAPTCHA
 					'https://recaptcha.google.com/recaptcha/', // reCAPTCHA
 					'https://accounts.google.com/gsi/' // Google Sign-In
+				],
+				'content-src': [
+					'https://www.facebook.com/platform/', // Facebook SDK
+					'https://www.facebook.com/x/oauth/' // Facebook SDK
 				]
 			}
 		},
