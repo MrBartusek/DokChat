@@ -7,6 +7,7 @@ import * as http from 'http';
 import * as morgan from 'morgan';
 import * as schedule from 'node-schedule';
 import * as path from 'path';
+import * as s3Client from './aws/s3';
 import { Server } from 'socket.io';
 import { ATTACHMENT_MAX_SIZE } from '../types/const';
 import { initializeDB } from './db/initalize';
@@ -43,44 +44,42 @@ async function main() {
 	app.use(express.urlencoded({ extended: true }));
 	app.use(cookieParser());
 	app.use(express.static(path.join(__dirname, '/../public')));
-	app.use(helmet({
-		contentSecurityPolicy: {
-			useDefaults: true,
-			directives: {
-				'script-src': [
-					'\'self\'',
-					'https://www.google.com/recaptcha/', // reCAPTCHA
-					'https://www.gstatic.com/recaptcha/', // reCAPTCHA
-					'https://accounts.google.com/gsi/', // Google Sign-In
-					'https://connect.facebook.net/' // Facebook SDK
-				],
-				'frame-src': [
-					'\'self\'',
-					'https://www.google.com/recaptcha/', // reCAPTCHA
-					'https://recaptcha.google.com/recaptcha/', // reCAPTCHA
-					'https://accounts.google.com/gsi/' // Google Sign-In
-				],
-				'connect-src': [
-					'\'self\'',
-					'https://www.facebook.com/' // Facebook SDK
-				],
-				'image-src': [
-					'\'self\'',
-					'amazonaws.com'
-				],
-				'media-src': [
-					'\'self\'',
-					'amazonaws.com'
-				]
+	if(isProduction) {
+		app.use(helmet({
+			contentSecurityPolicy: {
+				useDefaults: true,
+				directives: {
+					'script-src': [
+						'\'self\'',
+						'https://www.google.com/recaptcha/', // reCAPTCHA
+						'https://www.gstatic.com/recaptcha/', // reCAPTCHA
+						'https://accounts.google.com/gsi/', // Google Sign-In
+						'https://connect.facebook.net/' // Facebook SDK
+					],
+					'frame-src': [
+						'\'self\'',
+						'https://www.google.com/recaptcha/', // reCAPTCHA
+						'https://recaptcha.google.com/recaptcha/', // reCAPTCHA
+						'https://accounts.google.com/gsi/' // Google Sign-In
+					],
+					'connect-src': [
+						'\'self\'',
+						'https://www.facebook.com/' // Facebook SDK
+					],
+					'media-src': [
+						'\'self\'',
+						`https://${s3Client.bucketName}.s3.eu-central-1.amazonaws.com`
+					]
+				}
+			},
+			referrerPolicy: {
+				policy: 'strict-origin-when-cross-origin' //  Google Sign-In - https://stackoverflow.com/a/70739451
+			},
+			crossOriginOpenerPolicy: {
+				policy: 'same-origin-allow-popups'
 			}
-		},
-		referrerPolicy: {
-			policy: 'strict-origin-when-cross-origin' //  Google Sign-In - https://stackoverflow.com/a/70739451
-		},
-		crossOriginOpenerPolicy: {
-			policy: 'same-origin-allow-popups'
-		}
-	}));
+		}));
+	}
 
 	// Server API, frontend and
 	app.use('/api', apiRouter);
