@@ -17,6 +17,7 @@ import ensureAuthenticatedSocket from './middlewares/ensureAuthenticatedSocket';
 import apiRouter from './routes';
 import registerOnlineStatusHandler from './handlers/onlineStatusHandler';
 import { systemMessageHandler } from './handlers/systemMessageHandler';
+import helmet from 'helmet';
 
 const isProduction = (process.env['NODE' + '_ENV'] || 'development') == 'production';
 
@@ -42,6 +43,26 @@ async function main() {
 	app.use(express.urlencoded({ extended: true }));
 	app.use(cookieParser());
 	app.use(express.static(path.join(__dirname, '/../public')));
+	app.use(helmet({
+		contentSecurityPolicy: {
+			useDefaults: true,
+			directives: {
+				'script-src': [
+					'\'self\'',
+					'https://www.google.com/recaptcha/', // reCAPTCHA
+					'https://www.gstatic.com/recaptcha/', // reCAPTCHA
+					'https://accounts.google.com/gsi/', // Google Sign-In
+					'https://connect.facebook.net/' // Facebook SDK
+				],
+				'frame-src': [
+					'\'self\'',
+					'https://www.google.com/recaptcha/', // reCAPTCHA
+					'https://recaptcha.google.com/recaptcha/', // reCAPTCHA
+					'https://accounts.google.com/gsi/' // Google Sign-In
+				]
+			}
+		}
+	}));
 
 	// Server API, frontend and
 	app.use('/api', apiRouter);

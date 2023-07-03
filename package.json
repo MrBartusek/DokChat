@@ -44,6 +44,7 @@
     "fslightbox-react": "^1.6.2-2",
     "gif-picker-react": "^0.6.0",
     "google-auth-library": "^8.7.0",
+    "helmet": "^7.0.0",
     "jose": "^4.11.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
