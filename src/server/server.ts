@@ -39,11 +39,6 @@ async function main() {
 	const io = new Server(server, { maxHttpBufferSize: ATTACHMENT_MAX_SIZE});
 
 	// Register middleware
-	app.use(express.json());
-	app.use(morgan('dev'));
-	app.use(express.urlencoded({ extended: true }));
-	app.use(cookieParser());
-	app.use(express.static(path.join(__dirname, '/../public')));
 	if(isProduction) {
 		app.use(helmet({
 			contentSecurityPolicy: {
@@ -85,6 +80,11 @@ async function main() {
 			}
 		}));
 	}
+	app.use(express.json());
+	app.use(morgan('dev'));
+	app.use(express.urlencoded({ extended: true }));
+	app.use(cookieParser());
+	app.use(express.static(path.join(__dirname, '/../public')));
 
 	// Server API, frontend and
 	app.use('/api', apiRouter);
