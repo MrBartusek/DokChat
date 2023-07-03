@@ -61,6 +61,9 @@ async function main() {
 					'https://accounts.google.com/gsi/' // Google Sign-In
 				]
 			}
+		},
+		referrerPolicy: {
+			policy: 'strict-origin-when-cross-origin' //  Google Sign-In - https://stackoverflow.com/a/70739451
 		}
 	}));
 
