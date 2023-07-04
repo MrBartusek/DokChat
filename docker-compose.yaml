@@ -3,21 +3,31 @@ services:
   postgres:
     image: postgres:15
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=dokchat
+      - POSTGRES_USER: postgres
+      - POSTGRES_PASSWORD: postgres
+      - POSTGRES_DB: dokchat
     volumes:
       - pgdata:/var/lib/postgresql/data/
     ports:
       - '5432:5432'
+  redis:
+    image: redis:7
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes: 
+      - cache:/data
   web:
     build: .
     depends_on:
       - postgres
+      - redis
     environment:
-      - DB_HOST=postgres
+      - DB_HOST: postgres
+      - REDIS_HOST: cache
     ports: 
     - 3000:3000
-
 volumes:
   pgdata:
+  cache:
