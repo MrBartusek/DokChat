@@ -10,7 +10,8 @@ import * as path from 'path';
 import * as s3Client from './aws/s3';
 import { Server } from 'socket.io';
 import { ATTACHMENT_MAX_SIZE } from '../types/const';
-import { initializeDB } from './db/initalize';
+import { createDatabaseStructure } from './db/structure';
+import redis from './redis';
 import registerMessageHandler from './handlers/chatHandler';
 import processEmailBounces from './jobs/processBounces';
 import processEmailComplaints from './jobs/processComplaints';
@@ -22,24 +23,45 @@ import helmet from 'helmet';
 
 const isProduction = (process.env['NODE' + '_ENV'] || 'development') == 'production';
 
-async function main() {
-	console.log('Starting DokChat...');
-
-	// Initialize database
+async function initializeDatabase() {
 	let retries = 5;
 	while (retries) {
 		try {
-			await initializeDB();
+			await createDatabaseStructure();
 			break;
 		}
 		catch(error) {
-			console.log('Failed to initialize database, retry in 3 seconds...');
+			console.log('Failed to initialize database, retry in 5 seconds...');
 			console.log(error);
 			retries -= 1;
-			await new Promise(res => setTimeout(res, 3000));
+			await new Promise(res => setTimeout(res, 5000));
 		}
 	}
-	if (retries == 0) process.exit(1);
+	console.log('Postgres connection successful');
+}
+
+async function initializeRedis() {
+	let retries = 5;
+	while (retries) {
+		try {
+			await redis.connect();
+			break;
+		}
+		catch(error) {
+			console.log('Failed to initialize redis, retry in 5 seconds...');
+			console.log(error);
+			retries -= 1;
+			await new Promise(res => setTimeout(res, 5000));
+		}
+	}
+	console.log('Redis connection successful');
+}
+
+async function main() {
+	console.log('\r\nStarting DokChat...');
+
+	await initializeDatabase();
+	await initializeRedis();
 
 	// Setup web and websocket server
 	const app = express();
@@ -119,7 +141,7 @@ async function main() {
 
 	// Start the server
 	const port = process.env.SERVER_PORT || 3000;
-	server.listen(port, () => console.log(`DokChat Server is listening on http://localhost:${port}/`));
+	server.listen(port, () => console.log(`\r\nDokChat Server is listening on http://localhost:${port}/`));
 }
 
 main();

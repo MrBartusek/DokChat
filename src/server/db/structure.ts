@@ -1,7 +1,7 @@
 import sql from 'sql-template-strings';
 import db from './index';
 
-export async function initializeDB() {
+export async function createDatabaseStructure() {
 	await db.query(sql`
         CREATE TABLE IF NOT EXISTS users (
             id varchar NOT NULL,
