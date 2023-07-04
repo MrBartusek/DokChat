@@ -8,8 +8,6 @@ RUN npm install
 
 COPY . .
 
-ENV DB_HOST db
-
 RUN npm run build
 
 ENV PORT=8080

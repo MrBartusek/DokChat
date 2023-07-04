@@ -1,18 +1,23 @@
 version: '3.8'
 services:
-  db:
+  postgres:
     image: postgres:15
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=dokchat
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data/
     ports:
       - '5432:5432'
   web:
     build: .
     depends_on:
-      - db
+      - postgres
+    environment:
+      - DB_HOST=postgres
     ports: 
     - 3000:3000
+
+volumes:
+  pgdata:
