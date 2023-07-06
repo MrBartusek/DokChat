@@ -22,14 +22,17 @@ jobs:
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
       
-      - uses: actions/cache@v3
-        id: restore-build
+      - name: Save build cache
+        uses: actions/cache@v3
+        id: npm-cache
         with:
           path: ~/.npm
-          key: ${{ github.sha }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            - ${{ runner.os }}-node-
     
   build:
-    name: 'Build Frot & Back'
+    name: 'Build'
     runs-on: ubuntu-latest
     needs:
       - setup
@@ -42,11 +45,12 @@ jobs:
         with:
           node-version: 18
       
-      - uses: actions/cache@v3
-        id: restore-build
+      - name: Restore cache
+        uses: actions/cache@v3
+        id: npm-cache
         with:
           path: ~/.npm
-          key: ${{ github.sha }}
+          key: ${{ runner.os }}-node-
     
       - name: Build
         run: npm run build
