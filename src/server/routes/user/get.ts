@@ -2,7 +2,6 @@ import * as express from 'express';
 import { body, validationResult } from 'express-validator';
 import { User } from '../../../types/common';
 import { ApiResponse } from '../../apiResponse';
-import BlockManager from '../../managers/blockManager';
 import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';

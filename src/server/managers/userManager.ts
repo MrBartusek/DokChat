@@ -9,7 +9,6 @@ import { snowflakeGenerator } from '../utils/snowflakeGenerator';
 import Utils from '../utils/utils';
 import s3Client from './../aws/s3';
 import emailClient from './../aws/ses';
-import ChatManager from './chatManager';
 import EmailBlacklistManager from './emailBlacklistManager';
 
 export default class UserManager {

@@ -1,11 +1,9 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Stack } from 'react-bootstrap';
-import { BsBoxArrowLeft, BsCheckCircle, BsEyeSlashFill, BsSlashCircle } from 'react-icons/bs';
+import { BsBoxArrowLeft, BsEyeSlashFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { ChatParticipant } from '../../../types/common';
-import { BlockStatusResponse, EndpointResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
-import getAxios from '../../helpers/axios';
 import { LocalChat } from '../../types/Chat';
 import BlockUserCard from '../BlockUserCard/BlockUserCard';
 import InteractiveCard from '../InteractiveCard/InteractiveCard';

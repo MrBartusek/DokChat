@@ -7,7 +7,6 @@ import db from '../db';
 import { InternalChatParticipant } from '../types/common';
 import { snowflakeGenerator } from '../utils/snowflakeGenerator';
 import Utils from '../utils/utils';
-import UserManager from './userManager';
 
 export default class ChatManager {
 

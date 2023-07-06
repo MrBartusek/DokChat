@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { OnlineStatusResponse } from '../../types/websocket';
 import { UserContext } from '../context/UserContext';
-import { useFetch } from './useFetch';
 import { useWebsocketType } from './useWebsocket';
 
 export function useOnlineManager(ws: useWebsocketType): ((userId: string) => [ boolean, string | null ]) {

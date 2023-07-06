@@ -1,4 +1,5 @@
 import * as sizeOf from 'buffer-image-size';
+import { RateLimiterMemory } from 'rate-limiter-flexible';
 import { MessageAttachment } from '../../types/common';
 import { ALLOWED_ATTACHMENT_FORMAT } from '../../types/const';
 import { ClientAttachment, ClientMessage, DokChatServer, DokChatSocket, ServerMessage } from '../../types/websocket';
@@ -8,7 +9,6 @@ import BlockManager from '../managers/blockManager';
 import ChatManager from '../managers/chatManager';
 import PermissionsManager from '../managers/permissionsManager';
 import Utils from '../utils/utils';
-import { RateLimiterMemory } from 'rate-limiter-flexible';
 
 const messageLimiter = new RateLimiterMemory({
 	points: 15,

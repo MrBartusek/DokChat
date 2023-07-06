@@ -1,13 +1,12 @@
+import * as DateFns from 'date-fns';
 import * as express from 'express';
 import { body, validationResult } from 'express-validator';
 import { ApiResponse } from '../../apiResponse';
+import { systemMessageHandler } from '../../handlers/systemMessageHandler';
 import ChatManager from '../../managers/chatManager';
 import InviteManager from '../../managers/inviteManager';
-import PermissionsManager from '../../managers/permissionsManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
-import * as DateFns from 'date-fns';
-import { systemMessageHandler } from '../../handlers/systemMessageHandler';
 
 const router = express.Router();
 

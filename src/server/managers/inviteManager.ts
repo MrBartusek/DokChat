@@ -1,10 +1,10 @@
-import db from '../db';
-import sql from 'sql-template-strings';
-import { snowflakeGenerator } from '../utils/snowflakeGenerator';
-import * as DateFns from 'date-fns';
-import { ChatInvite } from '../../types/common';
 import * as crypto from 'crypto';
+import * as DateFns from 'date-fns';
 import { QueryResult } from 'pg';
+import sql from 'sql-template-strings';
+import { ChatInvite } from '../../types/common';
+import db from '../db';
+import { snowflakeGenerator } from '../utils/snowflakeGenerator';
 
 const INVITE_BASE_URL = 'https://dokchat.dokurno.dev/i/';
 const INVITE_TIME_DAYS = 7;

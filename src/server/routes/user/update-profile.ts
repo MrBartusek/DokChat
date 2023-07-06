@@ -2,7 +2,6 @@ import * as express from 'express';
 import { body, validationResult } from 'express-validator';
 import * as multer from 'multer';
 import sql from 'sql-template-strings';
-import { UserJWTData } from '../../../types/jwt';
 import { ApiResponse } from '../../apiResponse';
 import s3Client from '../../aws/s3';
 import emailClient from '../../aws/ses';

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { Socket, io } from 'socket.io-client';
 import { ClientToServerEvents, ServerToClientEvents } from '../../types/websocket';
 import { UserContext } from '../context/UserContext';
 

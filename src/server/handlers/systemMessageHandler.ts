@@ -1,4 +1,4 @@
-import { ChatParticipant, User } from '../../types/common';
+import { User } from '../../types/common';
 import { UserJWTData } from '../../types/jwt';
 import { DokChatServer, DokChatSocket, ServerMessage } from '../../types/websocket';
 import ChatManager from '../managers/chatManager';

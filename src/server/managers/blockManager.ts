@@ -1,7 +1,7 @@
-import db from '../db';
-import sql from 'sql-template-strings';
-import { snowflakeGenerator } from '../utils/snowflakeGenerator';
 import * as DateFns from 'date-fns';
+import sql from 'sql-template-strings';
+import db from '../db';
+import { snowflakeGenerator } from '../utils/snowflakeGenerator';
 
 class BlockManager {
 	public static async setBlockStatus(blockerId: string, targetId: string, shouldBeBlocked: boolean) {

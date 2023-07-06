@@ -9,7 +9,6 @@ import db from '../../db';
 import ChatManager from '../../managers/chatManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
-import Utils from '../../utils/utils';
 
 const router = express.Router();
 

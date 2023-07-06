@@ -1,11 +1,11 @@
+import * as DateFns from 'date-fns';
 import * as express from 'express';
 import { query, validationResult } from 'express-validator';
+import { InviteResponse } from '../../types/endpoints';
 import { ApiResponse } from '../apiResponse';
+import ChatManager from '../managers/chatManager';
 import InviteManager from '../managers/inviteManager';
 import allowedMethods from '../middlewares/allowedMethods';
-import * as DateFns from 'date-fns';
-import { InviteResponse } from '../../types/endpoints';
-import ChatManager from '../managers/chatManager';
 import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const router = express.Router();
