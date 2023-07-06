@@ -26,8 +26,7 @@ export type UserGetResponse = User;
 
 export type ChatCreateResponse = Chat;
 
-export type ChatParticipantsResponse = ChatParticipant[];
-export type FriendsResponse = string[];
+export type ChatParticipantsRepose = ChatParticipant[];
 
 export interface BlockStatusResponse {
     id: string,

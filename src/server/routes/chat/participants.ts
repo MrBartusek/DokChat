@@ -2,7 +2,7 @@ import * as express from 'express';
 import { query, validationResult } from 'express-validator';
 import { QueryResult } from 'pg';
 import sql from 'sql-template-strings';
-import { ChatParticipantsResponse } from '../../../types/endpoints';
+import { ChatParticipantsRepose } from '../../../types/endpoints';
 import { ApiResponse } from '../../apiResponse';
 import db from '../../db';
 import PermissionsManager from '../../managers/permissionsManager';
@@ -27,7 +27,7 @@ router.all('/participants',
 		}
 
 		const participantsQuery = await queryParticipants(chatId);
-		const participants: ChatParticipantsResponse = participantsQuery.rows.map((part) => {
+		const participants: ChatParticipantsRepose = participantsQuery.rows.map((part) => {
 			return {
 				...part,
 				avatar: Utils.avatarUrl(part.userId)
