@@ -104,6 +104,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
+      
+      - run: ls
 
       # https://github.com/actions/checkout/issues/363#issuecomment-1163942488
       - name: Workaround for dubious ownership issue
