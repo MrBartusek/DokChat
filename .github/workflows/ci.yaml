@@ -19,16 +19,17 @@ jobs:
         with:
           node-version: 18
       
-      - name: Install dependencies
-        uses: bahmutov/npm-install@v1
-      
-      - name: Save build cache
+      - name: Cache NPM dependencies
         uses: actions/cache@v3
-        id: npm-cache
+        id: cache-npm
         with:
-          path: ~/.npm
-          key: ${{ github.sha }}
-    
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.cache-npm.outputs.cache-hit != 'true'
+        run: npm ci
+
   build:
     name: 'Build'
     runs-on: ubuntu-latest
@@ -47,8 +48,8 @@ jobs:
         uses: actions/cache@v3
         id: npm-cache
         with:
-          path: ~/.npm
-          key: ${{ github.sha }}
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
     
       - name: Build
         run: npm run build
