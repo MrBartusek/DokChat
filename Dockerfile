@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . .
 
+RUN git config --global --add safe.directory $(realpath .) 
+
 RUN npm run build
 
 ENV PORT=8080
