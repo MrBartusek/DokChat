@@ -2,7 +2,6 @@ require('dotenv').config();
 
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
-const webpack = require('webpack');
 
 const mode = process.env.NODE_ENV || 'development';
 
@@ -59,13 +58,6 @@ const clientConfig = {
 			}
 		]
 	},
-	plugins: [
-		new webpack.DefinePlugin({
-			COMMIT_HASH: JSON.stringify(commitHash),
-			BRANCH: JSON.stringify(branch),
-			BUILD_MODE: JSON.stringify(mode)
-		})
-	],
 	resolve: {
 		extensions: [ '.tsx', '.ts', '.js', '.css', '.scss' ]
 	},
