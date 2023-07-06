@@ -107,6 +107,8 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v3
 
+      - run: git config --global --add safe.directory $(realpath .)
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
