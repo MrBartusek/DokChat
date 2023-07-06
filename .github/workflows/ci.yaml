@@ -103,10 +103,11 @@ jobs:
       - lint
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # https://github.com/actions/checkout/issues/363#issuecomment-1163942488
-      - run: git config --global --add safe.directory $(realpath .)
+      - name: Workaround for dubious ownership issue
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
