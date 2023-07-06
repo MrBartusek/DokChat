@@ -6,16 +6,6 @@ const webpack = require('webpack');
 
 const mode = process.env.NODE_ENV || 'development';
 
-const commitHash = require('child_process')
-	.execSync('git rev-parse HEAD')
-	.toString()
-	.trim();
-
-const branch = require('child_process')
-	.execSync('git rev-parse --abbrev-ref HEAD')
-	.toString()
-	.trim();
-
 console.log(`Building for ${mode}`);
 
 const serverConfig = {
