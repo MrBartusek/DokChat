@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-COPY .git/ ./.git/
+COPY .git .git
 
 RUN ls -a
 
