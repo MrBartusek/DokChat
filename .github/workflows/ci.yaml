@@ -27,9 +27,7 @@ jobs:
         id: npm-cache
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            - ${{ runner.os }}-node-
+          key: ${{ github.sha }}
     
   build:
     name: 'Build'
@@ -50,7 +48,7 @@ jobs:
         id: npm-cache
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-
+          key: ${{ github.sha }}
     
       - name: Build
         run: npm run build
