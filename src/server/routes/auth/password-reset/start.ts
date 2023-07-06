@@ -14,7 +14,7 @@ router.all('/start',
 	allowedMethods('POST'),
 	ensureCaptcha(),
 	body('email').isEmail().normalizeEmail(),
-	async (req, res, next) => {
+	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 

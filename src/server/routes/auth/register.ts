@@ -22,7 +22,7 @@ router.all('/register',
 	body('username').custom(isValidUsername),
 	body('password').custom(isValidPassword),
 	body('email').isEmail().normalizeEmail(),
-	async (req, res, next) => {
+	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 

@@ -11,7 +11,7 @@ import allowedMethods from '../middlewares/allowedMethods';
 
 const router = express.Router();
 
-router.all('/:id.png', param('id').isString(), allowedMethods('GET'), async (req, res, next) => {
+router.all('/:id.png', param('id').isString(), allowedMethods('GET'), async (req, res) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 	const id = req.params.id as string;

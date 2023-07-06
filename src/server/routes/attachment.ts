@@ -8,7 +8,7 @@ import allowedMethods from '../middlewares/allowedMethods';
 
 const router = express.Router();
 
-router.all('/', query('id').isString(), allowedMethods('GET'), async (req, res, next) => {
+router.all('/', query('id').isString(), allowedMethods('GET'), async (req, res) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 	const id = req.query.id as string;

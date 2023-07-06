@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Twemoji } from 'react-emoji-render';
-import { BsPerson, BsPersonPlusFill, BsThreeDots } from 'react-icons/bs';
+import { BsThreeDots } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
 import { OnlineManagerContext } from '../../context/OnlineManagerContext';
 import { UserContext } from '../../context/UserContext';

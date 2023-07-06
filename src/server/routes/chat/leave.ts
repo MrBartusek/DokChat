@@ -13,7 +13,7 @@ router.all('/leave',
 	allowedMethods('POST'),
 	ensureAuthenticated(),
 	body('chat').isString(),
-	async (req, res, next) => {
+	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 

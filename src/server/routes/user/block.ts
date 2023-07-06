@@ -15,7 +15,7 @@ router.all('/block',
 	body('id').optional().isString(),
 	query('id').optional().isString(),
 	body('blockStatus').optional().isBoolean(),
-	async (req, res, next) => {
+	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Tooltip } from 'react-bootstrap';
 
 const UpdatingTooltip = React.forwardRef(
-	({ popper, children, show: _, ...props }: any, ref) => {
+	({ popper, children, ...props }: any, ref) => {
 		useEffect(() => {
 			popper.scheduleUpdate();
 		}, [ children, popper ]);

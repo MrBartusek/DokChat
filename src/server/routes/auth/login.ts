@@ -13,7 +13,7 @@ router.all('/login',
 	body('email').isEmail().normalizeEmail(),
 	body('password').custom(isValidPassword),
 	body('rememberMe').isBoolean().optional(),
-	async (req, res, next) => {
+	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 

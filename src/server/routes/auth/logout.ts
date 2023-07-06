@@ -4,7 +4,7 @@ import allowedMethods from '../../middlewares/allowedMethods';
 
 const router = express.Router();
 
-router.all('/logout', allowedMethods('POST'), async (req, res, next) => {
+router.all('/logout', allowedMethods('POST'), async (req, res) => {
 	res.clearCookie('token');
 	res.clearCookie('refreshToken');
 	new ApiResponse(res).success();

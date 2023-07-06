@@ -21,7 +21,7 @@ router.all('/create',
 	allowedMethods('POST'),
 	ensureAuthenticated(),
 	body('participants').isArray({ min: 1, max: 25 }).custom(isUniqueArray),
-	async (req, res, next) => {
+	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 

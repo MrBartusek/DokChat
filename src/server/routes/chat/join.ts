@@ -14,7 +14,7 @@ router.all('/join',
 	allowedMethods('POST'),
 	ensureAuthenticated(),
 	body('invite').isString(),
-	async (req, res, next) => {
+	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 

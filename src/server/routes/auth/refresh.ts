@@ -8,7 +8,7 @@ import allowedMethods from '../../middlewares/allowedMethods';
 
 const router = express.Router();
 
-router.all('/refresh', allowedMethods('POST'), cookie('refreshToken').isString(), async (req, res, next) => {
+router.all('/refresh', allowedMethods('POST'), cookie('refreshToken').isString(), async (req, res) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 
@@ -27,7 +27,7 @@ router.all('/refresh', allowedMethods('POST'), cookie('refreshToken').isString()
 			await UserManager.bumpLastSeen(userId);
 			AuthManager.sendAuthResponse(res, user, passwordHash);
 		})
-		.catch((error) => {
+		.catch(() => {
 			return new ApiResponse(res).unauthorized('Invalid JWT');
 		});
 });

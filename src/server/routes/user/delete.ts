@@ -12,14 +12,14 @@ router.all('/delete',
 	ensureAuthenticated(),
 	allowedMethods('DELETE'),
 	body('password').isString(),
-	async (req, res, next) => {
+	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 
 		const password = req.body.password;
 
 		AuthManager.authenticateUser(req.auth.email, password)
-			.then(async ([ jwtData, passwordHash ]) =>  {
+			.then(async ([ jwtData ]) =>  {
 				await UserManager.deleteUser(jwtData);
 				return new ApiResponse(res).success();
 			})

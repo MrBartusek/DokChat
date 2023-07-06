@@ -1,13 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Alert, Stack } from 'react-bootstrap';
-import toast from 'react-hot-toast';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { User } from '../../../types/common';
-import { BlockStatusResponse, EndpointResponse } from '../../../types/endpoints';
-import { MessageManagerContext } from '../../context/MessageManagerContext';
+import { EndpointResponse } from '../../../types/endpoints';
 import { OnlineManagerContext } from '../../context/OnlineManagerContext';
-import { UserContext } from '../../context/UserContext';
-import getAxios from '../../helpers/axios';
 import { useFetch } from '../../hooks/useFetch';
 import BlockUserCard from '../BlockUserCard/BlockUserCard';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';

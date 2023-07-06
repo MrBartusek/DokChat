@@ -8,7 +8,7 @@ import SocialLoginManager from '../../../managers/socialLoginManager';
 const FACEBOOK_CLIENT_ID = process.env.FACEBOOK_CLIENT_ID;
 const router = express.Router();
 
-router.all('/facebook', body('token').isString(), async (req, res, next) => {
+router.all('/facebook', body('token').isString(), async (req, res) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 
@@ -27,7 +27,7 @@ router.all('/facebook', body('token').isString(), async (req, res, next) => {
 			}
 			return true;
 		})
-		.catch((error) => {
+		.catch(() => {
 			new ApiResponse(res).unauthorized('Provided Facebook token is not valid');
 		});
 	if(!token_debug) return;

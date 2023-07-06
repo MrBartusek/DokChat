@@ -18,7 +18,7 @@ router.all('/messages',
 	query('lastMessageTimestamp').optional().isInt(),
 	query('count').optional().isInt({max: 50, min: 10}),
 	query('chat').isString(),
-	async (req, res, next) => {
+	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 

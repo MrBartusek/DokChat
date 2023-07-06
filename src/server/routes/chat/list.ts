@@ -16,7 +16,7 @@ router.all('/list',
 	allowedMethods('GET'),
 	ensureAuthenticated(true),
 	query('page').optional().isNumeric(),
-	async (req, res, next) => {
+	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 		const page = req.query.page as any as number|| 0;

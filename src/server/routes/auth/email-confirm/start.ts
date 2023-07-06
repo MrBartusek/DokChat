@@ -12,7 +12,7 @@ const router = express.Router();
 router.all('/start',
 	allowedMethods('POST'),
 	ensureAuthenticated(true),
-	async (req, res, next) => {
+	async (req, res) => {
 		const query = await db.query(sql`
 		SELECT
 			last_email_confirm_attempt as "lastConfirmAttempt",

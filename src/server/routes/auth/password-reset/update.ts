@@ -14,7 +14,7 @@ const router = express.Router();
 router.all('/update', allowedMethods('POST'),
 	body('password').custom(isValidPassword),
 	body('token').isString(),
-	async (req, res, next) => {
+	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 

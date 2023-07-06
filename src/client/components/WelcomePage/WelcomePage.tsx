@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import { BsBugFill, BsChatSquareTextFill, BsChatTextFill, BsEmojiSmile, BsEmojiSmileFill, BsPeopleFill, BsStar, BsStarFill, BsTypeH1 } from 'react-icons/bs';
+import { BsBugFill, BsChatSquareTextFill, BsEmojiSmileFill, BsPeopleFill, BsStarFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 
 function WelcomePage() {

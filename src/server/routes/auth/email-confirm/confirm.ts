@@ -13,7 +13,7 @@ const router = express.Router();
 router.all('/confirm',
 	allowedMethods('POST'),
 	body('token').isString(),
-	async (req, res, next) => {
+	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 

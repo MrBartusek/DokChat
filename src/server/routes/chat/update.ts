@@ -24,7 +24,7 @@ router.all('/update',
 	body('id').isString(),
 	body('name').optional().isLength({max: 32, min: 2}),
 	body('color').optional().custom(isValidColor),
-	async (req, res, next) => {
+	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 

@@ -9,14 +9,14 @@ const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const router = express.Router();
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
-router.all('/google', body('token').isString(), async (req, res, next) => {
+router.all('/google', body('token').isString(), async (req, res) => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 
 	const token = req.body.token;
 
 	const ticket = await client.verifyIdToken({ idToken: token, audience: GOOGLE_CLIENT_ID})
-		.catch((error) => {
+		.catch(() => {
 			new ApiResponse(res).unauthorized('Provided Google token is not valid');
 		});
 	if(!ticket) return;

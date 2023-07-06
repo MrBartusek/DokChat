@@ -11,7 +11,6 @@ import * as s3Client from './aws/s3';
 import { Server } from 'socket.io';
 import { ATTACHMENT_MAX_SIZE } from '../types/const';
 import { createDatabaseStructure } from './db/structure';
-import redis from './redis';
 import registerMessageHandler from './handlers/chatHandler';
 import processEmailBounces from './jobs/processBounces';
 import processEmailComplaints from './jobs/processComplaints';

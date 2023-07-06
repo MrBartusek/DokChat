@@ -14,7 +14,7 @@ router.all('/',
 	allowedMethods('GET'),
 	ensureAuthenticated(),
 	query('key').isString(),
-	async (req, res, next) => {
+	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 

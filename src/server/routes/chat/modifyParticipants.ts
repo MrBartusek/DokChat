@@ -1,9 +1,7 @@
 import * as express from 'express';
-import { body, query, validationResult } from 'express-validator';
-import { BlockStatusResponse } from '../../../types/endpoints';
+import { body, validationResult } from 'express-validator';
 import { ApiResponse } from '../../apiResponse';
 import { systemMessageHandler } from '../../handlers/systemMessageHandler';
-import BlockManager from '../../managers/blockManager';
 import ChatManager from '../../managers/chatManager';
 import PermissionsManager from '../../managers/permissionsManager';
 import UserManager from '../../managers/userManager';
@@ -18,7 +16,7 @@ router.all('/modify-participants',
 	body('chat').isString(),
 	body('participant').optional().isString(),
 	body('user').optional().isString(),
-	async (req, res, next) => {
+	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 

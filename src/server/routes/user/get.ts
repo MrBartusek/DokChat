@@ -14,7 +14,7 @@ router.all('/get',
 	body('username').optional(),
 	body('tag').optional(),
 	body('id').optional(),
-	async (req, res, next) => {
+	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 

@@ -6,7 +6,7 @@ import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 
 const router = express.Router();
 
-router.all('/me', ensureAuthenticated(), allowedMethods('GET'), async (req, res, next) => {
+router.all('/me', ensureAuthenticated(), allowedMethods('GET'), async (req, res) => {
 	const user = await UserManager.getUserById(req.auth.id);
 	if(!user) new ApiResponse(res).notFound('User not found');
 	return new ApiResponse(res).success(user);

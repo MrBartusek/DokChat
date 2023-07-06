@@ -1,6 +1,6 @@
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
 import { toArray, Twemoji } from 'react-emoji-render';
+import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import './DokChatMarkdown.scss';
 
