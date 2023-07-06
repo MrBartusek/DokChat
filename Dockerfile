@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-RUN git status
+RUN ls
 
 RUN npm run build
 
