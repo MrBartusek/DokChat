@@ -97,14 +97,15 @@ jobs:
           category: "/language:javascript"
   
   docker:
-    name: 'Build and push docker images'
+    name: 'Build and push Docker images'
     runs-on: ubuntu-latest
     needs:
       - lint
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
+      # https://github.com/actions/checkout/issues/363#issuecomment-1163942488
       - run: git config --global --add safe.directory $(realpath .)
 
       - name: Set up QEMU
