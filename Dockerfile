@@ -8,10 +8,6 @@ RUN npm install
 
 COPY . .
 
-COPY .git .git
-
-RUN ls -a
-
 RUN npm run build
 
 ENV PORT=8080
