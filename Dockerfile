@@ -6,7 +6,9 @@ COPY package*.json ./
 
 RUN npm install
 
-ADD . .
+COPY . .
+
+COPY .git/ ./.git/
 
 RUN ls -a
 
