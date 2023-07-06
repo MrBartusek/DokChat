@@ -40,28 +40,10 @@ async function initializeDatabase() {
 	console.log('Postgres connection successful');
 }
 
-async function initializeRedis() {
-	let retries = 5;
-	while (retries) {
-		try {
-			await redis.connect();
-			break;
-		}
-		catch(error) {
-			console.log('Failed to initialize redis, retry in 5 seconds...');
-			console.log(error);
-			retries -= 1;
-			await new Promise(res => setTimeout(res, 5000));
-		}
-	}
-	console.log('Redis connection successful');
-}
-
 async function main() {
 	console.log('\r\nStarting DokChat...');
 
 	await initializeDatabase();
-	await initializeRedis();
 
 	// Setup web and websocket server
 	const app = express();
