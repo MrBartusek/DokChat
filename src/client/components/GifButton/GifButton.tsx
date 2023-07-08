@@ -2,9 +2,9 @@ import GifPicker, { TenorImage } from 'gif-picker-react';
 import React from 'react';
 import { OverlayTrigger, Popover } from 'react-bootstrap';
 import { AiOutlineGif } from 'react-icons/ai';
-import { TENOR_API_KEY } from '../../config';
 import { FileUploaderResult } from '../FileUploader/FileUploader';
 import IconButton from '../IconButton/IconButton';
+import { useClientConfig } from '../../hooks/useClientConfig';
 
 export interface EmojiButtonProps {
     fileUploader: FileUploaderResult;
@@ -12,6 +12,8 @@ export interface EmojiButtonProps {
 }
 
 function GifButton({ fileUploader, color }: EmojiButtonProps) {
+	const clientConfig = useClientConfig();
+
 	async function handleGifClick(image: TenorImage) {
 		// Workaround to close popover
 		document.body.click();
@@ -22,7 +24,7 @@ function GifButton({ fileUploader, color }: EmojiButtonProps) {
 	const gifPicker = (
 		<Popover style={{maxWidth: 500}} className="bg-transparent">
 			<Popover.Body className='p-0'>
-				<GifPicker tenorApiKey={TENOR_API_KEY} onGifClick={handleGifClick} />
+				<GifPicker tenorApiKey={clientConfig.tenorApiKey} onGifClick={handleGifClick} />
 			</Popover.Body>
 		</Popover>
 	);

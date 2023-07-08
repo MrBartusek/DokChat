@@ -37,3 +37,10 @@ export type InviteResponse = {
     invite: ChatInvite;
     chat: Chat;
 }
+
+export type ClientConfigResponse = {
+    googleClientId: string;
+    facebookClientId: string;
+    recaptchaSiteKey: string;
+    tenorApiKey: string;
+}

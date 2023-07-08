@@ -4,11 +4,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { BsFacebook } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { EndpointResponse, UserLoginResponse } from '../../../types/endpoints';
-import { FACEBOOK_CLIENT_ID } from '../../config';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import useBreakpoint from '../../hooks/useBreakpoint';
 import HorizontalSeparator from '../HorizontalSeparator/HorizontalSeparator';
+import { useClientConfig } from '../../hooks/useClientConfig';
 
 const axios = getAxios();
 
@@ -31,6 +31,7 @@ function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
 	const navigate = useNavigate();
 	const breakpoint = useBreakpoint();
 	const [ buttonWidth, setButtonWidth ] = useState('200');
+	const clientConfig = useClientConfig();
 
 	useEffect(() => {
 		switch (breakpoint) {
@@ -78,39 +79,43 @@ function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
 		<>
 			<HorizontalSeparator text='or' />
 			<div className='d-flex align-items-center flex-column gap-2'>
-				<GoogleLogin
-					onSuccess={onGoogleLogin}
-					onError={() => {
-						setError('Failed to get authorization response from Google');
-					}}
-					width={buttonWidth}
-					logo_alignment='center'
-					locale='en_US'
-				/>
-				<FacebookLogin
-					appId={FACEBOOK_CLIENT_ID}
-					onSuccess={onFacebookLogin}
-					onFail={(res) => {
-						if(res.status != 'loginCancelled') {
-							setError('Failed to get authorization response from Facebook');
-						}
-					}}
-					scope='public_profile, email'
-					style={{
-						backgroundColor: '#1877f2',
-						color: '#fff',
-						fontSize: '15px',
-						border: 'none',
-						borderRadius: '4px',
-						padding: 0,
-						width: buttonWidth + 'px',
-						height: '38px',
-						fontWeight: 500
-					}}
-					className='d-flex justify-content-center align-items-center mt-1'
-				>
-					<BsFacebook className='me-2' size={20}/> <span>Sign in with Facebook</span>
-				</FacebookLogin>
+				{clientConfig.googleClientId ? (
+					<GoogleLogin
+						onSuccess={onGoogleLogin}
+						onError={() => {
+							setError('Failed to get authorization response from Google');
+						}}
+						width={buttonWidth}
+						logo_alignment='center'
+						locale='en_US'
+					/>
+				): <></>}
+				{clientConfig.facebookClientId ? (
+					<FacebookLogin
+						appId={clientConfig.facebookClientId}
+						onSuccess={onFacebookLogin}
+						onFail={(res) => {
+							if(res.status != 'loginCancelled') {
+								setError('Failed to get authorization response from Facebook');
+							}
+						}}
+						scope='public_profile, email'
+						style={{
+							backgroundColor: '#1877f2',
+							color: '#fff',
+							fontSize: '15px',
+							border: 'none',
+							borderRadius: '4px',
+							padding: 0,
+							width: buttonWidth + 'px',
+							height: '38px',
+							fontWeight: 500
+						}}
+						className='d-flex justify-content-center align-items-center mt-1'
+					>
+						<BsFacebook className='me-2' size={20}/> <span>Sign in with Facebook</span>
+					</FacebookLogin>
+				): <></>}
 			</div>
 		</>
 	);

@@ -25,7 +25,6 @@ This is extensive guide how to run your own DokChat instance.
 ## Using Docker
 1. Clone this repository
 1. Copy and rename `.example.env` file to `.env` and fill it with AWS, Facebook, Google and reCAPTCHA tokens
-1. Update client-side tokens in [src/client/config.ts](./src/client/config.ts)
 1. Install [Docker](https://www.docker.com)
 1. run `docker-compose up -d`
 
@@ -33,7 +32,6 @@ This is extensive guide how to run your own DokChat instance.
 
 1. Clone this repository
 1. Copy and rename `.example.env` file to `.env` and fill it with AWS, Facebook, Google and reCAPTCHA tokens
-1. Update client-side tokens in [src/client/config.ts](./src/client/config.ts)
 1. Create postgres database. The default credentials are
     - user: `postgres`
     - password: `postgres`
