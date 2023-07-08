@@ -79,6 +79,7 @@ jobs:
     
       - name: Lint
         run: npm run lint
+
   codeql:
     name: 'Perform CodeQL Analysis'
     runs-on: ubuntu-latest
@@ -102,6 +103,8 @@ jobs:
     needs:
       - lint
       - build
+    env:
+      NODE_ENV: production
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
