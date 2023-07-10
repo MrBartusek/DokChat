@@ -26,11 +26,11 @@ function HomePage({ scrollToAbout }: HomePageProps) {
 			<Header />
 			<div ref={aboutRef}></div>
 			<HomeSection
-				img="/img/undraw_ask_me_anything.svg"
+				img="/img/dokchat_tag.svg"
 				title="Connect with anyone"
 			>
-				Share your own personalized tag with your friends or on your community profile on
-				other social platforms. Communicate with other people in seconds.
+				Crate and Share your own personalized tag with your friends or community.
+				Reach with other people in seconds.
 			</HomeSection>
 
 			<HomeSection
