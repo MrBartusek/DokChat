@@ -30,10 +30,9 @@ function Navbar({zeroHeight} : Props) {
 				<BsNavbar.Toggle />
 				<BsNavbar.Collapse className='my-2'>
 					<Nav className='flex-fill justify-content-center'>
-						<Nav.Link as={Link} to='/'>Home</Nav.Link>
-						<Nav.Link as={Link} to='/about'>About</Nav.Link>
-						<Nav.Link as={Link} to='/download'>Download</Nav.Link>
-						<Nav.Link href='https://github.com/MrBartusek/DokChat' target='_blank'>Github</Nav.Link>
+						<Nav.Link as={Link} to='/about'>Features</Nav.Link>
+						<Nav.Link as={Link} to='/get'>Get DokChat</Nav.Link>
+						<Nav.Link href='https://github.com/MrBartusek/DokChat' target='_blank'>Contribute</Nav.Link>
 					</Nav>
 					<BsNavbar.Text style={{'flex': '0 0 140px'}} className='d-flex justify-content-md-end'>
 						<Link to={user.isAuthenticated ? '/chat' : '/login'}>

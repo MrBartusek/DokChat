@@ -4,7 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import AccountBannedPage from '../../pages/AccountBannedPage';
 import ChatPage from '../../pages/ChatPage';
-import DownloadPage from '../../pages/DownloadPage';
+import GetDokchatPage from '../../pages/GetDokchatPage';
 import EmailConfirmPage from '../../pages/EmailConfirmPage';
 import HomePage from '../../pages/HomePage';
 import InvitePage from '../../pages/InvitePage';
@@ -93,7 +93,7 @@ function Router() {
 				<Route path="/" element={<HomePage />} />
 				<Route path="about" element={<HomePage scrollToAbout />} />
 				<Route path="privacy-policy" element={<PrivacyPolicyPage />} />
-				<Route path="download" element={<DownloadPage />} />
+				<Route path="get" element={<GetDokchatPage />} />
 				<Route path="i/:key" element={
 					<PrivateRoute>
 						<InvitePage />
