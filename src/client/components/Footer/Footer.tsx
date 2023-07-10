@@ -19,11 +19,11 @@ function Footer() {
 					<Col className='d-flex justify-content-center justify-content-lg-end gap-5 text-center text-lg-start'>
 						<div style={{width: 250}}>
 							<h3>
-								Support
+								Help
 							</h3>
 							<p>
 								<a href='https://github.com/MrBartusek/DokChat' className='link-secondary'>Bug tracker</a><br/>
-								<a href='mailto:dokchat@dokurno.dev' className='link-secondary'>dokchat@dokurno.dev</a><br/>
+								<a href='mailto:dokchat@dokurno.dev' className='link-secondary'>Contact</a><br/>
 							</p>
 						</div>
 						<div style={{width: 250}}>
