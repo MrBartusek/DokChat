@@ -7,6 +7,7 @@ import { UserContext } from '../../context/UserContext';
 import { LocalChat } from '../../types/Chat';
 import IconButton from '../IconButton/IconButton';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
+import ChatInfoButtons from '../ChatInfoButtons/ChatInfoButtons';
 
 export interface ChatInfoProps {
 	currentChat?: LocalChat
@@ -59,13 +60,7 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 					</span>
 				)}
 			</div>
-			{currentChat && (
-				<div className='d-flex align-items-center'>
-					<Link to={`/chat/${currentChat.id}/details`}>
-						<IconButton icon={BsThreeDots} color={currentChat.color.hex} />
-					</Link>
-				</div>
-			)}
+			{currentChat && <ChatInfoButtons currentChat={currentChat} />}
 		</div>
 	);
 

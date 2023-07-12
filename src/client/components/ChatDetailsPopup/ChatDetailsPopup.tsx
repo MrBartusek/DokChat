@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Tab, Tabs } from 'react-bootstrap';
 import { BsPersonPlus } from 'react-icons/bs';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useSearchParams } from 'react-router-dom';
 import { ChatParticipantsRepose, EndpointResponse } from '../../../types/endpoints';
 import { useFetch } from '../../hooks/useFetch';
 import { LocalChat } from '../../types/Chat';
@@ -18,7 +18,8 @@ function ChatDetailsPopup() {
 	const [ customFooter, setCustomFooter ] = useState<JSX.Element>(null);
 	const [ customStatic, setCustomStatic ] = useState<boolean>(null);
 	const [ popupTitle, setPopupTitle ] = useState('');
-	const [ key, setKey ] = useState('chat');
+	const [ searchParams ] = useSearchParams({ tab: 'chat' });
+	const [ key, setKey ] = useState(searchParams.get('tab'));
 	const participants = useFetch<EndpointResponse<ChatParticipantsRepose>>(null, true);
 
 	useEffect(() => {
