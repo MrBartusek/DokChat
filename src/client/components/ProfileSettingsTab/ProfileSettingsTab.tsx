@@ -51,7 +51,7 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 	 * Handle footer
 	 */
 	useEffect(() => {
-		if(!isEditing) props.setCustomFooter(null);
+		if(!isEditing) return props.setCustomFooter(null);
 		props.setCustomFooter(
 			<>
 				<InteractiveButton variant='secondary' onClick={handleDiscard}>
@@ -67,7 +67,7 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 				</InteractiveButton>
 			</>
 		);
-	}, [ isEditing, isUnsaved ]);
+	}, [ isEditing, isUnsaved, isLoading ]);
 
 	useEffect(() => {
 		props.setCustomStatic(isEditing);
@@ -99,10 +99,11 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 			});
 	}
 
-	function handleDiscard(e: React.MouseEvent) {
+	function handleDiscard() {
 		resetForm();
 		avatarUploader.reset();
 		setEditing(false);
+		setUnsaved(false);
 	}
 
 	return (
@@ -142,6 +143,7 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 						value={values.username}
 						onChange={handleChange}
 						readOnly={!isEditing}
+						disabled={isLoading}
 						required
 						maxLength={32}
 						minLength={2}
@@ -154,6 +156,7 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 						value={values.tag}
 						onChange={handleChange}
 						readOnly={!isEditing}
+						disabled={isLoading}
 						required
 						maxLength={4}
 						minLength={4}
@@ -183,6 +186,7 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 						value={isEditing ? values.email : user.emailMasked}
 						onChange={handleChange}
 						readOnly={!isEditing}
+						disabled={isLoading}
 						required
 					/>
 				</FloatingLabel>
@@ -192,6 +196,7 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 							type="password"
 							name="password"
 							value={values.password}
+							disabled={isLoading}
 							onChange={handleChange}
 							required
 						/>
