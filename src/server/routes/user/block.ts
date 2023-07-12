@@ -6,6 +6,7 @@ import BlockManager from '../../managers/blockManager';
 import ChatManager from '../../managers/chatManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
+import ensureRatelimit from '../../middlewares/ensureRatelimit';
 
 const router = express.Router();
 
@@ -15,6 +16,7 @@ router.all('/block',
 	body('id').optional().isString(),
 	query('id').optional().isString(),
 	body('blockStatus').optional().isBoolean(),
+	ensureRatelimit(),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);

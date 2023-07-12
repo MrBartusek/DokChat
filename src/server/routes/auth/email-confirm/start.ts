@@ -6,12 +6,14 @@ import emailClient from '../../../aws/ses';
 import db from '../../../db';
 import allowedMethods from '../../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../../middlewares/ensureAuthenticated';
+import ensureRatelimit from '../../../middlewares/ensureRatelimit';
 
 const router = express.Router();
 
 router.all('/start',
 	allowedMethods('POST'),
 	ensureAuthenticated(true),
+	ensureRatelimit(),
 	async (req, res) => {
 		const query = await db.query(sql`
 		SELECT

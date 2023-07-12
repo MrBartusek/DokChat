@@ -52,7 +52,6 @@
     "node-schedule": "^2.1.0",
     "nodejs-snowflake": "^2.0.1",
     "pg": "^8.8.0",
-    "rate-limiter-flexible": "^2.4.1",
     "react": "^17.0.2",
     "react-bootstrap": "^2.6.0",
     "react-color": "^2.19.3",

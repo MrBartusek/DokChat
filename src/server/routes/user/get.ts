@@ -5,6 +5,7 @@ import { ApiResponse } from '../../apiResponse';
 import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
+import ensureRatelimit from '../../middlewares/ensureRatelimit';
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router.all('/get',
 	body('username').optional(),
 	body('tag').optional(),
 	body('id').optional(),
+	ensureRatelimit(),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);

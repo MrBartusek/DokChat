@@ -8,12 +8,14 @@ import jwtManager from '../../../managers/jwtManager';
 import UserManager from '../../../managers/userManager';
 import allowedMethods from '../../../middlewares/allowedMethods';
 import { isValidPassword } from '../../../validators/isValidPassword';
+import ensureRatelimit from '../../../middlewares/ensureRatelimit';
 
 const router = express.Router();
 
 router.all('/update', allowedMethods('POST'),
 	body('password').custom(isValidPassword),
 	body('token').isString(),
+	ensureRatelimit(10),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);

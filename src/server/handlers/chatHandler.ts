@@ -1,5 +1,4 @@
 import * as sizeOf from 'buffer-image-size';
-import { RateLimiterMemory } from 'rate-limiter-flexible';
 import { MessageAttachment } from '../../types/common';
 import { ALLOWED_ATTACHMENT_FORMAT } from '../../types/const';
 import { ClientAttachment, ClientMessage, DokChatServer, DokChatSocket, ServerMessage } from '../../types/websocket';
@@ -9,27 +8,32 @@ import BlockManager from '../managers/blockManager';
 import ChatManager from '../managers/chatManager';
 import PermissionsManager from '../managers/permissionsManager';
 import Utils from '../utils/utils';
-
-const messageLimiter = new RateLimiterMemory({
-	points: 15,
-	duration: 15
-});
+import RateLimitManager from '../managers/rateLimitManager';
 
 export default function registerMessageHandler(io: DokChatServer, socket: DokChatSocket) {
 	socket.on('message', async (msg, callback) => {
-		// This checks both for chat access and if chat exist
 		if(!(await PermissionsManager.hasChatAccess(socket.auth, msg.chatId))) {
 			return new ApiResponse({} as any, callback).forbidden();
 		}
+
 		if(!validateMessage(msg, callback)) {
 			return new ApiResponse({} as any, callback).badRequest('Invalid message');
 		}
 
-		const limiterRes = await messageLimiter.consume(socket.auth.id, msg.attachment ? 3 : 1)
-			.catch(() => {
-				return new ApiResponse({} as any, callback).tooManyRequests();
-			});
-		if(!limiterRes) return;
+		const participants = await ChatManager.listParticipants(msg.chatId);
+		const otherParticipants = participants.filter(p => p.userId != socket.auth.id);
+		const isGroup = await ChatManager.isGroup(msg.chatId);
+
+		if(!isGroup && otherParticipants.length == 1) {
+			const isBlocked = await BlockManager.isBlockedAny(socket.auth.id, otherParticipants[0].userId);
+			if(isBlocked) {
+				return new ApiResponse({} as any, callback).forbidden('Cannot send message to blocked user');
+			}
+		}
+
+		if(!(await RateLimitManager.consume(socket.auth, msg.attachment ? 10 : 1 ))) {
+			return new ApiResponse({} as any, callback).tooManyRequests();
+		}
 
 		// Add message to db
 		const [ attachmentKey, attachment ] = await uploadAttachment(msg.attachment);
@@ -40,17 +44,6 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 			attachmentKey,
 			attachment
 		);
-
-		const participants = await ChatManager.listParticipants(msg.chatId);
-		const otherParticipants = participants.filter(p => p.userId != socket.auth.id);
-
-		const isGroup = await ChatManager.isGroup(msg.chatId);
-		if(!isGroup && otherParticipants.length == 1) {
-			const isBlocked = await BlockManager.isBlockedAny(socket.auth.id, otherParticipants[0].userId);
-			if(isBlocked) {
-				return new ApiResponse({} as any, callback).forbidden('Cannot send message to blocked user');
-			}
-		}
 
 		for await(const part of otherParticipants) {
 			// If chat is hidden by specific participant it will show up on message

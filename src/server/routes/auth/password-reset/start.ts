@@ -7,6 +7,7 @@ import emailClient from '../../../aws/ses';
 import db from '../../../db';
 import allowedMethods from '../../../middlewares/allowedMethods';
 import ensureCaptcha from '../../../middlewares/ensureCaptcha';
+import ensureRatelimit from '../../../middlewares/ensureRatelimit';
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router.all('/start',
 	allowedMethods('POST'),
 	ensureCaptcha(),
 	body('email').isEmail().normalizeEmail(),
+	ensureRatelimit(10),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);

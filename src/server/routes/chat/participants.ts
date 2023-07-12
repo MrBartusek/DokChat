@@ -9,6 +9,7 @@ import PermissionsManager from '../../managers/permissionsManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 import Utils from '../../utils/utils';
+import ensureRatelimit from '../../middlewares/ensureRatelimit';
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router.all('/participants',
 	allowedMethods('GET'),
 	ensureAuthenticated(),
 	query('chat').isNumeric(),
+	ensureRatelimit(),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);

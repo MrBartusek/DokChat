@@ -6,6 +6,7 @@ import InviteManager from '../../managers/inviteManager';
 import PermissionsManager from '../../managers/permissionsManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
+import ensureRatelimit from '../../middlewares/ensureRatelimit';
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ router.all('/invite',
 	allowedMethods('GET'),
 	ensureAuthenticated(),
 	query('chat').isString(),
+	ensureRatelimit(),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);

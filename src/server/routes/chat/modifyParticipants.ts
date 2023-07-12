@@ -7,6 +7,7 @@ import PermissionsManager from '../../managers/permissionsManager';
 import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
+import ensureRatelimit from '../../middlewares/ensureRatelimit';
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router.all('/modify-participants',
 	body('chat').isString(),
 	body('participant').optional().isString(),
 	body('user').optional().isString(),
+	ensureRatelimit(),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);

@@ -9,6 +9,7 @@ import db from '../../db';
 import ChatManager from '../../managers/chatManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
+import ensureRatelimit from '../../middlewares/ensureRatelimit';
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router.all('/list',
 	allowedMethods('GET'),
 	ensureAuthenticated(true),
 	query('page').optional().isNumeric(),
+	ensureRatelimit(5),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);

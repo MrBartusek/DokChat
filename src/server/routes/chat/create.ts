@@ -14,6 +14,7 @@ import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 import { snowflakeGenerator } from '../../utils/snowflakeGenerator';
 import Utils from '../../utils/utils';
 import { isUniqueArray } from '../../validators/isUniqueArray';
+import ensureRatelimit from '../../middlewares/ensureRatelimit';
 
 const router = express.Router();
 
@@ -21,6 +22,7 @@ router.all('/create',
 	allowedMethods('POST'),
 	ensureAuthenticated(),
 	body('participants').isArray({ min: 1, max: 25 }).custom(isUniqueArray),
+	ensureRatelimit(10),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);

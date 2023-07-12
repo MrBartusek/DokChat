@@ -6,6 +6,7 @@ import ChatManager from '../../managers/chatManager';
 import PermissionsManager from '../../managers/permissionsManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
+import ensureRatelimit from '../../middlewares/ensureRatelimit';
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ router.all('/leave',
 	allowedMethods('POST'),
 	ensureAuthenticated(),
 	body('chat').isString(),
+	ensureRatelimit(),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);

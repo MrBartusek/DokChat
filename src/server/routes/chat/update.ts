@@ -12,6 +12,7 @@ import PermissionsManager from '../../managers/permissionsManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 import { isValidColor } from '../../validators/isValidColor';
+import ensureRatelimit from '../../middlewares/ensureRatelimit';
 
 const router = express.Router();
 const storage = multer.memoryStorage();
@@ -24,6 +25,7 @@ router.all('/update',
 	body('id').isString(),
 	body('name').optional().isLength({max: 32, min: 2}),
 	body('color').optional().custom(isValidColor),
+	ensureRatelimit(),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);

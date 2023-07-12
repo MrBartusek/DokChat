@@ -13,6 +13,7 @@ import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 import { isValidPassword } from '../../validators/isValidPassword';
 import { isValidTag } from '../../validators/isValidTag';
 import { isValidUsername } from '../../validators/isValidUsername';
+import ensureRatelimit from '../../middlewares/ensureRatelimit';
 
 const router = express.Router();
 const storage = multer.memoryStorage();
@@ -26,6 +27,7 @@ router.all('/update-profile',
 	body('password').custom(isValidPassword),
 	body('email').isEmail().normalizeEmail(),
 	body('tag').custom(isValidTag),
+	ensureRatelimit(10),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);

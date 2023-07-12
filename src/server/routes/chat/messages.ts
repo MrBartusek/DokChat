@@ -9,6 +9,7 @@ import PermissionsManager from '../../managers/permissionsManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 import Utils from '../../utils/utils';
+import ensureRatelimit from '../../middlewares/ensureRatelimit';
 
 const router = express.Router();
 
@@ -18,6 +19,7 @@ router.all('/messages',
 	query('lastMessageTimestamp').optional().isInt(),
 	query('count').optional().isInt({max: 50, min: 10}),
 	query('chat').isString(),
+	ensureRatelimit(),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
