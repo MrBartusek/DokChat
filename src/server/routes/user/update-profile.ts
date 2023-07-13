@@ -47,6 +47,10 @@ router.all('/update-profile',
 		if(!authData) return;
 		const [ user ] = authData;
 
+		if(req.auth.isDemo) {
+			return new ApiResponse(res).badRequest('Can\'t do this on demo account');
+		}
+
 		const discriminatorChanged = user.username != username || user.tag != tag;
 		const emailChanged = user.email != email;
 

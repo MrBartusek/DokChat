@@ -15,7 +15,6 @@ router.all('/start',
 	allowedMethods('POST'),
 	ensureCaptcha(),
 	body('email').isEmail().normalizeEmail(),
-	ensureRatelimit(10),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
@@ -25,11 +24,13 @@ router.all('/start',
 		const query = await db.query(sql`
 		SELECT
 			last_pass_reset_attempt as "lastResetAttempt",
-			is_email_confirmed as "isEmailConfirmed"
+			is_email_confirmed as "isEmailConfirmed",
+			is_demo as "isDemo"
 		FROM users WHERE email = $1;`,
 		[ email ]);
 		if(query.rowCount == 0) return new ApiResponse(res).badRequest('No account associated with this e-mail address was found');
 		if(!query.rows[0].isEmailConfirmed) return new ApiResponse(res).badRequest('This e-mail address was not confirmed. Please contact support to reset your password.');
+		if(query.rows[0].isDemo) return new ApiResponse(res).badRequest('Can\'t reset password on this account');
 
 		const lastResetAttempt = DateFns.fromUnixTime(Number(query.rows[0].lastResetAttempt || 0));
 		const lastResetAttemptInMinutes = DateFns.differenceInMinutes(new Date(), lastResetAttempt);

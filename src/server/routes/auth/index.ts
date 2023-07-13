@@ -6,10 +6,12 @@ import passwordResetRouter from './password-reset/index';
 import refreshRouter from './refresh';
 import registerRouter from './register';
 import socialLoginRouter from './social-login';
+import demoRouter from './demo';
 
 const router = express.Router();
 
 router.use(loginRoute);
+router.use(demoRouter);
 router.use(registerRouter);
 router.use(refreshRouter);
 router.use(logoutRouter);

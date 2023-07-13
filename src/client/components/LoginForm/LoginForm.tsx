@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Alert, Form } from 'react-bootstrap';
+import { Alert, Button, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { EndpointResponse, UserLoginResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
@@ -82,6 +82,10 @@ function LoginForm() {
 						<Link to='/register' className='link-secondary'>
 						Sign up
 						</Link>
+						{' '} | {' '}
+						<a onClick={useDemoAccount} className='link-secondary' href="#">
+							Create demo account
+						</a>
 					</Form.Text>
 				</div>
 			</Form>
@@ -103,6 +107,24 @@ function LoginForm() {
 			.catch((e) => {
 				const resp: EndpointResponse<null> = e.response?.data;
 				setError(resp?.message || 'Failed to log you in you at this time. Please try again later.');
+				setLoading(false);
+			});
+	}
+
+	async function useDemoAccount(event: React.FormEvent) {
+		event.preventDefault();
+		setLoading(true);
+		await axios.post('/auth/demo')
+			.then((r: any) => {
+				const resp: EndpointResponse<UserLoginResponse> = r.data;
+				setTimeout(() => {
+					setUser(resp.data.token);
+					navigate('/chat');
+				}, 1000);
+			})
+			.catch((e) => {
+				const resp: EndpointResponse<null> = e.response?.data;
+				setError(resp?.message || 'Failed to create a demo account at this time. Please try again later.');
 				setLoading(false);
 			});
 	}

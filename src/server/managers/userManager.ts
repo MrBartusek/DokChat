@@ -60,9 +60,58 @@ export default class UserManager {
 			email: email,
 			avatar: Utils.avatarUrl(userId),
 			isBanned: false,
-			isEmailConfirmed: socialLogin
+			isEmailConfirmed: socialLogin,
+			isDemo: false
 		};
 		return [ jwtData, passwordHash ];
+	}
+
+	public static async createDemoUser(): Promise<[UserJWTData, string]> {
+		const demoIdentifier = `demo-${crypto.randomBytes(4).toString('hex')}`;
+		const email = `${demoIdentifier}@dokurno.dev`;
+
+		if(await UserManager.emailTaken(email)) {
+			console.log(`Failed to create demo account: ${demoIdentifier} - duplicate email`);
+			return UserManager.createDemoUser();
+		}
+		if((await this.usersWithUsernameCount(demoIdentifier)) >= 9999) {
+			console.log(`Failed to create demo account: ${demoIdentifier} - username taken`);
+			return UserManager.createDemoUser();
+		}
+
+		const tag = await this.generateTag(demoIdentifier);
+		const userId = snowflakeGenerator.getUniqueID().toString();
+
+		const timestamp = DateFns.getUnixTime(new Date());
+		await db.query(sql`
+		INSERT INTO users 
+			(id, username, tag, email, password_hash, created_at, last_seen, is_email_confirmed, is_demo)
+		VALUES (
+			$1, $2, $3, $4, $5, $6, $7, $8, $9
+		);
+		`, [
+			userId,
+			demoIdentifier,
+			tag,
+			email,
+			'',
+			timestamp,
+			timestamp,
+			true,
+			true
+		]);
+
+		const jwtData: UserJWTData = {
+			id: userId,
+			username: demoIdentifier,
+			tag: tag,
+			email: email,
+			avatar: Utils.avatarUrl(userId),
+			isBanned: false,
+			isEmailConfirmed: true,
+			isDemo: true
+		};
+		return [ jwtData, '' ];
 	}
 
 	public static async deleteUser(userData: UserJWTData): Promise<void> {
@@ -76,7 +125,9 @@ export default class UserManager {
 
 		// Delete user
 		await db.query('DELETE FROM users WHERE id=$1', [ userData.id ]);
-		await emailClient.sendAccountDeletedEmail(userData);
+		if(!userData.isDemo) {
+			await emailClient.sendAccountDeletedEmail(userData);
+		}
 	}
 
 	private static async usersWithUsernameCount(username: string): Promise<number> {
@@ -144,7 +195,8 @@ export default class UserManager {
 				email,
 				password_hash as "passwordHash",
 				is_banned as "isBanned",
-				is_email_confirmed as "isEmailConfirmed"
+				is_email_confirmed as "isEmailConfirmed",
+				is_demo as "isDemo"
 			FROM users WHERE id = $1;
 		`, [ id ]);
 
@@ -157,7 +209,8 @@ export default class UserManager {
 			email: user.email,
 			avatar: Utils.avatarUrl(user.id),
 			isBanned: user.isBanned,
-			isEmailConfirmed: user.isEmailConfirmed
+			isEmailConfirmed: user.isEmailConfirmed,
+			isDemo: user.isDemo
 		};
 	}
 
@@ -170,7 +223,8 @@ export default class UserManager {
 				email,
 				password_hash as "passwordHash",
 				is_banned as "isBanned",
-				is_email_confirmed as "isEmailConfirmed"
+				is_email_confirmed as "isEmailConfirmed",
+				is_demo as "isDemo"
 			FROM users WHERE email = $1;
 		`, [ email ]);
 
@@ -183,7 +237,8 @@ export default class UserManager {
 			email: user.email,
 			avatar: Utils.avatarUrl(user.id),
 			isBanned: user.isBanned,
-			isEmailConfirmed: user.isEmailConfirmed
+			isEmailConfirmed: user.isEmailConfirmed,
+			isDemo: user.isDemo
 		};
 	}
 
