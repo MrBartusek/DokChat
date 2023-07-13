@@ -1,5 +1,9 @@
 # DokChat | [Website](https://dokchat.dokurno.dev)
 
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/MrBartusek/DokChat/ci.yaml) [![Website](https://img.shields.io/website?url=https%3A%2F%2Fdokchat.dokurno.dev&link=https%3A%2F%2Fdokchat.dokurno.dev)](https://dokchat.dokurno.dev)
+ [![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/mrbartusek/dokchat/latest?label=docker%20version&link=https%3A%2F%2Fhub.docker.com%2Frepository%2Fdocker%2Fmrbartusek%2Fdokchat)](https://hub.docker.com/repository/docker/mrbartusek/dokchat/general) 
+
+
 [![hero](https://i.imgur.com/ZapD7Mn.png)](https://dokchat.dokurno.dev)
 
 DokChat is complete, fully fledged instant messaging application. It supports all of the common chatting features like groups, attachment, GIFs and emojis.
