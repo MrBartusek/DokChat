@@ -16,7 +16,7 @@ services:
     ports:
       - '6379:6379'
     command: redis-server --save 20 1 --loglevel warning
-    volumes: 
+    volumes:
       - cache:/data
   web:
     build: .
@@ -27,8 +27,8 @@ services:
       - DB_HOST=postgres
       - REDIS_HOST=cache
     env_file: .env
-    ports: 
-    - 3000:3000
+    ports:
+      - 8080:8080
 volumes:
   pgdata:
   cache:
