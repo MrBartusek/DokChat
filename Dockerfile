@@ -13,7 +13,7 @@ COPY webpack.config.js ./
 
 RUN npm run build
 
-ENV PORT=8080
+ENV PORT=3000
 
 EXPOSE $PORT
 
