@@ -1,0 +1,7 @@
+services:
+  web:
+    image: mrbartusek/dokchat:latest
+    environment:
+      - PORT=80
+    ports:
+      - 80:80
