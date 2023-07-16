@@ -1,6 +1,7 @@
 services:
   web:
     image: mrbartusek/dokchat:latest
+    build: null
     environment:
       - PORT=8080
     ports:
