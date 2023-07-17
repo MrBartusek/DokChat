@@ -15,10 +15,10 @@ const ChatWindowLazy = React.lazy(() => import('../components/ChatWindow/ChatWin
 function ChatPage() {
 	const { chatId } = useParams();
 	const ws = useWebsocket();
-	const [ isLoadingMessagesManager, chats, sendMessage, setChatList ] = useMessageManager(ws);
+	const [isLoadingMessagesManager, chats, sendMessage, setChatList] = useMessageManager(ws);
 	const getOnlineStatus = useOnlineManager(ws);
-	const [ currentChat, setCurrentChat ] = useState<LocalChat>(null);
-	const [ user ] = useContext(UserContext);
+	const [currentChat, setCurrentChat] = useState<LocalChat>(null);
+	const [user] = useContext(UserContext);
 	const documentReady = useDocumentReady();
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -37,41 +37,41 @@ function ChatPage() {
 		].find(x => location.pathname.startsWith(x))) !== undefined;
 
 		const isEmailConfirmRoute = location.pathname == '/chat/email-confirm';
-		if(!user.isEmailConfirmed && !isEmailConfirmRoute) {
+		if (!user.isEmailConfirmed && !isEmailConfirmRoute) {
 			navigate('/chat/email-confirm');
 		}
-		if(user.isEmailConfirmed && isEmailConfirmRoute) {
+		if (user.isEmailConfirmed && isEmailConfirmRoute) {
 			navigate('/chat');
 		}
 
-		if(isLoadingMessagesManager || chats.length == 0) return setCurrentChat(null);
+		if (isLoadingMessagesManager || chats.length == 0) return setCurrentChat(null);
 		const defaultChat = chats[0];
 
-		if(!chatId && currentChat) {
+		if (!chatId && currentChat) {
 			// If chat is selected but url is not updated, set url to current chat
-			if(isPopup) return;
+			if (isPopup) return;
 			navigate(`/chat/${currentChat.id}`);
 		}
 		else {
 			// If nothing is set or chatId is provided
 			const chat: LocalChat = chats.find(c => c.id == chatId);
-			if(chat) setCurrentChat(chat);
-			else if(!isPopup) navigate(`/chat/${defaultChat.id}`);
+			if (chat) setCurrentChat(chat);
+			else if (!isPopup) navigate(`/chat/${defaultChat.id}`);
 			else setCurrentChat(defaultChat);
 
 		}
-	}, [ isLoadingMessagesManager, chatId, location ]);
+	}, [isLoadingMessagesManager, chatId, location]);
 
 	const isLoading = (
 		isLoadingMessagesManager || !documentReady
 	);
 
-	if(isLoading) return (<MainLoading />);
+	if (isLoading) return (<MainLoading />);
 
 	return (
 		<React.Suspense fallback={<MainLoading />}>
 			<OnlineManagerContext.Provider value={getOnlineStatus}>
-				<MessageManagerContext.Provider value={[ chats, sendMessage, setChatList ]}>
+				<MessageManagerContext.Provider value={[chats, sendMessage, setChatList]}>
 					<ChatWindowLazy currentChat={currentChat} />
 					<Outlet context={currentChat} />
 				</MessageManagerContext.Provider>

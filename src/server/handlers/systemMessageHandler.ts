@@ -16,14 +16,14 @@ class SystemMessageHandler {
 	}
 
 	public async sendSystemMessage(chatId: string, content: string) {
-		if(!this.connected) {
+		if (!this.connected) {
 			console.log('System message not sent, socket is not connected');
 			return;
 		}
-		const [ id, timestamp ] = await ChatManager.saveMessage('SYSTEM', chatId, content);
+		const [id, timestamp] = await ChatManager.saveMessage('SYSTEM', chatId, content);
 
 		const participants = await ChatManager.listParticipants(chatId);
-		for await(const part of participants) {
+		for await (const part of participants) {
 			const chat = await ChatManager.getChat(chatId, part.userId, participants);
 			const systemMessage: ServerMessage = {
 				id: id,
@@ -47,13 +47,13 @@ class SystemMessageHandler {
 		const discriminator = Utils.userDiscriminator(user);
 		const updatedThings = [];
 
-		if(name) updatedThings.push('name');
-		if(avatar) updatedThings.push('avatar');
-		if(color) updatedThings.push('color');
+		if (name) updatedThings.push('name');
+		if (avatar) updatedThings.push('avatar');
+		if (color) updatedThings.push('color');
 
 		let updatedString = '';
 
-		if(updatedThings.length == 1) {
+		if (updatedThings.length == 1) {
 			updatedString = updatedThings[0];
 		}
 		else {

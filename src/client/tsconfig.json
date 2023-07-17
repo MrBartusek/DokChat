@@ -1,18 +1,19 @@
 {
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-      "outDir": "./public/js/",
-      "noImplicitAny": true,
-      "module": "ESNext",
-      "moduleResolution": "node",
-      "target": "es5",
-      "jsx": "react",
-      "allowSyntheticDefaultImports": true,
-      "lib":[
-          "es2015", "dom"
-      ],
-    },
-    "include": [
-        "."
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./public/js/",
+    "noImplicitAny": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "target": "es5",
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "lib": [
+      "es2015",
+      "dom"
     ],
-  }
+  },
+  "include": [
+    "."
+  ],
+}

@@ -17,7 +17,7 @@ router.all('/messages',
 	allowedMethods('GET'),
 	ensureAuthenticated(true),
 	query('lastMessageTimestamp').optional().isInt(),
-	query('count').optional().isInt({max: 50, min: 10}),
+	query('count').optional().isInt({ max: 50, min: 10 }),
 	query('chat').isString(),
 	ensureRatelimit(),
 	async (req, res) => {
@@ -28,7 +28,7 @@ router.all('/messages',
 		const count = Number(req.query.count) || 25;
 		const chatId = req.query.chat;
 
-		if(!(await PermissionsManager.hasChatAccess(req.auth, chatId))) {
+		if (!(await PermissionsManager.hasChatAccess(req.auth, chatId))) {
 			return new ApiResponse(res).forbidden();
 		}
 
@@ -40,7 +40,7 @@ router.all('/messages',
 				isSystem: msg.isSystem,
 				timestamp: msg.createdAt,
 				avatar: Utils.avatarUrl(msg.authorId),
-				attachment:  {
+				attachment: {
 					hasAttachment: msg.attachment != undefined,
 					mimeType: msg.attachmentType,
 					height: msg.attachmentHeight,
@@ -92,7 +92,7 @@ async function queryMessages(chatId: string, lastMessageTimestamp: number, count
 		ORDER BY 
 			messages.created_at DESC
 		LIMIT $3;
-	`, [ chatId, lastMessageTimestamp, count ]);
+	`, [chatId, lastMessageTimestamp, count]);
 }
 
 export default router;

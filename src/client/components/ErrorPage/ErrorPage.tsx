@@ -3,12 +3,12 @@ import FullPageContainer from '../FullPageContainer/FullPageContainer';
 import './ErrorPage.scss';
 
 interface ErrorPageProps {
-    title?: string
-    message?: string;
+	title?: string
+	message?: string;
 	displayRefresh?: boolean;
 }
 
-function ErrorPage({ title = 'Oh no!', message ='Something went wrong', displayRefresh }: ErrorPageProps) {
+function ErrorPage({ title = 'Oh no!', message = 'Something went wrong', displayRefresh }: ErrorPageProps) {
 	return (
 		<FullPageContainer className='d-flex flex-column align-items-center justify-content-center'>
 			<h1 className='errorTitle' data-text={title}>

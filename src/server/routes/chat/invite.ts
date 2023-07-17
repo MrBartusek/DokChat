@@ -21,7 +21,7 @@ router.all('/invite',
 
 		const chatId = req.query.chat;
 
-		if(!(await PermissionsManager.hasChatAccess(req.auth, chatId))) {
+		if (!(await PermissionsManager.hasChatAccess(req.auth, chatId))) {
 			return new ApiResponse(res).forbidden();
 		}
 

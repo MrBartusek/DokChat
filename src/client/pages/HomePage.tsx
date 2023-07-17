@@ -16,9 +16,9 @@ function HomePage({ scrollToAbout }: HomePageProps) {
 	const aboutRef = useRef<HTMLDivElement>(null!);
 
 	useLayoutEffect(() => {
-		if(!scrollToAbout) return;
+		if (!scrollToAbout) return;
 		aboutRef.current.scrollIntoView({ behavior: 'smooth' });
-	}, [ scrollToAbout ]);
+	}, [scrollToAbout]);
 
 	return (
 		<Layout zeroHeightNavbar={true}>

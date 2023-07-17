@@ -22,7 +22,7 @@
     text-decoration: underline;
 }
 
-.navbar-zero-height:has(div):has(button):has(.collapse.show,.collapsing) {
+.navbar-zero-height:has(div):has(button):has(.collapse.show, .collapsing) {
     background-color: rgba($dark, .98) !important;
-    transition:none;
+    transition: none;
 }

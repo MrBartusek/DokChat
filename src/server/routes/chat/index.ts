@@ -10,7 +10,7 @@ import modifyParticipantsRouter from './modifyParticipants';
 import participantsRouter from './participants';
 import updateRouter from './update';
 
-const router = express.Router();1;
+const router = express.Router(); 1;
 
 router.use(listRouter);
 router.use(messagesRouter);

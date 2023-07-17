@@ -10,14 +10,14 @@ import { useForm } from '../../hooks/useForm';
 import IconButton from '../IconButton/IconButton';
 
 export interface UserTagInputProps {
-    onAdd: ((user: User) => any);
+	onAdd: ((user: User) => any);
 }
 
 const UserTagInput = React.forwardRef(({ onAdd }: UserTagInputProps, ref: Ref<HTMLFormElement>) => {
-	const [ values, handleChange, clearValues ] = useForm({ username: '', tag: '' });
-	const [ isLoading, setLoading ] = useState(false);
-	const [ error, setError ] = useState(null);
-	const [ user ] = useContext(UserContext);
+	const [values, handleChange, clearValues] = useForm({ username: '', tag: '' });
+	const [isLoading, setLoading] = useState(false);
+	const [error, setError] = useState(null);
+	const [user] = useContext(UserContext);
 	const usernameRef = useRef<HTMLInputElement>(null);
 	const tagRef = useRef<HTMLInputElement>(null);
 
@@ -28,7 +28,7 @@ const UserTagInput = React.forwardRef(({ onAdd }: UserTagInputProps, ref: Ref<HT
 		const username = values.username;
 		const tag = values.tag;
 
-		if(username == user.username && tag == user.tag) {
+		if (username == user.username && tag == user.tag) {
 			setError('You can\'t add yourself to the new chat');
 			return;
 		}
@@ -42,7 +42,7 @@ const UserTagInput = React.forwardRef(({ onAdd }: UserTagInputProps, ref: Ref<HT
 				clearValues();
 			})
 			.catch((error) => {
-				if(error.response.status == 404) {
+				if (error.response.status == 404) {
 					setError(`User ${username}#${tag} was not found`);
 				}
 				else {
@@ -56,9 +56,9 @@ const UserTagInput = React.forwardRef(({ onAdd }: UserTagInputProps, ref: Ref<HT
 	}
 
 	function handleChangeWrapper(event: React.ChangeEvent<HTMLInputElement>) {
-		if(event.target == usernameRef.current) {
+		if (event.target == usernameRef.current) {
 			const nativeEvent = event.nativeEvent as InputEvent;
-			if(nativeEvent.inputType == 'insertText' && nativeEvent.data == '#') {
+			if (nativeEvent.inputType == 'insertText' && nativeEvent.data == '#') {
 				tagRef.current.focus();
 				return;
 			}
@@ -86,7 +86,7 @@ const UserTagInput = React.forwardRef(({ onAdd }: UserTagInputProps, ref: Ref<HT
 						type="number"
 						name="tag"
 						ref={tagRef}
-						style={{maxWidth: 63}}
+						style={{ maxWidth: 63 }}
 						placeholder={'0000'}
 						value={values.tag}
 						onChange={handleChangeWrapper}
@@ -106,6 +106,6 @@ const UserTagInput = React.forwardRef(({ onAdd }: UserTagInputProps, ref: Ref<HT
 	);
 });
 
-UserTagInput.displayName  = 'UserTagInput';
+UserTagInput.displayName = 'UserTagInput';
 
 export default UserTagInput;

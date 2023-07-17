@@ -10,7 +10,7 @@ interface CopyButtonProps extends React.DetailedHTMLProps<React.ButtonHTMLAttrib
 }
 
 function CopyButton(props: CopyButtonProps) {
-	const [ copied, copyAction ] = useCopy(props.copyText);
+	const [copied, copyAction] = useCopy(props.copyText);
 
 	const tooltip = (props: TooltipProps) => (
 		<UpdatingTooltip {...props}>

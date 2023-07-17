@@ -11,17 +11,17 @@ export default async function processEmailBounces() {
 	};
 
 	const response = await sqsClient.receiveMessage(params).promise();
-	if(!response.Messages) return;
-	for(const msg of response.Messages) {
+	if (!response.Messages) return;
+	for (const msg of response.Messages) {
 		const body = JSON.parse(msg.Body);
 		const bounce = JSON.parse(body.Message);
 		const email = bounce.mail.destination[0];
 
-		if(bounce.bounce.bounceType == 'Permanent') {
+		if (bounce.bounce.bounceType == 'Permanent') {
 			await EmailBlacklistManager.blacklistEmail(email);
 			console.log(`Processed Hard Bounce - '${email}' is now blacklisted!`);
 		}
-		else{
+		else {
 			console.log(`Processed Soft Bounce - '${email}' no action taken.`);
 		}
 

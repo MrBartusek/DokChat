@@ -9,7 +9,7 @@ import useBreakpoint from '../hooks/useBreakpoint';
 
 function GetDokchatPage() {
 	const breakpoint = useBreakpoint();
-	const [ user ] = useContext(UserContext);
+	const [user] = useContext(UserContext);
 
 	return (
 		<Layout>
@@ -45,7 +45,7 @@ function GetDokchatPage() {
 							<div className='d-flex justify-content-center mb-4 mt-5'>
 								<Link to={user.isAuthenticated ? '/chat' : '/login'}>
 									<Button variant='primary' size='lg'>
-										{[ 'xs', 'sm', 'md' ].includes(breakpoint) ? 'Open DokChat' : 'Open DokChat in your browser'}
+										{['xs', 'sm', 'md'].includes(breakpoint) ? 'Open DokChat' : 'Open DokChat in your browser'}
 									</Button>
 								</Link>
 							</div>

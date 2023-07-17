@@ -7,8 +7,8 @@ import IconButton from '../IconButton/IconButton';
 import { useClientConfig } from '../../hooks/useClientConfig';
 
 export interface EmojiButtonProps {
-    fileUploader: FileUploaderResult;
-    color?: string;
+	fileUploader: FileUploaderResult;
+	color?: string;
 }
 
 function GifButton({ fileUploader, color }: EmojiButtonProps) {
@@ -22,7 +22,7 @@ function GifButton({ fileUploader, color }: EmojiButtonProps) {
 	}
 
 	const gifPicker = (
-		<Popover style={{maxWidth: 500}} className="bg-transparent">
+		<Popover style={{ maxWidth: 500 }} className="bg-transparent">
 			<Popover.Body className='p-0'>
 				<GifPicker tenorApiKey={clientConfig.tenorApiKey} onGifClick={handleGifClick} />
 			</Popover.Body>
@@ -31,7 +31,7 @@ function GifButton({ fileUploader, color }: EmojiButtonProps) {
 
 	return (
 		<OverlayTrigger trigger="click" placement="top-start" overlay={gifPicker} rootClose>
-			<IconButton icon={AiOutlineGif} size={34}  type='button' color={color} />
+			<IconButton icon={AiOutlineGif} size={34} type='button' color={color} />
 		</OverlayTrigger>
 	);
 }
@@ -39,7 +39,7 @@ function GifButton({ fileUploader, color }: EmojiButtonProps) {
 async function getFileFromUrl(url: string): Promise<File> {
 	const response = await fetch(url);
 	const data = await response.blob();
-	return new File([ data ], 'Tenor Gif', {
+	return new File([data], 'Tenor Gif', {
 		type: data.type || 'image/gif'
 	});
 }

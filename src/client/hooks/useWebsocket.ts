@@ -3,20 +3,20 @@ import { Socket, io } from 'socket.io-client';
 import { ClientToServerEvents, ServerToClientEvents } from '../../types/websocket';
 import { UserContext } from '../context/UserContext';
 
-export type useWebsocketType = { isConnected?: boolean, socket: Socket<ServerToClientEvents, ClientToServerEvents>};
+export type useWebsocketType = { isConnected?: boolean, socket: Socket<ServerToClientEvents, ClientToServerEvents> };
 
 let socket: Socket = io({ autoConnect: false });
 
 export function useWebsocket(): useWebsocketType {
-	const [ isConnected, setIsConnected ] = useState(false);
-	const [ user ] = useContext(UserContext);
+	const [isConnected, setIsConnected] = useState(false);
+	const [user] = useContext(UserContext);
 
 	useEffect(() => {
 		socket = io({
 			auth: user.getAuthHeader(),
 			autoConnect: true
 		});
-	}, [ user ]);
+	}, [user]);
 
 	useEffect(() => {
 		socket.on('connect', () => {

@@ -19,18 +19,18 @@ export interface SocialLoginProps {
 }
 
 type FacebookAuthResponse = {
-    accessToken: string;
-    expiresIn: string;
-    reauthorize_required_in: string;
-    signedRequest: string;
-    userID: string;
+	accessToken: string;
+	expiresIn: string;
+	reauthorize_required_in: string;
+	signedRequest: string;
+	userID: string;
 }
 
 function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
-	const [ user, updateToken, setUser ] = useContext(UserContext);
+	const [user, updateToken, setUser] = useContext(UserContext);
 	const navigate = useNavigate();
 	const breakpoint = useBreakpoint();
-	const [ buttonWidth, setButtonWidth ] = useState('200');
+	const [buttonWidth, setButtonWidth] = useState('200');
 	const clientConfig = useClientConfig();
 
 	useEffect(() => {
@@ -46,10 +46,10 @@ function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
 				setButtonWidth('350');
 				break;
 		}
-	}, [ breakpoint ]);
+	}, [breakpoint]);
 
 	async function sendLoginRequest(service: 'google' | 'facebook', token: string) {
-		if(loading) return;
+		if (loading) return;
 		setLoading(true);
 		setError(null);
 		await axios.post(`/auth/social-login/${service}`, { token })
@@ -89,13 +89,13 @@ function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
 						logo_alignment='center'
 						locale='en_US'
 					/>
-				): <></>}
+				) : <></>}
 				{clientConfig.facebookClientId ? (
 					<FacebookLogin
 						appId={clientConfig.facebookClientId}
 						onSuccess={onFacebookLogin}
 						onFail={(res) => {
-							if(res.status != 'loginCancelled') {
+							if (res.status != 'loginCancelled') {
 								setError('Failed to get authorization response from Facebook');
 							}
 						}}
@@ -113,9 +113,9 @@ function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
 						}}
 						className='d-flex justify-content-center align-items-center mt-1'
 					>
-						<BsFacebook className='me-2' size={20}/> <span>Sign in with Facebook</span>
+						<BsFacebook className='me-2' size={20} /> <span>Sign in with Facebook</span>
 					</FacebookLogin>
-				): <></>}
+				) : <></>}
 			</div>
 		</>
 	);

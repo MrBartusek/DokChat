@@ -14,19 +14,19 @@ export interface ChatListProps {
 }
 
 function ChatList({ currentChat }: ChatListProps) {
-	const [ chats ] = useContext(MessageManagerContext);
+	const [chats] = useContext(MessageManagerContext);
 	const navigate = useNavigate();
 	const breakpoint = useBreakpoint();
 
 	const noChatsInfo = (
-		<span className='text-muted text-center mt-5 px-1' style={{ width: [ 'xs', 'sm' ].includes(breakpoint) ? 150 : 320 }}>
+		<span className='text-muted text-center mt-5 px-1' style={{ width: ['xs', 'sm'].includes(breakpoint) ? 150 : 320 }}>
 			There are no messages yet <br />
 			<Link to='/chat/new' className='link-secondary'>Start a new chat</Link>
 		</span>
 	);
 
 	return (
-		<div className='d-flex py-3 px-2 align-items-center flex-column' style={{overflowY: 'scroll', flex: '1 0 0'}}>
+		<div className='d-flex py-3 px-2 align-items-center flex-column' style={{ overflowY: 'scroll', flex: '1 0 0' }}>
 			{chats.map((chat) => (
 				<Chat
 					key={chat.id}
@@ -41,29 +41,29 @@ function ChatList({ currentChat }: ChatListProps) {
 }
 
 interface ChatProps {
-    chat: LocalChat,
+	chat: LocalChat,
 	isCurrent?: boolean
 	onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
 function Chat(props: ChatProps) {
-	const [ user ] = useContext(UserContext);
-	const [ isOnline, setOnline ] = useState(false);
+	const [user] = useContext(UserContext);
+	const [isOnline, setOnline] = useState(false);
 	const getOnlineStatus = useContext(OnlineManagerContext);
 
 	useEffect(() => {
 		const online = props.chat.participants.some(p => {
-			if(p.userId == user.id) return false;
-			const [ online ] = getOnlineStatus(p.userId);
+			if (p.userId == user.id) return false;
+			const [online] = getOnlineStatus(p.userId);
 			return online;
 		});
 		setOnline(online);
-	}, [ getOnlineStatus ]);
+	}, [getOnlineStatus]);
 
 	return (
 		<div
 			className={`d-flex px-2 chat flex-row rounded-3 flex-nowrap ${props.isCurrent ? 'current' : ''}`}
-			style={{height: 65}}
+			style={{ height: 65 }}
 			onClick={props.onClick}
 		>
 			<div className="d-flex align-items-center pe-md-3">
@@ -71,10 +71,10 @@ function Chat(props: ChatProps) {
 			</div>
 			<div
 				className='d-none d-md-flex justify-content-center flex-column py-0 px-1'
-				style={{width: 240}}
+				style={{ width: 240 }}
 			>
 				<Twemoji className='text-truncate text-nowrap' text={props.chat.name} />
-				<div className='text-muted text-truncate' style={{fontSize: '0.85em'}}>
+				<div className='text-muted text-truncate' style={{ fontSize: '0.85em' }}>
 					{props.chat.lastMessage ? (
 						<Twemoji
 							text={`
@@ -82,7 +82,7 @@ function Chat(props: ChatProps) {
 								${props.chat.lastMessage.content || '[Image]'}
 							`}
 						/>
-					): 'Click to start the chat!'}
+					) : 'Click to start the chat!'}
 
 				</div>
 			</div>

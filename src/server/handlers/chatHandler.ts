@@ -12,11 +12,11 @@ import RateLimitManager from '../managers/rateLimitManager';
 
 export default function registerMessageHandler(io: DokChatServer, socket: DokChatSocket) {
 	socket.on('message', async (msg, callback) => {
-		if(!(await PermissionsManager.hasChatAccess(socket.auth, msg.chatId))) {
+		if (!(await PermissionsManager.hasChatAccess(socket.auth, msg.chatId))) {
 			return new ApiResponse({} as any, callback).forbidden();
 		}
 
-		if(!validateMessage(msg, callback)) {
+		if (!validateMessage(msg, callback)) {
 			return new ApiResponse({} as any, callback).badRequest('Invalid message');
 		}
 
@@ -24,20 +24,20 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 		const otherParticipants = participants.filter(p => p.userId != socket.auth.id);
 		const isGroup = await ChatManager.isGroup(msg.chatId);
 
-		if(!isGroup && otherParticipants.length == 1) {
+		if (!isGroup && otherParticipants.length == 1) {
 			const isBlocked = await BlockManager.isBlockedAny(socket.auth.id, otherParticipants[0].userId);
-			if(isBlocked) {
+			if (isBlocked) {
 				return new ApiResponse({} as any, callback).forbidden('Cannot send message to blocked user');
 			}
 		}
 
-		if(!(await RateLimitManager.consume(socket.auth, msg.attachment ? 10 : 1 ))) {
+		if (!(await RateLimitManager.consume(socket.auth, msg.attachment ? 10 : 1))) {
 			return new ApiResponse({} as any, callback).tooManyRequests();
 		}
 
 		// Add message to db
-		const [ attachmentKey, attachment ] = await uploadAttachment(msg.attachment);
-		const [ id, timestamp ] = await ChatManager.saveMessage(
+		const [attachmentKey, attachment] = await uploadAttachment(msg.attachment);
+		const [id, timestamp] = await ChatManager.saveMessage(
 			socket.auth,
 			msg.chatId,
 			msg.content,
@@ -45,9 +45,9 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 			attachment
 		);
 
-		for await(const part of otherParticipants) {
+		for await (const part of otherParticipants) {
 			// If chat is hidden by specific participant it will show up on message
-			if(part.isHidden) await ChatManager.setChatHideForParticipant(part, false);
+			if (part.isHidden) await ChatManager.setChatHideForParticipant(part, false);
 
 			// Chat is fetched for each user since for DMs name might be different for each participant
 			const chat = await ChatManager.getChat(msg.chatId, part.userId, participants);
@@ -80,46 +80,46 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 }
 
 async function uploadAttachment(attachment?: ClientAttachment): Promise<[string, MessageAttachment]> {
-	if(!attachment) {
-		return [ null, {
+	if (!attachment) {
+		return [null, {
 			hasAttachment: false
-		} ];
+		}];
 	}
 	const mimeType = attachment.mimeType;
 	const key = await s3Client.uploadAttachment(attachment.buffer, mimeType);
 	let dimensions = null;
-	if(mimeType.startsWith('image/')) {
+	if (mimeType.startsWith('image/')) {
 		dimensions = sizeOf(attachment.buffer);
 	}
 
-	return [ key, {
+	return [key, {
 		hasAttachment: true,
 		width: dimensions?.width,
 		height: dimensions?.height,
 		mimeType: mimeType
-	} ];
+	}];
 }
 
 function validateMessage(msg: ClientMessage, callback: (response: any) => void): boolean {
-	if(msg.content && msg.attachment || !msg.content && !msg.attachment) {
+	if (msg.content && msg.attachment || !msg.content && !msg.attachment) {
 		new ApiResponse({} as any, callback).badRequest('Message content invalid');
 		return false;
 	}
-	else if(msg.content) {
-		if(msg.content.trim().length == 0) {
+	else if (msg.content) {
+		if (msg.content.trim().length == 0) {
 			new ApiResponse({} as any, callback).badRequest('Message is empty');
 			return false;
 		}
-		else if(msg.content.trim().length >= 4000) {
+		else if (msg.content.trim().length >= 4000) {
 			new ApiResponse({} as any, callback).badRequest('Message is too long');
 			return false;
 		}
 	}
-	else if(msg.attachment) {
-		if(!ALLOWED_ATTACHMENT_FORMAT.includes(msg.attachment.mimeType)) {
+	else if (msg.attachment) {
+		if (!ALLOWED_ATTACHMENT_FORMAT.includes(msg.attachment.mimeType)) {
 			return false;
 		}
-		if(!Buffer.isBuffer(msg.attachment.buffer)) {
+		if (!Buffer.isBuffer(msg.attachment.buffer)) {
 			return false;
 		}
 	}

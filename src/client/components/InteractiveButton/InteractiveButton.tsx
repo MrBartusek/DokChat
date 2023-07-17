@@ -2,20 +2,20 @@ import React from 'react';
 import { Button, ButtonProps, Spinner } from 'react-bootstrap';
 import { IconType } from 'react-icons';
 
-export interface InteractiveButtonProps extends ButtonProps  {
-    loading?: boolean,
+export interface InteractiveButtonProps extends ButtonProps {
+	loading?: boolean,
 	icon?: IconType
-    children?: React.ReactNode
+	children?: React.ReactNode
 }
 
 function InteractiveButton(props: InteractiveButtonProps) {
-	const spinner = (<Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className='me-2'/>);
+	const spinner = (<Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className='me-2' />);
 	const iconEl = props.icon ? React.createElement(
 		props.icon, { className: 'me-2' }
-	): null;
+	) : null;
 	return (
-		<Button {...{...props, loading: null, icon: null}} disabled={props.disabled || props.loading}>
-			{props.loading ? spinner : iconEl }
+		<Button {...{ ...props, loading: null, icon: null }} disabled={props.disabled || props.loading}>
+			{props.loading ? spinner : iconEl}
 			{props.children}
 		</Button>
 	);

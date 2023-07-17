@@ -7,10 +7,10 @@ export type DokChatSocket = Socket<ClientToServerEvents, ServerToClientEvents>;
 
 export interface ServerToClientEvents {
     message: (message: ServerMessage) => void;
-  }
+}
 
 export interface ClientToServerEvents {
-    message: (message: ClientMessage, callback: (response: EventAcknowledgement<{id: string, timestamp: string}>) => void) => void;
+    message: (message: ClientMessage, callback: (response: EventAcknowledgement<{ id: string, timestamp: string }>) => void) => void;
     onlineStatus: (callback: (response: EventAcknowledgement<OnlineStatusResponse>) => void) => void;
 }
 

@@ -24,7 +24,7 @@ const serverConfig = {
 		]
 	},
 	resolve: {
-		extensions: [ '.ts', '.js' ]
+		extensions: ['.ts', '.js']
 	},
 	output: {
 		filename: 'server.js',
@@ -34,7 +34,7 @@ const serverConfig = {
 	node: {
 		__dirname: false
 	},
-	externals: [ nodeExternals() ]
+	externals: [nodeExternals()]
 };
 
 const clientConfig = {
@@ -54,12 +54,12 @@ const clientConfig = {
 			},
 			{
 				test: /\.scss$/,
-				use: [ 'style-loader', 'css-loader', 'sass-loader' ]
+				use: ['style-loader', 'css-loader', 'sass-loader']
 			}
 		]
 	},
 	resolve: {
-		extensions: [ '.tsx', '.ts', '.js', '.css', '.scss' ]
+		extensions: ['.tsx', '.ts', '.js', '.css', '.scss']
 	},
 	output: {
 		filename: 'app.js',
@@ -67,4 +67,4 @@ const clientConfig = {
 	}
 };
 
-module.exports = [ serverConfig, clientConfig ];
+module.exports = [serverConfig, clientConfig];

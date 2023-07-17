@@ -6,17 +6,18 @@
     "target": "ESNext",
     "allowSyntheticDefaultImports": true,
     "lib": [
-        "es2017",
-        "dom"
+      "es2017",
+      "dom"
     ],
     "types": [
-        "node", "express",
+      "node",
+      "express",
     ],
     "typeRoots": [
       "./src/server/types"
     ]
   },
   "include": [
-      "."
+    "."
   ],
 }

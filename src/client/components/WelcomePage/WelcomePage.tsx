@@ -38,7 +38,7 @@ function WelcomePage() {
 				<p className='lead w-100 mb-2 d-flex align-items-center'>
 					<BsChatSquareTextFill color={'var(--bs-secondary'} className='me-3' />
 					<div>
-						<Link to ='/chat/new'>Create a new chat</Link> using your friends user tags.
+						<Link to='/chat/new'>Create a new chat</Link> using your friends user tags.
 					</div>
 				</p>
 

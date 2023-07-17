@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.all('/me', ensureAuthenticated(), allowedMethods('GET'), ensureRatelimit(), async (req, res) => {
 	const user = await UserManager.getUserById(req.auth.id);
-	if(!user) new ApiResponse(res).notFound('User not found');
+	if (!user) new ApiResponse(res).notFound('User not found');
 	return new ApiResponse(res).success(user);
 });
 

@@ -16,7 +16,7 @@ const IconButton = React.forwardRef((props: IconButtonProps, ref: React.Forwarde
 	const passProps = Object.assign({}, props);
 	passProps.icon = null; // Icon mess up native button
 	passProps.className += ` iconButton ${props.disabled ? 'disabled' : 'enabled'}`;
-	if(props.disabled) {
+	if (props.disabled) {
 		passProps.variant = 'secondary';
 	}
 

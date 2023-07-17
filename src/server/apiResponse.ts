@@ -7,9 +7,9 @@ const isProduction = (process.env['NODE' + '_ENV'] || 'development') == 'product
 
 export class ApiResponse {
 	constructor(
-        private resp: Response | Socket,
+		private resp: Response | Socket,
 		private next?: (error?: any) => any
-	) {}
+	) { }
 
 	public respond(error: boolean, status: number, message: string, data?: object): Response {
 		const result = {
@@ -18,16 +18,16 @@ export class ApiResponse {
 			message: message,
 			data: undefined
 		};
-		if(data) {
+		if (data) {
 			result.data = data;
 		}
 		const isWebsocket = (this.resp as any).status == undefined;
-		if(!isWebsocket) {
+		if (!isWebsocket) {
 			return (this.resp as Response).status(status).json(result).end();
 		}
 		else {
-			if(typeof this.next !== 'function') return;
-			if(result.error) {
+			if (typeof this.next !== 'function') return;
+			if (result.error) {
 				return this.next(new SocketError(result.status, result.message));
 			}
 			this.next(result);
@@ -68,10 +68,10 @@ export class ApiResponse {
 	}
 
 	public validationError(errors: Result<ValidationError>) {
-		if(!isProduction) console.log(errors.array());
+		if (!isProduction) console.log(errors.array());
 		const error = errors.array({ onlyFirstError: true }).at(0);
 		let msg = error.msg;
-		if(msg == 'Invalid value') {
+		if (msg == 'Invalid value') {
 			msg = `Invalid ${error.param} provided`;
 		}
 		return this.badRequest(msg);

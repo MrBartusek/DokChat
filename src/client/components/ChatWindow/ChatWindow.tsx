@@ -9,7 +9,7 @@ import UserInfo from '../UserInfo/UserInfo';
 import WelcomePage from '../WelcomePage/WelcomePage';
 
 export interface ChatWindowProps {
-    currentChat?: LocalChat
+	currentChat?: LocalChat
 }
 
 function ChatWindow({ currentChat }: ChatWindowProps) {
@@ -30,7 +30,7 @@ function ChatWindow({ currentChat }: ChatWindowProps) {
 								<MessagesWindow currentChat={currentChat} />
 								<MessageBar currentChat={currentChat} />
 							</>
-						): (
+						) : (
 							<WelcomePage />
 						)}
 					</div>
@@ -40,4 +40,4 @@ function ChatWindow({ currentChat }: ChatWindowProps) {
 	);
 }
 
-export default  ChatWindow;
+export default ChatWindow;

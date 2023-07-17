@@ -11,18 +11,18 @@ import { useUser } from './useUser';
  * This is more advanced version of useUser hook
  * that have token refreshing built-in
  */
-export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, React.Dispatch<string>,  () => Promise<void>] {
-	const [ isLoading, setLoading ] = useState(true);
-	const [ user, cookies, setUser, removeUser ] = useUser();
-	const [ isConfirmed, setConfirmed ] = useState(false);
+export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, React.Dispatch<string>, () => Promise<void>] {
+	const [isLoading, setLoading] = useState(true);
+	const [user, cookies, setUser, removeUser] = useUser();
+	const [isConfirmed, setConfirmed] = useState(false);
 
 	/**
 	 * Set user decoded from JWT if there is any and fetch new token
 	 */
 	useEffect(() => {
-		if(cookies.token) {
+		if (cookies.token) {
 			const user = LocalUser.fromJWT(cookies.token);
-			if(!user.expired) {
+			if (!user.expired) {
 				console.log(`AUTH: Loaded user ${user.email} from local JWT`);
 				setUser(cookies.token);
 				setLoading(false);
@@ -40,13 +40,13 @@ export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, Rea
 	*/
 	useEffect(() => {
 		const interval = setInterval(async () => {
-			if(user.isAuthenticated){
+			if (user.isAuthenticated) {
 				const expireIn = DateFns.differenceInSeconds(user.expiryDate, new Date());
-				if(expireIn <= 60) await refreshToken();
+				if (expireIn <= 60) await refreshToken();
 			}
 		}, 10 * 1000);
 		return () => clearInterval(interval);
-	}, [ user ]);
+	}, [user]);
 
 	async function refreshToken(refreshAvatar = false) {
 		const axios = getAxios();
@@ -54,19 +54,19 @@ export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, Rea
 			.then((r: any) => {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
 				const user = LocalUser.fromJWT(resp.data.token);
-				if(refreshAvatar) user.refreshAvatar();
+				if (refreshAvatar) user.refreshAvatar();
 				setUser(user);
 				setConfirmed(true);
 				console.log(`AUTH: Updated JWT to ${user.email} from server`);
 			}).catch(() => {
 				console.error('AUTH: Token refresh request failed.');
 				// If user was never confirmed log them out
-				if(!isConfirmed) {
+				if (!isConfirmed) {
 					console.error('AUTH: Local user rejected by server! Logging out...');
 					callLogout(true);
 				}
 				// If past tries to refresh user failed, just log out the user
-				if(user.isAuthenticated && user.expireIn < 15) {
+				if (user.isAuthenticated && user.expireIn < 15) {
 					console.error('AUTH: Log out after too many tries.');
 					callLogout();
 				}
@@ -83,15 +83,15 @@ export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, Rea
 		}
 		googleLogout();
 		removeUser();
-		if(!hideToast) toast('You have successfully been logged out');
+		if (!hideToast) toast('You have successfully been logged out');
 	}
 
 	async function setUserWrapper(newUser: string | LocalUser) {
-		if(!user.isAuthenticated) {
+		if (!user.isAuthenticated) {
 			toast('You have successfully signed in');
 		}
 		setUser(newUser);
 	}
 
-	return [ isLoading, user, (refreshAvatar?: boolean) => refreshToken(refreshAvatar), setUserWrapper, callLogout ];
+	return [isLoading, user, (refreshAvatar?: boolean) => refreshToken(refreshAvatar), setUserWrapper, callLogout];
 }

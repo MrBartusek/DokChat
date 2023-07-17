@@ -6,7 +6,7 @@ export default class PermissionsManager {
 	public static async hasChatAccess(auth: UserJWTData, chatId: string) {
 		const permissionsQuery = await db.query(sql`
             SELECT EXISTS(SELECT 1 FROM participants WHERE user_id = $1 AND chat_id=$2)
-        `, [ auth.id, chatId ]);
+        `, [auth.id, chatId]);
 		return permissionsQuery.rows[0].exists;
 	}
 }

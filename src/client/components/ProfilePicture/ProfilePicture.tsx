@@ -3,8 +3,8 @@ import Image, { ImageProps } from 'react-bootstrap/Image';
 import './ProfilePicture.scss';
 
 interface ProfilePictureProps extends ImageProps {
-    src: string,
-    size?: string | number,
+	src: string,
+	size?: string | number,
 	userId?: string,
 	isOnline?: boolean
 	onClick?: React.MouseEventHandler<HTMLImageElement>

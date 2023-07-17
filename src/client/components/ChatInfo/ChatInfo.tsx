@@ -14,29 +14,29 @@ export interface ChatInfoProps {
 }
 
 function ChatInfo({ currentChat }: ChatInfoProps) {
-	const [ user ] = useContext(UserContext);
-	const [ [ isOnline, statusText ], setOnlineStatus ] = useState<[ boolean, string | null]>([ false, null ]);
+	const [user] = useContext(UserContext);
+	const [[isOnline, statusText], setOnlineStatus] = useState<[boolean, string | null]>([false, null]);
 	const getOnlineStatus = useContext(OnlineManagerContext);
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if(!currentChat) return;
-		if(currentChat.participants.length <= 2) {
+		if (!currentChat) return;
+		if (currentChat.participants.length <= 2) {
 			const part = currentChat.participants.find(p => p.userId != user.id);
-			if(!part) return setOnlineStatus([ false, null ]);
+			if (!part) return setOnlineStatus([false, null]);
 			const status = getOnlineStatus(part.userId);
 			setOnlineStatus(status);
 		}
 		else {
 			const online = currentChat.participants.some(p => {
-				if(p.userId == user.id) return false;
-				const [ online ] = getOnlineStatus(p.userId);
+				if (p.userId == user.id) return false;
+				const [online] = getOnlineStatus(p.userId);
 				return online;
 			});
-			setOnlineStatus([ online, null ]);
+			setOnlineStatus([online, null]);
 		}
 
-	}, [ getOnlineStatus, currentChat ]);
+	}, [getOnlineStatus, currentChat]);
 
 	return (
 		<div className='d-flex px-3 py-2 border-bottom border-separator' style={{ height: 56 }}>
@@ -49,7 +49,7 @@ function ChatInfo({ currentChat }: ChatInfoProps) {
 					/>
 				</div>
 			)}
-			<div className='d-flex flex-fill justify-content-center p-0 flex-column' style={{lineHeight: 1.3}}>
+			<div className='d-flex flex-fill justify-content-center p-0 flex-column' style={{ lineHeight: 1.3 }}>
 				<Twemoji
 					className='fw-bold text-truncate'
 					text={currentChat?.name || 'Welcome to DokChat!'}

@@ -22,31 +22,31 @@ export interface MessagesWindowProps {
 }
 
 function MessagesWindow({ currentChat }: MessagesWindowProps) {
-	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
-	const [ user ] = useContext(UserContext);
+	const [chats, sendMessage, setChatList] = useContext(MessageManagerContext);
+	const [user] = useContext(UserContext);
 	const messageWindowRef = useRef<HTMLDivElement>();
 
-	const [ hasMore, setHasMore ] = useState(true);
-	const [ isLoading, setLoading ] = useState(false);
+	const [hasMore, setHasMore] = useState(true);
+	const [isLoading, setLoading] = useState(false);
 
 	useEffect(() => {
-		if(currentChat.isInitialized) return;
+		if (currentChat.isInitialized) return;
 		fetchMoreMessages(40);
 		setHasMore(true);
 		setLoading(false);
-	}, [ currentChat ]);
+	}, [currentChat]);
 
 	useLayoutEffect(() => {
-		if(!messageWindowRef.current) return;
-		if(messageWindowRef.current.scrollTop <= -300) return;
+		if (!messageWindowRef.current) return;
+		if (messageWindowRef.current.scrollTop <= -300) return;
 		messageWindowRef.current.scrollTo(0, messageWindowRef.current.scrollHeight);
-	}, [ chats, messageWindowRef ]);
+	}, [chats, messageWindowRef]);
 
 	async function fetchMoreMessages(count = 20) {
 		setLoading(true);
 		const axios = getAxios(user);
 		let url = `/chat/messages?chat=${currentChat.id}&count=${count}`;
-		if(currentChat.isInitialized && currentChat.messages.length > 0) {
+		if (currentChat.isInitialized && currentChat.messages.length > 0) {
 			const lastMessage = currentChat.messages[currentChat.messages.length - 1];
 			url += `&lastMessageTimestamp=${lastMessage.timestamp}`;
 		}
@@ -54,11 +54,11 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 			.then((r) => {
 				const resp: EndpointResponse<MessageListResponse> = r.data;
 				const messages = resp.data;
-				if(messages.length < count) {
+				if (messages.length < count) {
 					setHasMore(false);
 				}
 				const chatId = chats.findIndex(c => c.id == currentChat.id);
-				const chatsCopy = [ ...chats ];
+				const chatsCopy = [...chats];
 				chatsCopy[chatId] = chatsCopy[chatId].addMessagesList(resp.data);
 				setChatList(chatsCopy);
 			}).catch((error) => {
@@ -83,10 +83,10 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 		<div
 			className='d-flex px-3 flex-row flex-column-reverse'
 			ref={messageWindowRef}
-			style={{overflowY: 'scroll', flex: '1 0 0'}}
+			style={{ overflowY: 'scroll', flex: '1 0 0' }}
 			id='scrollableTarget'
 		>
-			{currentChat.isInitialized && currentChat.messages.length == 0 && noMessagesInfo }
+			{currentChat.isInitialized && currentChat.messages.length == 0 && noMessagesInfo}
 			{currentChat.isInitialized && (
 				<InfiniteScroll
 					dataLength={currentChat.messages.length}
@@ -112,10 +112,10 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 						const sendAgoInHours = Math.abs(DateFns.differenceInHours(msgTimestamp, new Date()));
 
 						let format = 'HH:mm';
-						if(sendAgoInHours > 24 * 7) {
+						if (sendAgoInHours > 24 * 7) {
 							format = 'd LLLL yyyy, HH:mm';
 						}
-						else if(!DateFns.isToday(msgTimestamp)) {
+						else if (!DateFns.isToday(msgTimestamp)) {
 							format = 'EEE, HH:mm';
 						}
 
@@ -124,7 +124,7 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 						return (
 							<div className='d-flex flex-column' key={msg.id}>
 								{msg.isSystem ? (
-									<SystemMessage content={msg.content}/>
+									<SystemMessage content={msg.content} />
 								) : (
 									<>
 										{(showTimestamp) && (
@@ -148,7 +148,7 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 					})}
 				</InfiniteScroll>
 			)}
-			{isLoading ? <SimpleLoading /> : hasMore && <Separator height={60} /> }
+			{isLoading ? <SimpleLoading /> : hasMore && <Separator height={60} />}
 		</div>
 	);
 }
@@ -161,12 +161,12 @@ interface MessageProps {
 	showStatus?: boolean
 }
 
-function UserMessage({currentChat, message, showAvatar, showAuthor, showStatus}: MessageProps) {
-	const [ user ] = useContext(UserContext);
+function UserMessage({ currentChat, message, showAvatar, showAuthor, showStatus }: MessageProps) {
+	const [user] = useContext(UserContext);
 	const isAuthor = message.author.id == user.id;
 
 	// If message is pending or failed, display status regardless of props
-	if(message.isPending || message.isFailed) {
+	if (message.isPending || message.isFailed) {
 		showStatus = true;
 	}
 	const isSent = !(message.isPending || message.isFailed);
@@ -187,13 +187,13 @@ function UserMessage({currentChat, message, showAvatar, showAuthor, showStatus}:
 	const nonTextMessage = (message.attachment.hasAttachment && isSent) || onlyEmojisRegex.test(message.content);
 
 	return (
-		<div className='d-flex flex-row align-items-end' style={{marginBottom: 3}}>
+		<div className='d-flex flex-row align-items-end' style={{ marginBottom: 3 }}>
 			<div className='me-2'>
 				{showAvatar
 					? (
-						<OverlayTrigger placement='left' overlay={authorTooltip} delay={{show: 500, hide: 0}}>
+						<OverlayTrigger placement='left' overlay={authorTooltip} delay={{ show: 500, hide: 0 }}>
 							<Link to={`/chat/user/${message.author.id}`}>
-								<ProfilePicture src={message.author.avatar} size={32} onClick={() => true}/>
+								<ProfilePicture src={message.author.avatar} size={32} onClick={() => true} />
 							</Link>
 						</OverlayTrigger>
 					)
@@ -202,12 +202,12 @@ function UserMessage({currentChat, message, showAvatar, showAuthor, showStatus}:
 
 			<div className='d-flex flex-fill flex-column'>
 				{showAuthor && (
-					<span className='text-muted' style={{marginLeft: 12, fontSize: '0.7em'}}>
+					<span className='text-muted' style={{ marginLeft: 12, fontSize: '0.7em' }}>
 						{message.author.username}
 					</span>)
 				}
 				<div className={`d-flex ${isAuthor ? 'flex-row-reverse' : 'flex-row'}`}>
-					<OverlayTrigger placement={isAuthor ? 'left' : 'right'} overlay={timeTooltip} delay={{show: 500, hide: 0}}>
+					<OverlayTrigger placement={isAuthor ? 'left' : 'right'} overlay={timeTooltip} delay={{ show: 500, hide: 0 }}>
 						<div
 							style={{
 								opacity: isSent ? '100%' : '50%',
@@ -217,7 +217,7 @@ function UserMessage({currentChat, message, showAvatar, showAuthor, showStatus}:
 						>
 							{message.attachment.hasAttachment ? (
 								<MessageAttachment message={message} />
-							): (
+							) : (
 								<DokChatMarkdown text={message.content || ''} className={nonTextMessage ? 'large-emojis' : ''} />
 							)}
 						</div>
@@ -238,7 +238,7 @@ interface SystemMessageProps {
 
 function SystemMessage({ content }: SystemMessageProps) {
 	return (
-		<div className='d-flex m-3 justify-content-center text-muted fw-bold' style={{fontSize: '0.8em'}}>
+		<div className='d-flex m-3 justify-content-center text-muted fw-bold' style={{ fontSize: '0.8em' }}>
 			{content}
 		</div>
 	);
@@ -250,15 +250,15 @@ interface MessageStatusProps {
 	color: string
 }
 
-function MessageStatus({color, isPending, isFailed: isError}: MessageStatusProps) {
+function MessageStatus({ color, isPending, isFailed: isError }: MessageStatusProps) {
 	let icon = BsCheckCircleFill;
 	if (isPending) icon = BsCheckCircle;
 	if (isError) icon = BsXCircle;
 	const iconEl = React.createElement(
 		icon, {
-			size: 14,
-			color: isError ? 'var(--bs-danger)' : color
-		}
+		size: 14,
+		color: isError ? 'var(--bs-danger)' : color
+	}
 	);
 	return (
 		<div className='d-flex align-items-end pe-0 ps-1'>

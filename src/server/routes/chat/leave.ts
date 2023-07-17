@@ -21,12 +21,12 @@ router.all('/leave',
 
 		const chatId = req.body.chat;
 
-		if(!(await PermissionsManager.hasChatAccess(req.auth, chatId))) {
+		if (!(await PermissionsManager.hasChatAccess(req.auth, chatId))) {
 			return new ApiResponse(res).forbidden();
 		}
 
 		const chat = await ChatManager.getChat(chatId);
-		if(!chat.isGroup) {
+		if (!chat.isGroup) {
 			return new ApiResponse(res).badRequest('Cannot leave chat that is not a group');
 		}
 

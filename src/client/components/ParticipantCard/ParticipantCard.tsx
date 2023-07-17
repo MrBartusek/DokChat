@@ -11,21 +11,21 @@ import IconButton from '../IconButton/IconButton';
 import { UserCard } from '../UserList/UserList';
 
 export interface ParticipantCardProps {
-    currentChat: LocalChat,
+	currentChat: LocalChat,
 	participant: ChatParticipant
 }
 
 export default function ParticipantCard({ currentChat, participant }: ParticipantCardProps) {
-	const [ user ] = useContext(UserContext);
-	const [ isLoading, setLoading ] = useState(false);
-	const [ removed, setRemoved ] = useState(false);
+	const [user] = useContext(UserContext);
+	const [isLoading, setLoading] = useState(false);
+	const [removed, setRemoved] = useState(false);
 	const navigate = useNavigate();
 
 	async function handleRemove() {
 		const axios = getAxios(user);
 
 		setLoading(true);
-		await axios.delete('chat/modify-participants', { data: { chat: currentChat.id, participant: participant.id }})
+		await axios.delete('chat/modify-participants', { data: { chat: currentChat.id, participant: participant.id } })
 			.then(() => {
 				toast('This user was removed from this group');
 				setRemoved(true);
@@ -43,7 +43,7 @@ export default function ParticipantCard({ currentChat, participant }: Participan
 	}
 
 	return (
-		<div style={{opacity: removed ? 0.25 : 1}}>
+		<div style={{ opacity: removed ? 0.25 : 1 }}>
 			<UserCard user={participant} icons={(
 				<span className='d-flex flex-row'>
 					<IconButton icon={BsInfoCircle} size={34} disabled={isLoading || removed} onClick={handleInfo} />

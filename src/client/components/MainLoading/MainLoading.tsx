@@ -5,7 +5,7 @@ import './MainLoading.scss';
 export default function MainLoading() {
 	// When developing this loading screen popping up on
 	// refresh is so annoying
-	if(location.hostname == 'localhost') {
+	if (location.hostname == 'localhost') {
 		return (<></>);
 	}
 
@@ -15,7 +15,7 @@ export default function MainLoading() {
 				className='d-flex justify-content-center align-items-center flex-column h-100'
 			>
 				<span className='display-4'>
-					<BsFillChatSquareTextFill className='me-2'/>
+					<BsFillChatSquareTextFill className='me-2' />
 					DokChat
 				</span>
 				<span className='mt-4 fs-5'>

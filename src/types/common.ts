@@ -25,15 +25,15 @@ export interface Chat {
 }
 
 export interface User {
-	id: string,
-	username: string,
+    id: string,
+    username: string,
     tag: string,
-	avatar: string
+    avatar: string
 }
 
 export interface LastMessage {
-	author: string,
-	content: string,
+    author: string,
+    content: string,
     timestamp: string,
 }
 
@@ -54,7 +54,7 @@ export interface Message {
 }
 
 export interface ChatParticipant extends User {
-	userId: string
+    userId: string
 }
 
 export interface ChatInvite {

@@ -3,8 +3,8 @@ import { Axios } from 'axios';
 import { LocalUser } from '../types/User';
 
 function getAxios(user?: LocalUser): Axios {
-	let headers: axios.RawAxiosRequestHeaders  = {};
-	if(user) {
+	let headers: axios.RawAxiosRequestHeaders = {};
+	if (user) {
 		headers = user.getAuthHeader();
 	}
 	return new Axios({

@@ -12,7 +12,7 @@ export default function registerOnlineStatusHandler(io: DokChatServer, socket: D
 			const lastSeen = DateFns.fromUnixTime(user.lastSeen);
 			const lastSeenDiff = DateFns.differenceInMinutes(new Date(), lastSeen);
 			const isOnline = lastSeenDiff <= 5;
-			const lastSeenFormatted = 'Last seen ' +  DateFns.formatDistance(lastSeen, new Date(), { addSuffix: true });
+			const lastSeenFormatted = 'Last seen ' + DateFns.formatDistance(lastSeen, new Date(), { addSuffix: true });
 			const isVeryOld = DateFns.differenceInDays(new Date(), lastSeen) > 30;
 			return {
 				id: user.userId,
@@ -34,7 +34,7 @@ type OnlineQuery = QueryResult<{
  * with specified user via param
  * @param as User id to display online users for
  */
-async function queryOnline(as: string ): Promise<OnlineQuery> {
+async function queryOnline(as: string): Promise<OnlineQuery> {
 	return db.query(sql`
 		SELECT DISTINCT
 			p.user_id as "userId",
@@ -53,5 +53,5 @@ async function queryOnline(as: string ): Promise<OnlineQuery> {
 			users.id = p.user_id
 		WHERE
 			participants.user_id = $1
-    `, [ as ]);
+    `, [as]);
 }

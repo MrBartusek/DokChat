@@ -29,24 +29,24 @@ router.all('/create',
 
 		const participantIds = req.body.participants as string[];
 
-		if(participantIds.includes(req.auth.id)) {
+		if (participantIds.includes(req.auth.id)) {
 			return new ApiResponse(res).badRequest('Authenticated user is included in participants');
 		}
 
 		// Check if specific DM already exist
 		const isDm = participantIds.length == 1;
-		if(isDm) {
+		if (isDm) {
 			const dmId = await ChatManager.dmExist(participantIds[0], req.auth.id);
-			if(dmId !== false) {
+			if (dmId !== false) {
 				const chat = await ChatManager.getChat(dmId, req.auth.id);
 				return new ApiResponse(res).respond(true, 409, 'This DM already exist', chat);
 			}
 		}
 
 		// Check if requesting user is blocking any of the participant and vice versa
-		for await(const partId of participantIds) {
+		for await (const partId of participantIds) {
 			const isBlocked = await BlockManager.isBlockedAny(req.auth.id, partId);
-			if(isBlocked) {
+			if (isBlocked) {
 				const user = await UserManager.getUserById(partId);
 				return new ApiResponse(res).forbidden(`${Utils.userDiscriminator(user)} has blocked you or, you are blocking this user`);
 			}
@@ -57,7 +57,7 @@ router.all('/create',
 
 		// Fetch participants
 		const participants = await convertIdsToUsers(participantIds);
-		if(participants.includes(null)) {
+		if (participants.includes(null)) {
 			return new ApiResponse(res).badRequest('Invalid participants list');
 		}
 
@@ -81,7 +81,7 @@ async function createChat(req: Request, creatorId: string, participants: User[])
 		DateFns.getUnixTime(new Date())
 	]);
 
-	for await(const part of participants) {
+	for await (const part of participants) {
 		// If this is a DM, hide a chat from other user
 		// It will be shown again on first message
 		const hide = (part.id != creatorId) && !isGroup;

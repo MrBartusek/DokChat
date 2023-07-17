@@ -18,53 +18,53 @@ export interface MessageBarProps {
 }
 
 function MessageBar({ currentChat }: MessageBarProps) {
-	const [ chats, sendMessage ] = useContext(MessageManagerContext);
-	const [ values, handleChange, setValues ] = useForm({ content: '' });
-	const [ isEnabled, setEnabled ] = useState(false);
+	const [chats, sendMessage] = useContext(MessageManagerContext);
+	const [values, handleChange, setValues] = useForm({ content: '' });
+	const [isEnabled, setEnabled] = useState(false);
 	const inputRef = useRef<HTMLInputElement>();
-	const [ fileUploader, setFileUploader ] = useState<FileUploaderResult>({});
+	const [fileUploader, setFileUploader] = useState<FileUploaderResult>({});
 
 	useEffect(() => {
 		setEnabled(values.content.length > 0);
-	}, [ values ]);
+	}, [values]);
 
 	useEffect(() => {
 		(async () => {
-			if(!fileUploader.file) return;
+			if (!fileUploader.file) return;
 			// First, send text message if there is any
-			if(isEnabled) await handleSubmit();
-			setTimeout(async() => {
+			if (isEnabled) await handleSubmit();
+			setTimeout(async () => {
 				await sendMessage(currentChat, null, fileUploader.file);
 				fileUploader.reset();
 			}, (isEnabled ? 100 : 0));
 		})();
-	}, [ fileUploader ]);
+	}, [fileUploader]);
 
 	async function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
 		e?.preventDefault();
-		if(!isEnabled) return;
+		if (!isEnabled) return;
 		await sendMessage(currentChat, values.content);
 		setValues();
 		inputRef.current.focus();
 	}
 
 	async function handlePaste(event: React.ClipboardEvent<HTMLInputElement>) {
-		if(!event.clipboardData.files.length) return;
+		if (!event.clipboardData.files.length) return;
 		const file = event.clipboardData.files[0];
-		if(!file) return;
+		if (!file) return;
 		fileUploader.setFile(file);
 	}
 
 	async function handleDrop(event: React.DragEvent<HTMLFormElement>) {
-		if(!event.dataTransfer.files.length) return;
+		if (!event.dataTransfer.files.length) return;
 		const file = event.dataTransfer.files[0];
-		if(!file) return;
+		if (!file) return;
 		fileUploader.setFile(file);
 		event.preventDefault();
 	}
 
 	function handleEmojiClick(emoji: EmojiClickData) {
-		setValues({ content: values.content + emoji.emoji});
+		setValues({ content: values.content + emoji.emoji });
 	}
 
 	return (
@@ -87,7 +87,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 				<Col className='p-0'>
 					<div
 						className='form-control rounded-pill d-flex flex-row gap-1 pe-1'
-						style={{'height': 34}}
+						style={{ 'height': 34 }}
 						tabIndex={0}
 						onFocus={(e) => (e.target.firstElementChild as HTMLElement)?.focus()}
 						onBlur={(e) => (e.target.firstElementChild as HTMLElement)?.blur()}
@@ -97,14 +97,14 @@ function MessageBar({ currentChat }: MessageBarProps) {
 							name="content"
 							placeholder="Aa"
 							className='border-0 p-0 h-100 shadow-none'
-							style={{'height': 34}}
+							style={{ 'height': 34 }}
 							autoComplete='off'
 							ref={inputRef}
 							value={values.content}
 							onChange={handleChange}
 							onPaste={handlePaste}
-							onFocus={(e) => e.target.parentElement?.classList.add('focus') }
-							onBlur={(e) => e.target.parentElement?.classList.remove('focus') }
+							onFocus={(e) => e.target.parentElement?.classList.add('focus')}
+							onBlur={(e) => e.target.parentElement?.classList.remove('focus')}
 						/>
 						<div className='d-flex align-items-center'>
 							<EmojiButton onEmojiClick={handleEmojiClick} color={currentChat.color.hex} />

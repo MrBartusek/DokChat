@@ -4,8 +4,8 @@ import { useLocalStorage } from './useLocalStorage';
 
 export enum Theme {
 	AUTO = 'auto',
-    DARK = 'dark',
-    LIGHT = 'light'
+	DARK = 'dark',
+	LIGHT = 'light'
 }
 
 export interface Settings {
@@ -21,7 +21,7 @@ export const DEFAULT_SETTINGS: Settings = {
 };
 
 export function useSettings(): [Settings, (settings: Settings) => void] {
-	const [ settings, setSettings ] = useLocalStorage<Settings>('settings2', {} as Settings);
+	const [settings, setSettings] = useLocalStorage<Settings>('settings2', {} as Settings);
 
 	const settingsCopy: Settings = {
 		soundNotifications: settings.soundNotifications ?? DEFAULT_SETTINGS.soundNotifications,
@@ -29,11 +29,11 @@ export function useSettings(): [Settings, (settings: Settings) => void] {
 		theme: praseTheme(settings.themeRaw ?? DEFAULT_SETTINGS.themeRaw)
 	};
 
-	return [ settingsCopy, setSettings ];
+	return [settingsCopy, setSettings];
 }
 
 function praseTheme(theme: Theme) {
-	if(theme == Theme.AUTO) {
+	if (theme == Theme.AUTO) {
 		const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)');
 		return darkThemeMq.matches ? Theme.DARK : Theme.LIGHT;
 	}

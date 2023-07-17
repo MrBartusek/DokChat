@@ -5,4 +5,4 @@ export interface EmailConfirmJWTData extends JWTPayload {
     email: string;
 }
 
-export interface PasswordResetJWTData extends EmailConfirmJWTData {}
+export interface PasswordResetJWTData extends EmailConfirmJWTData { }

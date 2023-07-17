@@ -12,11 +12,11 @@ import Popup from '../Popup/Popup';
 
 function ChatHidePopup() {
 	const currentChat = useOutletContext<LocalChat>();
-	const [ handleClose, setHandleClose ] = useState<() => void>(null);
-	const [ isLoading, setLoading ] = useState(false);
-	const [ error, setError ] = useState<string | null>(null);
-	const [ user ] = useContext(UserContext);
-	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
+	const [handleClose, setHandleClose] = useState<() => void>(null);
+	const [isLoading, setLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+	const [user] = useContext(UserContext);
+	const [chats, sendMessage, setChatList] = useContext(MessageManagerContext);
 	const navigate = useNavigate();
 
 	async function handleHide() {
@@ -25,7 +25,7 @@ function ChatHidePopup() {
 		setLoading(true);
 		await axios.post('chat/hide', { chat: currentChat.id })
 			.then(() => {
-				const chatsCopy = [ ...chats ];
+				const chatsCopy = [...chats];
 				setChatList(chatsCopy.filter(c => c.id !== currentChat.id));
 				toast('This chat has been hidden');
 				navigate('/chat');

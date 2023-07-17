@@ -24,7 +24,7 @@ router.all('/participants',
 
 		const chatId = req.query.chat;
 
-		if(!(await PermissionsManager.hasChatAccess(req.auth, chatId))) {
+		if (!(await PermissionsManager.hasChatAccess(req.auth, chatId))) {
 			return new ApiResponse(res).forbidden();
 		}
 
@@ -55,7 +55,7 @@ async function queryParticipants(chatId: string): Promise<ParticipantsQuery> {
 		INNER JOIN users ON participants.user_id = users.id
 		WHERE participants.chat_id = $1
 		ORDER BY participants.created_at ASC
-	`, [ chatId ]);
+	`, [chatId]);
 }
 
 export default router;

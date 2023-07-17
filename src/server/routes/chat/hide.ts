@@ -20,7 +20,7 @@ router.all('/hide',
 
 		const chatId = req.body.chat;
 
-		if(!(await PermissionsManager.hasChatAccess(req.auth, chatId))) {
+		if (!(await PermissionsManager.hasChatAccess(req.auth, chatId))) {
 			return new ApiResponse(res).forbidden();
 		}
 		await ChatManager.setChatHideForParticipantByUserId(chatId, req.auth.id, true);

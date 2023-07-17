@@ -17,24 +17,24 @@ function Footer() {
 						</p>
 					</Col>
 					<Col className='d-flex justify-content-center justify-content-lg-end gap-5 text-center text-lg-start'>
-						<div style={{width: 250}}>
+						<div style={{ width: 250 }}>
 							<h3>
 								Help
 							</h3>
 							<p>
-								<a href='https://github.com/MrBartusek/DokChat' className='link-secondary'>Bug tracker</a><br/>
-								<a href='mailto:dokchat@dokurno.dev' className='link-secondary'>Contact</a><br/>
+								<a href='https://github.com/MrBartusek/DokChat' className='link-secondary'>Bug tracker</a><br />
+								<a href='mailto:dokchat@dokurno.dev' className='link-secondary'>Contact</a><br />
 							</p>
 						</div>
-						<div style={{width: 250}}>
+						<div style={{ width: 250 }}>
 							<h3>
 								Links
 							</h3>
-							<Link to='/' className='link-secondary'>About DokChat</Link><br/>
-							<Link to='/download' className='link-secondary'>Download for Desktop</Link><br/>
-							<a href='https://github.com/MrBartusek/DokChat' className='link-secondary'>Github Repository</a><br/>
-							<Link to='/register' className='link-secondary'>Register Account</Link><br/>
-							<Link to='/privacy-policy' className='link-secondary'>Privacy Policy</Link><br/>
+							<Link to='/' className='link-secondary'>About DokChat</Link><br />
+							<Link to='/download' className='link-secondary'>Download for Desktop</Link><br />
+							<a href='https://github.com/MrBartusek/DokChat' className='link-secondary'>Github Repository</a><br />
+							<Link to='/register' className='link-secondary'>Register Account</Link><br />
+							<Link to='/privacy-policy' className='link-secondary'>Privacy Policy</Link><br />
 						</div>
 					</Col>
 				</Row>

@@ -15,20 +15,20 @@ router.all('/google', body('token').isString(), async (req, res) => {
 
 	const token = req.body.token;
 
-	const ticket = await client.verifyIdToken({ idToken: token, audience: GOOGLE_CLIENT_ID})
+	const ticket = await client.verifyIdToken({ idToken: token, audience: GOOGLE_CLIENT_ID })
 		.catch(() => {
 			new ApiResponse(res).unauthorized('Provided Google token is not valid');
 		});
-	if(!ticket) return;
+	if (!ticket) return;
 
 	const payload = ticket.getPayload();
-	if(!payload.email) {
+	if (!payload.email) {
 		return new ApiResponse(res).unauthorized(
 			'Failed to retrieve e-mail address from your Google account. ' +
 			'Make sure you have granted e-mail read permissions permissions to DokChat.'
 		);
 	}
-	if(!payload.email_verified) {
+	if (!payload.email_verified) {
 		return new ApiResponse(res).unauthorized('Provided Google e-mail address is not verified');
 	}
 

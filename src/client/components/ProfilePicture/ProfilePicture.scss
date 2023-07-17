@@ -24,7 +24,8 @@
 	border: solid 3px #fff;
 }
 
-#app[data-theme='dark'], .modal-dialog[data-theme='dark']  {
+#app[data-theme='dark'],
+.modal-dialog[data-theme='dark'] {
 	.online-dot {
 		border-color: $dark-background;
 	}

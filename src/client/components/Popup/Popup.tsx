@@ -17,10 +17,10 @@ interface PopupProps extends ModalProps {
 function Popup(props: PopupProps) {
 	const navigate = useNavigate();
 	const handleClose = () => navigate('/chat');
-	const [ settings ] = useContext(SettingsContext);
+	const [settings] = useContext(SettingsContext);
 
 	useEffect(() => {
-		if(!props.setHandleClose) return;
+		if (!props.setHandleClose) return;
 		props.setHandleClose(() => handleClose);
 	}, []);
 
@@ -34,7 +34,7 @@ function Popup(props: PopupProps) {
 			keyboard={!props.static}
 			data-theme={settings.theme}
 		>
-			<ErrorBoundary fallbackRender={({error, resetErrorBoundary}) => (
+			<ErrorBoundary fallbackRender={({ error, resetErrorBoundary }) => (
 				<>
 					<Modal.Header closeButton={true} closeVariant={closeVariant}>
 						<Modal.Title>Error</Modal.Title>
@@ -52,7 +52,7 @@ function Popup(props: PopupProps) {
 				<Modal.Header closeButton={!props.static} closeVariant={closeVariant}>
 					<Modal.Title
 						as={'div'}
-						style={!props.static ? {marginLeft: 22.9} : {}} // Even the space with close button
+						style={!props.static ? { marginLeft: 22.9 } : {}} // Even the space with close button
 					>
 						{props.title}
 					</Modal.Title>

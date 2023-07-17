@@ -5,9 +5,9 @@ import { LocalUser } from '../types/User';
 /**
  * This hook handles the User object as well as storing access token in cookie
  */
-export function useUser(): [LocalUser, {token?: any }, React.Dispatch<string | LocalUser>, React.Dispatch<void>] {
-	const [ user, setUser ] = useState(LocalUser.empty());
-	const [ cookies, setCookie, removeCookie ] = useCookies([ 'token' ]);
+export function useUser(): [LocalUser, { token?: any }, React.Dispatch<string | LocalUser>, React.Dispatch<void>] {
+	const [user, setUser] = useState(LocalUser.empty());
+	const [cookies, setCookie, removeCookie] = useCookies(['token']);
 
 	const isDevelopment = location.hostname == 'localhost';
 
@@ -16,7 +16,7 @@ export function useUser(): [LocalUser, {token?: any }, React.Dispatch<string | L
 		cookies,
 		(token: string | LocalUser) => {
 			const user = token instanceof LocalUser ? token : LocalUser.fromJWT(token);
-			setCookie('token', user.token, { secure: !isDevelopment, sameSite: 'strict'});
+			setCookie('token', user.token, { secure: !isDevelopment, sameSite: 'strict' });
 			setUser(user);
 		},
 		() => {

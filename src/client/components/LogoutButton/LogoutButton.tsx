@@ -3,11 +3,11 @@ import { BsBoxArrowLeft } from 'react-icons/bs';
 import { UserContext } from '../../context/UserContext';
 import InteractiveButton, { InteractiveButtonProps } from '../InteractiveButton/InteractiveButton';
 
-export interface LogoutButton extends InteractiveButtonProps {}
+export interface LogoutButton extends InteractiveButtonProps { }
 
 export default function LogoutButton(props: InteractiveButtonProps) {
-	const [ user, refreshToken, setUser, callLogout ] = useContext(UserContext);
-	const [ isLoading, setLoading ] = useState(false);
+	const [user, refreshToken, setUser, callLogout] = useContext(UserContext);
+	const [isLoading, setLoading] = useState(false);
 
 	async function handleClick() {
 		setLoading(true);

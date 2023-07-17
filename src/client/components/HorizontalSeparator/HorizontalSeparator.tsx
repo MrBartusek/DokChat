@@ -2,7 +2,7 @@ import React from 'react';
 import './HorizontalSeparator.scss';
 
 export interface HorizontalSeparatorProps {
-    text: string
+	text: string
 }
 
 export default function HorizontalSeparator({ text }: HorizontalSeparatorProps) {

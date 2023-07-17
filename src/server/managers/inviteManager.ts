@@ -13,12 +13,12 @@ class InviteManager {
 	public static async createOrGetInvite(chatId: string, participantId: string): Promise<ChatInvite> {
 		const invite = await this.getInviteByParticipant(chatId, participantId);
 		let tooOld = false;
-		if(invite) {
-			const createdAt =  DateFns.fromUnixTime(Number(invite.createdAt));
+		if (invite) {
+			const createdAt = DateFns.fromUnixTime(Number(invite.createdAt));
 			const createdAgo = DateFns.differenceInHours(new Date(), createdAt);
 			tooOld = createdAgo >= 5;
 		}
-		if(invite && !tooOld) return invite;
+		if (invite && !tooOld) return invite;
 		await this.pruneOldInvites();
 		return await this.generateInvite(chatId, participantId);
 	}
@@ -31,7 +31,7 @@ class InviteManager {
 				invites
 			WHERE
 				chat_id = $1 AND author_id = $2;
-		`, [ chatId, participantId ]);
+		`, [chatId, participantId]);
 		return this.praseInvite(inviteQuery);
 	}
 
@@ -43,12 +43,12 @@ class InviteManager {
 				invites
 			WHERE
 				invite_key = $1
-		`, [ key ]);
+		`, [key]);
 		return this.praseInvite(inviteQuery);
 	}
 
 	private static praseInvite(queryResult: QueryResult): ChatInvite | null {
-		if(queryResult.rowCount == 0) return null;
+		if (queryResult.rowCount == 0) return null;
 		const invite = queryResult.rows[0];
 		const created = DateFns.fromUnixTime(invite.createdAt);
 		const expire = DateFns.getUnixTime(DateFns.addDays(created, INVITE_TIME_DAYS));
@@ -71,7 +71,7 @@ class InviteManager {
 				invites (id, chat_id, author_id, created_at, invite_key)
 			VALUES
 				($1, $2, $3, $4, $5)
-		`, [ id, chatId, participantId, timestamp.toString(), key ]);
+		`, [id, chatId, participantId, timestamp.toString(), key]);
 
 		const expire = DateFns.getUnixTime(DateFns.addDays(created, INVITE_TIME_DAYS));
 
@@ -85,13 +85,13 @@ class InviteManager {
 	}
 
 	private static async pruneOldInvites(): Promise<number> {
-		const tooOld =  DateFns.getUnixTime(DateFns.subDays(new Date(), INVITE_TIME_DAYS));
+		const tooOld = DateFns.getUnixTime(DateFns.subDays(new Date(), INVITE_TIME_DAYS));
 		const query = await db.query(sql`
 			DELETE FROM
 				invites
 			WHERE created_at < $1
-		`, [ tooOld ]);
-		if(query.rowCount > 0) {
+		`, [tooOld]);
+		if (query.rowCount > 0) {
 			console.log(`Deleted ${query.rowCount} invites older than ${INVITE_TIME_DAYS} days`);
 		}
 		return query.rowCount;

@@ -21,20 +21,20 @@ export function useMessageManager(ws: useWebsocketType): [
 	LocalChat[], // chats
 	(chat: LocalChat, content?: string, attachment?: File) => Promise<void>, // sendMessage
 	React.Dispatch<LocalChat[]> // setChatList
-	] {
-	const [ loading, setLoading ] = useState(true);
-	const [ user ] = useContext(UserContext);
-	const [ playPing ] = useSound('/sounds/new_message_ping.mp3', { volume: 0.5 });
-	const [ settings ] = useContext(SettingsContext);
+] {
+	const [loading, setLoading] = useState(true);
+	const [user] = useContext(UserContext);
+	const [playPing] = useSound('/sounds/new_message_ping.mp3', { volume: 0.5 });
+	const [settings] = useContext(SettingsContext);
 
 	const initialChatList = useFetch<EndpointResponse<ChatListResponse>>('chat/list', true);
-	const [ chatList, setChatList ] = useState<LocalChat[]>([]);
+	const [chatList, setChatList] = useState<LocalChat[]>([]);
 
 	/**
-     * Load initial chat list and cache it
-     */
+	 * Load initial chat list and cache it
+	 */
 	useEffect(() => {
-		if(initialChatList.loading) return;
+		if (initialChatList.loading) return;
 		const rawChats = initialChatList.res.data;
 		setChatList(
 			rawChats.map((chat) => (
@@ -42,17 +42,17 @@ export function useMessageManager(ws: useWebsocketType): [
 			))
 		);
 		setLoading(false);
-	}, [ initialChatList ]);
+	}, [initialChatList]);
 
 	/**
 	 * Message receive
 	 */
 	useEffect(() => {
 		ws.socket.on('message', (msg) => {
-			const chats = [ ...chatList ];
+			const chats = [...chatList];
 			const chat = chats.find((c) => c.id == msg.chat.id);
 
-			if(!chat) {
+			if (!chat) {
 				// If chat does not exist, add one to cache
 				const newChat = msg.chat;
 				newChat.lastMessage = {
@@ -70,7 +70,7 @@ export function useMessageManager(ws: useWebsocketType): [
 				chat.color = msg.chat.color;
 			}
 			setChatList(chats);
-			if(settings.soundNotifications && !msg.isSystem) playPing();
+			if (settings.soundNotifications && !msg.isSystem) playPing();
 		});
 		return () => {
 			ws.socket.off('message');
@@ -78,37 +78,37 @@ export function useMessageManager(ws: useWebsocketType): [
 	});
 
 	function ackMessage(chat: LocalChat, pendingId: string, newId: string, timestamp: string) {
-		const chats = [ ...chatList ];
+		const chats = [...chatList];
 		const chatId = chats.findIndex((c) => c.id == chat.id);
-		if(chatId == -1) return;
+		if (chatId == -1) return;
 		chats[chatId].ackMessage(pendingId, newId, timestamp);
 		setChatList(chats);
 	}
 
 	function ackErrorMessage(chat: LocalChat, pendingId: string) {
-		const chats = [ ...chatList ];
+		const chats = [...chatList];
 		const chatId = chats.findIndex((c) => c.id == chat.id);
-		if(chatId == -1) return;
+		if (chatId == -1) return;
 		chats[chatId].ackErrorMessage(pendingId);
 		setChatList(chats);
 	}
 
 	function sortedChatList(): LocalChat[] {
-		return [ ...chatList ].sort((a, b) => {
-			return  Number(b.lastMessage?.timestamp || b.createdAt) - Number(a.lastMessage?.timestamp || a.createdAt);
+		return [...chatList].sort((a, b) => {
+			return Number(b.lastMessage?.timestamp || b.createdAt) - Number(a.lastMessage?.timestamp || a.createdAt);
 		});
 	}
 
-	async function sendMessage(chat: LocalChat, content?: string, attachment?: File)  {
-		if(attachment && attachment.size > ATTACHMENT_MAX_SIZE) {
+	async function sendMessage(chat: LocalChat, content?: string, attachment?: File) {
+		if (attachment && attachment.size > ATTACHMENT_MAX_SIZE) {
 			toast.error('Max attachments size is 25MB');
 			return;
 		}
 
 		// Add this message to local cache
-		const chats = [ ...chatList ];
+		const chats = [...chatList];
 		const chatId = chats.findIndex((c) => c.id == chat.id);
-		if(chatId == -1) return;
+		if (chatId == -1) return;
 		const pendingMessageId = chats[chatId].addMessage({
 			id: '0', // This will be auto-generated
 			isPending: true,
@@ -133,7 +133,7 @@ export function useMessageManager(ws: useWebsocketType): [
 			chatId: chat.id,
 			content: content
 		};
-		if(attachment) {
+		if (attachment) {
 			const arrBuffer = await attachment.arrayBuffer();
 			message.attachment = {
 				buffer: Buffer.from(arrBuffer),
@@ -141,7 +141,7 @@ export function useMessageManager(ws: useWebsocketType): [
 			};
 		}
 		ws.socket.emit('message', message, (response) => {
-			if(response.error) {
+			if (response.error) {
 				ackErrorMessage(chat, pendingMessageId);
 				console.error('Failed to send message', response);
 			}

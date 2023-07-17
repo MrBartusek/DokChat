@@ -13,22 +13,22 @@ export interface NewPasswordFormProps {
 }
 
 function NewPasswordForm({ token }: NewPasswordFormProps) {
-	const [ loading, setLoading ] = useState(false);
-	const [ values, handleChange ] = useForm({ password: '', confirmPassword: '' });
-	const [ error, setError ] = useState<string | null>(null);
-	const [ success, setSuccess ] = useState<boolean>(false);
+	const [loading, setLoading] = useState(false);
+	const [values, handleChange] = useForm({ password: '', confirmPassword: '' });
+	const [error, setError] = useState<string | null>(null);
+	const [success, setSuccess] = useState<boolean>(false);
 	const passwordConfirmRef = useRef<HTMLInputElement>(null);
 
 	useLayoutEffect(() => {
-		if(values.password != passwordConfirmRef.current.value) {
+		if (values.password != passwordConfirmRef.current.value) {
 			passwordConfirmRef.current.setCustomValidity('The password confirmation does not match');
 		}
 		else {
 			passwordConfirmRef.current.setCustomValidity('');
 		}
-	}, [ values, passwordConfirmRef ]);
+	}, [values, passwordConfirmRef]);
 
-	if(success) {
+	if (success) {
 		return (
 			<>
 				<div className='text-center mb-4'>

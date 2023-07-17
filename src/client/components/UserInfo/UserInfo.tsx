@@ -7,7 +7,7 @@ import IconButton from '../IconButton/IconButton';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 
 function UserInfo() {
-	const [ user ] = useContext(UserContext);
+	const [user] = useContext(UserContext);
 	const navigate = useNavigate();
 
 	const usernameTooltip = (props: TooltipProps) => (

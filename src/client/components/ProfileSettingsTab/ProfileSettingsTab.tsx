@@ -21,14 +21,14 @@ export interface ProfileSettingsProps {
 }
 
 export default function ProfileSettings(props: ProfileSettingsProps) {
-	const [ user, updateToken ] = useContext(UserContext);
-	const defaultValues = { username: user.username, tag: user.tag, email: user.email, password: ''};
-	const [ values, handleChange, resetForm ] = useForm(defaultValues);
-	const [ error, setError ] = useState<string | null>(null);
-	const [ avatarUploader, setAvatarUploader ]  = useState<FileUploaderResult>({});
-	const [ isEditing, setEditing ] = useState(false);
-	const [ isUnsaved, setUnsaved ] = useState(false);
-	const [ isLoading, setLoading ] = useState(false);
+	const [user, updateToken] = useContext(UserContext);
+	const defaultValues = { username: user.username, tag: user.tag, email: user.email, password: '' };
+	const [values, handleChange, resetForm] = useForm(defaultValues);
+	const [error, setError] = useState<string | null>(null);
+	const [avatarUploader, setAvatarUploader] = useState<FileUploaderResult>({});
+	const [isEditing, setEditing] = useState(false);
+	const [isUnsaved, setUnsaved] = useState(false);
+	const [isLoading, setLoading] = useState(false);
 	const formRef = useRef<HTMLFormElement>(null);
 
 	/**
@@ -42,16 +42,16 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 			avatarUploader.file != undefined
 		);
 		setUnsaved(changed);
-		if(changed && !isEditing) {
+		if (changed && !isEditing) {
 			setEditing(true);
 		}
-	}, [ values, avatarUploader ]);
+	}, [values, avatarUploader]);
 
 	/**
 	 * Handle footer
 	 */
 	useEffect(() => {
-		if(!isEditing) return props.setCustomFooter(null);
+		if (!isEditing) return props.setCustomFooter(null);
 		props.setCustomFooter(
 			<>
 				<InteractiveButton variant='secondary' onClick={handleDiscard}>
@@ -63,15 +63,15 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 					disabled={!isUnsaved}
 					loading={isLoading}
 				>
-						Save Changes
+					Save Changes
 				</InteractiveButton>
 			</>
 		);
-	}, [ isEditing, isUnsaved, isLoading ]);
+	}, [isEditing, isUnsaved, isLoading]);
 
 	useEffect(() => {
 		props.setCustomStatic(isEditing);
-	}, [ isEditing ]);
+	}, [isEditing]);
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -84,11 +84,11 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 		formData.append('password', values.password);
 
 		const avatarUpdated = avatarUploader.file != undefined;
-		if(avatarUpdated) {
+		if (avatarUpdated) {
 			formData.append('avatar', avatarUploader.file);
 		}
 
-		await getAxios(user).put('/user/update-profile', formData, { headers: {'Content-Type': 'multipart/form-data'}})
+		await getAxios(user).put('/user/update-profile', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
 			.then(() => updateToken(avatarUpdated))
 			.then(() => props.handleClose())
 			.then(() => toast('Your profile has been updated'))
@@ -128,7 +128,7 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 						<IconButton
 							icon={BsPencil}
 							className="position-absolute top-p end-0 mt-2"
-							style={{zIndex: 1}}
+							style={{ zIndex: 1 }}
 							size={34}
 							onClick={() => setEditing(true)}
 						/>
@@ -172,7 +172,7 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 							{!user.isEmailConfirmed && !isEditing && (
 								<>
 									<span> - </span>
-									<Link to='/chat/email-confirm' style={{ pointerEvents: 'auto'}}>
+									<Link to='/chat/email-confirm' style={{ pointerEvents: 'auto' }}>
 										Confirm E-Mail
 									</Link>
 								</>
@@ -209,11 +209,11 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 
 function SettingsOption(props: FormControlProps & React.AllHTMLAttributes<HTMLInputElement>) {
 	const propsCopy = Object.assign({}, props);
-	if(propsCopy.readOnly) {
+	if (propsCopy.readOnly) {
 		propsCopy.className = ' form-control-plaintext';
 		propsCopy.onFocus = (e) => e.target.blur();
 	}
 	return (
-		<Form.Control {...propsCopy}/>
+		<Form.Control {...propsCopy} />
 	);
 }

@@ -6,7 +6,7 @@ import ErrorPage from './components/ErrorPage/ErrorPage';
 function App() {
 	return (
 		<React.StrictMode>
-			<ErrorBoundary fallbackRender={({error, resetErrorBoundary}) => (
+			<ErrorBoundary fallbackRender={({ error, resetErrorBoundary }) => (
 				<ErrorPage
 					displayRefresh
 					message='Failed to render this page at this time'

@@ -4,7 +4,7 @@
 @import '../../scss/dark.scss';
 
 .message {
-    padding: 8px 12px;
+	padding: 8px 12px;
 	border-radius: 1.2rem;
 	overflow: hidden;
 	background-color: $gray-200;
@@ -22,7 +22,7 @@
 	background: none !important;
 }
 
-#app[data-theme='dark']  {
+#app[data-theme='dark'] {
 	.message {
 		background-color: mix($dark-background, $dark-washed, 20%)
 	}

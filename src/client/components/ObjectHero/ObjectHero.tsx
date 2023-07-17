@@ -6,12 +6,12 @@ import ProfilePicture from '../ProfilePicture/ProfilePicture';
 import Separator from '../Separator/Separator';
 
 export interface OObjectHeroProps {
-    currentAvatar: string;
+	currentAvatar: string;
 	isOnline?: boolean;
-    avatarUploader?: FileUploaderResult;
-    setAvatarUploader?: React.Dispatch<React.SetStateAction<FileUploaderResult>>;
-    title: string | React.ReactNode;
-    subTitle?: string;
+	avatarUploader?: FileUploaderResult;
+	setAvatarUploader?: React.Dispatch<React.SetStateAction<FileUploaderResult>>;
+	title: string | React.ReactNode;
+	subTitle?: string;
 	copyText?: string;
 }
 

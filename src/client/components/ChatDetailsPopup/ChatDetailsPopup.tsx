@@ -14,37 +14,37 @@ import Popup from '../Popup/Popup';
 
 function ChatDetailsPopup() {
 	const currentChat = useOutletContext<LocalChat>();
-	const [ handleClose, setHandleClose ] = useState<() => void>(null);
-	const [ customFooter, setCustomFooter ] = useState<JSX.Element>(null);
-	const [ customStatic, setCustomStatic ] = useState<boolean>(null);
-	const [ popupTitle, setPopupTitle ] = useState('');
-	const [ searchParams ] = useSearchParams({ tab: 'chat' });
-	const [ key, setKey ] = useState(searchParams.get('tab'));
+	const [handleClose, setHandleClose] = useState<() => void>(null);
+	const [customFooter, setCustomFooter] = useState<JSX.Element>(null);
+	const [customStatic, setCustomStatic] = useState<boolean>(null);
+	const [popupTitle, setPopupTitle] = useState('');
+	const [searchParams] = useSearchParams({ tab: 'chat' });
+	const [key, setKey] = useState(searchParams.get('tab'));
 	const participants = useFetch<EndpointResponse<ChatParticipantsRepose>>(null, true);
 
 	useEffect(() => {
-		if(key == 'chat') {
+		if (key == 'chat') {
 			setPopupTitle('Chat');
 		}
-		else if(key == 'participants') {
+		else if (key == 'participants') {
 			setPopupTitle('Participants');
 		}
-		else if(key == 'privacy') {
+		else if (key == 'privacy') {
 			setPopupTitle('Privacy');
 		}
-		else if(key == 'invite') {
+		else if (key == 'invite') {
 			setPopupTitle('Invite to group');
 		}
 		setCustomFooter(null);
 		setCustomStatic(false);
-	}, [ key ]);
+	}, [key]);
 
 	useEffect(() => {
-		if(!currentChat) return;
+		if (!currentChat) return;
 		participants.setUrl(`chat/participants?chat=${currentChat.id}`);
-	}, [ currentChat ]);
+	}, [currentChat]);
 
-	if(!currentChat) return null;
+	if (!currentChat) return null;
 	return (
 		<Popup
 			title={popupTitle}

@@ -1,16 +1,16 @@
 import React, { ChangeEvent, useEffect, useRef } from 'react';
 
 export interface FileUploaderResult {
-    click?: () => void;
+	click?: () => void;
 	reset?: () => void;
 	setFile?: (file: File) => void;
-    file?: File;
-    getURL?: () => Promise<string>;
-    getBase64?: () => Promise<string>;
+	file?: File;
+	getURL?: () => Promise<string>;
+	getBase64?: () => Promise<string>;
 }
 
 interface FileUploaderProps {
-    onChange: React.Dispatch<React.SetStateAction<FileUploaderResult>>,
+	onChange: React.Dispatch<React.SetStateAction<FileUploaderResult>>,
 	accept?: string
 }
 
@@ -70,7 +70,7 @@ export default function FileUploader({ onChange, accept }: FileUploaderProps) {
 			type="file"
 			accept={accept || 'image/*'}
 			ref={uploaderRef}
-			style={{display: 'none'}}
+			style={{ display: 'none' }}
 			onChange={onInputChange}
 		/>
 	);

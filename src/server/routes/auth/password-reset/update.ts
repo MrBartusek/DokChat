@@ -24,20 +24,20 @@ router.all('/update', allowedMethods('POST'),
 		const token: string = req.body.token;
 
 		const unconfirmedUserId = jwtManager.decodePassResetToken(token);
-		if(!unconfirmedUserId) {
+		if (!unconfirmedUserId) {
 			return new ApiResponse(res).unauthorized('Invalid token, please try to reset your password once again.');
 		}
 		const user = await UserManager.getUserJwtDataById(unconfirmedUserId);
-		if(!user) return new ApiResponse(res).badRequest('User not found');
+		if (!user) return new ApiResponse(res).badRequest('User not found');
 		const passwordHash = await UserManager.getUserHashById(unconfirmedUserId);
 		await jwtManager.verifyPassResetToken(token, user.email, passwordHash)
 			.then(async (userId: string) => {
-				if(bcrypt.compareSync(password, passwordHash)) {
+				if (bcrypt.compareSync(password, passwordHash)) {
 					return new ApiResponse(res).badRequest('New password cannot be same as the old one');
 				}
 
 				const newPasswordHash = await bcrypt.hash(password, 12);
-				await db.query(sql`UPDATE users SET password_hash = $1 WHERE id = $2;`, [ newPasswordHash, userId ]);
+				await db.query(sql`UPDATE users SET password_hash = $1 WHERE id = $2;`, [newPasswordHash, userId]);
 				return new ApiResponse(res).success();
 			})
 			.catch((error) => {

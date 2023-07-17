@@ -7,25 +7,25 @@ import ProfileSettingsTab from '../ProfileSettingsTab/ProfileSettingsTab';
 import SettingsTab from '../SettingsTab/SettingsTab';
 
 function SettingsPopup() {
-	const [ handleClose, setHandleClose ] = useState<() => void>(null);
-	const [ customFooter, setCustomFooter ] = useState<JSX.Element>(null);
-	const [ customStatic, setCustomStatic ] = useState<boolean>(null);
-	const [ popupTitle, setPopupTitle ] = useState('');
-	const [ key, setKey ] = useState('profile');
+	const [handleClose, setHandleClose] = useState<() => void>(null);
+	const [customFooter, setCustomFooter] = useState<JSX.Element>(null);
+	const [customStatic, setCustomStatic] = useState<boolean>(null);
+	const [popupTitle, setPopupTitle] = useState('');
+	const [key, setKey] = useState('profile');
 
 	useEffect(() => {
-		if(key == 'profile') {
+		if (key == 'profile') {
 			setPopupTitle('Profile');
 		}
-		else if(key == 'account') {
+		else if (key == 'account') {
 			setPopupTitle('My Account');
 		}
-		else if(key == 'settings') {
+		else if (key == 'settings') {
 			setPopupTitle('Settings');
 		}
 		setCustomFooter(null);
 		setCustomStatic(false);
-	}, [ key ]);
+	}, [key]);
 
 	return (
 		<Popup

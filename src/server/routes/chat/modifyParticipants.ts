@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.all('/modify-participants',
 	ensureAuthenticated(),
-	allowedMethods([ 'DELETE', 'PUT' ]),
+	allowedMethods(['DELETE', 'PUT']),
 	body('chat').isString(),
 	body('participant').optional().isString(),
 	body('user').optional().isString(),
@@ -26,35 +26,35 @@ router.all('/modify-participants',
 		const participantId = req.body.participant;
 		const userId = req.body.user;
 
-		if(req.method == 'DELETE' && (typeof participantId !== 'string' || typeof userId !== 'undefined')) {
+		if (req.method == 'DELETE' && (typeof participantId !== 'string' || typeof userId !== 'undefined')) {
 			return new ApiResponse(res).badRequest('participantId is required for DELETE call');
 		}
-		else if(req.method == 'PUT' && (typeof userId !== 'string' || typeof participantId !== 'undefined')) {
+		else if (req.method == 'PUT' && (typeof userId !== 'string' || typeof participantId !== 'undefined')) {
 			return new ApiResponse(res).badRequest('userId is required for PUT call');
 		}
 
-		if((participantId || userId) == req.auth.id) {
+		if ((participantId || userId) == req.auth.id) {
 			return new ApiResponse(res).badRequest('Cannot use modify-participants on authenticated user');
 		}
 
 		const hasAccess = await PermissionsManager.hasChatAccess(req.auth, chatId);
-		if(!hasAccess) return new ApiResponse(res).forbidden();
+		if (!hasAccess) return new ApiResponse(res).forbidden();
 
 		const isGroup = await ChatManager.isGroup(chatId);
-		if(!isGroup) return new ApiResponse(res).badRequest('This chat is not a group');
+		if (!isGroup) return new ApiResponse(res).badRequest('This chat is not a group');
 
-		if(req.method == 'PUT') {
+		if (req.method == 'PUT') {
 			const user = await UserManager.getUserById(userId);
-			if(!user) return new ApiResponse(res).badRequest('This user does not exist');
+			if (!user) return new ApiResponse(res).badRequest('This user does not exist');
 			const part = await ChatManager.getParticipant(chatId, null, userId);
-			if(part) return new ApiResponse(res).badRequest('This user is already part of this group');
+			if (part) return new ApiResponse(res).badRequest('This user is already part of this group');
 
 			await ChatManager.addUserToChat(userId, chatId);
 			systemMessageHandler.sendChatJoin(chatId, user);
 		}
 		else if (req.method == 'DELETE') {
 			const participant = await ChatManager.getParticipant(chatId, participantId);
-			if(!participant) return new ApiResponse(res).badRequest('This participant is not part of this group');
+			if (!participant) return new ApiResponse(res).badRequest('This participant is not part of this group');
 
 			await ChatManager.removeUserFromChat(participant.userId, chatId);
 			systemMessageHandler.sendChatRemoved(chatId, participant, req.auth);

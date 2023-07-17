@@ -28,7 +28,8 @@
     background-color: $gray-300;
 }
 
-#app[data-theme='dark'], .modal-dialog[data-theme='dark'] {
+#app[data-theme='dark'],
+.modal-dialog[data-theme='dark'] {
     .iconButton svg {
         color: $secondary;
     }
@@ -36,7 +37,7 @@
     .iconButton.enabled:hover {
         background-color: mix($dark-background, $dark-washed, 20%);
     }
-    
+
     .iconButton.enabled:active {
         background-color: $dark-washed;
     }

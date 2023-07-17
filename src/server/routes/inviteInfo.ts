@@ -23,11 +23,11 @@ router.all('/',
 		const invite = await InviteManager.getInviteByKey(inviteKey);
 
 		const isExpired = invite && DateFns.isPast(DateFns.fromUnixTime(Number(invite.expireAt)));
-		if(!invite || isExpired) {
+		if (!invite || isExpired) {
 			return new ApiResponse(res).badRequest('This invite is invalid or has expired');
 		}
 
-		const chat = await ChatManager.getChat(invite.chatId, req.auth.id );
+		const chat = await ChatManager.getChat(invite.chatId, req.auth.id);
 
 		const result: InviteResponse = { invite, chat };
 		new ApiResponse(res).success(result);

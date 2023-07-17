@@ -43,9 +43,9 @@ export class LocalUser {
 		user.isAuthenticated = true;
 		user.token = token;
 		user.id = data.id,
-		user.username = data.username,
-		user.tag = data.tag,
-		user.email = data.email;
+			user.username = data.username,
+			user.tag = data.tag,
+			user.email = data.email;
 		user.isBanned = data.isBanned;
 		user._avatar = data.avatar;
 		user.isEmailConfirmed = data.isEmailConfirmed;
@@ -55,24 +55,24 @@ export class LocalUser {
 	}
 
 	public get expired(): boolean {
-		if(!this.isAuthenticated) throw new Error('User is not authenticated');
+		if (!this.isAuthenticated) throw new Error('User is not authenticated');
 		return DateFns.isPast(this.expiryDate);
 	}
 
 	public get expireIn(): number {
-		if(!this.isAuthenticated) throw new Error('User is not authenticated');
+		if (!this.isAuthenticated) throw new Error('User is not authenticated');
 		return DateFns.differenceInSeconds(this.expiryDate, new Date());
 	}
 
 	public getAuthHeader(): { [header: string]: string; } {
-		if(!this.isAuthenticated) throw new Error('User is not authenticated');
+		if (!this.isAuthenticated) throw new Error('User is not authenticated');
 		return {
 			'Authorization': `Bearer ${this.token}`
 		};
 	}
 
 	public get discriminator(): string {
-		if(!this.isAuthenticated) throw new Error('User is not authenticated');
+		if (!this.isAuthenticated) throw new Error('User is not authenticated');
 		return `${this.username}#${this.tag}`;
 	}
 
@@ -82,7 +82,7 @@ export class LocalUser {
 		const sender = emailSplit[0];
 		const senderMask = sender[0] + '*'.repeat(sender.length - 1);
 		const domainMask = domainSplit.map((item, i, arr) => {
-			if(arr.length - 1 == i) return item;
+			if (arr.length - 1 == i) return item;
 			return item[0] + '*'.repeat(item.length - 1);
 		}).join('.');
 		return `${senderMask}@${domainMask}`;
@@ -93,7 +93,7 @@ export class LocalUser {
 	}
 
 	public get avatar(): string {
-		if(this.avatarRefreshTimestamp) {
+		if (this.avatarRefreshTimestamp) {
 			return this._avatar + `?timestamp=${this.avatarRefreshTimestamp}`;
 		}
 		return this._avatar;

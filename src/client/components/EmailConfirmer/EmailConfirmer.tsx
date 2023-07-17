@@ -7,24 +7,24 @@ import getAxios from '../../helpers/axios';
 import SimpleLoading from '../SimpleLoadng/SimpleLoading';
 
 export default function EmailConfirmer() {
-	const [ user, updateToken ] = useContext(UserContext);
+	const [user, updateToken] = useContext(UserContext);
 	const { token } = useParams();
-	const [ loading, setLoading ] = useState(true);
-	const [ error, setError ] = useState<string | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		const axios = getAxios();
 		axios.post('/auth/email-confirm/confirm', { token: token })
 			.then(() => {
 				setLoading(false);
-				if(user.isAuthenticated) updateToken();
+				if (user.isAuthenticated) updateToken();
 			})
 			.catch((e) => {
 				const resp: EndpointResponse<null> = e.response?.data as any;
 				setError(resp?.message || 'Failed to confirm this account at this time. Please try again later.');
 				setLoading(false);
 			});
-	}, [ token ]);
+	}, [token]);
 
 	return (
 		<>

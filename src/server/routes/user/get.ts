@@ -28,21 +28,21 @@ router.all('/get',
 		const haveUsername = username != undefined;
 		const haveTag = tag != undefined;
 
-		if(haveId) {
-			if(haveUsername || haveTag) return new ApiResponse(res).badRequest();
+		if (haveId) {
+			if (haveUsername || haveTag) return new ApiResponse(res).badRequest();
 		}
 		else {
-			if(!haveUsername || !haveTag) return new ApiResponse(res).badRequest();
+			if (!haveUsername || !haveTag) return new ApiResponse(res).badRequest();
 		}
 
 		let user: User = null;
-		if(haveId) {
+		if (haveId) {
 			user = await UserManager.getUserById(id);
 		}
 		else {
 			user = await UserManager.getUserByUsername(username, tag);
 		}
-		if(!user) return new ApiResponse(res).notFound('User not found');
+		if (!user) return new ApiResponse(res).notFound('User not found');
 		return new ApiResponse(res).success(user);
 	});
 

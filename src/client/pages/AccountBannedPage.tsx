@@ -7,10 +7,10 @@ import LogoutButton from '../components/LogoutButton/LogoutButton';
 import { UserContext } from '../context/UserContext';
 
 function AccountBannedPage() {
-	const [ user ] = useContext(UserContext);
+	const [user] = useContext(UserContext);
 
 	return (
-		<Container className='h-100 d-flex justify-content-center align-items-center flex-column' style={{maxWidth: '600px'}}>
+		<Container className='h-100 d-flex justify-content-center align-items-center flex-column' style={{ maxWidth: '600px' }}>
 			<DokChatLogo variant='black' className='opacity-50 mb-4' height={40} />
 
 			<div className='d-flex flex-column align-items-center border border-danger border-2 rounded-4 p-5'>

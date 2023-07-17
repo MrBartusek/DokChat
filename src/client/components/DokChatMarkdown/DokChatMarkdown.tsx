@@ -5,8 +5,8 @@ import remarkGfm from 'remark-gfm';
 import './DokChatMarkdown.scss';
 
 export interface DokChatMarkdownProps {
-    text: string;
-    className: string;
+	text: string;
+	className: string;
 }
 
 export default function DokChatMarkdown({ text, className }: DokChatMarkdownProps): JSX.Element {
@@ -15,15 +15,15 @@ export default function DokChatMarkdown({ text, className }: DokChatMarkdownProp
 
 		const newValue = emojisArray.reduce((previous: React.ReactElement, current: React.ReactElement) => {
 			if (typeof current === 'string') {
-				return  (
+				return (
 					<>
 						{previous}
 						<ReactMarkdown
-							allowedElements={[ 'a', 'strong', 'em', 'del', 'pre', 'code', 'blockquote' ]}
+							allowedElements={['a', 'strong', 'em', 'del', 'pre', 'code', 'blockquote']}
 							unwrapDisallowed
 							className={'dokchat-markdown-element' + className}
 							linkTarget="_blank"
-							remarkPlugins={[ remarkGfm ]}
+							remarkPlugins={[remarkGfm]}
 						>
 							{current}
 						</ReactMarkdown>

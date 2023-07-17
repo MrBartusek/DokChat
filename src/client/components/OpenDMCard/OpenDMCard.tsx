@@ -11,28 +11,28 @@ import { LocalChat } from '../../types/Chat';
 import InteractiveCard from '../InteractiveCard/InteractiveCard';
 
 export interface OpenDMCardProps {
-    userId: string;
+	userId: string;
 }
 
 export default function OpenDMCard({ userId }: OpenDMCardProps) {
-	const [ user ] = useContext(UserContext);
-	const [ isLoading, setLoading ] = useState(false);
-	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
+	const [user] = useContext(UserContext);
+	const [isLoading, setLoading] = useState(false);
+	const [chats, sendMessage, setChatList] = useContext(MessageManagerContext);
 	const navigate = useNavigate();
 
 	async function handleOpenDm() {
 		setLoading(true);
 		const axios = getAxios(user);
 		await axios.post('/chat/create', {
-			participants: [ userId ]
+			participants: [userId]
 		}, {
-			validateStatus: (s) => [ 200, 409 ].includes(s)
+			validateStatus: (s) => [200, 409].includes(s)
 		})
 			.then((r) => {
 				const resp: EndpointResponse<ChatCreateResponse> = r.data;
-				const chatsCopy = [ ...chats ];
+				const chatsCopy = [...chats];
 				const chatExist = chatsCopy.find(c => c.id == resp.data.id);
-				if(!chatExist) {
+				if (!chatExist) {
 					chatsCopy.push(new LocalChat(resp.data));
 					setChatList(chatsCopy);
 				}

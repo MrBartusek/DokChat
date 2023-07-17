@@ -12,7 +12,7 @@ export interface ChatParticipantsTabProps {
 
 export default function ChatParticipantsTab({ participants, currentChat }: ChatParticipantsTabProps) {
 
-	if(!participants) return <SimpleLoading />;
+	if (!participants) return <SimpleLoading />;
 
 	return (
 		<Stack className='overflow-auto'>

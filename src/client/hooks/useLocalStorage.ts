@@ -2,17 +2,17 @@
 
 import { useState } from 'react';
 
-export function useLocalStorage<T = string>(key: string, initialValue: T): [ T, (value: T) => void] {
-	const [ storedValue, setStoredValue ] = useState(() => {
+export function useLocalStorage<T = string>(key: string, initialValue: T): [T, (value: T) => void] {
+	const [storedValue, setStoredValue] = useState(() => {
 		if (typeof window === 'undefined') {
 			return initialValue;
 		}
 		try {
 			const item = window.localStorage.getItem('dokchat_' + key);
-			if(!item) {
+			if (!item) {
 				return initialValue;
 			}
-			else if(typeof initialValue == 'string') {
+			else if (typeof initialValue == 'string') {
 				return item as any as T;
 			}
 			else {
@@ -30,7 +30,7 @@ export function useLocalStorage<T = string>(key: string, initialValue: T): [ T, 
 			setStoredValue(value);
 			if (typeof window !== 'undefined') {
 				let valueToStore: string = undefined;
-				if(typeof value == 'string') {
+				if (typeof value == 'string') {
 					valueToStore = value;
 				}
 				else {
@@ -44,5 +44,5 @@ export function useLocalStorage<T = string>(key: string, initialValue: T): [ T, 
 		}
 	};
 
-	return [ storedValue, setValue ];
+	return [storedValue, setValue];
 }

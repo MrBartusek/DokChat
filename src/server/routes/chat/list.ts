@@ -21,12 +21,12 @@ router.all('/list',
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
-		const page = req.query.page as any as number|| 0;
+		const page = req.query.page as any as number || 0;
 
 		const chatsQuery = await queryChats(req, page);
 		const chats = await Promise.all(chatsQuery.rows.map(async (chat) => {
 			const participant = await ChatManager.listParticipants(chat.chatId);
-			const [ name, avatar ] = await ChatManager.generateChatNameAndAvatar(chat.chatId, chat.name, participant, chat.isGroup, req.auth.id);
+			const [name, avatar] = await ChatManager.generateChatNameAndAvatar(chat.chatId, chat.name, participant, chat.isGroup, req.auth.id);
 
 			return {
 				id: chat.chatId,
@@ -40,7 +40,7 @@ router.all('/list',
 					content: chat.messageContent || '',
 					author: chat.messageAuthor,
 					timestamp: chat.messageCreatedAt
-				}: null,
+				} : null,
 				participants: participant.map(p => ({
 					id: p.id,
 					userId: p.userId
@@ -57,7 +57,7 @@ type ChatsQuery = QueryResult<{
 	messageContent: string,
 	messageAuthor: string,
 	messageCreatedAt: string,
-    isGroup: boolean,
+	isGroup: boolean,
 	creatorId: string,
 	createdAt: string,
 	color: number
@@ -115,7 +115,7 @@ async function queryChats(req: express.Request, page: number): Promise<ChatsQuer
 		ORDER BY
 			COALESCE(last_message.created_at, chat.created_at) DESC
         LIMIT 25 OFFSET $2;
-    `, [ req.auth.id, page ]);
+    `, [req.auth.id, page]);
 }
 
 export default router;

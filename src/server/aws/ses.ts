@@ -21,7 +21,7 @@ class EmailClient {
 	}
 
 	private async sendTemplatedEmail(template: string, templateData: string, destination: string) {
-		if(await EmailBlacklistManager.isEmailBlacklisted(destination)) {
+		if (await EmailBlacklistManager.isEmailBlacklisted(destination)) {
 			return Promise.reject('This e-mail address is blacklisted. Please contact support.');
 		}
 
@@ -29,7 +29,7 @@ class EmailClient {
 			Source: EMAIL_SENDER,
 			ConfigurationSetName: 'dokchat-config-set',
 			Destination: {
-				ToAddresses: [ destination ]
+				ToAddresses: [destination]
 			},
 			Template: template,
 			TemplateData: templateData
@@ -48,7 +48,7 @@ class EmailClient {
 	}
 
 	public async sendPasswordResetEmail(email: string) {
-		const query = await db.query(sql`SELECT id, password_hash as "passwordHash" FROM users WHERE email = $1;`, [ email ]);
+		const query = await db.query(sql`SELECT id, password_hash as "passwordHash" FROM users WHERE email = $1;`, [email]);
 		const passwordHash = query.rows[0].passwordHash;
 		const id = query.rows[0].id;
 		const resetToken = await jwtManager.generatePassResetToken(id, email, passwordHash);

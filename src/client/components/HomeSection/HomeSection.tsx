@@ -18,7 +18,7 @@ export default function HomeSection({ img, title, children, variant }: SectionPr
 						src={img}
 						alt={title}
 						className='w-100'
-						style={{maxWidth: 450}}
+						style={{ maxWidth: 450 }}
 					/>
 				</Col>
 				<Col md={5} className="px-5 d-flex justify-content-center flex-column text-center text-md-start">

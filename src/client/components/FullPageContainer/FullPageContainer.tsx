@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Container, ContainerProps } from 'react-bootstrap';
 
 export interface FullPageContainerProps extends ContainerProps {
-    children: JSX.Element | JSX.Element[];
+	children: JSX.Element | JSX.Element[];
 	className?: string;
 }
 
-function FullPageContainer(props : FullPageContainerProps) {
-	const [ innerHeight, setInnerHeight ] = useState(window.innerHeight);
+function FullPageContainer(props: FullPageContainerProps) {
+	const [innerHeight, setInnerHeight] = useState(window.innerHeight);
 
 	useEffect(() => {
 		function handleResize() {

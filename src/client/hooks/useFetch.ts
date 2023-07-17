@@ -14,9 +14,9 @@ type useFetchState<T> = {
 
 export function useFetch<T>(initialUrl: string | null, useAuth = false): useFetchState<T> {
 	const isCurrent = useRef(true);
-	const [ url, setUrl ]= useState(initialUrl);
-	const [ state, setState ] = useState<useFetchState<T>>({ res: undefined, loading: true, setUrl: setUrl });
-	const [ user ] = useContext(UserContext);
+	const [url, setUrl] = useState(initialUrl);
+	const [state, setState] = useState<useFetchState<T>>({ res: undefined, loading: true, setUrl: setUrl });
+	const [user] = useContext(UserContext);
 
 	useEffect(() => {
 		return () => {
@@ -29,7 +29,7 @@ export function useFetch<T>(initialUrl: string | null, useAuth = false): useFetc
 		setState(state => ({ res: state.res, loading: true, setUrl: setUrl }));
 
 		// Don't fetch if no url provided
-		if(url == null) return setState({ loading: false, setUrl: setUrl });
+		if (url == null) return setState({ loading: false, setUrl: setUrl });
 
 		axios.get(url)
 			.then(res => {
@@ -45,7 +45,7 @@ export function useFetch<T>(initialUrl: string | null, useAuth = false): useFetc
 					setUrl: setUrl
 				});
 			});
-	}, [ url, setState ]);
+	}, [url, setState]);
 
 	return state;
 }

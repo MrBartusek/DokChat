@@ -3,7 +3,7 @@ import { BsTrash } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import InteractiveButton, { InteractiveButtonProps } from '../InteractiveButton/InteractiveButton';
 
-export interface LogoutButton extends InteractiveButtonProps {}
+export interface LogoutButton extends InteractiveButtonProps { }
 
 export default function DeleteAccountButton(props: InteractiveButtonProps) {
 	return (

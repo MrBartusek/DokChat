@@ -15,25 +15,25 @@ export interface ChatInviteTabProps {
 }
 
 export default function ChatInviteTab({ currentChat }: ChatInviteTabProps) {
-	const [ user ] = useContext(UserContext);
-	const [ inviteLink, setInviteLink ] = useState(null);
+	const [user] = useContext(UserContext);
+	const [inviteLink, setInviteLink] = useState(null);
 	const inviteInputRef = useRef<HTMLInputElement>(null);
 	const inviteFetch = useFetch<EndpointResponse<InviteResponse>>(`chat/invite?chat=${currentChat.id}`, true);
-	const [ isLoading, setLoading ] = useState(false);
+	const [isLoading, setLoading] = useState(false);
 
 	useEffect(() => {
-		if(inviteFetch.loading || inviteFetch.error) return;
+		if (inviteFetch.loading || inviteFetch.error) return;
 		setInviteLink(inviteFetch.res.data.invite);
-	}, [ inviteFetch ]);
+	}, [inviteFetch]);
 
 	function handleCopy() {
-		if(!inviteLink) return;
+		if (!inviteLink) return;
 		copyToClipboard(inviteLink);
 		inviteInputRef.current.select();
 	}
 
 	async function handleAdd(addedUser: User) {
-		if(isLoading) return;
+		if (isLoading) return;
 		const axios = getAxios(user);
 		await axios.put('chat/modify-participants', { chat: currentChat.id, user: addedUser.id })
 			.then(() => {

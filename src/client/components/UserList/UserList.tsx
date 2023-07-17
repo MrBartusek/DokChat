@@ -5,10 +5,10 @@ import { OnlineManagerContext } from '../../context/OnlineManagerContext';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 
 interface UserListProps {
-    users: (User | ChatParticipant)[];
+	users: (User | ChatParticipant)[];
 }
 
-function UserList({ users}: UserListProps) {
+function UserList({ users }: UserListProps) {
 	return (
 		<Stack>
 			{users.map((user, i) => (
@@ -24,18 +24,18 @@ function UserList({ users}: UserListProps) {
 }
 
 export interface UserCardProps {
-    user: User | ChatParticipant;
+	user: User | ChatParticipant;
 	icons?: React.ReactNode;
 }
 
 export function UserCard({ user, icons }: UserCardProps) {
 	const getOnlineStatus = useContext(OnlineManagerContext);
-	const [ isOnline, setOnline ] = useState(false);
+	const [isOnline, setOnline] = useState(false);
 
 	useEffect(() => {
-		const [ online ] = getOnlineStatus((user as any).userId || user.id);
+		const [online] = getOnlineStatus((user as any).userId || user.id);
 		setOnline(online);
-	}, [ getOnlineStatus ]);
+	}, [getOnlineStatus]);
 
 	return (
 		<div className='d-flex flex-row my-2 align-items-center'>

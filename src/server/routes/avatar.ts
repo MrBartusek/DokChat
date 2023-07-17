@@ -20,9 +20,9 @@ router.all('/:id.png', param('id').isString(), allowedMethods('GET'), async (req
 	const user = await UserManager.getUserById(id);
 
 	res.header('Cache-Control', s3Client.cacheControlHeader);
-	if(user) {
+	if (user) {
 		avatar = await userAvatar(id);
-		if(avatar) {
+		if (avatar) {
 			const avatarUrl = await s3Client.getSingedUrl(avatar);
 			res.redirect(302, avatarUrl);
 		}
@@ -33,9 +33,9 @@ router.all('/:id.png', param('id').isString(), allowedMethods('GET'), async (req
 	}
 	else {
 		const chat = await ChatManager.getChat(id);
-		if(!chat) return new ApiResponse(res).notFound('User or chat not found');
+		if (!chat) return new ApiResponse(res).notFound('User or chat not found');
 		avatar = await chatAvatar(id);
-		if(avatar) {
+		if (avatar) {
 			const avatarUrl = await s3Client.getSingedUrl(avatar);
 			res.redirect(302, avatarUrl);
 		}
@@ -55,8 +55,8 @@ async function userAvatar(id: string): Promise<string | null> {
 			users
 		WHERE id = $1
 		LIMIT 1;
-	`, [ id ]);
-	if(query.rowCount == 0) return null;
+	`, [id]);
+	if (query.rowCount == 0) return null;
 	return await query.rows[0].avatar;
 }
 
@@ -68,8 +68,8 @@ async function chatAvatar(id: string): Promise<string | null> {
 			chats
 		WHERE id = $1
 		LIMIT 1;
-	`, [ id ]);
-	if(query.rowCount == 0) return null;
+	`, [id]);
+	if (query.rowCount == 0) return null;
 	return query.rows[0].avatar;
 }
 

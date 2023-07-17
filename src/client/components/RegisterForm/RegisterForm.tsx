@@ -13,22 +13,22 @@ import SocialLogin from '../SocialLogin/SocialLogin';
 const axios = getAxios();
 
 function RegisterForm() {
-	const [ loading, setLoading ] = useState(false);
-	const [ values, handleChange ] = useForm({ email: '', username: '', password: '', confirmPassword: '', terms: false });
-	const [ error, setError ] = useState<string | null>(null);
-	const [ user, updateToken, setUser ] = useContext(UserContext);
+	const [loading, setLoading] = useState(false);
+	const [values, handleChange] = useForm({ email: '', username: '', password: '', confirmPassword: '', terms: false });
+	const [error, setError] = useState<string | null>(null);
+	const [user, updateToken, setUser] = useContext(UserContext);
 	const captchaRef = useRef<ReCAPTCHA>(null!);
 	const passwordConfirmRef = useRef<HTMLInputElement>(null!);
 	const navigate = useNavigate();
 
 	useLayoutEffect(() => {
-		if(values.password != values.confirmPassword) {
+		if (values.password != values.confirmPassword) {
 			passwordConfirmRef.current.setCustomValidity('The password confirmation does not match');
 		}
 		else {
 			passwordConfirmRef.current.setCustomValidity('');
 		}
-	}, [ values, passwordConfirmRef ]);
+	}, [values, passwordConfirmRef]);
 
 	return (
 		<>
@@ -121,10 +121,10 @@ function RegisterForm() {
 				<div className='d-flex justify-content-center mt-3'>
 					<Form.Text className="text-muted">
 						<span>
-						Already a user? {' '}
+							Already a user? {' '}
 						</span>
 						<Link to='/login' className='link-secondary'>
-						Log in
+							Log in
 						</Link>
 					</Form.Text>
 				</div>
@@ -140,7 +140,7 @@ function RegisterForm() {
 		const recaptchaResponse = await captchaRef.current.executeAsync().catch(() => {
 			setError('Failed to get ReCAPTCHA token');
 		});
-		if(!recaptchaResponse) return setLoading(false);
+		if (!recaptchaResponse) return setLoading(false);
 		await axios.post('auth/register',
 			{
 				email: values.email,

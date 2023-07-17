@@ -11,25 +11,25 @@ import InteractiveButton from '../InteractiveButton/InteractiveButton';
 const axios = getAxios();
 
 function PasswordResetForm() {
-	const [ loading, setLoading ] = useState(false);
-	const [ values, handleChange ] = useForm({ email: '' });
-	const [ error, setError ] = useState<string | null>(null);
-	const [ success, setSuccess ] = useState<boolean>(false);
+	const [loading, setLoading] = useState(false);
+	const [values, handleChange] = useForm({ email: '' });
+	const [error, setError] = useState<string | null>(null);
+	const [success, setSuccess] = useState<boolean>(false);
 	const captchaRef = useRef<ReCAPTCHA>(null!);
 
-	if(success) {
+	if (success) {
 		return (
 			<>
 				<div className='text-center mb-4'>
 					<h2 className='fw-normal mb-4'>Check your email!</h2>
 					<p className='text-muted text-center mb-0'>
-					We&apos;ve sent password reset instructions to:
+						We&apos;ve sent password reset instructions to:
 					</p>
 					<div className='fs-4 lead my-4'>
 						{values.email}
 					</div>
 					<p className='text-muted text-center mb-0'>
-					If you haven&apos;t received this email in few minutes, please check your spam folder.
+						If you haven&apos;t received this email in few minutes, please check your spam folder.
 					</p>
 				</div>
 				<Link to='/login' className='text-decoration-none'>
@@ -95,7 +95,7 @@ function PasswordResetForm() {
 		const recaptchaResponse = await captchaRef.current.executeAsync().catch(() => {
 			setError('Failed to get ReCAPTCHA token');
 		});
-		if(!recaptchaResponse) return;
+		if (!recaptchaResponse) return;
 		await axios.post('/auth/password-reset/start', {
 			...values,
 			recaptchaResponse

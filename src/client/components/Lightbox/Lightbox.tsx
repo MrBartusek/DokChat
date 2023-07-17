@@ -10,7 +10,7 @@ export default function Lightbox(props: LightBoxProps) {
 	return (
 		<Portal>
 			<FsLightbox
-				sources={[ props.source ]}
+				sources={[props.source]}
 				{...props}
 			/>
 		</Portal>

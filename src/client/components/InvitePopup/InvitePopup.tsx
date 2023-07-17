@@ -4,7 +4,7 @@ import InviteConfirm from '../InviteConfirm/InviteConfirm';
 import Popup from '../Popup/Popup';
 
 function InvitePopup() {
-	const [ handleClose, setHandleClose ] = useState<() => void>(null);
+	const [handleClose, setHandleClose] = useState<() => void>(null);
 	const { key } = useParams();
 
 	return (

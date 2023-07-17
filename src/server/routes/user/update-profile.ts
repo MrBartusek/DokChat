@@ -41,36 +41,36 @@ router.all('/update-profile',
 		// Authenticate user with password
 		const authData = await AuthManager.authenticateUser(req.auth.email, password)
 			.catch((reason) => {
-				if(typeof reason !== 'string') throw reason;
+				if (typeof reason !== 'string') throw reason;
 				new ApiResponse(res).badRequest('Provided password is not valid');
 			});
-		if(!authData) return;
-		const [ user ] = authData;
+		if (!authData) return;
+		const [user] = authData;
 
-		if(req.auth.isDemo) {
+		if (req.auth.isDemo) {
 			return new ApiResponse(res).badRequest('Can\'t do this on demo account');
 		}
 
 		const discriminatorChanged = user.username != username || user.tag != tag;
 		const emailChanged = user.email != email;
 
-		if(!discriminatorChanged && !emailChanged && !avatar) {
+		if (!discriminatorChanged && !emailChanged && !avatar) {
 			return new ApiResponse(res).badRequest('Provided details are identical to current ones');
 		}
 
-		if(discriminatorChanged && await discriminatorTaken(username, tag)) {
+		if (discriminatorChanged && await discriminatorTaken(username, tag)) {
 			return new ApiResponse(res).badRequest('This username and tag belongs to another user, please select other discriminator');
 		}
-		if(emailChanged && await UserManager.emailTaken(email)) {
+		if (emailChanged && await UserManager.emailTaken(email)) {
 			return new ApiResponse(res).badRequest('This email is already in use');
 		}
 
 		// Upload avatar to S3
-		if(avatar) {
+		if (avatar) {
 			const oldAvatar = await getUserAvatar(user.id);
-			if(oldAvatar) await s3Client.deleteFile(oldAvatar);
+			if (oldAvatar) await s3Client.deleteFile(oldAvatar);
 			const fileName = await s3Client.uploadAvatar(avatar);
-			await db.query(sql`UPDATE users SET avatar = $1 WHERE id=$2`, [ fileName, user.id ]);
+			await db.query(sql`UPDATE users SET avatar = $1 WHERE id=$2`, [fileName, user.id]);
 		}
 
 		await db.query(sql`
@@ -79,11 +79,11 @@ router.all('/update-profile',
 			tag = $2,
 			email = $3
 		WHERE id=$4`,
-		[ username, tag, email, user.id ]);
+			[username, tag, email, user.id]);
 
-		if(emailChanged) {
-			await db.query(sql`UPDATE users SET is_email_confirmed = FALSE WHERE id = $1`, [ user.id ]);
-			if(user.isEmailConfirmed) {
+		if (emailChanged) {
+			await db.query(sql`UPDATE users SET is_email_confirmed = FALSE WHERE id = $1`, [user.id]);
+			if (user.isEmailConfirmed) {
 				await emailClient.sendEmailChangedEmail(req.auth);
 			}
 		}
@@ -94,14 +94,14 @@ router.all('/update-profile',
 async function discriminatorTaken(username: string, tag: string) {
 	const result = await db.query(sql`
 		 SELECT EXISTS(SELECT 1 FROM users WHERE username = $1 AND tag = $2)`,
-	[ username, tag ]);
+		[username, tag]);
 
 	return result.rows[0].exists;
 }
 
 async function getUserAvatar(userId: string): Promise<string | null> {
-	const avatarQuery = await db.query(sql`SELECT avatar FROM users WHERE id=$1`, [ userId ]);
-	if(avatarQuery.rowCount != 1) throw new Error('Invalid user id provided to getUserAvatar');
+	const avatarQuery = await db.query(sql`SELECT avatar FROM users WHERE id=$1`, [userId]);
+	if (avatarQuery.rowCount != 1) throw new Error('Invalid user id provided to getUserAvatar');
 	return avatarQuery.rows[0].avatar;
 }
 

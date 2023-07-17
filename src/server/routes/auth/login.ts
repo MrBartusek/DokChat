@@ -22,12 +22,12 @@ router.all('/login',
 		const rememberMe: boolean = req.body.rememberMe;
 
 		AuthManager.authenticateUser(email, password)
-			.then(async ([ jwtData, passwordHash ]) =>  {
+			.then(async ([jwtData, passwordHash]) => {
 				await UserManager.bumpLastSeen(jwtData.id);
 				AuthManager.sendAuthResponse(res, jwtData, passwordHash, rememberMe);
 			})
 			.catch((reason) => {
-				if(typeof reason == 'string') {
+				if (typeof reason == 'string') {
 					return new ApiResponse(res).unauthorized(reason);
 				}
 				throw reason;

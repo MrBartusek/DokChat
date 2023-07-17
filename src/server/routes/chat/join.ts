@@ -25,13 +25,13 @@ router.all('/join',
 		const invite = await InviteManager.getInviteByKey(inviteKey);
 
 		const isExpired = invite && DateFns.isPast(DateFns.fromUnixTime(Number(invite.expireAt)));
-		if(!invite || isExpired) {
+		if (!invite || isExpired) {
 			return new ApiResponse(res).badRequest('This invite is invalid or has expired');
 		}
 
-		const chat = await ChatManager.getChat(invite.chatId, req.auth.id );
+		const chat = await ChatManager.getChat(invite.chatId, req.auth.id);
 
-		if(chat.participants.find(x => x.userId == req.auth.id)) {
+		if (chat.participants.find(x => x.userId == req.auth.id)) {
 			return new ApiResponse(res).badRequest('You are already a part of this chat');
 		}
 

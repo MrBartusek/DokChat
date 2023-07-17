@@ -25,11 +25,11 @@ router.all('/register',
 		const email: string = req.body.email;
 
 		await UserManager.createUser(username, email, password)
-			.then(([ userData, passwordHash ]) => {
+			.then(([userData, passwordHash]) => {
 				AuthManager.sendAuthResponse(res, userData, passwordHash);
 			})
 			.catch((reason) => {
-				if(typeof reason == 'string') {
+				if (typeof reason == 'string') {
 					return new ApiResponse(res).badRequest(reason);
 				}
 				throw reason;

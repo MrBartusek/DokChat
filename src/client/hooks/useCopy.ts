@@ -3,25 +3,25 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 function useCopy(str: string): [boolean, () => void, (value: boolean) => void] {
 	const copyableString = useRef(str);
-	const [ copied, setCopied ] = useState(false);
+	const [copied, setCopied] = useState(false);
 
 	const copyAction = useCallback(() => {
 		const copiedString = copyToClipboard(copyableString.current);
 		setCopied(copiedString);
-	}, [ copyableString ]);
+	}, [copyableString]);
 
 	useEffect(() => {
 		copyableString.current = str;
-	}, [ str ]);
+	}, [str]);
 
 	useEffect(() => {
 		const timeout = setTimeout(() => {
 			setCopied(false);
 		}, 3000);
 		return () => clearTimeout(timeout);
-	}, [ copied ]);
+	}, [copied]);
 
-	return [ copied, copyAction, setCopied ];
+	return [copied, copyAction, setCopied];
 }
 
 export default useCopy;

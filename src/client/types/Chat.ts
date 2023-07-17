@@ -50,7 +50,7 @@ export class LocalChat implements Chat {
 	 * Load messages list from API
 	 */
 	public addMessagesList(messages: Message[]): LocalChat {
-		if(!Array.isArray(this._messages)) {
+		if (!Array.isArray(this._messages)) {
 			this._messages = [];
 		}
 		(this._messages as Message[]).push(...messages);
@@ -63,16 +63,16 @@ export class LocalChat implements Chat {
 	 * @returns the message id, randomly generated if message is pending
 	 */
 	public addMessage(msg: LocalMessage): string {
-		if(msg.isPending) {
-			if(!this.isInitialized) throw new Error('Cannot send fresh message to uninitialized chat');
+		if (msg.isPending) {
+			if (!this.isInitialized) throw new Error('Cannot send fresh message to uninitialized chat');
 			msg.id = `PENDING-${this.id}-${this.lastPendingIndex}`;
 			this.lastPendingIndex++;
 		}
 		// If chat is uninitialized save only a partial message
 		// since it doesn't accept a regular message list
-		if(this.isInitialized) {
+		if (this.isInitialized) {
 			const msgs = (this._messages as Message[]);
-			if(msgs.find(m => m.id == msg.id)) {
+			if (msgs.find(m => m.id == msg.id)) {
 				console.warn('Ignoring duplicate message', msg);
 			}
 			msgs.push(msg);
@@ -91,9 +91,9 @@ export class LocalChat implements Chat {
 	 * Mark message with PENDING- id as accepted
 	 */
 	public ackMessage(pendingId: string, newId: string, timestamp: string): LocalMessage {
-		if(!pendingId.startsWith('PENDING-')) throw new Error('Provided message id is not pending id');
+		if (!pendingId.startsWith('PENDING-')) throw new Error('Provided message id is not pending id');
 		const msg = this.messages.find(m => m.id == pendingId);
-		if(!msg) throw new Error(`Message with id ${pendingId} was not found`);
+		if (!msg) throw new Error(`Message with id ${pendingId} was not found`);
 
 		msg.isPending = false;
 		msg.id = newId;
@@ -106,9 +106,9 @@ export class LocalChat implements Chat {
 	 * Mark message with PENDING- id as failed
 	 */
 	public ackErrorMessage(pendingId: string): LocalMessage {
-		if(!pendingId.startsWith('PENDING-')) throw new Error('Provided message id is not pending id');
+		if (!pendingId.startsWith('PENDING-')) throw new Error('Provided message id is not pending id');
 		const msg = this.messages.find(m => m.id == pendingId);
-		if(!msg) throw new Error(`Message with id ${pendingId} was not found`);
+		if (!msg) throw new Error(`Message with id ${pendingId} was not found`);
 
 		msg.id = msg.id.replace('PENDING', 'ERROR');
 		msg.isPending = false;
@@ -117,15 +117,15 @@ export class LocalChat implements Chat {
 		return msg;
 	}
 
-	get messages(): LocalMessage[]{
-		if(!this.isInitialized) throw new Error('Cannot read messages of uninitialized chat');
+	get messages(): LocalMessage[] {
+		if (!this.isInitialized) throw new Error('Cannot read messages of uninitialized chat');
 		const msgs = this._messages as LocalMessage[];
 		return msgs.sort((a, b) => Number(b.timestamp) - Number(a.timestamp));
 	}
 
 	get lastMessage(): LastMessage | null {
-		if(!this.isInitialized) {
-			if(Array.isArray(this._messages) && this._messages.length == 0) {
+		if (!this.isInitialized) {
+			if (Array.isArray(this._messages) && this._messages.length == 0) {
 				return null;
 			}
 			return this._messages as LastMessage;
@@ -133,8 +133,8 @@ export class LocalChat implements Chat {
 		else {
 			const msgs = (this._messages as Message[]);
 			const lastMsg = msgs[0];
-			if(!lastMsg) return null;
-			return  {
+			if (!lastMsg) return null;
+			return {
 				author: lastMsg.author.username,
 				content: lastMsg.content,
 				timestamp: lastMsg.timestamp

@@ -6,10 +6,10 @@ import { useClientConfig } from '../../hooks/useClientConfig';
 export interface DokChatCaptchaProps extends Omit<ReCAPTCHAProps, 'sitekey' | 'size'> { }
 
 const DokChatCaptcha = React.forwardRef((props, ref) => {
-	const [ settings ] = useContext(SettingsContext);
+	const [settings] = useContext(SettingsContext);
 	const clientConfig = useClientConfig();
 
-	if(!clientConfig.recaptchaSiteKey) return <></>;
+	if (!clientConfig.recaptchaSiteKey) return <></>;
 
 	return (
 		<ReCAPTCHA
@@ -24,6 +24,6 @@ const DokChatCaptcha = React.forwardRef((props, ref) => {
 	);
 });
 
-DokChatCaptcha.displayName  = 'DokChatCaptcha';
+DokChatCaptcha.displayName = 'DokChatCaptcha';
 
 export default DokChatCaptcha;

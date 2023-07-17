@@ -23,7 +23,7 @@ router.all('/update',
 	allowedMethods('PUT'),
 	upload.single('avatar'),
 	body('id').isString(),
-	body('name').optional().isLength({max: 32, min: 2}),
+	body('name').optional().isLength({ max: 32, min: 2 }),
 	body('color').optional().custom(isValidColor),
 	ensureRatelimit(),
 	async (req, res) => {
@@ -35,34 +35,34 @@ router.all('/update',
 		const color: string = req.body.color;
 		const avatar = req.file;
 
-		if(!(await PermissionsManager.hasChatAccess(req.auth, id))) {
+		if (!(await PermissionsManager.hasChatAccess(req.auth, id))) {
 			return new ApiResponse(res).forbidden();
 		}
 
 		const isGroup = await ChatManager.isGroup(id);
 
-		if(!isGroup && (avatar || name)) {
+		if (!isGroup && (avatar || name)) {
 			return new ApiResponse(res).badRequest('This chat is not a group');
 		}
 
 		// Upload avatar to S3
-		if(avatar) {
+		if (avatar) {
 			const oldAvatar = await getChatAvatar(id);
-			if(oldAvatar) await s3Client.deleteFile(oldAvatar);
+			if (oldAvatar) await s3Client.deleteFile(oldAvatar);
 			const fileName = await s3Client.uploadAvatar(avatar);
-			await db.query(sql`UPDATE chats SET avatar = $1 WHERE id=$2`, [ fileName, id ]);
+			await db.query(sql`UPDATE chats SET avatar = $1 WHERE id=$2`, [fileName, id]);
 		}
 
-		if(name) {
+		if (name) {
 			await db.query(sql`
 				UPDATE chats SET name = $1 WHERE id=$2`,
-			[ name, id ]);
+				[name, id]);
 		}
 
-		if(color) {
+		if (color) {
 			await db.query(sql`
 				UPDATE chats SET color = $1 WHERE id=$2`,
-			[ CHAT_COLORS.find(c => c.hex == color).id, id ]);
+				[CHAT_COLORS.find(c => c.hex == color).id, id]);
 		}
 
 		systemMessageHandler.sendChatUpdated(
@@ -76,8 +76,8 @@ router.all('/update',
 	});
 
 async function getChatAvatar(chatId: string): Promise<string | null> {
-	const avatarQuery = await db.query(sql`SELECT avatar FROM chats WHERE id=$1`, [ chatId ]);
-	if(avatarQuery.rowCount != 1) throw new Error('Invalid chat id provided to getChatAvatar');
+	const avatarQuery = await db.query(sql`SELECT avatar FROM chats WHERE id=$1`, [chatId]);
+	if (avatarQuery.rowCount != 1) throw new Error('Invalid chat id provided to getChatAvatar');
 	return avatarQuery.rows[0].avatar;
 }
 

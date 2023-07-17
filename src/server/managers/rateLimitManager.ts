@@ -12,11 +12,11 @@ export default class RateLimitManager {
 		const key = `ratelimit:${userId}`;
 		const used = await redisClient.incrby(key, credits);
 
-		if(used >= GLOBAL_RATELIMIT) {
+		if (used >= GLOBAL_RATELIMIT) {
 			return false;
 		}
 
-		if(used == credits) {
+		if (used == credits) {
 			// New cache key have just been created
 			// Set expiration time for it
 			await redisClient.expire(key, 60);

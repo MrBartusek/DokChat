@@ -19,12 +19,12 @@ router.all('/refresh',
 		const refreshToken: string = req.cookies.refreshToken;
 
 		const unconfirmedUserId = jwtManager.decodeRefreshToken(refreshToken);
-		if(!unconfirmedUserId) {
+		if (!unconfirmedUserId) {
 			return new ApiResponse(res).unauthorized('Invalid JWT');
 		}
 
 		const creditsLeft = await RateLimitManager.getCreditsLeft(unconfirmedUserId);
-		if(creditsLeft < 5) {
+		if (creditsLeft < 5) {
 			return new ApiResponse(res).tooManyRequests();
 		}
 
@@ -33,7 +33,7 @@ router.all('/refresh',
 
 		await jwtManager.verifyRefreshToken(refreshToken, passwordHash)
 			.then(async (userId: string) => {
-				if(!(await RateLimitManager.consume(userId, 5 ))) {
+				if (!(await RateLimitManager.consume(userId, 5))) {
 					return new ApiResponse(res).tooManyRequests();
 				}
 

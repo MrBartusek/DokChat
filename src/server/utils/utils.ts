@@ -24,12 +24,12 @@ export default class Utils {
 		const invalidCharacters = /[^0-9a-zA-Z_.\-]+/g;
 
 		const normalized = validator.normalizeEmail(email);
-		if(normalized == false) throw new Error('Invalid e-mail passed for emailToUsername');
+		if (normalized == false) throw new Error('Invalid e-mail passed for emailToUsername');
 		const inbox = normalized.split('@')[0];
 		let username = inbox.replace(invalidCharacters, '');
 
 		// Add random numbers at the end of username
-		while(username.length < 5) {
+		while (username.length < 5) {
 			username += Math.floor(Math.random() * 10);
 		}
 

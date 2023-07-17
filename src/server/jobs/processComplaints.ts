@@ -11,8 +11,8 @@ export default async function processEmailComplaints() {
 	};
 
 	const response = await sqsClient.receiveMessage(params).promise();
-	if(!response.Messages) return;
-	for(const msg of response.Messages) {
+	if (!response.Messages) return;
+	for (const msg of response.Messages) {
 		const body = JSON.parse(msg.Body);
 		const complaint = JSON.parse(body.Message);
 		const email = complaint.mail.destination[0];

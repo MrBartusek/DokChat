@@ -7,18 +7,18 @@ import getAxios from '../../helpers/axios';
 import InteractiveCard from '../InteractiveCard/InteractiveCard';
 
 export interface BlockUserCardProps {
-    userId: string;
+	userId: string;
 }
 
 export default function BlockUserCard({ userId }: BlockUserCardProps) {
-	const [ user ] = useContext(UserContext);
-	const [ blocked, setBlocked ] = useState(null);
-	const [ isLoading, setLoading ] = useState(true);
+	const [user] = useContext(UserContext);
+	const [blocked, setBlocked] = useState(null);
+	const [isLoading, setLoading] = useState(true);
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		setLoading(true);
-		if(user.id == userId) return;
+		if (user.id == userId) return;
 		const axios = getAxios(user);
 		axios.get(`user/block?id=${userId}`)
 			.then((r) => {
@@ -27,7 +27,7 @@ export default function BlockUserCard({ userId }: BlockUserCardProps) {
 				setLoading(false);
 			})
 			.catch(console.error);
-	}, [ userId ]);
+	}, [userId]);
 
 	function handleBlock() {
 		navigate(`/chat/user/${userId}/block`);

@@ -3,18 +3,18 @@ import FileUploader, { FileUploaderResult } from '../FileUploader/FileUploader';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 
 export interface ChangeableAvatarProps {
-    fileUploader: FileUploaderResult;
-    setFileUploader: React.Dispatch<React.SetStateAction<FileUploaderResult>>;
-    currentAvatar: string;
-    size?: number;
+	fileUploader: FileUploaderResult;
+	setFileUploader: React.Dispatch<React.SetStateAction<FileUploaderResult>>;
+	currentAvatar: string;
+	size?: number;
 }
 
 export default function ChangeableAvatar({ size, fileUploader, setFileUploader, currentAvatar }: ChangeableAvatarProps) {
-	const [ uploadedAvatar, setUploadedAvatar ] = useState<string | null>(null);
+	const [uploadedAvatar, setUploadedAvatar] = useState<string | null>(null);
 
 	useEffect(() => {
 		(async () => {
-			if(fileUploader.file) {
+			if (fileUploader.file) {
 				const url = await fileUploader.getURL();
 				setUploadedAvatar(url);
 			}
@@ -23,7 +23,7 @@ export default function ChangeableAvatar({ size, fileUploader, setFileUploader, 
 			}
 
 		})();
-	}, [ fileUploader ]);
+	}, [fileUploader]);
 
 	return (
 		<>
@@ -32,7 +32,7 @@ export default function ChangeableAvatar({ size, fileUploader, setFileUploader, 
 				size={size}
 				onClick={() => fileUploader.click()}
 			/>
-			<FileUploader onChange={setFileUploader}/>
+			<FileUploader onChange={setFileUploader} />
 		</>
 	);
 }

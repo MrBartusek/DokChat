@@ -42,7 +42,8 @@
     background-color: $gray-300;
 }
 
-#app[data-theme='dark'], .modal-dialog[data-theme='dark'] {
+#app[data-theme='dark'],
+.modal-dialog[data-theme='dark'] {
     .interactiveCard {
         background-color: mix($dark-background, $dark-washed, 40%);
     }
@@ -54,7 +55,7 @@
     .interactiveCard.enabled:hover {
         background-color: mix($dark-background, $dark-washed, 70%);
     }
-    
+
     .interactiveCard.enabled:active {
         background-color: $dark-background;
     }

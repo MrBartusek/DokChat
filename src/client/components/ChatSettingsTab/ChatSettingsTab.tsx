@@ -24,17 +24,17 @@ export interface ChatSettingsTabProps {
 }
 
 export default function ChatSettingsTab(props: ChatSettingsTabProps) {
-	const [ user ] = useContext(UserContext);
-	const [ error, setError ] = useState<string | null>(null);
-	const [ isLoading, setLoading ] = useState(true);
-	const [ isEditing, setEditing ] = useState(false);
-	const [ isUnsaved, setUnsaved ] = useState(false);
+	const [user] = useContext(UserContext);
+	const [error, setError] = useState<string | null>(null);
+	const [isLoading, setLoading] = useState(true);
+	const [isEditing, setEditing] = useState(false);
+	const [isUnsaved, setUnsaved] = useState(false);
 
-	const [ avatarUploader, setAvatarUploader ]  = useState<FileUploaderResult>({});
-	const [ name, setName ] = useState(props.currentChat.name);
-	const [ color, setColor ] = useState(props.currentChat.color);
+	const [avatarUploader, setAvatarUploader] = useState<FileUploaderResult>({});
+	const [name, setName] = useState(props.currentChat.name);
+	const [color, setColor] = useState(props.currentChat.color);
 
-	const [ tab, setTab ] = useState('home');
+	const [tab, setTab] = useState('home');
 
 	/**
 	 * Handle isUnsaved hook
@@ -46,16 +46,16 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 			avatarUploader.file != undefined
 		);
 		setUnsaved(changed);
-		if(changed && !isEditing) {
+		if (changed && !isEditing) {
 			setEditing(true);
 		}
-	}, [ name, color, avatarUploader ]);
+	}, [name, color, avatarUploader]);
 
 	/**
 	 * Handle footer
 	 */
 	useEffect(() => {
-		if(!isEditing) {
+		if (!isEditing) {
 			props.setCustomFooter(null);
 			return;
 		}
@@ -74,34 +74,34 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 				</InteractiveButton>
 			</>
 		);
-	}, [ isEditing, isUnsaved, tab, name, color ]);
+	}, [isEditing, isUnsaved, tab, name, color]);
 
 	useEffect(() => {
 		setLoading(!props.participants);
-	}, [ props.participants ]);
+	}, [props.participants]);
 
 	useEffect(() => {
 		props.setCustomStatic(isEditing);
-	}, [ isEditing ]);
+	}, [isEditing]);
 
 	async function handleSubmit() {
 		setLoading(true);
 
 		const formData = new FormData();
 		formData.append('id', props.currentChat.id);
-		if(name != props.currentChat.name) {
+		if (name != props.currentChat.name) {
 			formData.append('name', name);
 		}
-		if(color.name != props.currentChat.color.name) {
+		if (color.name != props.currentChat.color.name) {
 			formData.append('color', color.hex);
 		}
 
 		const avatarUpdated = avatarUploader.file != undefined;
-		if(avatarUpdated) {
+		if (avatarUpdated) {
 			formData.append('avatar', avatarUploader.file);
 		}
 
-		await getAxios(user).put('/chat/update', formData, { headers: {'Content-Type': 'multipart/form-data'}})
+		await getAxios(user).put('/chat/update', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
 			.then(() => props.handleClose())
 			.then(() => toast('This chat has been updated'))
 			.catch((e) => {
@@ -112,7 +112,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 	}
 
 	function handleDiscard() {
-		if(tab !== 'home') return setTab('home');
+		if (tab !== 'home') return setTab('home');
 		setName(props.currentChat.name);
 		setColor(props.currentChat.color);
 		setEditing(false);
@@ -131,7 +131,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 				title={<Twemoji text={name || props.currentChat.name} />}
 				subTitle={!props.currentChat.isGroup
 					? 'Private Conversation'
-					: `${participantsCount} participant${ participantsCount > 1 ? 's' : ''}`}
+					: `${participantsCount} participant${participantsCount > 1 ? 's' : ''}`}
 				currentAvatar={props.currentChat.avatar}
 				avatarUploader={props.currentChat.isGroup && avatarUploader}
 				setAvatarUploader={props.currentChat.isGroup && setAvatarUploader}

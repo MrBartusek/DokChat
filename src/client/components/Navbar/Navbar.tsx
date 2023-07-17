@@ -9,11 +9,11 @@ interface Props {
 	zeroHeight?: boolean;
 }
 
-function Navbar({zeroHeight} : Props) {
-	const [ user ] = useContext(UserContext);
+function Navbar({ zeroHeight }: Props) {
+	const [user] = useContext(UserContext);
 
 	const brand = (
-		<BsNavbar.Brand as={Link} to='/' style={{'flex': '0 0 140px'}} className='d-flex justify-content-start align-items-center'>
+		<BsNavbar.Brand as={Link} to='/' style={{ 'flex': '0 0 140px' }} className='d-flex justify-content-start align-items-center'>
 			<DokChatLogo width={140} variant='white' />
 		</BsNavbar.Brand>
 	);
@@ -34,7 +34,7 @@ function Navbar({zeroHeight} : Props) {
 						<Nav.Link as={Link} to='/get'>Get DokChat</Nav.Link>
 						<Nav.Link href='https://github.com/MrBartusek/DokChat' target='_blank'>Contribute</Nav.Link>
 					</Nav>
-					<BsNavbar.Text style={{'flex': '0 0 140px'}} className='d-flex justify-content-md-end'>
+					<BsNavbar.Text style={{ 'flex': '0 0 140px' }} className='d-flex justify-content-md-end'>
 						<Link to={user.isAuthenticated ? '/chat' : '/login'}>
 							<Button variant="light" >
 								{user.isAuthenticated ? 'Open DokChat' : 'Log in'}

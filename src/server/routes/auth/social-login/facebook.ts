@@ -17,7 +17,7 @@ router.all('/facebook', body('token').isString(), async (req, res) => {
 	const token_debug = await axios.get(`https://graph.facebook.com/v15.0/debug_token?input_token=${token}&access_token=${token}`)
 		.then((res) => {
 			const data = res.data.data;
-			if(
+			if (
 				data.type !== 'USER' ||
 				data.app_id !== FACEBOOK_CLIENT_ID ||
 				DateFns.isPast(DateFns.fromUnixTime(data.expires_at)) ||
@@ -30,7 +30,7 @@ router.all('/facebook', body('token').isString(), async (req, res) => {
 		.catch(() => {
 			new ApiResponse(res).unauthorized('Provided Facebook token is not valid');
 		});
-	if(!token_debug) return;
+	if (!token_debug) return;
 
 	const data = await axios.get(`https://graph.facebook.com/v15.0/me?fields=id,email,picture.type(large)&access_token=${token}`)
 		.then((res) => {
@@ -40,9 +40,9 @@ router.all('/facebook', body('token').isString(), async (req, res) => {
 			console.error(error.response.data);
 			new ApiResponse(res).unauthorized('Provided Facebook token is not valid');
 		});
-	if(!data) return;
+	if (!data) return;
 
-	if(!data.email) {
+	if (!data.email) {
 		return new ApiResponse(res).unauthorized(
 			'Failed to retrieve e-mail address from your Facebook account. ' +
 			'Make sure you have granted e-mail read permissions permissions to DokChat.'

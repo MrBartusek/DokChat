@@ -6,17 +6,17 @@ import { Theme } from '../../hooks/useSettings';
 import DebugInfo from '../DebugInfo/DebugInfo';
 
 export default function SettingsTab() {
-	const [ settings, setSettings ] = useContext(SettingsContext);
+	const [settings, setSettings] = useContext(SettingsContext);
 
 	function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
 		const name = event.target.name;
 		const checked = event.target.checked;
 		const settingsCopy = Object.assign({}, settings);
 
-		if(name == 'sound-notifications') {
+		if (name == 'sound-notifications') {
 			settingsCopy.soundNotifications = checked;
 		}
-		else if(name == 'theme') {
+		else if (name == 'theme') {
 			settingsCopy.themeRaw = event.target.id as Theme;
 		}
 

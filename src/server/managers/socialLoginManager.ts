@@ -12,15 +12,15 @@ import UserManager from './userManager';
 export default class SocialLoginManager {
 	public static async socialLogin(res: Response, email: string, profilePictureUrl?: string) {
 		const normalizedEmail = validator.normalizeEmail(email);
-		if(normalizedEmail == false) {
+		if (normalizedEmail == false) {
 			return new ApiResponse(res).unauthorized('E-mail provided by social login provided is not valid');
 		}
 		const userExist = await UserManager.emailTaken(normalizedEmail);
 
-		if(userExist) {
-		// Login to user account
+		if (userExist) {
+			// Login to user account
 			const userData = await UserManager.getUserJwtDataByEmail(normalizedEmail);
-			if(!userData.isEmailConfirmed) {
+			if (!userData.isEmailConfirmed) {
 				return new ApiResponse(res).badRequest(
 					'E-mail address associated with this account is not confirmed. ' +
 					'In order to use social login please, login to this account using your ' +
@@ -31,20 +31,20 @@ export default class SocialLoginManager {
 			await AuthManager.sendAuthResponse(res, userData, passwordHash);
 		}
 		else {
-		// Register user that doesn't exist
+			// Register user that doesn't exist
 			const username = Utils.emailToUsername(normalizedEmail);
 			await UserManager.createUser(username, normalizedEmail, null, true)
-				.then(async ([ userData, passwordHash ]) => {
-					if(profilePictureUrl) {
+				.then(async ([userData, passwordHash]) => {
+					if (profilePictureUrl) {
 						const avatar = await this.uploadProfilePicture(profilePictureUrl);
-						if(avatar) {
-							await db.query(sql`UPDATE users SET avatar = $1 WHERE id=$2`, [ avatar, userData.id ]);
+						if (avatar) {
+							await db.query(sql`UPDATE users SET avatar = $1 WHERE id=$2`, [avatar, userData.id]);
 						}
 					}
 					await AuthManager.sendAuthResponse(res, userData, passwordHash);
 				})
 				.catch((reason) => {
-					if(typeof reason == 'string') {
+					if (typeof reason == 'string') {
 						return new ApiResponse(res).badRequest(reason);
 					}
 					throw reason;
@@ -53,7 +53,7 @@ export default class SocialLoginManager {
 	}
 
 	private static async uploadProfilePicture(url: string): Promise<string | null> {
-		return axios.get(url, {responseType: 'arraybuffer'})
+		return axios.get(url, { responseType: 'arraybuffer' })
 			.then(async (res) => {
 				const buffer = Buffer.from(res.data, 'binary');
 				const fileName = await s3Client.uploadAvatar(buffer);

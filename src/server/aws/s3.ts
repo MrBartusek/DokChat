@@ -18,10 +18,10 @@ class DokChatS3Client {
 	}
 
 	/**
-     * Get temporary url for publicly accessing s3 object
-     * @param key Resource key
-     * @returns Url
-     */
+	 * Get temporary url for publicly accessing s3 object
+	 * @param key Resource key
+	 * @returns Url
+	 */
 	public async getSingedUrl(key: string): Promise<string> {
 		const getParams: GetObjectCommandInput = {
 			Bucket: bucketName,
@@ -39,10 +39,10 @@ class DokChatS3Client {
 	}
 
 	/**
-     * Format and upload user avatar to S3
-     * @param avatar Raw avatar sent by user
-     * @returns Resource key
-     */
+	 * Format and upload user avatar to S3
+	 * @param avatar Raw avatar sent by user
+	 * @returns Resource key
+	 */
 	public async uploadAvatar(avatar: Express.Multer.File | Buffer): Promise<string> {
 		const buffer = await this.imageToBuffer(avatar);
 		const formatted = await this.formatAvatar(buffer);
@@ -50,20 +50,20 @@ class DokChatS3Client {
 	}
 
 	/**
-     * Format and upload chat attachment to S3
-     * @param attachment Raw attachment sent by user
-     * @returns Resource key
-     */
+	 * Format and upload chat attachment to S3
+	 * @param attachment Raw attachment sent by user
+	 * @returns Resource key
+	 */
 	public async uploadAttachment(buffer: Buffer, contentType: string): Promise<string> {
 		return await this.uploadBuffer(buffer, contentType);
 	}
 
 	/**
-     * Upload buffer to S3
-     * @param buffer Buffer to upload
-     * @param contentType Content-Type for this object
-     * @returns Object key
-     */
+	 * Upload buffer to S3
+	 * @param buffer Buffer to upload
+	 * @param contentType Content-Type for this object
+	 * @returns Object key
+	 */
 	async uploadBuffer(buffer: Buffer, contentType: string): Promise<string> {
 		const fileName = this.generateFileKey();
 		const uploadParams: PutObjectCommandInput = {
@@ -77,9 +77,9 @@ class DokChatS3Client {
 	}
 
 	/**
-     * Delete object from s3
-     * @param key Resource key
-     */
+	 * Delete object from s3
+	 * @param key Resource key
+	 */
 	async deleteFile(key: string): Promise<void> {
 		const deleteParams: DeleteObjectCommandInput = {
 			Bucket: bucketName,
@@ -89,10 +89,10 @@ class DokChatS3Client {
 	}
 
 	private async imageToBuffer(file: Express.Multer.File | File | Buffer): Promise<Buffer> {
-		if(file instanceof Buffer) {
+		if (file instanceof Buffer) {
 			return file;
 		}
-		if((file as any).buffer) {
+		if ((file as any).buffer) {
 			return (file as Express.Multer.File).buffer;
 		}
 		else {

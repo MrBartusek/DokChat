@@ -10,8 +10,8 @@ import SimpleLoading from '../SimpleLoadng/SimpleLoading';
 const axios = getAxios();
 
 function NewPasswordDialog() {
-	const [ loading, setLoading ] = useState(true);
-	const [ error, setError ] = useState<string | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 	const { token } = useParams();
 
 	useEffect(() => {
@@ -27,19 +27,19 @@ function NewPasswordDialog() {
 		}
 
 		const expired = DateFns.isPast(DateFns.fromUnixTime(data.exp));
-		if(expired) {
+		if (expired) {
 			setError('This token is expired');
 			setLoading(false);
 			return;
 		}
 
 		setLoading(false);
-	}, [ token ]);
+	}, [token]);
 
-	if(loading) {
-		return ( <SimpleLoading /> );
+	if (loading) {
+		return (<SimpleLoading />);
 	}
-	else if(error) {
+	else if (error) {
 		return (
 			<>
 				<Alert variant='danger'>{error}</Alert>
@@ -53,7 +53,7 @@ function NewPasswordDialog() {
 			</>
 		);
 	}
-	return ( <NewPasswordForm token={token} /> );
+	return (<NewPasswordForm token={token} />);
 }
 
 export default NewPasswordDialog;

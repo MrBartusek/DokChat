@@ -11,11 +11,11 @@ import './DokChatDark.scss';
 import { useClientConfig } from '../../hooks/useClientConfig';
 
 export default function DokChat() {
-	const [ isUserLoading, user, updateToken, setUser, callLogout ] = useUpdatingUser();
-	let [ settings, setSettings ] = useSettings();
+	const [isUserLoading, user, updateToken, setUser, callLogout] = useUpdatingUser();
+	let [settings, setSettings] = useSettings();
 	const clientConfig = useClientConfig();
 
-	if(!user.isAuthenticated) {
+	if (!user.isAuthenticated) {
 		settings = DEFAULT_SETTINGS;
 		setSettings = () => console.warn('Cannot set user settings, user is not authenticated');
 	}
@@ -24,12 +24,12 @@ export default function DokChat() {
 		ReactGA.initialize('G-DQPTM9KZYV');
 	});
 
-	if(isUserLoading) return <></>;
+	if (isUserLoading) return <></>;
 
 	return (
 		<GoogleOAuthProvider clientId={clientConfig.googleClientId}>
-			<SettingsContext.Provider value={[ settings, setSettings ]}>
-				<UserContext.Provider value={[ user, updateToken, setUser, callLogout ]}>
+			<SettingsContext.Provider value={[settings, setSettings]}>
+				<UserContext.Provider value={[user, updateToken, setUser, callLogout]}>
 					<div id='app' data-theme={settings.theme}>
 						<Toaster toastOptions={{
 							style: {
@@ -37,7 +37,7 @@ export default function DokChat() {
 								color: 'var(--bs-light)',
 								borderRadius: 6
 							}
-						}}/>
+						}} />
 						<Router />
 					</div>
 				</UserContext.Provider>

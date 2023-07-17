@@ -7,6 +7,6 @@ interface SeparatorProps {
 
 export default function Separator({ width, height }: SeparatorProps) {
 	return (
-		<div role='none' className='p-0' style={{minWidth: width || '100%', minHeight: height || '100%'}}></div>
+		<div role='none' className='p-0' style={{ minWidth: width || '100%', minHeight: height || '100%' }}></div>
 	);
 }
