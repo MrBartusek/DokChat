@@ -29,7 +29,7 @@ async function initializeDatabase() {
 			await createDatabaseStructure();
 			break;
 		}
-		catch(error) {
+		catch (error) {
 			console.log('Failed to initialize database, retry in 5 seconds...');
 			console.log(error);
 			retries -= 1;
@@ -47,10 +47,10 @@ async function main() {
 	// Setup web and websocket server
 	const app = express();
 	const server = http.createServer(app);
-	const io = new Server(server, { maxHttpBufferSize: ATTACHMENT_MAX_SIZE});
+	const io = new Server(server, { maxHttpBufferSize: ATTACHMENT_MAX_SIZE });
 
 	// Register middleware
-	if(isProduction) {
+	if (isProduction) {
 		app.use(helmet({
 			contentSecurityPolicy: {
 				useDefaults: true,
@@ -99,7 +99,7 @@ async function main() {
 
 	// Server API, frontend and
 	app.use('/api', apiRouter);
-	app.get('*', (req,res) =>{
+	app.get('*', (req, res) => {
 		res.sendFile(path.join(__dirname + '/../public/index.html'));
 	});
 
@@ -112,7 +112,7 @@ async function main() {
 	});
 
 	// Schedule jobs
-	if(isProduction) {
+	if (isProduction) {
 		schedule.scheduleJob('Handle SES Bounces', '*/10 * * * *', processEmailBounces).invoke();
 		schedule.scheduleJob('Handle SES Complaints', '*/10 * * * *', processEmailComplaints).invoke();
 	}
@@ -121,7 +121,7 @@ async function main() {
 	}
 
 	// Start the server
-	const port = process.env.SERVER_PORT || 3000;
+	const port = process.env.PORT || 3000;
 	server.listen(port, () => console.log(`\r\nDokChat Server is listening on http://localhost:${port}/`));
 }
 
