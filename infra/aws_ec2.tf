@@ -13,14 +13,42 @@ data "aws_ami" "amazon_linux_2" {
   }
 }
 
+resource "random_password" "jwt_1" {
+  length  = 64
+  special = false
+}
+
+resource "random_password" "jwt_2" {
+  length  = 64
+  special = false
+}
+
+resource "random_password" "jwt_3" {
+  length  = 64
+  special = false
+}
+
+resource "random_password" "jwt_4" {
+  length  = 64
+  special = false
+}
+
 resource "aws_instance" "ec2_instance" {
   ami                    = data.aws_ami.amazon_linux_2.id
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.http_https_ssh.id]
   key_name               = var.key_name
   user_data = templatefile("userdata.tftpl", {
-    s3_bucket_name = aws_s3_bucket.this.id
-    aws_region     = var.aws_region
+    s3_bucket_name       = aws_s3_bucket.this.id
+    aws_region           = var.aws_region,
+    jwt_secret_1         = random_password.jwt_1.result,
+    jwt_secret_2         = random_password.jwt_2.result,
+    jwt_secret_3         = random_password.jwt_3.result,
+    jwt_secret_4         = random_password.jwt_4.result,
+    sqs_complaints_queue = aws_sqs_queue.ses_complaints.url,
+    sqs_bounces_queue    = aws_sqs_queue.ses_bounces.url,
+    access_key_id        = aws_iam_access_key.this.id,
+    access_key_secret    = aws_iam_access_key.this.secret,
   })
 
   tags = {

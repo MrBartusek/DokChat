@@ -29,26 +29,32 @@ git clone https://github.com/MrBartusek/DokChat.git
 cd DokChat
 
 cat > .env <<EOL
+##############################
+# DOKCHAT CONFIGURATION FILE #
+##############################
+
+# This file was auto-generated using TERRAFORM
+
 NODE_ENV = "production"
 
 # AWS CONFIG
 # this is configuration for attachments s3 bucket
 AWS_BUCKET_NAME = "${s3_bucket_name}"
 AWS_REGION = "${aws_region}"
-AWS_ACCESS_KEY_ID=""
-AWS_SECRET_ACCESS_KEY=""
+AWS_ACCESS_KEY_ID="${access_key_id}"
+AWS_SECRET_ACCESS_KEY=${access_key_secret}""
 
 # JWT SINGING CONFIG
 # random tokens used for singing JWTS
-JWT_USER_TOKEN_SECRET = "CHANGE_ME_1"
-JWT_REFRESH_TOKEN_SECRET = "CHANGE_ME_2"
-JWT_PASS_RESET_TOKEN_SECRET = "CHANGE_ME_3"
-JWT_EMAIL_CONFIRM_TOKEN_SECRET = "CHANGE_ME_4"
+JWT_USER_TOKEN_SECRET = "${jwt_secret_1}"
+JWT_REFRESH_TOKEN_SECRET = "${jwt_secret_2}"
+JWT_PASS_RESET_TOKEN_SECRET = "${jwt_secret_3}"
+JWT_EMAIL_CONFIRM_TOKEN_SECRET = "${jwt_secret_4}"
 
 # Email SQS Bounces
 # URLs for SQS URLS for bounces and complaints
-SQS_COMPLAINTS_URL = ""
-SQS_BOUNCES_URL = ""
+SQS_COMPLAINTS_URL = "${sqs_complaints_queue}"
+SQS_BOUNCES_URL = "${sqs_bounces_queue}"
 
 # SOCIAL LOGIN
 # Client IDs for Social Login
