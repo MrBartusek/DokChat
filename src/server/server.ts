@@ -51,7 +51,7 @@ async function main() {
 
 	// Register middleware
 	const helmetEnabled = process.env.ENABLE_HELMET === 'true';
-	if (isProduction && helmetEnabled) {
+	if (helmetEnabled) {
 		app.use(helmet({
 			contentSecurityPolicy: {
 				useDefaults: true,
