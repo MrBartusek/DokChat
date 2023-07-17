@@ -49,7 +49,8 @@ resource "aws_instance" "ec2_instance" {
     sqs_bounces_queue    = aws_sqs_queue.ses_bounces.url,
     access_key_id        = aws_iam_access_key.this.id,
     access_key_secret    = aws_iam_access_key.this.secret,
-    tenor_apikey         = google_apikeys_key.tenor.key_string
+    tenor_apikey         = google_apikeys_key.tenor.key_string,
+    sqs_config_set       = aws_ses_configuration_set.this.name
   })
 
   tags = {

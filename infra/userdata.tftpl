@@ -43,7 +43,7 @@ NODE_ENV = 'production'
 AWS_BUCKET_NAME = "${s3_bucket_name}"
 AWS_REGION = "${aws_region}"
 AWS_ACCESS_KEY_ID="${access_key_id}"
-AWS_SECRET_ACCESS_KEY=${access_key_secret}""
+AWS_SECRET_ACCESS_KEY="${access_key_secret}"
 
 # [ JWT SECRETS CONFIG ]
 # Set every token to diffrent random string 
@@ -56,7 +56,7 @@ JWT_EMAIL_CONFIRM_TOKEN_SECRET = "${jwt_secret_4}"
 # Enable DokChat to send account confirmation and similar e-mails, they are all transactional
 ENABLE_EMAIL_SERVICE = false
 SES_EMAIL_SENDER = "DokChat <no-reply@CHANGE_ME.com>"
-SES_CONFIGURATION_SET_NAME = ''
+SES_CONFIGURATION_SET_NAME = "${sqs_config_set}"
 
 # [ EMAIL BOUNCES/COMPLAINTS HANDLING ]
 # Bounces and complaints handling module, this is reqired in order to leave SES Sandbox

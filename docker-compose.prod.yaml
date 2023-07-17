@@ -5,3 +5,8 @@ services:
       - PORT=8080
     ports:
       - 8080:8080
+    restart: on-failure:10
+  postgres:
+    restart: on-failure:10
+  redis:
+    restart: on-failure:10

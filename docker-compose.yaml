@@ -25,7 +25,7 @@ services:
       - redis
     environment:
       - DB_HOST=postgres
-      - REDIS_HOST=cache
+      - REDIS_HOST=redis
     env_file: .env
     ports:
       - 3000:3000
