@@ -7,9 +7,9 @@ import EmailBlacklistManager from '../managers/emailBlacklistManager';
 import jwtManager from '../managers/jwtManager';
 import Utils from '../utils/utils';
 
+const emailServiceEnabled = process.env.ENABLE_EMAIL_SERVICE == 'true';
 const region = process.env.AWS_REGION;
-
-const EMAIL_SENDER = 'DokChat <no-reply@dokurno.dev>';
+const EMAIL_SENDER = process.env.SES_EMAIL_SENDER ?? 'DokChat <no-reply@dokurno.dev>';
 
 class EmailClient {
 	private client: AWS.SES;
@@ -24,10 +24,11 @@ class EmailClient {
 		if (await EmailBlacklistManager.isEmailBlacklisted(destination)) {
 			return Promise.reject('This e-mail address is blacklisted. Please contact support.');
 		}
+		if(!emailServiceEnabled) return Promise.resolve();
 
 		const params: AWS.SES.SendTemplatedEmailRequest = {
 			Source: EMAIL_SENDER,
-			ConfigurationSetName: 'dokchat-config-set',
+			ConfigurationSetName: process.env.SES_CONFIGURATION_SET_NAME,
 			Destination: {
 				ToAddresses: [ destination ]
 			},

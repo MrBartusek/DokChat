@@ -36,6 +36,7 @@ export default class UserManager {
 		const userId = snowflakeGenerator.getUniqueID().toString();
 
 		const timestamp = DateFns.getUnixTime(new Date());
+		const emailServiceEnabled = process.env.ENABLE_EMAIL_SERVICE == 'true';
 		await db.query(sql`
 		INSERT INTO users 
 			(id, username, tag, email, password_hash, created_at, last_seen, is_email_confirmed)
@@ -50,7 +51,8 @@ export default class UserManager {
 			passwordHash,
 			timestamp,
 			timestamp,
-			socialLogin /* confirm email for social logins */
+			// confirm email for social logins or if email system is disabled
+			socialLogin || !emailServiceEnabled
 		]);
 
 		const jwtData: UserJWTData = {
@@ -60,7 +62,7 @@ export default class UserManager {
 			email: email,
 			avatar: Utils.avatarUrl(userId),
 			isBanned: false,
-			isEmailConfirmed: socialLogin,
+			isEmailConfirmed: socialLogin || !emailServiceEnabled,
 			isDemo: false
 		};
 		return [ jwtData, passwordHash ];
