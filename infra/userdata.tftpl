@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# Update System
+sudo yum update -y
+
+# Instal NGINX
+sudo amazon-linux-extras install nginx1 -y
+sudo amazon-linux-extras enable nginx1
+# sudo systemctl enable nginx
+# sudo systemctl start nginx
+
+# Install GIT
+sudo yum install git -y
+
+# Install Docker
+sudo amazon-linux-extras install docker
+sudo service docker start
+sudo usermod -a -G docker ec2-user
+sudo chkconfig docker on # Docker autostart
+
+# Install Compose
+sudo curl -L https://github.com/docker/compose/releases/download/v2.20.0/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose # Add docker to PATH
+
+# Build DokChat
+cd home/ec2-user
+git clone https://github.com/MrBartusek/DokChat.git
+cd DokChat
+
+cat > .env <<EOL
+NODE_ENV = "production"
+
+# AWS CONFIG
+# this is configuration for attachments s3 bucket
+AWS_BUCKET_NAME = "${s3_bucket_name}"
+AWS_REGION = "${aws_region}"
+AWS_ACCESS_KEY_ID=""
+AWS_SECRET_ACCESS_KEY=""
+
+# JWT SINGING CONFIG
+# random tokens used for singing JWTS
+JWT_USER_TOKEN_SECRET = "CHANGE_ME_1"
+JWT_REFRESH_TOKEN_SECRET = "CHANGE_ME_2"
+JWT_PASS_RESET_TOKEN_SECRET = "CHANGE_ME_3"
+JWT_EMAIL_CONFIRM_TOKEN_SECRET = "CHANGE_ME_4"
+
+# Email SQS Bounces
+# URLs for SQS URLS for bounces and complaints
+SQS_COMPLAINTS_URL = ""
+SQS_BOUNCES_URL = ""
+
+# SOCIAL LOGIN
+# Client IDs for Social Login
+GOOGLE_CLIENT_ID = ""
+FACEBOOK_CLIENT_ID = ""
+
+# RECHAPTA
+RECAPTCHA_SITE_KEY = ""
+RECAPTCHA_SECRET = ""
+
+# Tenor
+TENOR_API_KEY = ""
+EOL
+
+sudo chown -R ec2-user .
+docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
+
+reboot

@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Terraform bash script should use LF
+*.tftpl text eol=lf

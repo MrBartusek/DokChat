@@ -4,5 +4,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "this" {
-  bucket = "dokchat-s3"
+  bucket_prefix = "dokchat-s3-"
 }
+
+

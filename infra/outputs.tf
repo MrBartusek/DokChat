@@ -3,7 +3,7 @@ output "ec2_instance_public_ips" {
   value       = aws_eip.lb.public_ip
 }
 
-output "s3_bucket_arn" {
-  description = "Name of S3 Attachments bucket"
-  value       = aws_s3_bucket.this.arn
+output "aws_region" {
+  description = "AWS region for all services"
+  value       = var.aws_region
 }

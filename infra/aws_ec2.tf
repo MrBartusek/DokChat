@@ -18,7 +18,10 @@ resource "aws_instance" "ec2_instance" {
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.http_https_ssh.id]
   key_name               = var.key_name
-  user_data              = file("userdata.tpl")
+  user_data = templatefile("userdata.tftpl", {
+    s3_bucket_name = aws_s3_bucket.this.id
+    aws_region     = var.aws_region
+  })
 
   tags = {
     Name = "DokChat - Web server"
@@ -55,8 +58,8 @@ resource "aws_security_group" "http_https_ssh" {
   }
 
   ingress {
-    from_port   = 3000
-    to_port     = 3000
+    from_port   = 8080
+    to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
