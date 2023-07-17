@@ -92,13 +92,13 @@ function PasswordResetForm() {
 		event.preventDefault();
 		setLoading(true);
 
-		const recaptchaResponse = await captchaRef.current.executeAsync().catch(() => {
-			setError('Failed to get ReCAPTCHA token');
-		});
-		if (!recaptchaResponse) return;
+		// Allow for empty response, if server don't send site keys
+		// It means reCAPTCHA is disabled
+		const reCaptchaResponse = captchaRef.current ? await captchaRef.current.executeAsync() : null;
+
 		await axios.post('/auth/password-reset/start', {
 			...values,
-			recaptchaResponse
+			reCaptchaResponse
 		})
 			.then(() => {
 				setSuccess(true);

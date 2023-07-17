@@ -112,7 +112,7 @@ async function main() {
 	});
 
 	// Schedule jobs
-	const enableBouncesHandling = process.env.ENABLE_SNS_BOUNCES_HANDLING;
+	const enableBouncesHandling = process.env.ENABLE_SNS_BOUNCES_HANDLING === 'true';
 	if (isProduction && enableBouncesHandling) {
 		schedule.scheduleJob('Handle SES Bounces', '*/10 * * * *', processEmailBounces).invoke();
 		schedule.scheduleJob('Handle SES Complaints', '*/10 * * * *', processEmailComplaints).invoke();

@@ -137,16 +137,17 @@ function RegisterForm() {
 	async function onSubmit(event: React.FormEvent) {
 		event.preventDefault();
 		setLoading(true);
-		const recaptchaResponse = await captchaRef.current.executeAsync().catch(() => {
-			setError('Failed to get ReCAPTCHA token');
-		});
-		if (!recaptchaResponse) return setLoading(false);
+
+		// Allow for empty response, if server don't send site keys
+		// It means reCAPTCHA is disabled
+		const reCaptchaResponse = captchaRef.current ? await captchaRef.current.executeAsync() : null;
+
 		await axios.post('auth/register',
 			{
 				email: values.email,
 				username: values.username,
 				password: values.password,
-				recaptchaResponse
+				reCaptchaResponse
 			})
 			.then((r: any) => {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
