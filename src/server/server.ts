@@ -50,7 +50,8 @@ async function main() {
 	const io = new Server(server, { maxHttpBufferSize: ATTACHMENT_MAX_SIZE });
 
 	// Register middleware
-	if (isProduction) {
+	const helmetEnabled = process.env.ENABLE_HELMET === 'true';
+	if (isProduction && helmetEnabled) {
 		app.use(helmet({
 			contentSecurityPolicy: {
 				useDefaults: true,
