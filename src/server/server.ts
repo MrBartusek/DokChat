@@ -36,7 +36,7 @@ async function initializeDatabase() {
 			await new Promise(res => setTimeout(res, 5000));
 		}
 	}
-	console.log('Postgres connection successful');
+	console.log('[OK] Database connected!');
 }
 
 async function main() {
@@ -112,12 +112,17 @@ async function main() {
 	});
 
 	// Schedule jobs
-	if (isProduction) {
+	const enableBouncesHandling = process.env.ENABLE_SNS_BOUNCES_HANDLING;
+	if (isProduction && enableBouncesHandling) {
 		schedule.scheduleJob('Handle SES Bounces', '*/10 * * * *', processEmailBounces).invoke();
 		schedule.scheduleJob('Handle SES Complaints', '*/10 * * * *', processEmailComplaints).invoke();
+		console.info('[OK] Bounces/Complains processing module - enabled');
+	}
+	else if(enableBouncesHandling) {
+		console.info('[!] Bounces/Complains processing module - app is running in development mode');
 	}
 	else {
-		console.info('Not processing Bounces/Complains - app is running in development mode');
+		console.info('[!] Bounces/Complains processing module - disabled by ENABLE_SNS_BOUNCES_HANDLING');
 	}
 
 	// Start the server
