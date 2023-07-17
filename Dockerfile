@@ -11,6 +11,8 @@ COPY public/ public/
 COPY tsconfig.json ./
 COPY webpack.config.js ./
 
+ENV NODE_ENV=production
+
 RUN npm run build
 
 EXPOSE $PORT
