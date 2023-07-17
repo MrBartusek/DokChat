@@ -7,11 +7,11 @@ import ProfileSettingsTab from '../ProfileSettingsTab/ProfileSettingsTab';
 import SettingsTab from '../SettingsTab/SettingsTab';
 
 function SettingsPopup() {
-	const [handleClose, setHandleClose] = useState<() => void>(null);
-	const [customFooter, setCustomFooter] = useState<JSX.Element>(null);
-	const [customStatic, setCustomStatic] = useState<boolean>(null);
-	const [popupTitle, setPopupTitle] = useState('');
-	const [key, setKey] = useState('profile');
+	const [ handleClose, setHandleClose ] = useState<() => void>(null);
+	const [ customFooter, setCustomFooter ] = useState<JSX.Element>(null);
+	const [ customStatic, setCustomStatic ] = useState<boolean>(null);
+	const [ popupTitle, setPopupTitle ] = useState('');
+	const [ key, setKey ] = useState('profile');
 
 	useEffect(() => {
 		if (key == 'profile') {
@@ -25,7 +25,7 @@ function SettingsPopup() {
 		}
 		setCustomFooter(null);
 		setCustomStatic(false);
-	}, [key]);
+	}, [ key ]);
 
 	return (
 		<Popup

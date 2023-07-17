@@ -17,7 +17,7 @@ interface PopupProps extends ModalProps {
 function Popup(props: PopupProps) {
 	const navigate = useNavigate();
 	const handleClose = () => navigate('/chat');
-	const [settings] = useContext(SettingsContext);
+	const [ settings ] = useContext(SettingsContext);
 
 	useEffect(() => {
 		if (!props.setHandleClose) return;

@@ -10,19 +10,19 @@ class BlockManager {
 			const timestamp = DateFns.getUnixTime(new Date()).toString();
 			await db.query(sql`
                 INSERT INTO blocks (id, blocker_id, target_id, created_at) VALUES ($1, $2, $3, $4)
-            `, [id, blockerId, targetId, timestamp]);
+            `, [ id, blockerId, targetId, timestamp ]);
 		}
 		else {
 			await db.query(sql`
                 DELETE FROM blocks WHERE blocker_id = $1 AND target_id=$2;
-            `, [blockerId, targetId]);
+            `, [ blockerId, targetId ]);
 		}
 	}
 
 	public static async isBlocked(userId: string, blockedById: string): Promise<boolean> {
 		const blockQuery = await db.query(sql`
             SELECT EXISTS(SELECT 1 FROM blocks WHERE blocker_id = $1 AND target_id = $2)
-        `, [blockedById, userId]);
+        `, [ blockedById, userId ]);
 
 		return blockQuery.rows[0].exists;
 	}
@@ -34,7 +34,7 @@ class BlockManager {
 				(blocker_id = $1 AND target_id = $2) OR
 				(blocker_id = $2 AND target_id = $1)
 			)
-        `, [userA, userB]);
+        `, [ userA, userB ]);
 
 		return blockQuery.rows[0].exists;
 	}

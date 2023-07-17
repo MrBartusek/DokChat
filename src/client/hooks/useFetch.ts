@@ -14,9 +14,9 @@ type useFetchState<T> = {
 
 export function useFetch<T>(initialUrl: string | null, useAuth = false): useFetchState<T> {
 	const isCurrent = useRef(true);
-	const [url, setUrl] = useState(initialUrl);
-	const [state, setState] = useState<useFetchState<T>>({ res: undefined, loading: true, setUrl: setUrl });
-	const [user] = useContext(UserContext);
+	const [ url, setUrl ] = useState(initialUrl);
+	const [ state, setState ] = useState<useFetchState<T>>({ res: undefined, loading: true, setUrl: setUrl });
+	const [ user ] = useContext(UserContext);
 
 	useEffect(() => {
 		return () => {
@@ -45,7 +45,7 @@ export function useFetch<T>(initialUrl: string | null, useAuth = false): useFetc
 					setUrl: setUrl
 				});
 			});
-	}, [url, setState]);
+	}, [ url, setState ]);
 
 	return state;
 }

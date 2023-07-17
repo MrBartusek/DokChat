@@ -43,9 +43,9 @@ export class LocalUser {
 		user.isAuthenticated = true;
 		user.token = token;
 		user.id = data.id,
-			user.username = data.username,
-			user.tag = data.tag,
-			user.email = data.email;
+		user.username = data.username,
+		user.tag = data.tag,
+		user.email = data.email;
 		user.isBanned = data.isBanned;
 		user._avatar = data.avatar;
 		user.isEmailConfirmed = data.isEmailConfirmed;

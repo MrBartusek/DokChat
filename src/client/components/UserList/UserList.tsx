@@ -30,12 +30,12 @@ export interface UserCardProps {
 
 export function UserCard({ user, icons }: UserCardProps) {
 	const getOnlineStatus = useContext(OnlineManagerContext);
-	const [isOnline, setOnline] = useState(false);
+	const [ isOnline, setOnline ] = useState(false);
 
 	useEffect(() => {
-		const [online] = getOnlineStatus((user as any).userId || user.id);
+		const [ online ] = getOnlineStatus((user as any).userId || user.id);
 		setOnline(online);
-	}, [getOnlineStatus]);
+	}, [ getOnlineStatus ]);
 
 	return (
 		<div className='d-flex flex-row my-2 align-items-center'>

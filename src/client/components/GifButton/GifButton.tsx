@@ -39,7 +39,7 @@ function GifButton({ fileUploader, color }: EmojiButtonProps) {
 async function getFileFromUrl(url: string): Promise<File> {
 	const response = await fetch(url);
 	const data = await response.blob();
-	return new File([data], 'Tenor Gif', {
+	return new File([ data ], 'Tenor Gif', {
 		type: data.type || 'image/gif'
 	});
 }

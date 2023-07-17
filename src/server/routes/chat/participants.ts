@@ -55,7 +55,7 @@ async function queryParticipants(chatId: string): Promise<ParticipantsQuery> {
 		INNER JOIN users ON participants.user_id = users.id
 		WHERE participants.chat_id = $1
 		ORDER BY participants.created_at ASC
-	`, [chatId]);
+	`, [ chatId ]);
 }
 
 export default router;

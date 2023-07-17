@@ -9,11 +9,11 @@ import MaskedText from '../MaskedText/MaskedText';
 import Popup from '../Popup/Popup';
 
 function EmailConfirmPopup() {
-	const [user] = useContext(UserContext);
-	const [handleClose, setHandleClose] = useState<() => void>(null);
-	const [error, setError] = useState<string | null>(null);
-	const [isLoading, setLoading] = useState(false);
-	const [success, setSuccess] = useState<boolean>(false);
+	const [ user ] = useContext(UserContext);
+	const [ handleClose, setHandleClose ] = useState<() => void>(null);
+	const [ error, setError ] = useState<string | null>(null);
+	const [ isLoading, setLoading ] = useState(false);
+	const [ success, setSuccess ] = useState<boolean>(false);
 
 	async function handleSubmit(event: React.MouseEvent<HTMLInputElement>) {
 		event.preventDefault();

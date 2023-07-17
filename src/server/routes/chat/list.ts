@@ -26,7 +26,7 @@ router.all('/list',
 		const chatsQuery = await queryChats(req, page);
 		const chats = await Promise.all(chatsQuery.rows.map(async (chat) => {
 			const participant = await ChatManager.listParticipants(chat.chatId);
-			const [name, avatar] = await ChatManager.generateChatNameAndAvatar(chat.chatId, chat.name, participant, chat.isGroup, req.auth.id);
+			const [ name, avatar ] = await ChatManager.generateChatNameAndAvatar(chat.chatId, chat.name, participant, chat.isGroup, req.auth.id);
 
 			return {
 				id: chat.chatId,
@@ -115,7 +115,7 @@ async function queryChats(req: express.Request, page: number): Promise<ChatsQuer
 		ORDER BY
 			COALESCE(last_message.created_at, chat.created_at) DESC
         LIMIT 25 OFFSET $2;
-    `, [req.auth.id, page]);
+    `, [ req.auth.id, page ]);
 }
 
 export default router;

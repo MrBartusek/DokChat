@@ -92,7 +92,7 @@ async function queryMessages(chatId: string, lastMessageTimestamp: number, count
 		ORDER BY 
 			messages.created_at DESC
 		LIMIT $3;
-	`, [chatId, lastMessageTimestamp, count]);
+	`, [ chatId, lastMessageTimestamp, count ]);
 }
 
 export default router;

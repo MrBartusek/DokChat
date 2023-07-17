@@ -7,7 +7,7 @@ import LogoutButton from '../components/LogoutButton/LogoutButton';
 import { UserContext } from '../context/UserContext';
 
 function AccountBannedPage() {
-	const [user] = useContext(UserContext);
+	const [ user ] = useContext(UserContext);
 
 	return (
 		<Container className='h-100 d-flex justify-content-center align-items-center flex-column' style={{ maxWidth: '600px' }}>

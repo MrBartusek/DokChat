@@ -19,11 +19,11 @@ export default function DokChatMarkdown({ text, className }: DokChatMarkdownProp
 					<>
 						{previous}
 						<ReactMarkdown
-							allowedElements={['a', 'strong', 'em', 'del', 'pre', 'code', 'blockquote']}
+							allowedElements={[ 'a', 'strong', 'em', 'del', 'pre', 'code', 'blockquote' ]}
 							unwrapDisallowed
 							className={'dokchat-markdown-element' + className}
 							linkTarget="_blank"
-							remarkPlugins={[remarkGfm]}
+							remarkPlugins={[ remarkGfm ]}
 						>
 							{current}
 						</ReactMarkdown>

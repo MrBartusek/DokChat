@@ -15,16 +15,16 @@ export interface ChatInviteTabProps {
 }
 
 export default function ChatInviteTab({ currentChat }: ChatInviteTabProps) {
-	const [user] = useContext(UserContext);
-	const [inviteLink, setInviteLink] = useState(null);
+	const [ user ] = useContext(UserContext);
+	const [ inviteLink, setInviteLink ] = useState(null);
 	const inviteInputRef = useRef<HTMLInputElement>(null);
 	const inviteFetch = useFetch<EndpointResponse<InviteResponse>>(`chat/invite?chat=${currentChat.id}`, true);
-	const [isLoading, setLoading] = useState(false);
+	const [ isLoading, setLoading ] = useState(false);
 
 	useEffect(() => {
 		if (inviteFetch.loading || inviteFetch.error) return;
 		setInviteLink(inviteFetch.res.data.invite);
-	}, [inviteFetch]);
+	}, [ inviteFetch ]);
 
 	function handleCopy() {
 		if (!inviteLink) return;

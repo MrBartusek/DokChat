@@ -9,12 +9,12 @@ import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import Popup from '../Popup/Popup';
 
 function DeleteAccountPopup() {
-	const [handleClose, setHandleClose] = useState<() => void>(null);
-	const [values, handleChange, resetForm] = useForm({ password: '' });
-	const [isChanged, setChanged] = useState(false);
-	const [isLoading, setLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
-	const [user, updateToken, setUser, callLogout] = useContext(UserContext);
+	const [ handleClose, setHandleClose ] = useState<() => void>(null);
+	const [ values, handleChange, resetForm ] = useForm({ password: '' });
+	const [ isChanged, setChanged ] = useState(false);
+	const [ isLoading, setLoading ] = useState(false);
+	const [ error, setError ] = useState<string | null>(null);
+	const [ user, updateToken, setUser, callLogout ] = useContext(UserContext);
 
 	/**
 	 * Handle isUnsaved hook
@@ -22,7 +22,7 @@ function DeleteAccountPopup() {
 	useEffect(() => {
 		const changed = values.password != '';
 		setChanged(changed);
-	}, [values]);
+	}, [ values ]);
 
 	async function handleSubmit(event: React.MouseEvent<HTMLInputElement>) {
 		event.preventDefault();

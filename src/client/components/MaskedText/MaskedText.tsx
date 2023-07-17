@@ -7,7 +7,7 @@ export interface MaskedTextProps {
 }
 
 export default function MaskedText({ masked, text }: MaskedTextProps) {
-	const [show, setShow] = useState(false);
+	const [ show, setShow ] = useState(false);
 	return (
 		<span className='text-nowrap'>
 			<span className='text-muted'> {show ? text : masked}</span>

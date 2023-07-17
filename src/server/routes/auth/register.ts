@@ -25,7 +25,7 @@ router.all('/register',
 		const email: string = req.body.email;
 
 		await UserManager.createUser(username, email, password)
-			.then(([userData, passwordHash]) => {
+			.then(([ userData, passwordHash ]) => {
 				AuthManager.sendAuthResponse(res, userData, passwordHash);
 			})
 			.catch((reason) => {

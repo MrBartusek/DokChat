@@ -4,7 +4,6 @@ import { ApiResponse } from '../../apiResponse';
 import AuthManager from '../../managers/authManager';
 import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
-import ensureCaptcha from '../../middlewares/ensureCaptcha';
 
 const router = express.Router();
 
@@ -15,7 +14,7 @@ router.all('/demo',
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 
 		await UserManager.createDemoUser()
-			.then(([userData, passwordHash]) => {
+			.then(([ userData, passwordHash ]) => {
 				AuthManager.sendAuthResponse(res, userData, passwordHash);
 			})
 			.catch((reason) => {

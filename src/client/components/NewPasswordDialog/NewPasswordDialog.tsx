@@ -10,8 +10,8 @@ import SimpleLoading from '../SimpleLoadng/SimpleLoading';
 const axios = getAxios();
 
 function NewPasswordDialog() {
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
+	const [ loading, setLoading ] = useState(true);
+	const [ error, setError ] = useState<string | null>(null);
 	const { token } = useParams();
 
 	useEffect(() => {
@@ -34,7 +34,7 @@ function NewPasswordDialog() {
 		}
 
 		setLoading(false);
-	}, [token]);
+	}, [ token ]);
 
 	if (loading) {
 		return (<SimpleLoading />);

@@ -14,24 +14,24 @@ import SimpleLoading from '../SimpleLoadng/SimpleLoading';
 
 function UserPopup() {
 	const { userId } = useParams();
-	const [handleClose, setHandleClose] = useState<() => void>(null);
-	const [error, setError] = useState<string | null>(null);
+	const [ handleClose, setHandleClose ] = useState<() => void>(null);
+	const [ error, setError ] = useState<string | null>(null);
 	const userFetch = useFetch<EndpointResponse<User>>(`/user/get?id=${userId}`, true);
 	const getOnlineStatus = useContext(OnlineManagerContext);
-	const [isOnline, setOnline] = useState(false);
-	const [onlineStatus, setOnlineStatus] = useState('');
+	const [ isOnline, setOnline ] = useState(false);
+	const [ onlineStatus, setOnlineStatus ] = useState('');
 
 	useEffect(() => {
 		if (userFetch.error) {
 			setError('Failed to fetch user data');
 		}
-	}, [userFetch.error]);
+	}, [ userFetch.error ]);
 
 	useEffect(() => {
-		const [online, status] = getOnlineStatus(userId);
+		const [ online, status ] = getOnlineStatus(userId);
 		setOnline(online);
 		setOnlineStatus(online ? 'Online' : status);
-	}, [getOnlineStatus]);
+	}, [ getOnlineStatus ]);
 
 	return (
 		<Popup

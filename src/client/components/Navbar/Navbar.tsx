@@ -10,7 +10,7 @@ interface Props {
 }
 
 function Navbar({ zeroHeight }: Props) {
-	const [user] = useContext(UserContext);
+	const [ user ] = useContext(UserContext);
 
 	const brand = (
 		<BsNavbar.Brand as={Link} to='/' style={{ 'flex': '0 0 140px' }} className='d-flex justify-content-start align-items-center'>

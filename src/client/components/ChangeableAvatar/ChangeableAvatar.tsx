@@ -10,7 +10,7 @@ export interface ChangeableAvatarProps {
 }
 
 export default function ChangeableAvatar({ size, fileUploader, setFileUploader, currentAvatar }: ChangeableAvatarProps) {
-	const [uploadedAvatar, setUploadedAvatar] = useState<string | null>(null);
+	const [ uploadedAvatar, setUploadedAvatar ] = useState<string | null>(null);
 
 	useEffect(() => {
 		(async () => {
@@ -23,7 +23,7 @@ export default function ChangeableAvatar({ size, fileUploader, setFileUploader, 
 			}
 
 		})();
-	}, [fileUploader]);
+	}, [ fileUploader ]);
 
 	return (
 		<>

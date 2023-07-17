@@ -21,7 +21,7 @@ export const DEFAULT_SETTINGS: Settings = {
 };
 
 export function useSettings(): [Settings, (settings: Settings) => void] {
-	const [settings, setSettings] = useLocalStorage<Settings>('settings2', {} as Settings);
+	const [ settings, setSettings ] = useLocalStorage<Settings>('settings2', {} as Settings);
 
 	const settingsCopy: Settings = {
 		soundNotifications: settings.soundNotifications ?? DEFAULT_SETTINGS.soundNotifications,
@@ -29,7 +29,7 @@ export function useSettings(): [Settings, (settings: Settings) => void] {
 		theme: praseTheme(settings.themeRaw ?? DEFAULT_SETTINGS.themeRaw)
 	};
 
-	return [settingsCopy, setSettings];
+	return [ settingsCopy, setSettings ];
 }
 
 function praseTheme(theme: Theme) {

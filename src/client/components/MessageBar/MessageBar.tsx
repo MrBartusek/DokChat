@@ -18,15 +18,15 @@ export interface MessageBarProps {
 }
 
 function MessageBar({ currentChat }: MessageBarProps) {
-	const [chats, sendMessage] = useContext(MessageManagerContext);
-	const [values, handleChange, setValues] = useForm({ content: '' });
-	const [isEnabled, setEnabled] = useState(false);
+	const [ chats, sendMessage ] = useContext(MessageManagerContext);
+	const [ values, handleChange, setValues ] = useForm({ content: '' });
+	const [ isEnabled, setEnabled ] = useState(false);
 	const inputRef = useRef<HTMLInputElement>();
-	const [fileUploader, setFileUploader] = useState<FileUploaderResult>({});
+	const [ fileUploader, setFileUploader ] = useState<FileUploaderResult>({});
 
 	useEffect(() => {
 		setEnabled(values.content.length > 0);
-	}, [values]);
+	}, [ values ]);
 
 	useEffect(() => {
 		(async () => {
@@ -38,7 +38,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 				fileUploader.reset();
 			}, (isEnabled ? 100 : 0));
 		})();
-	}, [fileUploader]);
+	}, [ fileUploader ]);
 
 	async function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
 		e?.preventDefault();

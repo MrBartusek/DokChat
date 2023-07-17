@@ -36,8 +36,8 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 		}
 
 		// Add message to db
-		const [attachmentKey, attachment] = await uploadAttachment(msg.attachment);
-		const [id, timestamp] = await ChatManager.saveMessage(
+		const [ attachmentKey, attachment ] = await uploadAttachment(msg.attachment);
+		const [ id, timestamp ] = await ChatManager.saveMessage(
 			socket.auth,
 			msg.chatId,
 			msg.content,
@@ -81,9 +81,9 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 
 async function uploadAttachment(attachment?: ClientAttachment): Promise<[string, MessageAttachment]> {
 	if (!attachment) {
-		return [null, {
+		return [ null, {
 			hasAttachment: false
-		}];
+		} ];
 	}
 	const mimeType = attachment.mimeType;
 	const key = await s3Client.uploadAttachment(attachment.buffer, mimeType);
@@ -92,12 +92,12 @@ async function uploadAttachment(attachment?: ClientAttachment): Promise<[string,
 		dimensions = sizeOf(attachment.buffer);
 	}
 
-	return [key, {
+	return [ key, {
 		hasAttachment: true,
 		width: dimensions?.width,
 		height: dimensions?.height,
 		mimeType: mimeType
-	}];
+	} ];
 }
 
 function validateMessage(msg: ClientMessage, callback: (response: any) => void): boolean {

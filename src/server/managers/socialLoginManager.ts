@@ -34,11 +34,11 @@ export default class SocialLoginManager {
 			// Register user that doesn't exist
 			const username = Utils.emailToUsername(normalizedEmail);
 			await UserManager.createUser(username, normalizedEmail, null, true)
-				.then(async ([userData, passwordHash]) => {
+				.then(async ([ userData, passwordHash ]) => {
 					if (profilePictureUrl) {
 						const avatar = await this.uploadProfilePicture(profilePictureUrl);
 						if (avatar) {
-							await db.query(sql`UPDATE users SET avatar = $1 WHERE id=$2`, [avatar, userData.id]);
+							await db.query(sql`UPDATE users SET avatar = $1 WHERE id=$2`, [ avatar, userData.id ]);
 						}
 					}
 					await AuthManager.sendAuthResponse(res, userData, passwordHash);

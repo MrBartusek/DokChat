@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.all('/block',
 	ensureAuthenticated(),
-	allowedMethods(['POST', 'GET']),
+	allowedMethods([ 'POST', 'GET' ]),
 	body('id').optional().isString(),
 	query('id').optional().isString(),
 	body('blockStatus').optional().isBoolean(),

@@ -13,10 +13,10 @@ export interface NewPasswordFormProps {
 }
 
 function NewPasswordForm({ token }: NewPasswordFormProps) {
-	const [loading, setLoading] = useState(false);
-	const [values, handleChange] = useForm({ password: '', confirmPassword: '' });
-	const [error, setError] = useState<string | null>(null);
-	const [success, setSuccess] = useState<boolean>(false);
+	const [ loading, setLoading ] = useState(false);
+	const [ values, handleChange ] = useForm({ password: '', confirmPassword: '' });
+	const [ error, setError ] = useState<string | null>(null);
+	const [ success, setSuccess ] = useState<boolean>(false);
 	const passwordConfirmRef = useRef<HTMLInputElement>(null);
 
 	useLayoutEffect(() => {
@@ -26,7 +26,7 @@ function NewPasswordForm({ token }: NewPasswordFormProps) {
 		else {
 			passwordConfirmRef.current.setCustomValidity('');
 		}
-	}, [values, passwordConfirmRef]);
+	}, [ values, passwordConfirmRef ]);
 
 	if (success) {
 		return (

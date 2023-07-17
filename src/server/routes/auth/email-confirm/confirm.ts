@@ -39,21 +39,21 @@ router.all('/confirm',
 async function isTokenValid(tokenData: EmailConfirmJWTData): Promise<boolean> {
 	const query = await db.query(sql`
 		SELECT EXISTS(SELECT 1 FROM users WHERE id = $1 AND email = $2)
-	`, [tokenData.id, tokenData.email]);
+	`, [ tokenData.id, tokenData.email ]);
 	return query.rows[0].exists;
 }
 
 async function isEmailConfirmed(tokenData: EmailConfirmJWTData): Promise<boolean> {
 	const query = await db.query(sql`
 		SELECT is_email_confirmed as "isEmailConfirmed"  FROM users WHERE id = $1 AND email = $2
-	`, [tokenData.id, tokenData.email]);
+	`, [ tokenData.id, tokenData.email ]);
 	return query.rows[0].isEmailConfirmed;
 }
 
 async function confirmEmail(tokenData: EmailConfirmJWTData): Promise<QueryResult<any>> {
 	return db.query(sql`
 		UPDATE users SET is_email_confirmed = 'true' WHERE id = $1 AND email = $2
-	`, [tokenData.id, tokenData.email]);
+	`, [ tokenData.id, tokenData.email ]);
 }
 
 export default router;

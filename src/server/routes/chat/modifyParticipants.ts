@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.all('/modify-participants',
 	ensureAuthenticated(),
-	allowedMethods(['DELETE', 'PUT']),
+	allowedMethods([ 'DELETE', 'PUT' ]),
 	body('chat').isString(),
 	body('participant').optional().isString(),
 	body('user').optional().isString(),

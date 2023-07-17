@@ -10,7 +10,7 @@ export interface ChatInfoButtonsProps {
 }
 
 function ChatInfoButtons({ currentChat }: ChatInfoButtonsProps) {
-	const [user] = useContext(UserContext);
+	const [ user ] = useContext(UserContext);
 
 	return (
 		<div className='d-flex align-items-center'>

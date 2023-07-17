@@ -20,7 +20,7 @@ class SystemMessageHandler {
 			console.log('System message not sent, socket is not connected');
 			return;
 		}
-		const [id, timestamp] = await ChatManager.saveMessage('SYSTEM', chatId, content);
+		const [ id, timestamp ] = await ChatManager.saveMessage('SYSTEM', chatId, content);
 
 		const participants = await ChatManager.listParticipants(chatId);
 		for await (const part of participants) {

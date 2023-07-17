@@ -6,8 +6,8 @@ import { LocalUser } from '../types/User';
  * This hook handles the User object as well as storing access token in cookie
  */
 export function useUser(): [LocalUser, { token?: any }, React.Dispatch<string | LocalUser>, React.Dispatch<void>] {
-	const [user, setUser] = useState(LocalUser.empty());
-	const [cookies, setCookie, removeCookie] = useCookies(['token']);
+	const [ user, setUser ] = useState(LocalUser.empty());
+	const [ cookies, setCookie, removeCookie ] = useCookies([ 'token' ]);
 
 	const isDevelopment = location.hostname == 'localhost';
 

@@ -20,7 +20,7 @@ export default class AuthManager {
 		const passwordValid = await bcrypt.compare(password, passwordHash);
 		if (!passwordValid) return Promise.reject('Provided email and password are not valid');
 
-		return [user, passwordHash];
+		return [ user, passwordHash ];
 	}
 
 	public static async sendAuthResponse(res: Response, userData: UserJWTData, passwordHash: string, rememberMe?: boolean) {

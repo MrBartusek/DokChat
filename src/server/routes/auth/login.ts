@@ -22,7 +22,7 @@ router.all('/login',
 		const rememberMe: boolean = req.body.rememberMe;
 
 		AuthManager.authenticateUser(email, password)
-			.then(async ([jwtData, passwordHash]) => {
+			.then(async ([ jwtData, passwordHash ]) => {
 				await UserManager.bumpLastSeen(jwtData.id);
 				AuthManager.sendAuthResponse(res, jwtData, passwordHash, rememberMe);
 			})

@@ -22,25 +22,25 @@ export interface MessagesWindowProps {
 }
 
 function MessagesWindow({ currentChat }: MessagesWindowProps) {
-	const [chats, sendMessage, setChatList] = useContext(MessageManagerContext);
-	const [user] = useContext(UserContext);
+	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
+	const [ user ] = useContext(UserContext);
 	const messageWindowRef = useRef<HTMLDivElement>();
 
-	const [hasMore, setHasMore] = useState(true);
-	const [isLoading, setLoading] = useState(false);
+	const [ hasMore, setHasMore ] = useState(true);
+	const [ isLoading, setLoading ] = useState(false);
 
 	useEffect(() => {
 		if (currentChat.isInitialized) return;
 		fetchMoreMessages(40);
 		setHasMore(true);
 		setLoading(false);
-	}, [currentChat]);
+	}, [ currentChat ]);
 
 	useLayoutEffect(() => {
 		if (!messageWindowRef.current) return;
 		if (messageWindowRef.current.scrollTop <= -300) return;
 		messageWindowRef.current.scrollTo(0, messageWindowRef.current.scrollHeight);
-	}, [chats, messageWindowRef]);
+	}, [ chats, messageWindowRef ]);
 
 	async function fetchMoreMessages(count = 20) {
 		setLoading(true);
@@ -58,7 +58,7 @@ function MessagesWindow({ currentChat }: MessagesWindowProps) {
 					setHasMore(false);
 				}
 				const chatId = chats.findIndex(c => c.id == currentChat.id);
-				const chatsCopy = [...chats];
+				const chatsCopy = [ ...chats ];
 				chatsCopy[chatId] = chatsCopy[chatId].addMessagesList(resp.data);
 				setChatList(chatsCopy);
 			}).catch((error) => {
@@ -162,7 +162,7 @@ interface MessageProps {
 }
 
 function UserMessage({ currentChat, message, showAvatar, showAuthor, showStatus }: MessageProps) {
-	const [user] = useContext(UserContext);
+	const [ user ] = useContext(UserContext);
 	const isAuthor = message.author.id == user.id;
 
 	// If message is pending or failed, display status regardless of props
@@ -256,9 +256,9 @@ function MessageStatus({ color, isPending, isFailed: isError }: MessageStatusPro
 	if (isError) icon = BsXCircle;
 	const iconEl = React.createElement(
 		icon, {
-		size: 14,
-		color: isError ? 'var(--bs-danger)' : color
-	}
+			size: 14,
+			color: isError ? 'var(--bs-danger)' : color
+		}
 	);
 	return (
 		<div className='d-flex align-items-end pe-0 ps-1'>

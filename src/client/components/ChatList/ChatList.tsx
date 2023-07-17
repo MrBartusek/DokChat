@@ -14,12 +14,12 @@ export interface ChatListProps {
 }
 
 function ChatList({ currentChat }: ChatListProps) {
-	const [chats] = useContext(MessageManagerContext);
+	const [ chats ] = useContext(MessageManagerContext);
 	const navigate = useNavigate();
 	const breakpoint = useBreakpoint();
 
 	const noChatsInfo = (
-		<span className='text-muted text-center mt-5 px-1' style={{ width: ['xs', 'sm'].includes(breakpoint) ? 150 : 320 }}>
+		<span className='text-muted text-center mt-5 px-1' style={{ width: [ 'xs', 'sm' ].includes(breakpoint) ? 150 : 320 }}>
 			There are no messages yet <br />
 			<Link to='/chat/new' className='link-secondary'>Start a new chat</Link>
 		</span>
@@ -47,18 +47,18 @@ interface ChatProps {
 }
 
 function Chat(props: ChatProps) {
-	const [user] = useContext(UserContext);
-	const [isOnline, setOnline] = useState(false);
+	const [ user ] = useContext(UserContext);
+	const [ isOnline, setOnline ] = useState(false);
 	const getOnlineStatus = useContext(OnlineManagerContext);
 
 	useEffect(() => {
 		const online = props.chat.participants.some(p => {
 			if (p.userId == user.id) return false;
-			const [online] = getOnlineStatus(p.userId);
+			const [ online ] = getOnlineStatus(p.userId);
 			return online;
 		});
 		setOnline(online);
-	}, [getOnlineStatus]);
+	}, [ getOnlineStatus ]);
 
 	return (
 		<div

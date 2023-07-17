@@ -16,9 +16,9 @@ export interface ParticipantCardProps {
 }
 
 export default function ParticipantCard({ currentChat, participant }: ParticipantCardProps) {
-	const [user] = useContext(UserContext);
-	const [isLoading, setLoading] = useState(false);
-	const [removed, setRemoved] = useState(false);
+	const [ user ] = useContext(UserContext);
+	const [ isLoading, setLoading ] = useState(false);
+	const [ removed, setRemoved ] = useState(false);
 	const navigate = useNavigate();
 
 	async function handleRemove() {

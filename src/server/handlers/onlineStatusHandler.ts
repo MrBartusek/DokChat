@@ -53,5 +53,5 @@ async function queryOnline(as: string): Promise<OnlineQuery> {
 			users.id = p.user_id
 		WHERE
 			participants.user_id = $1
-    `, [as]);
+    `, [ as ]);
 }

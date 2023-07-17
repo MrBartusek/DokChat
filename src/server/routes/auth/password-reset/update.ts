@@ -37,7 +37,7 @@ router.all('/update', allowedMethods('POST'),
 				}
 
 				const newPasswordHash = await bcrypt.hash(password, 12);
-				await db.query(sql`UPDATE users SET password_hash = $1 WHERE id = $2;`, [newPasswordHash, userId]);
+				await db.query(sql`UPDATE users SET password_hash = $1 WHERE id = $2;`, [ newPasswordHash, userId ]);
 				return new ApiResponse(res).success();
 			})
 			.catch((error) => {

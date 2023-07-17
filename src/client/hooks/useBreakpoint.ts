@@ -43,7 +43,7 @@ const resolveBreakpoint = (width: number): Breakpoint => {
 
 /** Get Media Query Breakpoints in React */
 const useBreakpoint = (): Breakpoint => {
-	const [size, setSize] = useState(() => resolveBreakpoint(window.innerWidth));
+	const [ size, setSize ] = useState(() => resolveBreakpoint(window.innerWidth));
 
 	useEffect(() => {
 		const calcInnerWidth = debounce(function () {

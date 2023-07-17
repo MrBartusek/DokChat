@@ -12,16 +12,16 @@ import Popup from '../Popup/Popup';
 
 function GroupLeavePopup() {
 	const currentChat = useOutletContext<LocalChat>();
-	const [handleClose, setHandleClose] = useState<() => void>(null);
-	const [isLoading, setLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
-	const [user] = useContext(UserContext);
-	const [chats, sendMessage, setChatList] = useContext(MessageManagerContext);
+	const [ handleClose, setHandleClose ] = useState<() => void>(null);
+	const [ isLoading, setLoading ] = useState(false);
+	const [ error, setError ] = useState<string | null>(null);
+	const [ user ] = useContext(UserContext);
+	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (!currentChat.isGroup) navigate(`/chat/${currentChat.id}`);
-	}, [currentChat]);
+	}, [ currentChat ]);
 
 	async function handleLeave() {
 		const axios = getAxios(user);
@@ -29,7 +29,7 @@ function GroupLeavePopup() {
 		setLoading(true);
 		await axios.post('chat/leave', { chat: currentChat.id })
 			.then(() => {
-				const chatsCopy = [...chats];
+				const chatsCopy = [ ...chats ];
 				setChatList(chatsCopy.filter(c => c.id !== currentChat.id));
 				toast('You have just left this group');
 				navigate('/chat');

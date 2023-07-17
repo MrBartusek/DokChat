@@ -7,10 +7,10 @@ import getAxios from '../../helpers/axios';
 import SimpleLoading from '../SimpleLoadng/SimpleLoading';
 
 export default function EmailConfirmer() {
-	const [user, updateToken] = useContext(UserContext);
+	const [ user, updateToken ] = useContext(UserContext);
 	const { token } = useParams();
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
+	const [ loading, setLoading ] = useState(true);
+	const [ error, setError ] = useState<string | null>(null);
 
 	useEffect(() => {
 		const axios = getAxios();
@@ -24,7 +24,7 @@ export default function EmailConfirmer() {
 				setError(resp?.message || 'Failed to confirm this account at this time. Please try again later.');
 				setLoading(false);
 			});
-	}, [token]);
+	}, [ token ]);
 
 	return (
 		<>

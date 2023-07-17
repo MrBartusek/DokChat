@@ -21,14 +21,14 @@ export interface ProfileSettingsProps {
 }
 
 export default function ProfileSettings(props: ProfileSettingsProps) {
-	const [user, updateToken] = useContext(UserContext);
+	const [ user, updateToken ] = useContext(UserContext);
 	const defaultValues = { username: user.username, tag: user.tag, email: user.email, password: '' };
-	const [values, handleChange, resetForm] = useForm(defaultValues);
-	const [error, setError] = useState<string | null>(null);
-	const [avatarUploader, setAvatarUploader] = useState<FileUploaderResult>({});
-	const [isEditing, setEditing] = useState(false);
-	const [isUnsaved, setUnsaved] = useState(false);
-	const [isLoading, setLoading] = useState(false);
+	const [ values, handleChange, resetForm ] = useForm(defaultValues);
+	const [ error, setError ] = useState<string | null>(null);
+	const [ avatarUploader, setAvatarUploader ] = useState<FileUploaderResult>({});
+	const [ isEditing, setEditing ] = useState(false);
+	const [ isUnsaved, setUnsaved ] = useState(false);
+	const [ isLoading, setLoading ] = useState(false);
 	const formRef = useRef<HTMLFormElement>(null);
 
 	/**
@@ -45,7 +45,7 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 		if (changed && !isEditing) {
 			setEditing(true);
 		}
-	}, [values, avatarUploader]);
+	}, [ values, avatarUploader ]);
 
 	/**
 	 * Handle footer
@@ -67,11 +67,11 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 				</InteractiveButton>
 			</>
 		);
-	}, [isEditing, isUnsaved, isLoading]);
+	}, [ isEditing, isUnsaved, isLoading ]);
 
 	useEffect(() => {
 		props.setCustomStatic(isEditing);
-	}, [isEditing]);
+	}, [ isEditing ]);
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();

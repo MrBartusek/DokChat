@@ -24,17 +24,17 @@ export interface ChatSettingsTabProps {
 }
 
 export default function ChatSettingsTab(props: ChatSettingsTabProps) {
-	const [user] = useContext(UserContext);
-	const [error, setError] = useState<string | null>(null);
-	const [isLoading, setLoading] = useState(true);
-	const [isEditing, setEditing] = useState(false);
-	const [isUnsaved, setUnsaved] = useState(false);
+	const [ user ] = useContext(UserContext);
+	const [ error, setError ] = useState<string | null>(null);
+	const [ isLoading, setLoading ] = useState(true);
+	const [ isEditing, setEditing ] = useState(false);
+	const [ isUnsaved, setUnsaved ] = useState(false);
 
-	const [avatarUploader, setAvatarUploader] = useState<FileUploaderResult>({});
-	const [name, setName] = useState(props.currentChat.name);
-	const [color, setColor] = useState(props.currentChat.color);
+	const [ avatarUploader, setAvatarUploader ] = useState<FileUploaderResult>({});
+	const [ name, setName ] = useState(props.currentChat.name);
+	const [ color, setColor ] = useState(props.currentChat.color);
 
-	const [tab, setTab] = useState('home');
+	const [ tab, setTab ] = useState('home');
 
 	/**
 	 * Handle isUnsaved hook
@@ -49,7 +49,7 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 		if (changed && !isEditing) {
 			setEditing(true);
 		}
-	}, [name, color, avatarUploader]);
+	}, [ name, color, avatarUploader ]);
 
 	/**
 	 * Handle footer
@@ -74,15 +74,15 @@ export default function ChatSettingsTab(props: ChatSettingsTabProps) {
 				</InteractiveButton>
 			</>
 		);
-	}, [isEditing, isUnsaved, tab, name, color]);
+	}, [ isEditing, isUnsaved, tab, name, color ]);
 
 	useEffect(() => {
 		setLoading(!props.participants);
-	}, [props.participants]);
+	}, [ props.participants ]);
 
 	useEffect(() => {
 		props.setCustomStatic(isEditing);
-	}, [isEditing]);
+	}, [ isEditing ]);
 
 	async function handleSubmit() {
 		setLoading(true);

@@ -63,7 +63,7 @@ export default class UserManager {
 			isEmailConfirmed: socialLogin,
 			isDemo: false
 		};
-		return [jwtData, passwordHash];
+		return [ jwtData, passwordHash ];
 	}
 
 	public static async createDemoUser(): Promise<[UserJWTData, string]> {
@@ -111,32 +111,32 @@ export default class UserManager {
 			isEmailConfirmed: true,
 			isDemo: true
 		};
-		return [jwtData, ''];
+		return [ jwtData, '' ];
 	}
 
 	public static async deleteUser(userData: UserJWTData): Promise<void> {
 		// Delete all attachments from S3
 		const attachmentsQuery = await db.query(sql`
 			SELECT attachment FROM messages WHERE author_id=$1 AND attachment IS NOT NULL
-		`, [userData.id]);
+		`, [ userData.id ]);
 		for await (const row of attachmentsQuery.rows) {
 			await s3Client.deleteFile(row.attachment);
 		}
 
 		// Delete user
-		await db.query('DELETE FROM users WHERE id=$1', [userData.id]);
+		await db.query('DELETE FROM users WHERE id=$1', [ userData.id ]);
 		if (!userData.isDemo) {
 			await emailClient.sendAccountDeletedEmail(userData);
 		}
 	}
 
 	private static async usersWithUsernameCount(username: string): Promise<number> {
-		const query = await db.query(sql`SELECT COUNT(*) FROM users WHERE username=$1`, [username]);
+		const query = await db.query(sql`SELECT COUNT(*) FROM users WHERE username=$1`, [ username ]);
 		return query.rows[0].count;
 	}
 
 	private static async generateTag(username: string): Promise<string> {
-		const query = await db.query(sql`SELECT tag FROM users WHERE username=$1`, [username]);
+		const query = await db.query(sql`SELECT tag FROM users WHERE username=$1`, [ username ]);
 		const takenTags = query.rows.map(u => u.tag);
 		let tag: string | undefined = undefined;
 		while (tag == undefined) {
@@ -156,7 +156,7 @@ export default class UserManager {
 				users
 			WHERE id = $1
 			LIMIT 1;
-		`, [id]);
+		`, [ id ]);
 		if (query.rowCount == 0) return null;
 		const user = query.rows[0];
 		return {
@@ -175,7 +175,7 @@ export default class UserManager {
 				users
 			WHERE username = $1 AND tag = $2
 			LIMIT 1;
-		`, [username, tag]);
+		`, [ username, tag ]);
 		if (query.rowCount == 0) return null;
 		const user = query.rows[0];
 		return {
@@ -198,7 +198,7 @@ export default class UserManager {
 				is_email_confirmed as "isEmailConfirmed",
 				is_demo as "isDemo"
 			FROM users WHERE id = $1;
-		`, [id]);
+		`, [ id ]);
 
 		if (query.rowCount == 0) return null;
 		const user = query.rows[0];
@@ -226,7 +226,7 @@ export default class UserManager {
 				is_email_confirmed as "isEmailConfirmed",
 				is_demo as "isDemo"
 			FROM users WHERE email = $1;
-		`, [email]);
+		`, [ email ]);
 
 		if (query.rowCount == 0) return null;
 		const user = query.rows[0];
@@ -243,30 +243,30 @@ export default class UserManager {
 	}
 
 	public static async getUserHashById(id: string): Promise<string | null> {
-		const query = await db.query(sql`SELECT password_hash as "passwordHash" FROM users WHERE id = $1;`, [id]);
+		const query = await db.query(sql`SELECT password_hash as "passwordHash" FROM users WHERE id = $1;`, [ id ]);
 		if (query.rowCount == 0) return null;
 		return query.rows[0].passwordHash;
 	}
 
 	public static async getUserHashByEmail(email: string): Promise<string | null> {
-		const query = await db.query(sql`SELECT password_hash as "passwordHash" FROM users WHERE email = $1;`, [email]);
+		const query = await db.query(sql`SELECT password_hash as "passwordHash" FROM users WHERE email = $1;`, [ email ]);
 		if (query.rowCount == 0) return null;
 		return query.rows[0].passwordHash;
 	}
 
 	public static async emailTaken(email: string): Promise<boolean> {
-		const query = await db.query(sql`SELECT EXISTS(SELECT 1 FROM users WHERE email=$1)`, [email]);
+		const query = await db.query(sql`SELECT EXISTS(SELECT 1 FROM users WHERE email=$1)`, [ email ]);
 		return query.rows[0].exists;
 	}
 
 	public static async confirmEmail(userData: UserJWTData): Promise<void> {
 		await db.query(sql`
 			UPDATE users SET is_email_confirmed = 'true' WHERE id = $1
-		`, [userData.id]);
+		`, [ userData.id ]);
 	}
 
 	public static async bumpLastSeen(userId: string): Promise<void> {
 		const timestamp = DateFns.getUnixTime(new Date());
-		await db.query(sql`UPDATE users SET last_seen=$1 WHERE id=$2`, [timestamp, userId]);
+		await db.query(sql`UPDATE users SET last_seen=$1 WHERE id=$2`, [ timestamp, userId ]);
 	}
 }

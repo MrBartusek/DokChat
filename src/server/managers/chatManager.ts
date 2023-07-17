@@ -36,12 +36,12 @@ export default class ChatManager {
 				chats
 			WHERE id = $1
 			LIMIT 1;
-		`, [chatId]);
+		`, [ chatId ]);
 		if (chats.rowCount == 0) return null;
 		const chat = chats.rows[0];
 		if (!participants) participants = await ChatManager.listParticipants(chatId);
 
-		const [name, avatar] = await ChatManager.generateChatNameAndAvatar(chat.id, chat.name, participants, chat.isGroup, displayAs);
+		const [ name, avatar ] = await ChatManager.generateChatNameAndAvatar(chat.id, chat.name, participants, chat.isGroup, displayAs);
 		return {
 			id: chatId,
 			avatar,
@@ -69,7 +69,7 @@ export default class ChatManager {
 				participants
 			JOIN users ON users.id = participants.user_id
 			WHERE chat_id = $1 AND (participants.id = $2 OR users.id = $3);
-		`, [chatId, participantId, userId]);
+		`, [ chatId, participantId, userId ]);
 
 		if (query.rowCount == 0) return null;
 		const part = query.rows[0];
@@ -97,7 +97,7 @@ export default class ChatManager {
 				participants
 			JOIN users ON users.id = participants.user_id
 			WHERE chat_id = $1;
-		`, [chatId]);
+		`, [ chatId ]);
 		const result: InternalChatParticipant[] = [];
 		for (const part of query.rows) {
 			result.push({
@@ -160,7 +160,7 @@ export default class ChatManager {
 			) AS participants
 			GROUP BY participants.chat_id
 			HAVING count(*) > 1
-		`, [userIdA, userIdb]);
+		`, [ userIdA, userIdb ]);
 		if (result.rowCount == 0) {
 			return false;
 		}
@@ -189,7 +189,7 @@ export default class ChatManager {
 	public static async removeUserFromChat(userId: string, chatId: string): Promise<void> {
 		await db.query(sql`
             DELETE FROM participants WHERE user_id = $1 AND chat_id=$2
-        `, [userId, chatId]);
+        `, [ userId, chatId ]);
 	}
 
 	public static async setChatHideForParticipant(participant: InternalChatParticipant | string, hide: boolean) {
@@ -199,7 +199,7 @@ export default class ChatManager {
 				SET is_hidden = $1
 			WHERE
 				id = $2
-		`, [hide, id]);
+		`, [ hide, id ]);
 	}
 
 	public static async setChatHideForParticipantByUserId(chatId: string, userId: string, hide: boolean) {
@@ -208,11 +208,11 @@ export default class ChatManager {
 				SET is_hidden = $1
 			WHERE
 				chat_id = $2 AND user_id = $3
-		`, [hide, chatId, userId]);
+		`, [ hide, chatId, userId ]);
 	}
 
 	public static async isGroup(chatId: string): Promise<boolean> {
-		const chatQuery = await db.query(sql`SELECT is_group as "isGroup" FROM chats WHERE id = $1;`, [chatId]);
+		const chatQuery = await db.query(sql`SELECT is_group as "isGroup" FROM chats WHERE id = $1;`, [ chatId ]);
 		return chatQuery.rows[0].isGroup;
 	}
 
@@ -237,8 +237,8 @@ export default class ChatManager {
 			VALUES (
 				$1, $2, $3, $4, $5, $6, $7, $8, $9, $10
 			);
-		`, [id, chatId, senderId, content, timestamp, sender == 'SYSTEM', attachmentKey,
-			attachment?.mimeType, attachment?.height, attachment?.width]);
-		return [id, timestamp];
+		`, [ id, chatId, senderId, content, timestamp, sender == 'SYSTEM', attachmentKey,
+			attachment?.mimeType, attachment?.height, attachment?.width ]);
+		return [ id, timestamp ];
 	}
 }

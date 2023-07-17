@@ -9,7 +9,7 @@ export interface MessageAttachmentProps {
 }
 
 export default function MessageAttachment({ message }: MessageAttachmentProps) {
-	const [showLightbox, setShowLightbox] = useState(false);
+	const [ showLightbox, setShowLightbox ] = useState(false);
 	const isSent = !(message.isPending || message.isFailed);
 
 	if (isSent) {

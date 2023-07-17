@@ -7,7 +7,7 @@ export interface FullPageContainerProps extends ContainerProps {
 }
 
 function FullPageContainer(props: FullPageContainerProps) {
-	const [innerHeight, setInnerHeight] = useState(window.innerHeight);
+	const [ innerHeight, setInnerHeight ] = useState(window.innerHeight);
 
 	useEffect(() => {
 		function handleResize() {

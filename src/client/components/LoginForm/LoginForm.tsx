@@ -11,11 +11,11 @@ import SocialLogin from '../SocialLogin/SocialLogin';
 const axios = getAxios();
 
 function LoginForm() {
-	const [loading, setLoading] = useState(false);
-	const [values, handleChange] = useForm({ email: '', password: '', rememberMe: false });
-	const [error, setError] = useState<string | null>(null);
+	const [ loading, setLoading ] = useState(false);
+	const [ values, handleChange ] = useForm({ email: '', password: '', rememberMe: false });
+	const [ error, setError ] = useState<string | null>(null);
 	const navigate = useNavigate();
-	const [user, updateToken, setUser] = useContext(UserContext);
+	const [ user, updateToken, setUser ] = useContext(UserContext);
 
 	return (
 		<>

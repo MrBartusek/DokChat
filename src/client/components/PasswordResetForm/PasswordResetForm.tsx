@@ -11,10 +11,10 @@ import InteractiveButton from '../InteractiveButton/InteractiveButton';
 const axios = getAxios();
 
 function PasswordResetForm() {
-	const [loading, setLoading] = useState(false);
-	const [values, handleChange] = useForm({ email: '' });
-	const [error, setError] = useState<string | null>(null);
-	const [success, setSuccess] = useState<boolean>(false);
+	const [ loading, setLoading ] = useState(false);
+	const [ values, handleChange ] = useForm({ email: '' });
+	const [ error, setError ] = useState<string | null>(null);
+	const [ success, setSuccess ] = useState<boolean>(false);
 	const captchaRef = useRef<ReCAPTCHA>(null!);
 
 	if (success) {

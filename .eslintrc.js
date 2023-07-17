@@ -21,6 +21,11 @@ module.exports = {
 		'react',
 		'@typescript-eslint'
 	],
+	settings: {
+		react: {
+			version: 'detect'
+		}
+	},
 	rules: {
 		'brace-style': ['error', 'stroustrup', { 'allowSingleLine': true }],
 		'quotes': ['error', 'single'],

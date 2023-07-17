@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 
 export function useDocumentReady(): boolean {
-	const [documentState, setDocumentState] = useState(document.readyState);
+	const [ documentState, setDocumentState ] = useState(document.readyState);
 
 	useEffect(() => {
 		document.addEventListener('readystatechange', readyStateChange);

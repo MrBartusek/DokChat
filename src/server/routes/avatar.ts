@@ -55,7 +55,7 @@ async function userAvatar(id: string): Promise<string | null> {
 			users
 		WHERE id = $1
 		LIMIT 1;
-	`, [id]);
+	`, [ id ]);
 	if (query.rowCount == 0) return null;
 	return await query.rows[0].avatar;
 }
@@ -68,7 +68,7 @@ async function chatAvatar(id: string): Promise<string | null> {
 			chats
 		WHERE id = $1
 		LIMIT 1;
-	`, [id]);
+	`, [ id ]);
 	if (query.rowCount == 0) return null;
 	return query.rows[0].avatar;
 }

@@ -11,9 +11,9 @@ export interface BlockUserCardProps {
 }
 
 export default function BlockUserCard({ userId }: BlockUserCardProps) {
-	const [user] = useContext(UserContext);
-	const [blocked, setBlocked] = useState(null);
-	const [isLoading, setLoading] = useState(true);
+	const [ user ] = useContext(UserContext);
+	const [ blocked, setBlocked ] = useState(null);
+	const [ isLoading, setLoading ] = useState(true);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -27,7 +27,7 @@ export default function BlockUserCard({ userId }: BlockUserCardProps) {
 				setLoading(false);
 			})
 			.catch(console.error);
-	}, [userId]);
+	}, [ userId ]);
 
 	function handleBlock() {
 		navigate(`/chat/user/${userId}/block`);

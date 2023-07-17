@@ -21,13 +21,13 @@ import UserTagInput from '../UserTagInput/UserTagInput';
 
 function NewChatPopup() {
 	const navigate = useNavigate();
-	const [participants, setParticipants] = useState<(User)[]>([]);
-	const [searchParams] = useSearchParams({});
-	const [isLoading, setLoading] = useState(false);
-	const [user] = useContext(UserContext);
-	const [error, setError] = useState(null);
-	const [chats, sendMessage, setChatList] = useContext(MessageManagerContext);
-	const [handleClose, setHandleClose] = useState<() => void>(null);
+	const [ participants, setParticipants ] = useState<(User)[]>([]);
+	const [ searchParams ] = useSearchParams({});
+	const [ isLoading, setLoading ] = useState(false);
+	const [ user ] = useContext(UserContext);
+	const [ error, setError ] = useState(null);
+	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
+	const [ handleClose, setHandleClose ] = useState<() => void>(null);
 	const userAddRef = useRef<HTMLFormElement>(null);
 
 	useEffect(() => {
@@ -38,7 +38,7 @@ function NewChatPopup() {
 		axios.get(`/user/get?id=${id}`)
 			.then((r) => {
 				const resp: EndpointResponse<UserGetResponse> = r.data;
-				const participantsCopy = [...participants];
+				const participantsCopy = [ ...participants ];
 				participantsCopy.push(resp.data);
 				setParticipants(participantsCopy);
 			})
@@ -46,7 +46,7 @@ function NewChatPopup() {
 				setError('Failed to load pre-filled user');
 			})
 			.finally(() => setLoading(false));
-	}, [searchParams]);
+	}, [ searchParams ]);
 
 	async function handleSubmit() {
 		// If user just typed the discriminator and didn't
@@ -67,11 +67,11 @@ function NewChatPopup() {
 		await axios.post('/chat/create', {
 			participants: participants.map(p => p.id)
 		}, {
-			validateStatus: (s) => [200, 409].includes(s)
+			validateStatus: (s) => [ 200, 409 ].includes(s)
 		})
 			.then((r) => {
 				const resp: EndpointResponse<ChatCreateResponse> = r.data;
-				const chatsCopy = [...chats];
+				const chatsCopy = [ ...chats ];
 				const chatExist = chatsCopy.find(c => c.id == resp.data.id);
 				if (!chatExist) {
 					chatsCopy.push(new LocalChat(resp.data));
@@ -90,7 +90,7 @@ function NewChatPopup() {
 		if (participants.find(p => p.id == user.id)) {
 			return setError(`${Utils.userDiscriminator(user)} is already on this list`);
 		}
-		setParticipants([...participants, user]);
+		setParticipants([ ...participants, user ]);
 	}
 
 	return (

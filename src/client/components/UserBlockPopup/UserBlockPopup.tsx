@@ -14,13 +14,13 @@ import SimpleLoading from '../SimpleLoadng/SimpleLoading';
 
 function UserBlockPopup() {
 	const { userId } = useParams();
-	const [isLoading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
-	const [user] = useContext(UserContext);
+	const [ isLoading, setLoading ] = useState(true);
+	const [ error, setError ] = useState<string | null>(null);
+	const [ user ] = useContext(UserContext);
 	const userFetch = useFetch<EndpointResponse<User>>(`/user/get?id=${userId}`, true);
 	const navigate = useNavigate();
 
-	const [blocked, setBlocked] = useState(false);
+	const [ blocked, setBlocked ] = useState(false);
 
 	useEffect(() => {
 		setLoading(true);
@@ -32,7 +32,7 @@ function UserBlockPopup() {
 				setLoading(false);
 			})
 			.catch(console.error);
-	}, [userId]);
+	}, [ userId ]);
 
 	async function handleHide() {
 		const axios = getAxios(user);
@@ -61,7 +61,7 @@ function UserBlockPopup() {
 		if (userFetch.error) {
 			setError('Failed to fetch user data');
 		}
-	}, [userFetch.error]);
+	}, [ userFetch.error ]);
 
 	return (
 		<Popup

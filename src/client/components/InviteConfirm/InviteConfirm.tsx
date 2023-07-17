@@ -17,11 +17,11 @@ export interface InviteConfirmProps {
 }
 
 function InviteConfirm({ inviteKey, handleClose }: InviteConfirmProps) {
-	const [user] = useContext(UserContext);
+	const [ user ] = useContext(UserContext);
 	const inviteFetch = useFetch<EndpointResponse<InviteResponse>>(`invite-info?key=${inviteKey}`, true);
-	const [isLoading, setLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
-	const [chats, sendMessage, setChatList] = useContext(MessageManagerContext);
+	const [ isLoading, setLoading ] = useState(false);
+	const [ error, setError ] = useState<string | null>(null);
+	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
 	const navigate = useNavigate();
 
 	async function handleJoin() {
@@ -30,7 +30,7 @@ function InviteConfirm({ inviteKey, handleClose }: InviteConfirmProps) {
 		await axios.post('chat/join', { invite: inviteKey })
 			.then((r) => {
 				const resp: EndpointResponse<ChatCreateResponse> = r.data;
-				const chatsCopy = [...chats];
+				const chatsCopy = [ ...chats ];
 				const chatExist = chatsCopy.find(c => c.id == resp.data.id);
 				if (!chatExist) {
 					chatsCopy.push(new LocalChat(resp.data));

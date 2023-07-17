@@ -14,10 +14,10 @@ export interface UserTagInputProps {
 }
 
 const UserTagInput = React.forwardRef(({ onAdd }: UserTagInputProps, ref: Ref<HTMLFormElement>) => {
-	const [values, handleChange, clearValues] = useForm({ username: '', tag: '' });
-	const [isLoading, setLoading] = useState(false);
-	const [error, setError] = useState(null);
-	const [user] = useContext(UserContext);
+	const [ values, handleChange, clearValues ] = useForm({ username: '', tag: '' });
+	const [ isLoading, setLoading ] = useState(false);
+	const [ error, setError ] = useState(null);
+	const [ user ] = useContext(UserContext);
 	const usernameRef = useRef<HTMLInputElement>(null);
 	const tagRef = useRef<HTMLInputElement>(null);
 

@@ -14,12 +14,12 @@ import Popup from '../Popup/Popup';
 
 function ChatDetailsPopup() {
 	const currentChat = useOutletContext<LocalChat>();
-	const [handleClose, setHandleClose] = useState<() => void>(null);
-	const [customFooter, setCustomFooter] = useState<JSX.Element>(null);
-	const [customStatic, setCustomStatic] = useState<boolean>(null);
-	const [popupTitle, setPopupTitle] = useState('');
-	const [searchParams] = useSearchParams({ tab: 'chat' });
-	const [key, setKey] = useState(searchParams.get('tab'));
+	const [ handleClose, setHandleClose ] = useState<() => void>(null);
+	const [ customFooter, setCustomFooter ] = useState<JSX.Element>(null);
+	const [ customStatic, setCustomStatic ] = useState<boolean>(null);
+	const [ popupTitle, setPopupTitle ] = useState('');
+	const [ searchParams ] = useSearchParams({ tab: 'chat' });
+	const [ key, setKey ] = useState(searchParams.get('tab'));
 	const participants = useFetch<EndpointResponse<ChatParticipantsRepose>>(null, true);
 
 	useEffect(() => {
@@ -37,12 +37,12 @@ function ChatDetailsPopup() {
 		}
 		setCustomFooter(null);
 		setCustomStatic(false);
-	}, [key]);
+	}, [ key ]);
 
 	useEffect(() => {
 		if (!currentChat) return;
 		participants.setUrl(`chat/participants?chat=${currentChat.id}`);
-	}, [currentChat]);
+	}, [ currentChat ]);
 
 	if (!currentChat) return null;
 	return (

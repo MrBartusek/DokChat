@@ -14,9 +14,9 @@ export interface ChatPrivacyTabProps {
 }
 
 export default function ChatPrivacyTab({ currentChat, participants }: ChatPrivacyTabProps) {
-	const [user] = useContext(UserContext);
+	const [ user ] = useContext(UserContext);
 	const navigate = useNavigate();
-	const otherParticipant = useMemo(() => participants.find(x => x.userId != user.id), [participants]);
+	const otherParticipant = useMemo(() => participants.find(x => x.userId != user.id), [ participants ]);
 
 	return (
 		<>

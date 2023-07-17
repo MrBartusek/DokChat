@@ -12,9 +12,9 @@ import { useUser } from './useUser';
  * that have token refreshing built-in
  */
 export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, React.Dispatch<string>, () => Promise<void>] {
-	const [isLoading, setLoading] = useState(true);
-	const [user, cookies, setUser, removeUser] = useUser();
-	const [isConfirmed, setConfirmed] = useState(false);
+	const [ isLoading, setLoading ] = useState(true);
+	const [ user, cookies, setUser, removeUser ] = useUser();
+	const [ isConfirmed, setConfirmed ] = useState(false);
 
 	/**
 	 * Set user decoded from JWT if there is any and fetch new token
@@ -46,7 +46,7 @@ export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, Rea
 			}
 		}, 10 * 1000);
 		return () => clearInterval(interval);
-	}, [user]);
+	}, [ user ]);
 
 	async function refreshToken(refreshAvatar = false) {
 		const axios = getAxios();
@@ -93,5 +93,5 @@ export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, Rea
 		setUser(newUser);
 	}
 
-	return [isLoading, user, (refreshAvatar?: boolean) => refreshToken(refreshAvatar), setUserWrapper, callLogout];
+	return [ isLoading, user, (refreshAvatar?: boolean) => refreshToken(refreshAvatar), setUserWrapper, callLogout ];
 }

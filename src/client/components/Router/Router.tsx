@@ -149,7 +149,7 @@ interface SpecialRouteProps {
 }
 
 const PrivateRoute = ({ children, isSuspendedRoute }: SpecialRouteProps) => {
-	const [user] = useContext(UserContext);
+	const [ user ] = useContext(UserContext);
 	if (user.isAuthenticated) {
 		if (user.isBanned && !isSuspendedRoute) {
 			return <Navigate to="/suspended" />;
@@ -163,6 +163,6 @@ const PrivateRoute = ({ children, isSuspendedRoute }: SpecialRouteProps) => {
 };
 
 const PublicOnlyRoute = ({ children }: SpecialRouteProps) => {
-	const [user] = useContext(UserContext);
+	const [ user ] = useContext(UserContext);
 	return !user.isAuthenticated ? children : <Navigate to="/chat" />;
 };

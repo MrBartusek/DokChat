@@ -3,7 +3,7 @@ import db from './index';
 import * as DateFns from 'date-fns';
 
 export async function createDatabaseStructure() {
-    await db.query(sql`
+	await db.query(sql`
         CREATE TABLE IF NOT EXISTS users (
             id varchar NOT NULL,
             password_hash varchar NOT NULL,
@@ -82,15 +82,15 @@ export async function createDatabaseStructure() {
             PRIMARY KEY (id)
         );
     `);
-    await removeDemoAccounts();
+	await removeDemoAccounts();
 }
 
 async function removeDemoAccounts() {
-    const timestampToRemove = DateFns.getUnixTime(DateFns.subHours(new Date(), 24));
-    const query = await db.query(sql`
+	const timestampToRemove = DateFns.getUnixTime(DateFns.subHours(new Date(), 24));
+	const query = await db.query(sql`
         DELETE FROM users WHERE is_demo IS TRUE AND created_at <= $1`,
-        [timestampToRemove]);
-    if (query.rowCount > 0) {
-        console.log(`Postgres: Removed ${query.rowCount} old demo account(s)`);
-    }
+	[ timestampToRemove ]);
+	if (query.rowCount > 0) {
+		console.log(`Postgres: Removed ${query.rowCount} old demo account(s)`);
+	}
 }

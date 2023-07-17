@@ -50,19 +50,19 @@ router.all('/update',
 			const oldAvatar = await getChatAvatar(id);
 			if (oldAvatar) await s3Client.deleteFile(oldAvatar);
 			const fileName = await s3Client.uploadAvatar(avatar);
-			await db.query(sql`UPDATE chats SET avatar = $1 WHERE id=$2`, [fileName, id]);
+			await db.query(sql`UPDATE chats SET avatar = $1 WHERE id=$2`, [ fileName, id ]);
 		}
 
 		if (name) {
 			await db.query(sql`
 				UPDATE chats SET name = $1 WHERE id=$2`,
-				[name, id]);
+			[ name, id ]);
 		}
 
 		if (color) {
 			await db.query(sql`
 				UPDATE chats SET color = $1 WHERE id=$2`,
-				[CHAT_COLORS.find(c => c.hex == color).id, id]);
+			[ CHAT_COLORS.find(c => c.hex == color).id, id ]);
 		}
 
 		systemMessageHandler.sendChatUpdated(
@@ -76,7 +76,7 @@ router.all('/update',
 	});
 
 async function getChatAvatar(chatId: string): Promise<string | null> {
-	const avatarQuery = await db.query(sql`SELECT avatar FROM chats WHERE id=$1`, [chatId]);
+	const avatarQuery = await db.query(sql`SELECT avatar FROM chats WHERE id=$1`, [ chatId ]);
 	if (avatarQuery.rowCount != 1) throw new Error('Invalid chat id provided to getChatAvatar');
 	return avatarQuery.rows[0].avatar;
 }

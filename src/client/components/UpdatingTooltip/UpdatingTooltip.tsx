@@ -5,7 +5,7 @@ const UpdatingTooltip = React.forwardRef(
 	({ popper, children, ...props }: any, ref) => {
 		useEffect(() => {
 			popper.scheduleUpdate();
-		}, [children, popper]);
+		}, [ children, popper ]);
 
 		return (
 			<Tooltip ref={ref} {...props}>

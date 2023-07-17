@@ -13,10 +13,10 @@ import SocialLogin from '../SocialLogin/SocialLogin';
 const axios = getAxios();
 
 function RegisterForm() {
-	const [loading, setLoading] = useState(false);
-	const [values, handleChange] = useForm({ email: '', username: '', password: '', confirmPassword: '', terms: false });
-	const [error, setError] = useState<string | null>(null);
-	const [user, updateToken, setUser] = useContext(UserContext);
+	const [ loading, setLoading ] = useState(false);
+	const [ values, handleChange ] = useForm({ email: '', username: '', password: '', confirmPassword: '', terms: false });
+	const [ error, setError ] = useState<string | null>(null);
+	const [ user, updateToken, setUser ] = useContext(UserContext);
 	const captchaRef = useRef<ReCAPTCHA>(null!);
 	const passwordConfirmRef = useRef<HTMLInputElement>(null!);
 	const navigate = useNavigate();
@@ -28,7 +28,7 @@ function RegisterForm() {
 		else {
 			passwordConfirmRef.current.setCustomValidity('');
 		}
-	}, [values, passwordConfirmRef]);
+	}, [ values, passwordConfirmRef ]);
 
 	return (
 		<>

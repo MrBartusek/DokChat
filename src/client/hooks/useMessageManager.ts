@@ -22,13 +22,13 @@ export function useMessageManager(ws: useWebsocketType): [
 	(chat: LocalChat, content?: string, attachment?: File) => Promise<void>, // sendMessage
 	React.Dispatch<LocalChat[]> // setChatList
 ] {
-	const [loading, setLoading] = useState(true);
-	const [user] = useContext(UserContext);
-	const [playPing] = useSound('/sounds/new_message_ping.mp3', { volume: 0.5 });
-	const [settings] = useContext(SettingsContext);
+	const [ loading, setLoading ] = useState(true);
+	const [ user ] = useContext(UserContext);
+	const [ playPing ] = useSound('/sounds/new_message_ping.mp3', { volume: 0.5 });
+	const [ settings ] = useContext(SettingsContext);
 
 	const initialChatList = useFetch<EndpointResponse<ChatListResponse>>('chat/list', true);
-	const [chatList, setChatList] = useState<LocalChat[]>([]);
+	const [ chatList, setChatList ] = useState<LocalChat[]>([]);
 
 	/**
 	 * Load initial chat list and cache it
@@ -42,14 +42,14 @@ export function useMessageManager(ws: useWebsocketType): [
 			))
 		);
 		setLoading(false);
-	}, [initialChatList]);
+	}, [ initialChatList ]);
 
 	/**
 	 * Message receive
 	 */
 	useEffect(() => {
 		ws.socket.on('message', (msg) => {
-			const chats = [...chatList];
+			const chats = [ ...chatList ];
 			const chat = chats.find((c) => c.id == msg.chat.id);
 
 			if (!chat) {
@@ -78,7 +78,7 @@ export function useMessageManager(ws: useWebsocketType): [
 	});
 
 	function ackMessage(chat: LocalChat, pendingId: string, newId: string, timestamp: string) {
-		const chats = [...chatList];
+		const chats = [ ...chatList ];
 		const chatId = chats.findIndex((c) => c.id == chat.id);
 		if (chatId == -1) return;
 		chats[chatId].ackMessage(pendingId, newId, timestamp);
@@ -86,7 +86,7 @@ export function useMessageManager(ws: useWebsocketType): [
 	}
 
 	function ackErrorMessage(chat: LocalChat, pendingId: string) {
-		const chats = [...chatList];
+		const chats = [ ...chatList ];
 		const chatId = chats.findIndex((c) => c.id == chat.id);
 		if (chatId == -1) return;
 		chats[chatId].ackErrorMessage(pendingId);
@@ -94,7 +94,7 @@ export function useMessageManager(ws: useWebsocketType): [
 	}
 
 	function sortedChatList(): LocalChat[] {
-		return [...chatList].sort((a, b) => {
+		return [ ...chatList ].sort((a, b) => {
 			return Number(b.lastMessage?.timestamp || b.createdAt) - Number(a.lastMessage?.timestamp || a.createdAt);
 		});
 	}
@@ -106,7 +106,7 @@ export function useMessageManager(ws: useWebsocketType): [
 		}
 
 		// Add this message to local cache
-		const chats = [...chatList];
+		const chats = [ ...chatList ];
 		const chatId = chats.findIndex((c) => c.id == chat.id);
 		if (chatId == -1) return;
 		const pendingMessageId = chats[chatId].addMessage({

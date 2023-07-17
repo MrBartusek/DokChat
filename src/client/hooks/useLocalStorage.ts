@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 export function useLocalStorage<T = string>(key: string, initialValue: T): [T, (value: T) => void] {
-	const [storedValue, setStoredValue] = useState(() => {
+	const [ storedValue, setStoredValue ] = useState(() => {
 		if (typeof window === 'undefined') {
 			return initialValue;
 		}
@@ -44,5 +44,5 @@ export function useLocalStorage<T = string>(key: string, initialValue: T): [T, (
 		}
 	};
 
-	return [storedValue, setValue];
+	return [ storedValue, setValue ];
 }

@@ -31,7 +31,7 @@ class InviteManager {
 				invites
 			WHERE
 				chat_id = $1 AND author_id = $2;
-		`, [chatId, participantId]);
+		`, [ chatId, participantId ]);
 		return this.praseInvite(inviteQuery);
 	}
 
@@ -43,7 +43,7 @@ class InviteManager {
 				invites
 			WHERE
 				invite_key = $1
-		`, [key]);
+		`, [ key ]);
 		return this.praseInvite(inviteQuery);
 	}
 
@@ -71,7 +71,7 @@ class InviteManager {
 				invites (id, chat_id, author_id, created_at, invite_key)
 			VALUES
 				($1, $2, $3, $4, $5)
-		`, [id, chatId, participantId, timestamp.toString(), key]);
+		`, [ id, chatId, participantId, timestamp.toString(), key ]);
 
 		const expire = DateFns.getUnixTime(DateFns.addDays(created, INVITE_TIME_DAYS));
 
@@ -90,7 +90,7 @@ class InviteManager {
 			DELETE FROM
 				invites
 			WHERE created_at < $1
-		`, [tooOld]);
+		`, [ tooOld ]);
 		if (query.rowCount > 0) {
 			console.log(`Deleted ${query.rowCount} invites older than ${INVITE_TIME_DAYS} days`);
 		}
