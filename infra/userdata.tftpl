@@ -25,7 +25,7 @@ server {
         proxy_http_version 1.1;
         proxy_set_header Upgrade \$http_upgrade;
         proxy_set_header Connection "upgrade";
-        }
+    }
 }
 EOL
 sudo chown -R ec2-user /etc/nginx/conf.d/dokchat.dokurno.dev.conf
