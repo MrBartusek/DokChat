@@ -12,12 +12,12 @@ if(enableRecaptcha) {
 const ensureCaptcha = () => async (req: Request, res: Response, next: NextFunction) => {
 	if(!enableRecaptcha) return next();
 
-	const recaptchaResponse: string | undefined = req.body.recaptchaResponse;
-	if (!recaptchaResponse) {
+	const reCaptchaResponse: string | undefined = req.body.reCaptchaResponse;
+	if (!reCaptchaResponse) {
 		return new ApiResponse(res, next).badRequest('Missing ReCAPTCHA response');
 	}
 
-	req.body['g-recaptcha-response'] = recaptchaResponse;
+	req.body['g-recaptcha-response'] = reCaptchaResponse;
 	return recaptcha.verify(req, (error, data) => {
 		if (!error) {
 			return next();
