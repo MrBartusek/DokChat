@@ -62,7 +62,7 @@ async function main() {
 						'https://www.gstatic.com/recaptcha/', // reCAPTCHA
 						'https://accounts.google.com/gsi/', // Google Sign-In
 						'https://connect.facebook.net/', // Facebook SDK
-						'https://www.googletagmanager.com/gtag/' // Google Analytics
+						'https://*.googletagmanager.com' // Google Analytics
 					],
 					'frame-src': [
 						'\'self\'',
@@ -72,7 +72,10 @@ async function main() {
 					],
 					'connect-src': [
 						'\'self\'',
-						'https://www.facebook.com/' // Facebook SDK
+						'https://www.facebook.com/', // Facebook SDK
+						'https://*.google-analytics.com', // Google Analytics
+						'https://*.analytics.google.com', // Google Analytics
+						'https://*.googletagmanager.com' // Google Analytics
 					],
 					'media-src': [
 						'\'self\'',
@@ -80,8 +83,10 @@ async function main() {
 					],
 					'img-src': [
 						'\'self\'',
-						'data:',
-						`https://${s3Client.bucketName}.s3.eu-central-1.amazonaws.com`
+						'data:', // In-line base 64 SVGs
+						`https://${s3Client.bucketName}.s3.eu-central-1.amazonaws.com`, // S3 Bucket
+						'https://*.google-analytics.com', // Google Analytics
+						'https://*.googletagmanager.com' // Google Analytics
 					]
 				}
 			},
