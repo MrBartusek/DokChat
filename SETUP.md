@@ -95,6 +95,8 @@ file. There are multiple ways to do it:
 
 ### Google reCAPTCHA v2
 
+DokChat uses Invisible reCAPTCHA to detect and block bots.
+
 1. Create new [Google reCAPTCHA](https://www.google.com/recaptcha/admin/create) project.
 2. Input any label, for type select Challenge (v2) → Invisible reCAPTCHA badge and input your
    domain or EC2 Instance IP
@@ -122,4 +124,40 @@ TODO
 
 ### Set up TLS (HTTPS) and enable Helmet
 
-TODO
+Default DokChat Terraform setup have partially configured NGINX and certbot for you. For
+this step you need to have a domain name registered.
+
+1. Connect to your instancies - [See this section introduction](#step-4---optional-modules-and-configuration)
+2. Rename `/etc/nginx/dokchat.dokurno.dev.conf` to match your domain name like: 
+   `/etc/nginx/example.com.conf`
+3. In this file change this line:
+   ```conf
+   server_name _;
+   ```
+   To match your domain, for example:
+   ```conf
+   server_name wwww.example.com example.com;
+   ```
+4. Run the following command to generate certificates with the Cerbot NGINX plug‑in:
+   ```sh
+   sudo certbot --nginx -d example.com -d www.example.com
+   ```
+5. Respond to prompts from certbot to configure your HTTPS settings, which involves
+   entering your email address and agreeing to the Let’s Encrypt terms of service.
+6. You have now successfully setup certificate for the next 90 days. You can see that your
+   `/etc/nginx/example.com.conf` file have been modified.
+7. To enable automatic renew, you need to add new crontab entry, type following command:
+   ```sh
+   crontab -e
+   ``
+8. Add certbot to run daily
+   ```conf
+   0 12 * * * /usr/bin/certbot renew --quiet
+   ```
+9. Save and close the file. All installed certificates will be automatically renewed and reloaded.
+10. Now you have TLS working, can enable additional security measures, edit `~/DokChat/.env` file
+11. Change `ENABLE_HELMET = false` to `ENABLE_HELMET = true`
+12. Restart DokChat - In `~/DokChat` directory run
+   ```sh
+   docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
+   ```
