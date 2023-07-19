@@ -16,24 +16,20 @@ export type ClientConfig = {
 const axios = getAxios();
 
 export function useClientConfig(): ClientConfig {
-	const [ config, setConfig ] = useLocalStorage('clientConfig', { lastCached: 0 } as ClientConfig);
+	const [config, setConfig] = useLocalStorage('clientConfig', { lastCached: 0 } as ClientConfig);
 
 	useEffect(() => {
-		const lastCached = DateFns.fromUnixTime(config.lastCached);
-		const shouldRevalidate = DateFns.differenceInHours(new Date(), lastCached) > 12;
-		if (shouldRevalidate) {
-			axios.get('get-client-config')
-				.then((res) => {
-					const data: ClientConfigResponse = res.data.data;
-					setConfig({
-						lastCached: DateFns.getUnixTime(new Date()),
-						...data
-					});
-				})
-				.catch(() => {
-					console.error(`Failed to update client config, using config from: ${config.lastCached}`);
+		axios.get('get-client-config')
+			.then((res) => {
+				const data: ClientConfigResponse = res.data.data;
+				setConfig({
+					lastCached: DateFns.getUnixTime(new Date()),
+					...data
 				});
-		}
+			})
+			.catch(() => {
+				console.error(`Failed to update client config, using config from: ${config.lastCached}`);
+			});
 	});
 
 	return config;
