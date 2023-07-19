@@ -8,7 +8,7 @@ output "google_credentials_url" {
   value       = "https://console.cloud.google.com/apis/credentials?project=${var.google_project}"
 }
 
-output "aws_identities_url" {
+output "aws_ses_identities_url" {
   description = "AWS Console URL to create identities"
-  value       = "https://eu-central-1.console.aws.amazon.com/ses/home?region=${var.aws_region}#/verified-identities"
+  value       = "https://${var.aws_region}.console.aws.amazon.com/ses/home?region=${var.aws_region}#/verified-identities"
 }

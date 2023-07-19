@@ -58,6 +58,13 @@ resource "aws_instance" "ec2_instance" {
   }
 
   lifecycle {
+    ignore_changes = [
+      user_data # user data runs only after the initial launch of instance
+    ]
+
+    # WARNING: REMOVING prevent_destroy IS GOING TO
+    # REMOVE YOUR DATABASE, CONFIGURATION FILE AND
+    # ALL OTHER DOKCHAT DATA
     prevent_destroy = true
   }
 }

@@ -120,7 +120,33 @@ TODO
 
 ### Email Service
 
-TODO
+Default DokChat Terraform have set up most of the email system for you. You now only need
+to create an identity and enable it.
+
+1. After running `terraform apply` Terraform has generated `aws_ses_identities_url`, as
+   output, navigate to this URL.
+2. Create and verify **BOTH** Domain and Email address. You are by default put in SES
+   sandbox and you will be able to only send emails from verified domains to verified
+   email addresses.
+3. Connect to your instancies - [See this section introduction](#step-4---optional-modules-and-configuration)
+4. Edit `~/DokChat/.env` file
+5. Change Email Service section to
+   ```conf
+   ENABLE_EMAIL_SERVICE = true
+   SES_EMAIL_SENDER = "DokChat <no-reply@YOUR_VERIFIED_DOMAIN>"
+   SES_CONFIGURATION_SET_NAME = "dokchat-configuration-set"
+   ```
+
+You would probably also want to enable email bounces/complaints handling system. It is
+not required. If you want to leave SES Sandbox you are reqired to properly handle Bounces
+and Complaints to maintain good sender reputation. You can read more about that in
+[AWS Guide](https://docs.aws.amazon.com/ses/latest/dg/send-email-concepts-deliverability.html).
+
+If you want to enable this module just change `ENABLE_SNS_BOUNCES_HANDLING` to `true`. Everything
+else should be setup by Terraform:
+```conf
+ENABLE_SNS_BOUNCES_HANDLING = true
+```
 
 ### Set up TLS (HTTPS) and enable Helmet
 
@@ -161,3 +187,84 @@ this step you need to have a domain name registered.
    ```sh
    docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
    ```
+
+## Common instancies management
+
+Congratulations! You are now proud owner of DokChat Instance. There are some useful
+administrative actions that you can do!
+
+### Start up the instancies
+
+Run this from `~/DokChat` directory:
+```sh
+docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
+```
+
+### Stop the instancies
+
+Run this from `~/DokChat` directory:
+```sh
+docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml stop
+```
+
+### Pull new pre-built image version
+
+Terraform deploy use [mrbartusek/dokchat:latest](https://hub.docker.com/r/mrbartusek/dokchat/tags)
+image which is pre-built by [Github Actions](https://github.com/MrBartusek/DokChat/actions/workflows/ci.yaml)
+on every commit. If you wish to update your image you need to run:
+
+```sh
+docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml pull
+```
+
+### Remove whole deployment
+
+You can as simply as terraform provisioned infrastructure for you, it can also destroy it.
+You can't just simply remove the infrastructure by using `terraform destroy` since EC2
+instance is protected by `prevent_destroy` flag. Before proceeding forward you need to understand
+**that his process will remove all DokChat data** including: database, .env configuration file,
+attachment, logs and any other user data. **There is no going back**.
+
+> **Warning**
+> Removing prevent_destroy lifecycle tags is going to remove your database,
+> .env configuration file,attachment, logs and any other user data. **There is no going back**.
+
+Navigate to [infra/aws_ec2.tf](./infra/aws_ec2.tf) and remove following:
+
+```diff
+ resource "aws_s3_bucket" "this" {
+   ...
+
+   lifecycle {
+-     # WARNING: REMOVING prevent_destroy IS GOING TO
+-     # REMOVE ALL USER ATTACHMENTS
+-     prevent_destroy = true
+   }
+ }
+
+```
+
+Navigate to [infra/aws_ec2.tf](./infra/aws_ec2.tf) and remove following:
+
+```diff
+ resource "aws_instance" "ec2_instance" {
+   ...
+
+   lifecycle {
+     ignore_changes = [
+       user_data # user data runs only after the initial launch of instance
+     ]
+
+-    # WARNING: REMOVING prevent_destroy IS GOING TO
+-    # REMOVE YOUR DATABASE, CONFIGURATION FILE AND
+-    # ALL OTHER DOKCHAT DATA
+-    prevent_destroy = true
+   }
+}
+```
+
+Say you final goodbyes and run:
+
+```sh
+terraform destroy
+```
