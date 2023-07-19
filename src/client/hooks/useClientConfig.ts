@@ -16,7 +16,7 @@ export type ClientConfig = {
 const axios = getAxios();
 
 export function useClientConfig(): ClientConfig {
-	const [config, setConfig] = useLocalStorage('clientConfig', { lastCached: 0 } as ClientConfig);
+	const [ config, setConfig ] = useLocalStorage('clientConfig', { lastCached: 0 } as ClientConfig);
 
 	useEffect(() => {
 		axios.get('get-client-config')
