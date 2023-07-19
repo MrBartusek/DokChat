@@ -3,12 +3,6 @@ import { BsFillChatSquareTextFill } from 'react-icons/bs';
 import './MainLoading.scss';
 
 export default function MainLoading() {
-	// When developing this loading screen popping up on
-	// refresh is so annoying
-	if (location.hostname == 'localhost') {
-		return (<></>);
-	}
-
 	return (
 		<div className='mainLoading'>
 			<div
