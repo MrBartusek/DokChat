@@ -22,7 +22,7 @@ DokChat is complete, fully fledged instant messaging application. It supports al
 - Current online status with green dots
 - reCAPTCHA and ratelimit protections against bots.
 
-## Local Setup
+## Deploy own DokChat instance
 
 See [`SETUP.MD`](SETUP.md) for local setup guide.
 
@@ -34,6 +34,7 @@ See [`SETUP.MD`](SETUP.md) for local setup guide.
 - **Typescript** - Typescript is used both on backend and frontend code to ensure type safety in whole project.
 - **Socket.io** - Websockets are used for instant communication
 - **Amazon AWS**- AWS is used as primary hosting provider that handles server and attachments hosting as well as emails.
+- **Terraform** - Whole infrastructure is provisioned using Terraform
   
 ### Hosting
 
@@ -42,7 +43,8 @@ This project is designed to run on AWS using following services:
 - [EC2](https://aws.amazon.com/ec2/) - for hosting server
 - [S3](https://aws.amazon.com/s3/) - for attachments and profile pictures
 - [SES](https://aws.amazon.com/ses/) - for email sending
-- [SQS](https://aws.amazon.com/sqs/), [SNS](https://aws.amazon.com/sns/) - for email bounces and complaints handling
+- [SQS](https://aws.amazon.com/sqs/), [SNS](https://aws.amazon.com/sns/) - for email bounces and complaints 
+- [IAM](https://aws.amazon.com/iam/), for access management
 
 ## Database Design
 
