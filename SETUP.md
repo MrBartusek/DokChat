@@ -226,8 +226,8 @@ instance is protected by `prevent_destroy` flag. Before proceeding forward you n
 attachment, logs and any other user data. **There is no going back**.
 
 > **Warning**
-> Removing prevent_destroy lifecycle tags is going to remove your database,
-> .env configuration file,attachment, logs and any other user data. **There is no going back**.
+> Removing `prevent_destroy` lifecycle tags is going to remove your database,
+> .env configuration file, attachment, logs and any other user data. **There is no going back**.
 
 Navigate to [infra/aws_ec2.tf](./infra/aws_ec2.tf) and remove following:
 
