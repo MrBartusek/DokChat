@@ -26,6 +26,9 @@ Before going forward, you need to set up our two cloud providers AWS and Google 
 5. [Create new Google Cloud project](https://console.cloud.google.com/projectcreate). You 
    can choose  any project name. Note the Project ID that you have been assigned, you will
    need it for later.
+5. Enable [Cloud Resource Manager API](https://console.cloud.google.com/marketplace/product/google/cloudresourcemanager.googleapis.com) on Google Cloud Project. It is required in order for
+   Terraform to menage Google Cloud.
+
 
 You are now ready to install the required tools!
 
@@ -78,9 +81,36 @@ optional set up.
 
 ## Step 4 - Optional Modules and Configuration
 
+Next steps are optional modules, they are not required however, it's recommended to setup
+all of them. Every step till this point was highly automated but now, you need to do some
+manual labor. Before we begin, you need to connect to your instancies to edit configuration
+file. There are multiple ways to do it:
+
+- **SSH** You can SSH to your instancies using key that you've created:
+   ```sh
+   ssh ec2-user@PUBLIC_IP -i PATH_TO_PEM_FILE
+   ```
+- **SFTP** You can SFTP protocol and login using user: `ec-user` and key that you've created
+- **EC2 Instance Connect** - Navigate to EC2, select your instance and click connect.
+
 ### Google reCAPTCHA v2
 
-TODO
+1. Create new [Google reCAPTCHA](https://www.google.com/recaptcha/admin/create) project.
+2. Input any label, for type select Challenge (v2) → Invisible reCAPTCHA badge and input your
+   domain or EC2 Instance IP
+3. After creating project you can now see your reCAPTCHA site key and secret key.
+4. Connect to your instancies - [See this section introduction](#step-4---optional-modules-and-configuration)
+5. Edit `~/DokChat/.env` file
+6. Change reCAPTCHA section to:
+   ```conf
+   ENABLE_RECAPTCHA = true
+   RECAPTCHA_SITE_KEY = "<YOUR-SITE-KEY>"
+   RECAPTCHA_SECRET = "<YOUR-SECRET-KEY>"
+   ```
+7. Restart DokChat - In `~/DokChat` directory run
+   ```sh
+   docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
+   ```
 
 ### Google and Facebook OAuth Social Login
 

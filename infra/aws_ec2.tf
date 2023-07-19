@@ -56,6 +56,10 @@ resource "aws_instance" "ec2_instance" {
   tags = {
     Name = "DokChat - Web server"
   }
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_default_vpc" "default" {}

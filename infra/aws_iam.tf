@@ -1,7 +1,7 @@
 data "aws_caller_identity" "current" {}
 
 resource "aws_iam_user" "main" {
-  name = "dokchat-server-TERRAFORM"
+  name = "dokchat-server"
 }
 
 resource "aws_iam_access_key" "this" {
@@ -42,19 +42,19 @@ data "aws_iam_policy_document" "sqs" {
 }
 
 resource "aws_iam_user_policy" "s3" {
-  name   = "dokchat-s3-policy-TERRAFORM"
+  name   = "dokchat-s3-policy"
   user   = aws_iam_user.main.name
   policy = data.aws_iam_policy_document.s3.json
 }
 
 resource "aws_iam_user_policy" "ses" {
-  name   = "dokchat-ses-policy-TERRAFORM"
+  name   = "dokchat-ses-policy"
   user   = aws_iam_user.main.name
   policy = data.aws_iam_policy_document.ses.json
 }
 
 resource "aws_iam_user_policy" "sqs" {
-  name   = "dokchat-sqs-policy-TERRAFORM"
+  name   = "dokchat-sqs-policy"
   user   = aws_iam_user.main.name
   policy = data.aws_iam_policy_document.sqs.json
 }
