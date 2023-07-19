@@ -10,4 +10,8 @@ const client = new Redis({
 	host: host
 });
 
+client.on('ready', () => {
+	console.log('[OK] Redis Connected!');
+});
+
 export default client;
