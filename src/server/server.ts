@@ -75,7 +75,8 @@ async function main() {
 						'https://www.facebook.com/', // Facebook SDK
 						'https://*.google-analytics.com', // Google Analytics
 						'https://*.analytics.google.com', // Google Analytics
-						'https://*.googletagmanager.com' // Google Analytics
+						'https://*.googletagmanager.com', // Google Analytics
+						'https://tenor.googleapis.com/' // Tenor
 					],
 					'media-src': [
 						'\'self\'',
