@@ -30,7 +30,7 @@ export function useClientConfig(): ClientConfig {
 			.catch(() => {
 				console.error(`Failed to update client config, using config from: ${config.lastCached}`);
 			});
-	});
+	}, [ ]);
 
 	return config;
 }
