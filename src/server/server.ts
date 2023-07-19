@@ -80,7 +80,8 @@ async function main() {
 					],
 					'media-src': [
 						'\'self\'',
-						`https://${s3Client.bucketName}.s3.eu-central-1.amazonaws.com`
+						`https://${s3Client.bucketName}.s3.eu-central-1.amazonaws.com`,
+						'https://media.tenor.com/'
 					],
 					'img-src': [
 						'\'self\'',
