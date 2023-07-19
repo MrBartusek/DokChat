@@ -1,9 +1,8 @@
-import { useEffect } from 'react';
-import { ClientConfigResponse, EndpointResponse } from '../../types/endpoints';
-import { useFetch } from './useFetch';
-import { useLocalStorage } from './useLocalStorage';
 import * as DateFns from 'date-fns';
+import { useEffect } from 'react';
+import { ClientConfigResponse } from '../../types/endpoints';
 import getAxios from '../helpers/axios';
+import { useLocalStorage } from './useLocalStorage';
 
 export type ClientConfig = {
 	lastCached: number;
