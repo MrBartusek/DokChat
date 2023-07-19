@@ -13,7 +13,7 @@ data "aws_iam_policy_document" "s3" {
     effect  = "Allow"
     actions = ["s3:PutObject", "s3:GetObject", "s3:DeleteObject"]
     resources = [
-      aws_s3_bucket.this.arn
+      "${aws_s3_bucket.this.arn}/*"
     ]
   }
 }
