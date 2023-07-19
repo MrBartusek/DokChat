@@ -61,7 +61,8 @@ async function main() {
 						'https://www.google.com/recaptcha/', // reCAPTCHA
 						'https://www.gstatic.com/recaptcha/', // reCAPTCHA
 						'https://accounts.google.com/gsi/', // Google Sign-In
-						'https://connect.facebook.net/' // Facebook SDK
+						'https://connect.facebook.net/', // Facebook SDK
+						'https://www.googletagmanager.com/gtag/' // Google Analytics
 					],
 					'frame-src': [
 						'\'self\'',
@@ -119,7 +120,7 @@ async function main() {
 		schedule.scheduleJob('Handle SES Complaints', '*/10 * * * *', processEmailComplaints).invoke();
 		console.info('[OK] Bounces/Complains processing module - enabled');
 	}
-	else if(enableBouncesHandling) {
+	else if (enableBouncesHandling) {
 		console.info('[!] Bounces/Complains processing module - app is running in development mode');
 	}
 	else {
