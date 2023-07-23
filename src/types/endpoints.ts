@@ -39,8 +39,9 @@ export type InviteResponse = {
 }
 
 export type ClientConfigResponse = {
-    googleClientId: string;
-    facebookClientId: string;
-    recaptchaSiteKey: string;
-    tenorApiKey: string;
+    googleClientId?: string;
+    facebookClientId?: string;
+    recaptchaSiteKey?: string;
+    tenorApiKey?: string;
+    gaMeasurementId?: string;
 }

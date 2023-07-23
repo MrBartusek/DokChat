@@ -21,8 +21,10 @@ export default function DokChat() {
 	}
 
 	useEffect(() => {
-		ReactGA.initialize('G-DQPTM9KZYV');
-	});
+		if(clientConfig.gaMeasurementId) {
+			ReactGA.initialize(clientConfig.gaMeasurementId);
+		}
+	}, [ clientConfig.gaMeasurementId ]);
 
 	if (isUserLoading) return <></>;
 

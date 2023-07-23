@@ -19,7 +19,8 @@ router.all('/', allowedMethods('GET'),
 			googleClientId: enableSocialLogin ? process.env.GOOGLE_CLIENT_ID : undefined,
 			facebookClientId: enableSocialLogin ? process.env.GOOGLE_CLIENT_ID : undefined,
 			recaptchaSiteKey: enableRecaptcha ? process.env.RECAPTCHA_SITE_KEY : undefined,
-			tenorApiKey: enableTenor ? process.env.TENOR_API_KEY : undefined
+			tenorApiKey: enableTenor ? process.env.TENOR_API_KEY : undefined,
+			gaMeasurementId: enableTenor ? process.env.GA_MEASUREMENT_ID : undefined
 		};
 
 		res.header('Cache-Control', `public, max-age=${12 * 60 * 60}, immutable`);
