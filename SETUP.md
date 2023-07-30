@@ -219,7 +219,7 @@ docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml pull
 
 ### Remove whole deployment
 
-You can as simply as terraform provisioned infrastructure for you, it can also destroy it.
+You can as simply as terraform provisioned infrastructure for you, it can also destroy it but, it takes a little more work.
 You can't just simply remove the infrastructure by using `terraform destroy` since EC2
 instance is protected by `prevent_destroy` flag. Before proceeding forward you need to understand
 **that his process will remove all DokChat data** including: database, .env configuration file,
