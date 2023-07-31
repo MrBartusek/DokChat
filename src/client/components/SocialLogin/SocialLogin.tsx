@@ -28,26 +28,26 @@ type FacebookAuthResponse = {
 }
 
 function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
-	const [ user, updateToken, setUser ] = useContext(UserContext);
+	const [user, updateToken, setUser] = useContext(UserContext);
 	const navigate = useNavigate();
 	const breakpoint = useBreakpoint();
-	const [ buttonWidth, setButtonWidth ] = useState('200');
+	const [buttonWidth, setButtonWidth] = useState(200);
 	const clientConfig = useClientConfig();
 
 	useEffect(() => {
 		switch (breakpoint) {
 			case 'xs':
-				setButtonWidth('230');
+				setButtonWidth(230);
 				break;
 			case 'sm':
 			case 'md':
-				setButtonWidth('400');
+				setButtonWidth(400);
 				break;
 			default:
-				setButtonWidth('350');
+				setButtonWidth(350);
 				break;
 		}
-	}, [ breakpoint ]);
+	}, [breakpoint]);
 
 	async function sendLoginRequest(service: 'google' | 'facebook', token: string) {
 		if (loading) return;
