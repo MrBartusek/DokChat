@@ -9,6 +9,7 @@ import getAxios from '../../helpers/axios';
 import useBreakpoint from '../../hooks/useBreakpoint';
 import HorizontalSeparator from '../HorizontalSeparator/HorizontalSeparator';
 import { useClientConfig } from '../../hooks/useClientConfig';
+import { ErrorBoundary } from 'react-error-boundary';
 
 const axios = getAxios();
 
@@ -76,7 +77,7 @@ function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
 	}
 
 	return (
-		<>
+		<ErrorBoundary fallbackRender={() => <span>Failed to load social login component</span>}>
 			<HorizontalSeparator text='or' />
 			<div className='d-flex align-items-center flex-column gap-2'>
 				{clientConfig.googleClientId ? (
@@ -117,7 +118,7 @@ function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
 					</FacebookLogin>
 				) : <></>}
 			</div>
-		</>
+		</ErrorBoundary>
 	);
 }
 
