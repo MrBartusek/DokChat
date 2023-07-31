@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { BsShieldLock, BsUnlockFill } from 'react-icons/bs';
 import DeleteAccountButton from '../DeleteAccountButton/DeleteAccountButton';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import LogoutButton from '../LogoutButton/LogoutButton';
 import './AccountTab.scss';
+import { UserContext } from '../../context/UserContext';
+import DemoInfo from '../DemoInfo/DemoInfo';
 
 export default function AccountTab() {
+	const [ user ] = useContext(UserContext);
+
 	return (
 		<div className='d-flex flex-column'>
 			<SettingsRow
@@ -45,7 +49,9 @@ export default function AccountTab() {
 				title="Account Removal"
 				description="Permanently delete this DokChat account. This action is not reversible."
 			>
-				<DeleteAccountButton size='sm' />
+				{!user.isDemo
+					? <DeleteAccountButton size='sm' />
+					: <DemoInfo />}
 			</SettingsRow>
 		</div>
 	);
@@ -54,7 +60,7 @@ export default function AccountTab() {
 interface SettingsRowProps {
 	title: string,
 	description?: string,
-	children?: JSX.Element;
+	children?: React.ReactNode;
 }
 
 function SettingsRow({ title, description, children }: SettingsRowProps) {

@@ -4,7 +4,7 @@ import { IconType } from 'react-icons';
 
 export interface InteractiveButtonProps extends ButtonProps {
 	loading?: boolean,
-	icon?: IconType
+	icon?: IconType,
 	children?: React.ReactNode
 }
 
@@ -14,7 +14,10 @@ function InteractiveButton(props: InteractiveButtonProps) {
 		props.icon, { className: 'me-2' }
 	) : null;
 	return (
-		<Button {...{ ...props, loading: null, icon: null }} disabled={props.disabled || props.loading}>
+		<Button
+			disabled={props.disabled || props.loading}
+			{...{ ...props, loading: null, icon: null }}
+		>
 			{props.loading ? spinner : iconEl}
 			{props.children}
 		</Button>

@@ -7,7 +7,7 @@ export interface LogoutButton extends InteractiveButtonProps { }
 
 export default function DeleteAccountButton(props: InteractiveButtonProps) {
 	return (
-		<Link to='/chat/delete-account'>
+		<Link to={!props.disabled ? '/chat/delete-account' : ''}>
 			<InteractiveButton
 				icon={BsTrash}
 				variant="danger"

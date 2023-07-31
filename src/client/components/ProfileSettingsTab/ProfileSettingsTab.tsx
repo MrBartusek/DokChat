@@ -13,6 +13,7 @@ import { FileUploaderResult } from '../FileUploader/FileUploader';
 import IconButton from '../IconButton/IconButton';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import ObjectHero from '../ObjectHero/ObjectHero';
+import DemoInfo from '../DemoInfo/DemoInfo';
 
 export interface ProfileSettingsProps {
 	setCustomFooter: React.Dispatch<React.SetStateAction<JSX.Element>>,
@@ -124,7 +125,7 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 
 			<Form ref={formRef} onSubmit={handleSubmit}>
 				<div className="position-relative">
-					{!isEditing && (
+					{!isEditing && !user.isDemo && (
 						<IconButton
 							icon={BsPencil}
 							className="position-absolute top-p end-0 mt-2"
@@ -203,6 +204,12 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 					</FloatingLabel>
 				)}
 			</Form>
+
+			<DemoInfo message={
+				'This is a temporary demo account that will be removed in the next 24 hours. ' +
+				'You can\'t modify details of this account. Please create a regular demo account ' +
+				'to access all features.'
+			} />
 		</>
 	);
 }
