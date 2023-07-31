@@ -1,8 +1,8 @@
 # Deploy own DokChat instance
 
 DokChat is quite extensive project that uses a multitude of AWS and Google Cloud service to
-function hence, it is not trivial to set up. Fortunately, we have configured Docker,
-Terraform and other similar tools so this process is highly automated.
+function hence, it is not trivial to set up. Fortunately, we have configured [Terraform](https://www.terraform.io), [Docker](https://www.docker.com), [NGINX](https://nginx.org) and other similar tools
+so this process is highly automated.
 
 You can divide this process into three main steps:
 - **Infrastructure Prerequisites** - Create AWS account and Google Cloud project
@@ -113,10 +113,6 @@ DokChat uses Invisible reCAPTCHA to detect and block bots.
    ```sh
    docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
    ```
-
-### Google and Facebook OAuth Social Login
-
-TODO
 
 ### Email Service
 

@@ -24,7 +24,11 @@ DokChat is complete, fully fledged instant messaging application. It supports al
 
 ## Deploy own DokChat instance
 
-See [`SETUP.MD`](SETUP.md) for local setup guide.
+DokChat is well suited to be deployed on your own. We have configured multiple tools such as
+[Terraform](https://www.terraform.io), [Docker](https://www.docker.com) and 
+[NGINX](https://nginx.org) so you can easily deploy your own DokChat server and infrastructure.
+
+See [`SETUP.MD`](SETUP.md) for setup guide.
 
 ## Tech Stack
 
