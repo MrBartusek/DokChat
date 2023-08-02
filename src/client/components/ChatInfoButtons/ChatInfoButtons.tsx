@@ -12,13 +12,15 @@ export interface ChatInfoButtonsProps {
 function ChatInfoButtons({ currentChat }: ChatInfoButtonsProps) {
 	const [ user ] = useContext(UserContext);
 
+	const otherParticipantId = currentChat.participants.find(p => p.userId != user.id).userId;
+
 	return (
 		<div className='d-flex align-items-center'>
 
 			<Link to={
 				currentChat.isGroup
 					? `/chat/${currentChat.id}/details?tab=invite`
-					: `/chat/new?prefill=${currentChat.participants.find(p => p.userId != user.id).userId}`}>
+					: `/chat/new?prefill=${otherParticipantId}`}>
 				<IconButton icon={BsPersonPlusFill} color={currentChat.color.hex} />
 			</Link>
 

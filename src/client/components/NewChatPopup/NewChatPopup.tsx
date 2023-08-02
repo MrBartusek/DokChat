@@ -42,9 +42,7 @@ function NewChatPopup() {
 				participantsCopy.push(resp.data);
 				setParticipants(participantsCopy);
 			})
-			.catch(() => {
-				setError('Failed to load pre-filled user');
-			})
+			.catch(() => setError('Failed to load pre-filled user'))
 			.finally(() => setLoading(false));
 	}, [ searchParams ]);
 
