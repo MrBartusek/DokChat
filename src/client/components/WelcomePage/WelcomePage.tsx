@@ -45,7 +45,7 @@ function WelcomePage() {
 				<p className='lead w-100 mb-2 d-flex align-items-center'>
 					<BsEmojiSmileFill color={'var(--bs-secondary'} className='me-3' />
 					<div>
-						If you can&apos;t find anybody, you can message me. My user tag is <code>MrBartusek#0001</code>
+						If you can&apos;t find anybody, you can message me. My user tag is <code>MrBartusek#0001</code>. <Link to='/chat/new'>Open chat creation window</Link>.
 					</div>
 				</p>
 
