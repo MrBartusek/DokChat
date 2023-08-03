@@ -1,15 +1,17 @@
 import * as axios from 'axios';
 import { Axios } from 'axios';
 import { LocalUser } from '../types/User';
+import Utils from './utils';
 
 function getAxios(user?: LocalUser): Axios {
 	let headers: axios.RawAxiosRequestHeaders = {};
 	if (user) {
 		headers = user.getAuthHeader();
 	}
+
 	return new Axios({
 		...axios.default.defaults,
-		baseURL: window.location.origin + '/api',
+		baseURL: Utils.getBaseUrl() + '/api/',
 		headers: headers,
 		validateStatus: function (status) {
 			return status >= 200 && status < 300;

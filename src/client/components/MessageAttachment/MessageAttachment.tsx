@@ -3,6 +3,7 @@ import { Spinner } from 'react-bootstrap';
 import { BsExclamationSquare } from 'react-icons/bs';
 import { LocalMessage } from '../../types/Chat';
 import Lightbox from '../Lightbox/Lightbox';
+import Utils from '../../helpers/utils';
 
 export interface MessageAttachmentProps {
 	message: LocalMessage
@@ -14,7 +15,7 @@ export default function MessageAttachment({ message }: MessageAttachmentProps) {
 
 	if (isSent) {
 		const attachmentType = message.attachment.mimeType.split('/')[0];
-		const attachmentUrl = `/api/attachment?id=${message.id}`;
+		const attachmentUrl = Utils.getBaseUrl() + `/api/attachment?id=${message.id}`;
 
 		return (
 			<div className='mw-100 fs-6 d-flex' style={{ maxHeight: '200px' }}>

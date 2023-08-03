@@ -24,7 +24,7 @@ export function useMessageManager(ws: useWebsocketType): [
 ] {
 	const [ loading, setLoading ] = useState(true);
 	const [ user ] = useContext(UserContext);
-	const [ playPing ] = useSound('/sounds/new_message_ping.mp3', { volume: 0.5 });
+	const [ playPing ] = useSound('./sounds/new_message_ping.mp3', { volume: 0.5 });
 	const [ settings ] = useContext(SettingsContext);
 
 	const initialChatList = useFetch<EndpointResponse<ChatListResponse>>('chat/list', true);

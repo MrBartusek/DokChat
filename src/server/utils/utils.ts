@@ -4,7 +4,7 @@ import { UserJWTData } from '../../types/jwt';
 
 export default class Utils {
 	public static apiUrl() {
-		return '/api/';
+		return (process.env.SERVER_BASE_URL ?? 'http://localhost:3000/') + 'api/';
 	}
 
 	public static avatarUrl(id: string) {

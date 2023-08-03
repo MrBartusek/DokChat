@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Alert } from 'react-bootstrap';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import AccountBannedPage from '../../pages/AccountBannedPage';
 import ChatPage from '../../pages/ChatPage';
@@ -16,6 +16,7 @@ import EmailConfirmer from '../EmailConfirmer/EmailConfirmer';
 import ErrorPage from '../ErrorPage/ErrorPage';
 import NewPasswordDialog from '../NewPasswordDialog/NewPasswordDialog';
 import PasswordResetForm from '../PasswordResetForm/PasswordResetForm';
+import Utils from '../../helpers/utils';
 
 const ChatDetailsPopupLazy = React.lazy(() => import('../ChatDetailsPopup/ChatDetailsPopup'));
 const NewChatPopupLazy = React.lazy(() => import('../NewChatPopup/NewChatPopup'));
@@ -29,8 +30,13 @@ const UserBlockPopupLazy = React.lazy(() => import('../UserBlockPopup/UserBlockP
 const InvitePopupLazy = React.lazy(() => import('../InvitePopup/InvitePopup'));
 
 function Router() {
+	const ConditionalRouterWrapper = ({ children }: any) =>
+		Utils.isElectron
+			? <HashRouter>{children}</HashRouter>
+			: <BrowserRouter>{children}</BrowserRouter>;
+
 	return (
-		<BrowserRouter>
+		<ConditionalRouterWrapper>
 			<Routes>
 				<Route path="chat" element={
 					<PrivateRoute>
@@ -137,7 +143,7 @@ function Router() {
 				{/* 404 */}
 				<Route path="*" element={<ErrorPage title="404" message="This page was not found" />} />
 			</Routes>
-		</BrowserRouter>
+		</ConditionalRouterWrapper>
 	);
 }
 

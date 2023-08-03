@@ -6,6 +6,6 @@ interface DokChatLogoProps extends React.DetailedHTMLProps<React.ImgHTMLAttribut
 
 export default function DokChatLogo(props: DokChatLogoProps) {
 	return (
-		<img {...props} src={`/img/logo/dokchat-logo-${props.variant || 'blue'}.png`} alt="DokChat logo" />
+		<img {...props} src={`./img/logo/dokchat-logo-${props.variant || 'blue'}.png`} alt="DokChat logo" />
 	);
 }

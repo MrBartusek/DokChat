@@ -26,7 +26,7 @@ function HomePage({ scrollToAbout }: HomePageProps) {
 			<Header />
 			<div ref={aboutRef}></div>
 			<HomeSection
-				img="/img/dokchat_tag.svg"
+				img="./img/dokchat_tag.svg"
 				title="Connect with anyone"
 			>
 				Crate and Share your own personalized tag with your friends or community.
@@ -34,7 +34,7 @@ function HomePage({ scrollToAbout }: HomePageProps) {
 			</HomeSection>
 
 			<HomeSection
-				img="/img/undraw_group_chat.svg"
+				img="./img/undraw_group_chat.svg"
 				title="Group up with anyone"
 				variant
 			>
@@ -44,7 +44,7 @@ function HomePage({ scrollToAbout }: HomePageProps) {
 			</HomeSection>
 
 			<HomeSection
-				img="/img/undraw_settings.svg"
+				img="./img/undraw_settings.svg"
 				title="Fully Customizable"
 			>
 				You can customize the experience that you have with DokChat. Change your username, avatar or create
@@ -52,7 +52,7 @@ function HomePage({ scrollToAbout }: HomePageProps) {
 			</HomeSection>
 
 			<HomeSection
-				img="/img/undraw_proud_coder.svg"
+				img="./img/undraw_proud_coder.svg"
 				title="Open Source"
 				variant
 			>
