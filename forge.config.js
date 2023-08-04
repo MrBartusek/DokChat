@@ -1,6 +1,13 @@
 module.exports = {
 	packagerConfig: {
-		asar: true
+		asar: true,
+		protocols: [
+			{
+				protocol: 'dokchat',
+				name: 'dokchat',
+				schemes: 'dokchat'
+			}
+		]
 	},
 	rebuildConfig: {},
 	makers: [
