@@ -10,7 +10,7 @@ interface ErrorPageProps {
 
 function ErrorPage({ title = 'Oh no!', message = 'Something went wrong', displayRefresh }: ErrorPageProps) {
 	return (
-		<FullPageContainer className='d-flex flex-column align-items-center justify-content-center'>
+		<FullPageContainer className='bg-white text-black d-flex flex-column align-items-center justify-content-center'>
 			<h1 className='errorTitle' data-text={title}>
 				{title}
 			</h1>

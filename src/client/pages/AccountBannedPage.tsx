@@ -5,15 +5,14 @@ import { BsDashCircle } from 'react-icons/bs';
 import DokChatLogo from '../components/DokChatLogo/DokChatLogo';
 import LogoutButton from '../components/LogoutButton/LogoutButton';
 import { UserContext } from '../context/UserContext';
+import FullFocusPage from '../components/FullFocusPage/FullFocusPage';
 
 function AccountBannedPage() {
 	const [ user ] = useContext(UserContext);
 
 	return (
-		<Container className='h-100 d-flex justify-content-center align-items-center flex-column' style={{ maxWidth: '600px' }}>
-			<DokChatLogo variant='black' className='opacity-50 mb-4' height={40} />
-
-			<div className='d-flex flex-column align-items-center border border-danger border-2 rounded-4 p-5'>
+		<FullFocusPage>
+			<div className='d-flex justify-content-center align-items-center flex-column'>
 				<BsDashCircle size={80} color='var(--bs-danger)' className='mb-3' />
 				<h1 className='text-center'>
 					Account suspended
@@ -25,12 +24,12 @@ function AccountBannedPage() {
 					<a href="mailto:dokchat@dokurno.dev">dokchat@dokurno.dev</a>
 				</p>
 				<LogoutButton />
-			</div>
 
-			<p className='text-center text-secondary opacity-50 mt-4'>
-				id: {user.id}, user: {user.discriminator}, timestamp: {DateFns.getUnixTime(new Date())}
-			</p>
-		</Container>
+				<p className='text-center text-secondary opacity-50 mt-4'>
+					id: {user.id}, user: {user.discriminator}, timestamp: {DateFns.getUnixTime(new Date())}
+				</p>
+			</div>
+		</FullFocusPage>
 	);
 }
 

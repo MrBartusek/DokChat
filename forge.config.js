@@ -3,9 +3,8 @@ module.exports = {
 		asar: true,
 		protocols: [
 			{
-				protocol: 'dokchat',
-				name: 'dokchat',
-				schemes: 'dokchat'
+				'name': 'DokChat Desktop Auth Protocol',
+				'schemes': [ 'dokchat', 'dokchat-dev' ]
 			}
 		]
 	},
@@ -21,7 +20,9 @@ module.exports = {
 		},
 		{
 			name: '@electron-forge/maker-deb',
-			config: {}
+			config: {
+				mimeType: [ 'x-scheme-handler/dokchat', 'x-scheme-handler/dokchat-dev' ]
+			}
 		},
 		{
 			name: '@electron-forge/maker-rpm',

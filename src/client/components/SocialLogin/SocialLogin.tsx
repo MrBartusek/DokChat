@@ -17,6 +17,7 @@ export interface SocialLoginProps {
 	setError: React.Dispatch<React.SetStateAction<string>>;
 	setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 	loading: boolean
+	redirectUrl: string;
 }
 
 type FacebookAuthResponse = {
@@ -27,7 +28,7 @@ type FacebookAuthResponse = {
 	userID: string;
 }
 
-function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
+function SocialLogin({ setError, setLoading, loading, redirectUrl }: SocialLoginProps) {
 	const [ user, updateToken, setUser ] = useContext(UserContext);
 	const navigate = useNavigate();
 	const breakpoint = useBreakpoint();
@@ -58,7 +59,7 @@ function SocialLogin({ setError, setLoading, loading }: SocialLoginProps) {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
 				setTimeout(() => {
 					setUser(resp.data.token);
-					navigate('/chat');
+					navigate(redirectUrl);
 				}, 1000);
 			})
 			.catch((e) => {

@@ -129,7 +129,7 @@ function RegisterForm() {
 					</Form.Text>
 				</div>
 			</Form>
-			<SocialLogin setError={setError} setLoading={setLoading} loading={loading} />
+			<SocialLogin setError={setError} setLoading={setLoading} loading={loading} redirectUrl='/chat' />
 			<DokChatCaptcha ref={captchaRef} />
 		</>
 	);

@@ -24,14 +24,18 @@ function main() {
 		passAuthToken(url);
 	});
 
-	app.whenReady().then(() => {
-		createWindow();
-	});
-
 	app.on('open-url', (event, url) => {
 		passAuthToken(url);
 	});
+
+	app.whenReady().then(() => {
+		createWindow();
+	});
 }
+
+ipcMain.on('open-browser', (event, url) => {
+	shell.openExternal(url);
+});
 
 function passAuthToken(url) {
 	const firstUrlPart = `${authProtocol}://auth/login?token=`;
@@ -77,6 +81,7 @@ function createWindow() {
 		: mainWindow.loadFile(productionIndexUrl);
 
 	mainWindow.webContents.openDevTools();
+
 	console.log(`DokChat electron started, auth registered to ${authProtocol}://auth`);
 }
 

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Alert, Button, Form } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { EndpointResponse, UserLoginResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
@@ -10,12 +10,19 @@ import SocialLogin from '../SocialLogin/SocialLogin';
 
 const axios = getAxios();
 
-function LoginForm() {
+export interface LoginFormProps {
+	redirectUrl?: string;
+}
+
+function LoginForm(props: LoginFormProps) {
 	const [ loading, setLoading ] = useState(false);
 	const [ values, handleChange ] = useForm({ email: '', password: '', rememberMe: false });
 	const [ error, setError ] = useState<string | null>(null);
 	const navigate = useNavigate();
 	const [ user, updateToken, setUser ] = useContext(UserContext);
+	const [ searchParams ] = useSearchParams({ redirectUrl: '/chat' });
+
+	const redirectUrl = props.redirectUrl ?? searchParams.get('redirectUrl');
 
 	return (
 		<>
@@ -89,7 +96,12 @@ function LoginForm() {
 					</Form.Text>
 				</div>
 			</Form>
-			<SocialLogin setError={setError} setLoading={setLoading} loading={loading} />
+			<SocialLogin
+				setError={setError}
+				setLoading={setLoading}
+				loading={loading}
+				redirectUrl={redirectUrl}
+			/>
 		</>
 	);
 
@@ -101,7 +113,7 @@ function LoginForm() {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
 				setTimeout(() => {
 					setUser(resp.data.token);
-					navigate('/chat');
+					navigate(redirectUrl);
 				}, 1000);
 			})
 			.catch((e) => {

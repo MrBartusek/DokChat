@@ -17,6 +17,9 @@ import ErrorPage from '../ErrorPage/ErrorPage';
 import NewPasswordDialog from '../NewPasswordDialog/NewPasswordDialog';
 import PasswordResetForm from '../PasswordResetForm/PasswordResetForm';
 import Utils from '../../helpers/utils';
+import ElectronLoginPage from '../../pages/ElectronLoginPage';
+import ElectronHandoffPage from '../../pages/ElectronHandoffPage';
+import ElectronWelcomePage from '../../pages/ElectronWelcomePage';
 
 const ChatDetailsPopupLazy = React.lazy(() => import('../ChatDetailsPopup/ChatDetailsPopup'));
 const NewChatPopupLazy = React.lazy(() => import('../NewChatPopup/NewChatPopup'));
@@ -31,7 +34,7 @@ const InvitePopupLazy = React.lazy(() => import('../InvitePopup/InvitePopup'));
 
 function Router() {
 	const ConditionalRouterWrapper = ({ children }: any) =>
-		Utils.isElectron
+		Utils.isElectron()
 			? <HashRouter>{children}</HashRouter>
 			: <BrowserRouter>{children}</BrowserRouter>;
 
@@ -96,7 +99,10 @@ function Router() {
 					} />
 				</Route>
 
-				<Route path="/" element={<HomePage />} />
+				<Route path="/" element={
+					<ElectronDenyRoute>
+						<HomePage />
+					</ElectronDenyRoute>} />
 				<Route path="about" element={<HomePage scrollToAbout />} />
 				<Route path="privacy-policy" element={<PrivacyPolicyPage />} />
 				<Route path="get" element={<GetDokchatPage />} />
@@ -140,6 +146,10 @@ function Router() {
 					</PrivateRoute>
 				} />
 
+				<Route path="electron-login" element={<ElectronLoginPage />} />
+				<Route path="handoff" element={<ElectronHandoffPage />} />
+				<Route path="electron-welcome" element={<ElectronWelcomePage />} />
+
 				{/* 404 */}
 				<Route path="*" element={<ErrorPage title="404" message="This page was not found" />} />
 			</Routes>
@@ -170,5 +180,10 @@ const PrivateRoute = ({ children, isSuspendedRoute }: SpecialRouteProps) => {
 
 const PublicOnlyRoute = ({ children }: SpecialRouteProps) => {
 	const [ user ] = useContext(UserContext);
+	if(Utils.isElectron()) return <Navigate to="/electron-welcome" />;
 	return !user.isAuthenticated ? children : <Navigate to="/chat" />;
+};
+
+const ElectronDenyRoute = ({ children }: SpecialRouteProps) => {
+	return Utils.isElectron() ? <Navigate to="/electron-welcome" /> : children;
 };

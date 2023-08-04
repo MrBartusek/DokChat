@@ -1,6 +1,5 @@
 import React from 'react';
 import { Navigate, useParams } from 'react-router-dom';
-import './InvitePage.scss';
 
 function InvitePage(): JSX.Element {
 	const { key } = useParams();
