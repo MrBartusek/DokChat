@@ -43,7 +43,7 @@ function passAuthToken(url) {
 		return;
 	}
 	const token = url.replace(firstUrlPart, '');
-	dialog.showErrorBox('hello', `token is ${token}`);
+	dialog.showErrorBox('Deep Link Success', `token is ${token}`);
 
 }
 
