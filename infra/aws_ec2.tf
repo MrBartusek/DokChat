@@ -50,7 +50,8 @@ resource "aws_instance" "ec2_instance" {
     access_key_id        = aws_iam_access_key.this.id,
     access_key_secret    = aws_iam_access_key.this.secret,
     tenor_apikey         = google_apikeys_key.tenor.key_string,
-    sqs_config_set       = aws_ses_configuration_set.this.name
+    sqs_config_set       = aws_ses_configuration_set.this.name,
+    server_ip            = aws_eip.lb.public_ip
   })
 
   tags = {
@@ -59,7 +60,7 @@ resource "aws_instance" "ec2_instance" {
 
   lifecycle {
     ignore_changes = [
-      user_data # user data runs only after the initial launch of instance
+      user_data, ami
     ]
 
     # WARNING: REMOVING prevent_destroy IS GOING TO
@@ -112,10 +113,14 @@ resource "aws_security_group" "http_https_ssh" {
 
 resource "aws_eip" "lb" {
   depends_on = [aws_default_vpc.default]
-  instance   = aws_instance.ec2_instance.id
   domain     = "vpc"
 
   tags = {
     Name = "DokChat - Web server Elastic IP"
   }
+}
+
+resource "aws_eip_association" "eip_assoc" {
+  instance_id   = aws_instance.ec2_instance.id
+  allocation_id = aws_eip.lb.id
 }

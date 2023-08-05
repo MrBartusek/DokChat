@@ -179,6 +179,8 @@ this step you need to have a domain name registered.
 9. Save and close the file. All installed certificates will be automatically renewed and reloaded.
 10. Now you have TLS working, can enable additional security measures, edit `~/DokChat/.env` file
 11. Change `ENABLE_HELMET = false` to `ENABLE_HELMET = true`
+11. Also don't forget to change the base url `SERVER_BASE_URL` to your server URL like
+    `SERVER_BASE_URL = "https://example.com/`
 12. Restart DokChat - In `~/DokChat` directory run
    ```sh
    docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d

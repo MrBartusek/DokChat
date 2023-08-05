@@ -67,6 +67,8 @@ cat > .env <<EOL
 NODE_ENV = 'production'
 # Enable security measures - CSP, CORS, Upgrade-Insecure-Requests and similar
 ENABLE_HELMET = false
+# Server base URL
+SERVER_BASE_URL = "http://${server_ip}/"
 
 # [ AMAZON WEB SERVICES CONFIG ]
 # All of these are reqired fields, DokChat was desinged to run on AWS
