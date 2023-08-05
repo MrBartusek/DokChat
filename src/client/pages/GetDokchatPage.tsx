@@ -58,8 +58,8 @@ function GetDokchatPage() {
 								DokChat for Desktop
 							</h2>
 							<p className='text-center lead pb-3'>
-								If you use DokChat for everyday you can use our Desktop Application for better
-								performance and simplicity.
+								If you use DokChat everyday you can use our Desktop Application for better
+								performance and additional features.
 							</p>
 							<p className='d-flex align-items-center'>
 								<BsCheck size="1.8em" className='me-1' color='var(--bs-success)' />
