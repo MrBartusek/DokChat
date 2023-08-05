@@ -11,7 +11,7 @@ import './DokChatDark.scss';
 import { useClientConfig } from '../../hooks/useClientConfig';
 
 export default function DokChat() {
-	const [ isUserLoading, user, updateToken, setUser, callLogout ] = useUpdatingUser();
+	const [ isUserLoading, user, updateToken, setUser, callLogout, isConfirmed ] = useUpdatingUser();
 	let [ settings, setSettings ] = useSettings();
 	const clientConfig = useClientConfig();
 
@@ -31,7 +31,7 @@ export default function DokChat() {
 	return (
 		<GoogleOAuthProvider clientId={clientConfig.googleClientId}>
 			<SettingsContext.Provider value={[ settings, setSettings ]}>
-				<UserContext.Provider value={[ user, updateToken, setUser, callLogout ]}>
+				<UserContext.Provider value={[ user, updateToken, setUser, callLogout, isConfirmed ]}>
 					<div id='app' data-theme={settings.theme}>
 						<Toaster toastOptions={{
 							style: {

@@ -11,7 +11,14 @@ import { useUser } from './useUser';
  * This is more advanced version of useUser hook
  * that have token refreshing built-in
  */
-export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, React.Dispatch<string>, () => Promise<void>] {
+export function useUpdatingUser(): [
+	boolean,
+	LocalUser,
+	() => Promise<void>,
+	React.Dispatch<string>,
+	() => Promise<void>,
+	boolean
+	] {
 	const [ isLoading, setLoading ] = useState(true);
 	const [ user, cookies, setUser, removeUser ] = useUser();
 	const [ isConfirmed, setConfirmed ] = useState(false);
@@ -93,5 +100,5 @@ export function useUpdatingUser(): [boolean, LocalUser, () => Promise<void>, Rea
 		setUser(newUser);
 	}
 
-	return [ isLoading, user, (refreshAvatar?: boolean) => refreshToken(refreshAvatar), setUserWrapper, callLogout ];
+	return [ isLoading, user, (refreshAvatar?: boolean) => refreshToken(refreshAvatar), setUserWrapper, callLogout, isConfirmed ];
 }

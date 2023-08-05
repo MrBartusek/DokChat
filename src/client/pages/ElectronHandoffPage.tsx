@@ -4,25 +4,32 @@ import { UserContext } from '../context/UserContext';
 import { Spinner } from 'react-bootstrap';
 import Utils from '../helpers/utils';
 import { useNavigate } from 'react-router-dom';
+import { useFetch } from '../hooks/useFetch';
+import { EndpointResponse, UserLoginResponse } from '../../types/endpoints';
+import { useDocumentReady } from '../hooks/useDocumentReady';
 
 function ElectronHandoffPage() {
-	const [ user ] = useContext(UserContext);
-	const [ status, setStatus ] = useState('Checking your credentials...');
+	const [ status, setStatus ] = useState('Loading...');
 	const [ loading, setLoading ] = useState(true);
 	const [ authUrl, setAuthUrl ] = useState<string>(null);
+	const tokenFetch = useFetch<EndpointResponse<UserLoginResponse>>('/auth/desktop-login', true);
 
 	useEffect(() => {
-		if(!user.isAuthenticated) {
-			setLoading(false);
-			setStatus('Error: You are not logged in, please try again');
+		if(tokenFetch.loading) {
+			setStatus('Checking your credentials...');
 		}
-		setStatus('Redirecting you to DokChat Desktop...');
+		else if(tokenFetch.error) {
+			setStatus('Failed to log you in to DokChat Desktop! Please try again later');
+			setLoading(false);
+		}
+		else {
+			const protocol = Utils.isDev() ? 'dokchat-dev' : 'dokchat';
+			const authUrl = `${protocol}://auth/login?token=${tokenFetch.res.data.token}`;
+			setAuthUrl(authUrl);
+			setStatus('Redirecting you to DokChat Desktop...');
+		}
 
-		const authUrl = `${Utils.isDev() ? 'dokchat-dev' : 'dokchat'}://auth/login?token=NO_TOKEN`;
-		setAuthUrl(authUrl);
-	}, []);
-
-	//if(!Utils.isElectron()) return ( <Navigate to='/login' /> );
+	}, [ tokenFetch ]);
 
 	return (
 		<FullFocusPage>

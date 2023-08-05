@@ -3,13 +3,19 @@ import FullFocusPage from '../components/FullFocusPage/FullFocusPage';
 import { UserContext } from '../context/UserContext';
 import { Spinner } from 'react-bootstrap';
 import Utils from '../helpers/utils';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 function ElectronWelcomePage() {
 	const [ user ] = useContext(UserContext);
 	const browserUrl = Utils.getBaseUrl() + '/electron-login';
+	const [ browserOpened, setBrowserOpened ] = useState(false);
 
-	//if(!Utils.isElectron()) return ( <Navigate to='/login' /> );
+	if(!Utils.isElectron()) return ( <Navigate to='/login' /> );
+
+	useEffect(() => {
+		if(!browserOpened) openBrowser();
+		setBrowserOpened(true);
+	}, []);
 
 	return (
 		<FullFocusPage>

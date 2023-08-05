@@ -3,7 +3,7 @@ import { Axios } from 'axios';
 import { LocalUser } from '../types/User';
 import Utils from './utils';
 
-function getAxios(user?: LocalUser): Axios {
+function getAxios(user?: LocalUser, config?: axios.AxiosRequestConfig<any>): Axios {
 	let headers: axios.RawAxiosRequestHeaders = {};
 	if (user) {
 		headers = user.getAuthHeader();
@@ -16,7 +16,8 @@ function getAxios(user?: LocalUser): Axios {
 		validateStatus: function (status) {
 			return status >= 200 && status < 300;
 		},
-		timeout: 30 * 1000
+		timeout: 30 * 1000,
+		...config
 	});
 }
 

@@ -147,7 +147,10 @@ function Router() {
 				} />
 
 				<Route path="electron-login" element={<ElectronLoginPage />} />
-				<Route path="handoff" element={<ElectronHandoffPage />} />
+				<Route path="handoff" element={
+					<PrivateRoute>
+						<ElectronHandoffPage />
+					</PrivateRoute>} />
 				<Route path="electron-welcome" element={<ElectronWelcomePage />} />
 
 				{/* 404 */}

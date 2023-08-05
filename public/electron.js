@@ -20,7 +20,7 @@ function main() {
 			mainWindow.focus();
 		}
 
-		const url = commandLine.pop().slice(0, -1);
+		const url = commandLine.pop();
 		passAuthToken(url);
 	});
 
