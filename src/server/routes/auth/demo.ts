@@ -4,6 +4,7 @@ import { ApiResponse } from '../../apiResponse';
 import AuthManager from '../../managers/authManager';
 import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
+import jwtManager from '../../managers/jwtManager';
 
 const router = express.Router();
 
@@ -13,9 +14,11 @@ router.all('/demo',
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 
+		const audience = jwtManager.getAudienceFromRequest(req);
+
 		await UserManager.createDemoUser()
 			.then(([ userData, passwordHash ]) => {
-				AuthManager.sendAuthResponse(res, userData, passwordHash);
+				AuthManager.sendAuthResponse(res, userData, audience, passwordHash);
 			})
 			.catch((reason) => {
 				if (typeof reason == 'string') {

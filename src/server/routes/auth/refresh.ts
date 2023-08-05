@@ -31,14 +31,16 @@ router.all('/refresh',
 		const user = await UserManager.getUserJwtDataById(unconfirmedUserId);
 		const passwordHash = await UserManager.getUserHashById(unconfirmedUserId);
 
-		await jwtManager.verifyRefreshToken(refreshToken, passwordHash)
+		const audience = jwtManager.getAudienceFromRequest(req);
+
+		await jwtManager.verifyRefreshToken(refreshToken, audience, passwordHash)
 			.then(async (userId: string) => {
 				if (!(await RateLimitManager.consume(userId, 5))) {
 					return new ApiResponse(res).tooManyRequests();
 				}
 
 				await UserManager.bumpLastSeen(userId);
-				AuthManager.sendAuthResponse(res, user, passwordHash);
+				AuthManager.sendAuthResponse(res, user, audience, passwordHash);
 			})
 			.catch(() => {
 				return new ApiResponse(res).unauthorized('Invalid JWT');

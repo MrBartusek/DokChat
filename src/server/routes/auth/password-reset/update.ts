@@ -27,10 +27,14 @@ router.all('/update', allowedMethods('POST'),
 		if (!unconfirmedUserId) {
 			return new ApiResponse(res).unauthorized('Invalid token, please try to reset your password once again.');
 		}
+
 		const user = await UserManager.getUserJwtDataById(unconfirmedUserId);
 		if (!user) return new ApiResponse(res).badRequest('User not found');
+
 		const passwordHash = await UserManager.getUserHashById(unconfirmedUserId);
-		await jwtManager.verifyPassResetToken(token, user.email, passwordHash)
+		const audience = jwtManager.getAudienceFromRequest(req);
+
+		await jwtManager.verifyPassResetToken(token, user.email, audience, passwordHash)
 			.then(async (userId: string) => {
 				if (bcrypt.compareSync(password, passwordHash)) {
 					return new ApiResponse(res).badRequest('New password cannot be same as the old one');

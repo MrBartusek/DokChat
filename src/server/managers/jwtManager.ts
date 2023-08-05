@@ -1,6 +1,8 @@
 import * as jose from 'jose';
 import { UserJWTData } from '../../types/jwt';
 import { EmailConfirmJWTData, PasswordResetJWTData } from '../types/jwt';
+import Utils from '../utils/utils';
+import { IncomingMessage } from 'http';
 
 const USER_TOKEN_SECRET = process.env.JWT_USER_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_TOKEN_SECRET;
@@ -8,18 +10,30 @@ const PASS_RESET_TOKEN_SECRET = process.env.JWT_PASS_RESET_TOKEN_SECRET;
 const EMAIL_CONFIRM_TOKEN_SECRET = process.env.JWT_EMAIL_CONFIRM_TOKEN_SECRET;
 
 export enum TokenType {
-	USER_TOKEN,
-	REFRESH_TOKEN,
-	PASS_RESET_TOKEN,
-	EMAIL_CONFIRM_TOKEN
+	USER_TOKEN = 'user-token',
+	REFRESH_TOKEN = 'refresh-token',
+	PASS_RESET_TOKEN = 'pass-reset-token',
+	EMAIL_CONFIRM_TOKEN = 'email-confirm-token'
+}
+
+export enum TokenAudience {
+	WEB_CLIENT = 'web-client',
+	DESKTOP_APP = 'desktop-app'
 }
 
 export default class jwtManager {
-	private static async signJWT(data: jose.JWTPayload, tokenType: TokenType, passwordHash = '') {
+	private static async signJWT(
+		data: jose.JWTPayload,
+		tokenType: TokenType,
+		audience: TokenAudience,
+		passwordHash = ''
+	) {
 		const token = await new jose.SignJWT(data)
-			.setProtectedHeader({ alg: 'HS256' })
+			.setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
 			.setExpirationTime(this.getTokenExpirationTime(tokenType))
 			.setIssuedAt()
+			.setIssuer(`dokchat:auth:${tokenType}`)
+			.setAudience(`dokchat:auth:${audience}`)
 			.sign(Buffer.from(this.getTokenSecret(tokenType) + passwordHash));
 		return token;
 	}
@@ -34,8 +48,24 @@ export default class jwtManager {
 		}
 	}
 
-	private static async verifyJWT<T = jose.JWTPayload>(token: string, tokenType: TokenType, passwordHash = ''): Promise<T> {
-		const data = await jose.jwtVerify(token, Buffer.from(this.getTokenSecret(tokenType) + passwordHash));
+	private static async verifyJWT<T = jose.JWTPayload>(
+		token: string,
+		tokenType: TokenType,
+		audience: TokenAudience,
+		passwordHash = ''
+	): Promise<T> {
+		const secret = Buffer.from(this.getTokenSecret(tokenType) + passwordHash);
+		const data = await jose.jwtVerify(token, secret, {
+			algorithms: [ 'HS256' ],
+			typ: 'JWT',
+			issuer: `dokchat:auth:${tokenType}`,
+			audience: `dokchat:auth:${audience}`
+		});
+
+		if(!this.allowedAudiences(tokenType).includes(audience)) {
+			throw new Error(`${audience} audience is not allowed to use ${tokenType} token`);
+		}
+
 		return data.payload as any as T;
 	}
 
@@ -50,6 +80,20 @@ export default class jwtManager {
 				return PASS_RESET_TOKEN_SECRET;
 			case TokenType.EMAIL_CONFIRM_TOKEN:
 				return EMAIL_CONFIRM_TOKEN_SECRET;
+		}
+	}
+
+	private static allowedAudiences(tokenType: TokenType): TokenAudience[] {
+		switch (tokenType) {
+			default:
+			case TokenType.USER_TOKEN:
+				return [ TokenAudience.WEB_CLIENT, TokenAudience.DESKTOP_APP ];
+			case TokenType.REFRESH_TOKEN:
+				return [ TokenAudience.WEB_CLIENT, TokenAudience.DESKTOP_APP ];
+			case TokenType.PASS_RESET_TOKEN:
+				return [ TokenAudience.WEB_CLIENT ];
+			case TokenType.EMAIL_CONFIRM_TOKEN:
+				return [ TokenAudience.WEB_CLIENT ];
 		}
 	}
 
@@ -70,22 +114,22 @@ export default class jwtManager {
 	// GENERATE
 	// --------------------------
 
-	public static async generateUserToken(data: UserJWTData): Promise<string> {
-		return this.signJWT(data, TokenType.USER_TOKEN);
+	public static async generateUserToken(data: UserJWTData, audience: TokenAudience): Promise<string> {
+		return this.signJWT(data, TokenType.USER_TOKEN, audience);
 	}
 
-	public static async generateRefreshToken(id: string, passwordHash: string): Promise<string> {
-		return this.signJWT({ id }, TokenType.REFRESH_TOKEN, passwordHash);
+	public static async generateRefreshToken(id: string, audience: TokenAudience, passwordHash: string): Promise<string> {
+		return this.signJWT({ id }, TokenType.REFRESH_TOKEN, audience, passwordHash);
 	}
 
-	public static async generatePassResetToken(id: string, email: string, passwordHash: string): Promise<string> {
+	public static async generatePassResetToken(id: string, email: string, audience: TokenAudience, passwordHash: string): Promise<string> {
 		const data: PasswordResetJWTData = { id, email };
-		return this.signJWT(data, TokenType.PASS_RESET_TOKEN, passwordHash);
+		return this.signJWT(data, TokenType.PASS_RESET_TOKEN, audience, passwordHash);
 	}
 
-	public static async generateEmailConfirmToken(id: string, email: string): Promise<string> {
+	public static async generateEmailConfirmToken(id: string, email: string, audience: TokenAudience): Promise<string> {
 		const data: EmailConfirmJWTData = { id, email };
-		return this.signJWT(data, TokenType.EMAIL_CONFIRM_TOKEN);
+		return this.signJWT(data, TokenType.EMAIL_CONFIRM_TOKEN, audience);
 	}
 
 	// --------------------------
@@ -106,23 +150,31 @@ export default class jwtManager {
 	// VERIFY
 	// --------------------------
 
-	public static async verifyUserToken(token: string): Promise<UserJWTData> {
-		return this.verifyJWT<UserJWTData>(token, TokenType.USER_TOKEN);
+	public static async verifyUserToken(token: string, audience: TokenAudience): Promise<UserJWTData> {
+		return this.verifyJWT<UserJWTData>(token, TokenType.USER_TOKEN, audience);
 	}
 
-	public static async verifyRefreshToken(token: string, passwordHash: string): Promise<string> {
-		const data = await this.verifyJWT<{ id: string }>(token, TokenType.REFRESH_TOKEN, passwordHash);
+	public static async verifyRefreshToken(token: string, audience: TokenAudience, passwordHash: string): Promise<string> {
+		const data = await this.verifyJWT<{ id: string }>(token, TokenType.REFRESH_TOKEN, audience, passwordHash);
 		return data.id;
 	}
 
-	public static async verifyPassResetToken(token: string, email: string, passwordHash: string): Promise<string> {
-		const data = await this.verifyJWT<{ id: string, email: string }>(token, TokenType.PASS_RESET_TOKEN, passwordHash);
+	public static async verifyPassResetToken(token: string, email: string, audience: TokenAudience, passwordHash: string): Promise<string> {
+		const data = await this.verifyJWT<{ id: string, email: string }>(token, TokenType.PASS_RESET_TOKEN, audience, passwordHash);
 		if (data.email != email) throw new Error('JWT email does not match account email');
 		return data.id;
 	}
 
-	public static async verifyEmailConfirmToken(token: string): Promise<EmailConfirmJWTData> {
-		const data = await this.verifyJWT<EmailConfirmJWTData>(token, TokenType.EMAIL_CONFIRM_TOKEN);
+	public static async verifyEmailConfirmToken(token: string, audience: TokenAudience): Promise<EmailConfirmJWTData> {
+		const data = await this.verifyJWT<EmailConfirmJWTData>(token,  TokenType.EMAIL_CONFIRM_TOKEN, audience);
 		return data;
+	}
+
+	// --------------------------
+	// HELPERS
+	// --------------------------
+
+	public static getAudienceFromRequest(req: Express.Request | IncomingMessage): TokenAudience {
+		return Utils.requestedFromElectron(req) ? TokenAudience.DESKTOP_APP : TokenAudience.WEB_CLIENT;
 	}
 }

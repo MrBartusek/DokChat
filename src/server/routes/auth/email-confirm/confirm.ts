@@ -19,7 +19,9 @@ router.all('/confirm',
 
 		const token: string = req.body.token;
 
-		await jwtManager.verifyEmailConfirmToken(token)
+		const audience = jwtManager.getAudienceFromRequest(req);
+
+		await jwtManager.verifyEmailConfirmToken(token, audience)
 			.then(async (tokenData: EmailConfirmJWTData) => {
 				if (!(await isTokenValid(tokenData))) {
 					return new ApiResponse(res).unauthorized('Invalid token, please try to reset your password once again.');

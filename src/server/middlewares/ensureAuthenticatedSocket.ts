@@ -13,7 +13,9 @@ const ensureAuthenticatedSocket = () => async (socket: Socket, next: NextFunctio
 	}
 	token = token.replace('Bearer ', '');
 
-	return jwtManager.verifyUserToken(token)
+	const audience = jwtManager.getAudienceFromRequest(socket.request);
+
+	return jwtManager.verifyUserToken(token, audience)
 		.then(async (data) => {
 			if (data.isBanned) return new ApiResponse(socket, next).forbidden('Account is suspended');
 			if (!data.isEmailConfirmed) return new ApiResponse(socket, next).forbidden('E-mail not confirmed');

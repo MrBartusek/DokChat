@@ -3,6 +3,7 @@ import { body, validationResult } from 'express-validator';
 import { OAuth2Client } from 'google-auth-library';
 import { ApiResponse } from '../../../apiResponse';
 import SocialLoginManager from '../../../managers/socialLoginManager';
+import jwtManager from '../../../managers/jwtManager';
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 
@@ -33,7 +34,8 @@ router.all('/google', body('token').isString(), async (req, res) => {
 	}
 
 	const profilePicture = payload.picture && payload.picture.replace('s96-c', 's256-c');
-	await SocialLoginManager.socialLogin(res, payload.email, profilePicture);
+	const audience = jwtManager.getAudienceFromRequest(req);
+	await SocialLoginManager.socialLogin(res, audience, payload.email, profilePicture);
 });
 
 export default router;

@@ -8,9 +8,10 @@ import db from '../db';
 import Utils from '../utils/utils';
 import AuthManager from './authManager';
 import UserManager from './userManager';
+import { TokenAudience } from './jwtManager';
 
 export default class SocialLoginManager {
-	public static async socialLogin(res: Response, email: string, profilePictureUrl?: string) {
+	public static async socialLogin(res: Response, audience: TokenAudience, email: string, profilePictureUrl?: string) {
 		const normalizedEmail = validator.normalizeEmail(email);
 		if (normalizedEmail == false) {
 			return new ApiResponse(res).unauthorized('E-mail provided by social login provided is not valid');
@@ -28,7 +29,7 @@ export default class SocialLoginManager {
 				);
 			}
 			const passwordHash = await UserManager.getUserHashByEmail(normalizedEmail);
-			await AuthManager.sendAuthResponse(res, userData, passwordHash);
+			await AuthManager.sendAuthResponse(res, userData, audience, passwordHash);
 		}
 		else {
 			// Register user that doesn't exist
@@ -41,7 +42,7 @@ export default class SocialLoginManager {
 							await db.query(sql`UPDATE users SET avatar = $1 WHERE id=$2`, [ avatar, userData.id ]);
 						}
 					}
-					await AuthManager.sendAuthResponse(res, userData, passwordHash);
+					await AuthManager.sendAuthResponse(res, userData, audience, passwordHash);
 				})
 				.catch((reason) => {
 					if (typeof reason == 'string') {

@@ -5,6 +5,7 @@ import AuthManager from '../../managers/authManager';
 import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import { isValidPassword } from '../../validators/isValidPassword';
+import jwtManager from '../../managers/jwtManager';
 
 const router = express.Router();
 
@@ -21,10 +22,12 @@ router.all('/login',
 		const password: string = req.body.password;
 		const rememberMe: boolean = req.body.rememberMe;
 
+		const audience = jwtManager.getAudienceFromRequest(req);
+
 		AuthManager.authenticateUser(email, password)
 			.then(async ([ jwtData, passwordHash ]) => {
 				await UserManager.bumpLastSeen(jwtData.id);
-				AuthManager.sendAuthResponse(res, jwtData, passwordHash, rememberMe);
+				AuthManager.sendAuthResponse(res, jwtData, audience, passwordHash, rememberMe);
 			})
 			.catch((reason) => {
 				if (typeof reason == 'string') {

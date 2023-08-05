@@ -4,7 +4,7 @@ import { Response } from 'express';
 import { UserLoginResponse } from '../../types/endpoints';
 import { UserJWTData } from '../../types/jwt';
 import { ApiResponse } from '../apiResponse';
-import jwtManager from './jwtManager';
+import jwtManager, { TokenAudience } from './jwtManager';
 import UserManager from './userManager';
 
 export default class AuthManager {
@@ -23,9 +23,9 @@ export default class AuthManager {
 		return [ user, passwordHash ];
 	}
 
-	public static async sendAuthResponse(res: Response, userData: UserJWTData, passwordHash: string, rememberMe?: boolean) {
-		const refreshToken = await jwtManager.generateRefreshToken(userData.id, passwordHash);
-		const token = await jwtManager.generateUserToken(userData);
+	public static async sendAuthResponse(res: Response, userData: UserJWTData, audience: TokenAudience, passwordHash: string, rememberMe?: boolean) {
+		const refreshToken = await jwtManager.generateRefreshToken(userData.id, audience, passwordHash);
+		const token = await jwtManager.generateUserToken(userData, audience);
 		res.cookie('refreshToken', refreshToken, {
 			httpOnly: true,
 			sameSite: 'strict',

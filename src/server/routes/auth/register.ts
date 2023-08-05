@@ -7,6 +7,7 @@ import allowedMethods from '../../middlewares/allowedMethods';
 import ensureCaptcha from '../../middlewares/ensureCaptcha';
 import { isValidPassword } from '../../validators/isValidPassword';
 import { isValidUsername } from '../../validators/isValidUsername';
+import jwtManager from '../../managers/jwtManager';
 
 const router = express.Router();
 
@@ -24,9 +25,11 @@ router.all('/register',
 		const password: string = req.body.password;
 		const email: string = req.body.email;
 
+		const audience = jwtManager.getAudienceFromRequest(req);
+
 		await UserManager.createUser(username, email, password)
 			.then(([ userData, passwordHash ]) => {
-				AuthManager.sendAuthResponse(res, userData, passwordHash);
+				AuthManager.sendAuthResponse(res, userData, audience, passwordHash);
 			})
 			.catch((reason) => {
 				if (typeof reason == 'string') {

@@ -4,7 +4,7 @@ import { User } from '../../types/common';
 import { UserJWTData } from '../../types/jwt';
 import db from '../db';
 import EmailBlacklistManager from '../managers/emailBlacklistManager';
-import jwtManager from '../managers/jwtManager';
+import jwtManager, { TokenAudience, TokenType } from '../managers/jwtManager';
 import Utils from '../utils/utils';
 
 const emailServiceEnabled = process.env.ENABLE_EMAIL_SERVICE == 'true';
@@ -40,7 +40,8 @@ class EmailClient {
 	}
 
 	public async sendEmailConfirmEmail(user: UserJWTData | User, email: string) {
-		const confirmToken = await jwtManager.generateEmailConfirmToken(user.id, email);
+		const confirmToken = await jwtManager.generateEmailConfirmToken(
+			user.id, email, TokenAudience.WEB_CLIENT);
 		const confirmUrl = `https://dokchat.dokurno.dev/email-confirm/${confirmToken}`;
 
 		// eslint-disable-next-line no-useless-escape
@@ -52,7 +53,8 @@ class EmailClient {
 		const query = await db.query(sql`SELECT id, password_hash as "passwordHash" FROM users WHERE email = $1;`, [ email ]);
 		const passwordHash = query.rows[0].passwordHash;
 		const id = query.rows[0].id;
-		const resetToken = await jwtManager.generatePassResetToken(id, email, passwordHash);
+		const resetToken = await jwtManager.generatePassResetToken(
+			id, email, TokenAudience.WEB_CLIENT, passwordHash);
 		const resetUrl = `https://dokchat.dokurno.dev/forgot-password/${resetToken}`;
 
 		// eslint-disable-next-line no-useless-escape

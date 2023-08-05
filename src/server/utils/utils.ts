@@ -1,6 +1,7 @@
 import validator from 'validator';
 import { User } from '../../types/common';
 import { UserJWTData } from '../../types/jwt';
+import { IncomingMessage } from 'http';
 
 export default class Utils {
 	public static apiUrl() {
@@ -34,5 +35,10 @@ export default class Utils {
 		}
 
 		return username.substring(0, 32);
+	}
+
+	public static requestedFromElectron(req: Express.Request | IncomingMessage): boolean {
+		const userAgent = (req as any).headers['user-agent'] as string;
+		return userAgent.toLowerCase().indexOf(' electron/') > -1;
 	}
 }

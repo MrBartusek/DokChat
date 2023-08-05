@@ -12,7 +12,9 @@ const ensureAuthenticated = (allowUnconfirmedEmail = false) => async (req: Reque
 	}
 	token = token.replace('Bearer ', '');
 
-	return jwtManager.verifyUserToken(token)
+	const audience = jwtManager.getAudienceFromRequest(req);
+
+	return jwtManager.verifyUserToken(token, audience)
 		.then((data) => {
 			if (data.isBanned) return new ApiResponse(res, next).forbidden('Account is suspended');
 			if (!data.isEmailConfirmed && !allowUnconfirmedEmail) return new ApiResponse(res, next).forbidden('E-mail not confirmed');
