@@ -52,9 +52,9 @@ ipcMain.on('set-token', (event, token) => {
 });
 
 ipcMain.on('logout', (event) => {
+	store.set('disableAutoLogin', true);
 	store.delete('token');
 	store.delete('refreshToken');
-	store.set('disableAutoLogin', true);
 });
 
 function passAuthToken(url) {

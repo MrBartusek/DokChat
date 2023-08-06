@@ -30,7 +30,7 @@ export function useFetch<T>(initialUrl: string | null, useAuth = false): useFetc
 		if(user.isAuthenticated && isConfirmed) {
 			setWaitingForUser(false);
 		}
-	}, []);
+	}, [ user, isConfirmed ]);
 
 	useEffect(() => {
 		const abortController = new AbortController();
