@@ -7,11 +7,12 @@ declare global {
 export interface ElectronAPIConfig {
 	refreshToken: string;
   token: string;
+  disableAutoLogin?: boolean;
 }
 
 interface ElectronAPIType {
 	openBrowser(url: string): void
-  getConfig(): ElectronAPIConfig;
+  getConfig(): Promise<ElectronAPIConfig>;
   setToken(token: string): void;
   logout(): void;
 }

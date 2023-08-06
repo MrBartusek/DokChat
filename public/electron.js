@@ -42,7 +42,8 @@ ipcMain.on('open-browser', (event, url) => {
 ipcMain.handle('get-config', (event) => {
 	return {
 		refreshToken: store.get('refreshToken'),
-		token: store.get('token')
+		token: store.get('token'),
+		disableAutoLogin: store.get('disableAutoLogin', false)
 	};
 });
 
@@ -53,6 +54,7 @@ ipcMain.on('set-token', (event, token) => {
 ipcMain.on('logout', (event) => {
 	store.delete('token');
 	store.delete('refreshToken');
+	store.set('disableAutoLogin', true);
 });
 
 function passAuthToken(url) {
@@ -68,6 +70,7 @@ function passAuthToken(url) {
 	const urlParams = new URLSearchParams(queryString);
 	store.set('token', urlParams.get('token'));
 	store.set('refreshToken', urlParams.get('refreshToken'));
+	store.set('disableAutoLogin', false);
 	mainWindow.webContents.reload();
 	console.log('Successfully handoff');
 }

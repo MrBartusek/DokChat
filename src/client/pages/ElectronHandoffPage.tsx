@@ -20,7 +20,7 @@ function ElectronHandoffPage() {
 			setLoading(false);
 		}
 		else {
-			const protocol = Utils.isDev() ? 'dokchat-dev' : 'dokchat';
+			const protocol = 'dokchat';
 			const authUrl = `${protocol}://auth/login?refreshToken=` +
 				`${tokenFetch.res.data.refreshToken}&token=${tokenFetch.res.data.token}`;
 			setAuthUrl(authUrl);

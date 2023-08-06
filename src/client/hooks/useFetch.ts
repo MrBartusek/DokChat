@@ -4,7 +4,6 @@ import { AxiosError } from 'axios';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { UserContext } from '../context/UserContext';
 import getAxios from '../helpers/axios';
-import { CancelToken } from 'axios';
 
 type useFetchState<T> = {
 	res?: T,
@@ -18,11 +17,19 @@ export function useFetch<T>(initialUrl: string | null, useAuth = false): useFetc
 	const [ url, setUrl ] = useState(initialUrl);
 	const [ state, setState ] = useState<useFetchState<T>>({ res: undefined, loading: true, setUrl: setUrl });
 	const [ user, updateToken, setUser, callLogout, isConfirmed  ] = useContext(UserContext);
+	const [ waitingForUser, setWaitingForUser ] = useState(true);
 
 	useEffect(() => {
 		return () => {
 			isCurrent.current = false;
 		};
+	}, []);
+
+	useEffect(() => {
+		if(!useAuth) setWaitingForUser(false);
+		if(!user.isAuthenticated || !isConfirmed) {
+			setWaitingForUser(false);
+		}
 	}, []);
 
 	useEffect(() => {
@@ -32,7 +39,7 @@ export function useFetch<T>(initialUrl: string | null, useAuth = false): useFetc
 		setState(state => ({ res: state.res, loading: true, setUrl: setUrl }));
 
 		// Fix for fetch hooks made before user was properly loaded
-		if(useAuth && (!user.isAuthenticated || !isConfirmed)) return;
+		if(waitingForUser) return;
 
 		// Don't fetch if no url provided
 		{if (url == null) return setState({ loading: false, setUrl: setUrl });}
@@ -57,7 +64,7 @@ export function useFetch<T>(initialUrl: string | null, useAuth = false): useFetc
 		return () =>{
 			abortController.abort();
 		};
-	}, [ url ]);
+	}, [ url, waitingForUser ]);
 
 	return state;
 }
