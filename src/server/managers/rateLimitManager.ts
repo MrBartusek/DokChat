@@ -1,7 +1,8 @@
 import { UserJWTData } from '../../types/jwt';
 import redisClient from '../redis';
+import Utils from '../utils/utils';
 
-const GLOBAL_RATELIMIT = 60;
+const GLOBAL_RATELIMIT = Utils.isDev() ? 1000 : 180;
 
 export default class RateLimitManager {
 	public static async consume(
@@ -31,5 +32,9 @@ export default class RateLimitManager {
 		const used = await redisClient.get(key);
 
 		return GLOBAL_RATELIMIT - Number(used);
+	}
+
+	public static isDev(): boolean {
+		return process.env.NODE_ENV != 'production';
 	}
 }

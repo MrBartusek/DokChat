@@ -41,4 +41,8 @@ export default class Utils {
 		const userAgent = (req as any).headers['user-agent'] as string;
 		return userAgent.toLowerCase().indexOf(' electron/') > -1;
 	}
+
+	public static isDev(): boolean {
+		return process.env.NODE_ENV != 'production';
+	}
 }
