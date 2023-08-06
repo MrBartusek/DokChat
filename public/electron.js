@@ -47,6 +47,8 @@ ipcMain.handle('get-config', (event) => {
 	};
 });
 
+ipcMain.handle('is-packaged', () => app.isPackaged);
+
 ipcMain.on('set-token', (event, token) => {
 	store.set('token', token);
 });
@@ -100,7 +102,9 @@ function createWindow() {
 	const indexLocation = path.join(__dirname, 'electron.html');
 	mainWindow.loadFile(indexLocation);
 
-	mainWindow.webContents.openDevTools();
+	if(store.get('debug', false) == true && !app.isPackaged) {
+		mainWindow.webContents.openDevTools();
+	}
 
 	console.log(`DokChat electron started, auth registered to ${authProtocol}://auth`);
 }

@@ -15,6 +15,7 @@ interface ElectronAPIType {
   getConfig(): Promise<ElectronAPIConfig>;
   setToken(token: string): void;
   logout(): void;
+  isPackaged: boolean;
 }
 
 export {};
