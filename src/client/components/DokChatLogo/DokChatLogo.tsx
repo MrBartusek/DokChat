@@ -1,11 +1,20 @@
 import React from 'react';
+import { useSettings } from '../../hooks/useSettings';
+import { Theme } from 'emoji-picker-react';
 
 interface DokChatLogoProps extends React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement> {
-	variant?: 'black' | 'white' | 'blue';
+	variant?: 'black' | 'white' | 'blue' | 'auto';
 }
 
 export default function DokChatLogo(props: DokChatLogoProps) {
+	const [ settings ] = useSettings();
+
+	let variant = props.variant;
+
+	if(variant == 'auto') {
+		variant = settings.theme == Theme.LIGHT ? 'blue' : 'white';
+	}
 	return (
-		<img {...props} src={`./img/logo/dokchat-logo-${props.variant || 'blue'}.png`} alt="DokChat logo" />
+		<img {...props} src={`./img/logo/dokchat-logo-${variant || 'blue'}.png`} alt="DokChat logo" />
 	);
 }
