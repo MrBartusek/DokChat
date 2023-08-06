@@ -1,11 +1,13 @@
 const { app, BrowserWindow, ipcMain, shell, dialog } = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
+const Store = require('electron-store');
 
 // Handle windows uninstall
 if (require('electron-squirrel-startup')) app.quit();
 
 const authProtocol = isDev ? 'dokchat-dev' : 'dokchat';
+const store = new Store();
 let mainWindow;
 
 function main() {
@@ -37,8 +39,24 @@ ipcMain.on('open-browser', (event, url) => {
 	shell.openExternal(url);
 });
 
+ipcMain.handle('get-config', (event) => {
+	return {
+		refreshToken: store.get('refreshToken'),
+		token: store.get('token')
+	};
+});
+
+ipcMain.on('set-token', (event, token) => {
+	store.set('token', token);
+});
+
+ipcMain.on('logout', (event) => {
+	store.delete('token');
+	store.delete('refreshToken');
+});
+
 function passAuthToken(url) {
-	const firstUrlPart = `${authProtocol}://auth/login?token=`;
+	const firstUrlPart = `${authProtocol}://auth/login`;
 	if(!url.startsWith(firstUrlPart)) {
 		dialog.showErrorBox(
 			'DokChat Auth Error',
@@ -46,9 +64,12 @@ function passAuthToken(url) {
 		);
 		return;
 	}
-	const token = url.replace(firstUrlPart, '');
-	dialog.showErrorBox('Deep Link Success', `token is ${token}`);
-
+	const queryString = url.replace(firstUrlPart, '');
+	const urlParams = new URLSearchParams(queryString);
+	store.set('token', urlParams.get('token'));
+	store.set('refreshToken', urlParams.get('refreshToken'));
+	mainWindow.webContents.reload();
+	console.log('Successfully handoff');
 }
 
 function registerDefaultProtocolClient(protocol) {
@@ -67,18 +88,12 @@ function createWindow() {
 		width: 1280,
 		height: 720,
 		webPreferences: {
-			preload: path.join(__dirname, 'preload.js'),
-			nodeIntegration: true
+			preload: path.join(__dirname, 'preload.js')
 		}
 	});
 
-	const port = process.env.PORT || 3000;
-	const devServerURL = `http://localhost:${port}/`;
-	const productionIndexUrl = path.join(__dirname, 'index.html');
-
-	process.env.NODE_ENV === 'development'
-		? mainWindow.loadURL(devServerURL)
-		: mainWindow.loadFile(productionIndexUrl);
+	const indexLocation = path.join(__dirname, 'electron.html');
+	mainWindow.loadFile(indexLocation);
 
 	mainWindow.webContents.openDevTools();
 

@@ -1,6 +1,7 @@
 import * as DateFns from 'date-fns';
 import * as jose from 'jose';
 import { UserJWTData } from '../../types/jwt';
+import Utils from '../helpers/utils';
 
 /**
  * This class initialization is split into two constructors. The default constructor

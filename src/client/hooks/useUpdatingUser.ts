@@ -6,6 +6,9 @@ import { EndpointResponse, UserLoginResponse } from '../../types/endpoints';
 import getAxios from '../helpers/axios';
 import { LocalUser } from '../types/User';
 import { useUser } from './useUser';
+import Utils from '../helpers/utils';
+import { useElectronConfig } from './useElectronConfig';
+import { AxiosRequestConfig, RawAxiosRequestHeaders } from 'axios';
 
 /**
  * This is more advanced version of useUser hook
@@ -22,16 +25,23 @@ export function useUpdatingUser(): [
 	const [ isLoading, setLoading ] = useState(true);
 	const [ user, cookies, setUser, removeUser ] = useUser();
 	const [ isConfirmed, setConfirmed ] = useState(false);
+	const electronConfig = useElectronConfig();
 
 	/**
 	 * Set user decoded from JWT if there is any and fetch new token
 	 */
 	useEffect(() => {
-		if (cookies.token) {
-			const user = LocalUser.fromJWT(cookies.token);
+		const isElectron = Utils.isElectron();
+		if((isElectron && !electronConfig) || !isLoading) return;
+
+		const token = isElectron ? electronConfig?.token : cookies.token;
+
+		if (token) {
+			const user = LocalUser.fromJWT(token);
 			if (!user.expired) {
-				console.log(`AUTH: Loaded user ${user.email} from local JWT`);
-				setUser(cookies.token);
+				const method = isElectron ? 'electron-store' : 'cookie';
+				console.log(`AUTH: Loaded user ${user.email} from local JWT (${method})`);
+				setUser(token);
 				setLoading(false);
 			}
 			(async () => await refreshToken(true).then(() => setLoading(false)))();
@@ -39,7 +49,7 @@ export function useUpdatingUser(): [
 		else {
 			setLoading(false);
 		}
-	}, []);
+	}, [ electronConfig ]);
 
 	/**
 	 * Refresh access token using refresh token periodically when
@@ -56,7 +66,12 @@ export function useUpdatingUser(): [
 	}, [ user ]);
 
 	async function refreshToken(refreshAvatar = false) {
-		const axios = getAxios();
+		// Electron doesn't allow for any type of cookies so desktop app
+		// uses special refresh token i Authorization header
+		const config: AxiosRequestConfig<any> = {};
+		if(Utils.isElectron()) config.headers = generateElectronRefreshHeaders();
+
+		const axios = getAxios(null, config);
 		return await axios.post('auth/refresh')
 			.then((r: any) => {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
@@ -98,6 +113,15 @@ export function useUpdatingUser(): [
 			toast('You have successfully signed in');
 		}
 		setUser(newUser);
+	}
+
+	/**
+	 * Generate refresh auth header for Desktop App
+	 */
+	function generateElectronRefreshHeaders(): RawAxiosRequestHeaders {
+		return {
+			'Authorization': `Bearer ${electronConfig.refreshToken}`
+		};
 	}
 
 	return [ isLoading, user, (refreshAvatar?: boolean) => refreshToken(refreshAvatar), setUserWrapper, callLogout, isConfirmed ];

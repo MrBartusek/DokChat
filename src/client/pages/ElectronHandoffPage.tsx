@@ -1,18 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
-import FullFocusPage from '../components/FullFocusPage/FullFocusPage';
-import { UserContext } from '../context/UserContext';
+import React, { useEffect, useState } from 'react';
 import { Spinner } from 'react-bootstrap';
+import { DesktopLoginResponse, EndpointResponse } from '../../types/endpoints';
+import FullFocusPage from '../components/FullFocusPage/FullFocusPage';
 import Utils from '../helpers/utils';
-import { useNavigate } from 'react-router-dom';
 import { useFetch } from '../hooks/useFetch';
-import { EndpointResponse, UserLoginResponse } from '../../types/endpoints';
-import { useDocumentReady } from '../hooks/useDocumentReady';
 
 function ElectronHandoffPage() {
 	const [ status, setStatus ] = useState('Loading...');
 	const [ loading, setLoading ] = useState(true);
 	const [ authUrl, setAuthUrl ] = useState<string>(null);
-	const tokenFetch = useFetch<EndpointResponse<UserLoginResponse>>('/auth/desktop-login', true);
+	const tokenFetch = useFetch<EndpointResponse<DesktopLoginResponse>>('/auth/desktop-login', true);
 
 	useEffect(() => {
 		if(tokenFetch.loading) {
@@ -24,7 +21,8 @@ function ElectronHandoffPage() {
 		}
 		else {
 			const protocol = Utils.isDev() ? 'dokchat-dev' : 'dokchat';
-			const authUrl = `${protocol}://auth/login?token=${tokenFetch.res.data.token}`;
+			const authUrl = `${protocol}://auth/login?refreshToken=` +
+				`${tokenFetch.res.data.refreshToken}&token=${tokenFetch.res.data.token}`;
 			setAuthUrl(authUrl);
 			setStatus('Redirecting you to DokChat Desktop...');
 		}

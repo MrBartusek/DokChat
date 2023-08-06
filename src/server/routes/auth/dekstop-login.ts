@@ -10,7 +10,7 @@ import { isValidUsername } from '../../validators/isValidUsername';
 import jwtManager, { TokenAudience } from '../../managers/jwtManager';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 import RateLimitManager from '../../managers/rateLimitManager';
-import { UserLoginResponse } from '../../../types/endpoints';
+import { DesktopLoginResponse } from '../../../types/endpoints';
 
 const router = express.Router();
 
@@ -25,9 +25,11 @@ router.all('/desktop-login', ensureAuthenticated(), async (req, res) => {
 	const passwordHash = await UserManager.getUserHashById(req.auth.id);
 
 	const refreshToken = await jwtManager.generateRefreshToken(
-		req.auth.id, TokenAudience.DESKTOP_APP, passwordHash);1;
+		req.auth.id, TokenAudience.DESKTOP_APP, passwordHash);
+	const userData = await UserManager.getUserJwtDataById(req.auth.id);
+	const token = await jwtManager.generateUserToken(userData, TokenAudience.DESKTOP_APP);
 
-	const response: UserLoginResponse = { email: req.auth.email, token: refreshToken };
+	const response: DesktopLoginResponse = { email: req.auth.email, refreshToken, token };
 	new ApiResponse(res).success(response);
 
 });

@@ -18,6 +18,12 @@ export interface UserLoginResponse {
     token: string
 }
 
+export interface DesktopLoginResponse {
+    email: string,
+    token: string,
+    refreshToken: string
+}
+
 export type ChatListResponse = Chat[]
 
 export type MessageListResponse = Message[];

@@ -9,18 +9,25 @@ function ElectronWelcomePage() {
 	const [ user ] = useContext(UserContext);
 	const browserUrl = Utils.getBaseUrl() + '/electron-login';
 	const [ browserOpened, setBrowserOpened ] = useState(false);
+	const navigate = useNavigate();
 
 	if(!Utils.isElectron()) return ( <Navigate to='/login' /> );
 
 	useEffect(() => {
-		if(!browserOpened) openBrowser();
-		setBrowserOpened(true);
-	}, []);
+		console.log(user.isAuthenticated);
+		if(!user.isAuthenticated) {
+			if(!browserOpened) openBrowser();
+			setBrowserOpened(true);
+		}
+		else {
+			navigate('/chat');
+		}
+	}, [ user ]);
 
 	return (
 		<FullFocusPage>
 			<h2 className='fw-normal mb-4 text-center'>Welcome DokChat Desktop</h2>
-			<div className='d-flex flex-column align-items-center pt-3'>
+			<div className='d-flex flex-column align-items-center pt-2'>
 				<span className='lead'>
 					Please login using a web browser
 				</span>
@@ -36,7 +43,7 @@ function ElectronWelcomePage() {
 	);
 
 	function openBrowser() {
-		window.electronAPI.openBrowser(browserUrl);
+		window.electron.openBrowser(browserUrl);
 	}
 }
 

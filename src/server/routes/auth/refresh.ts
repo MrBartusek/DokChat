@@ -11,12 +11,22 @@ const router = express.Router();
 
 router.all('/refresh',
 	allowedMethods('POST'),
-	cookie('refreshToken').isString(),
+	cookie('refreshToken').isString().optional(),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
 
-		const refreshToken: string = req.cookies.refreshToken;
+		const refreshTokenCookie: string = req.cookies.refreshToken;
+		const refreshTokenHeaderRaw: string = req.headers.authorization;
+		if(refreshTokenCookie && refreshTokenHeaderRaw) {
+			return new ApiResponse(res).badRequest();
+		}
+		if (refreshTokenHeaderRaw && !refreshTokenHeaderRaw.startsWith('Bearer ')) {
+			return new ApiResponse(res).badRequest();
+		}
+		const refreshTokenHeader = refreshTokenHeaderRaw?.replace('Bearer ', '');
+
+		const refreshToken = refreshTokenCookie ?? refreshTokenHeader;
 
 		const unconfirmedUserId = jwtManager.decodeRefreshToken(refreshToken);
 		if (!unconfirmedUserId) {
