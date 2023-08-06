@@ -32,7 +32,7 @@ export function useUpdatingUser(): [
 	 */
 	useEffect(() => {
 		const isElectron = Utils.isElectron();
-		if((isElectron && !electronConfig) || !isLoading) return;
+		if((isElectron && !electronConfig)) return;
 
 		const token = isElectron ? electronConfig?.token : cookies.token;
 

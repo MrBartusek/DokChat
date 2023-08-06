@@ -27,7 +27,7 @@ export function useFetch<T>(initialUrl: string | null, useAuth = false): useFetc
 
 	useEffect(() => {
 		if(!useAuth) setWaitingForUser(false);
-		if(user.isAuthenticated && isConfirmed) {
+		if(user.isAuthenticated) {
 			setWaitingForUser(false);
 		}
 	}, [ user, isConfirmed ]);
