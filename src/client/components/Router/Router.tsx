@@ -33,13 +33,10 @@ const UserBlockPopupLazy = React.lazy(() => import('../UserBlockPopup/UserBlockP
 const InvitePopupLazy = React.lazy(() => import('../InvitePopup/InvitePopup'));
 
 function Router() {
-	const ConditionalRouterWrapper = ({ children }: any) =>
-		Utils.isElectron()
-			? <HashRouter>{children}</HashRouter>
-			: <BrowserRouter>{children}</BrowserRouter>;
+	const ConditionalRouter = Utils.isElectron() ? HashRouter : BrowserRouter;
 
 	return (
-		<ConditionalRouterWrapper>
+		<ConditionalRouter>
 			<Routes>
 				<Route path="chat" element={
 					<PrivateRoute>
@@ -156,7 +153,7 @@ function Router() {
 				{/* 404 */}
 				<Route path="*" element={<ErrorPage title="404" message="This page was not found" />} />
 			</Routes>
-		</ConditionalRouterWrapper>
+		</ConditionalRouter>
 	);
 }
 
