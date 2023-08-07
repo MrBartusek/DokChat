@@ -40,9 +40,11 @@ function PrivacyPolicyPage() {
 				</p>
 
 				<ul>
-					<li>E-mail adress</li>
+					<li>E-mail address</li>
 					<li>Username</li>
 					<li>Password</li>
+					<li>Created messages and attachments</li>
+					<li>Behavior patterns</li>
 				</ul>
 
 				<p>
