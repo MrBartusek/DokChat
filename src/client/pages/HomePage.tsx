@@ -7,6 +7,7 @@ import InteractiveButton from '../components/InteractiveButton/InteractiveButton
 import Layout from '../components/Layout/Layout';
 import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
 import Section from '../components/Section/Section';
+import { usePageInfo } from '../hooks/usePageInfo';
 
 export interface HomePageProps {
 	scrollToAbout?: boolean;
@@ -14,6 +15,11 @@ export interface HomePageProps {
 
 function HomePage({ scrollToAbout }: HomePageProps) {
 	const aboutRef = useRef<HTMLDivElement>(null!);
+
+	usePageInfo({
+		title: 'Connect with anyone',
+		discordTitle: 'Browsing home page'
+	});
 
 	useLayoutEffect(() => {
 		if (!scrollToAbout) return;

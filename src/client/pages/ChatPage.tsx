@@ -9,6 +9,7 @@ import { useMessageManager } from '../hooks/useMessageManager';
 import { useOnlineManager } from '../hooks/useOnlineManager';
 import { useWebsocket } from '../hooks/useWebsocket';
 import { LocalChat } from '../types/Chat';
+import { usePageInfo } from '../hooks/usePageInfo';
 
 const ChatWindowLazy = React.lazy(() => import('../components/ChatWindow/ChatWindow'));
 
@@ -23,19 +24,25 @@ function ChatPage() {
 	const navigate = useNavigate();
 	const location = useLocation();
 
+	const isPopup = ([
+		'/chat/new',
+		'/chat/profile',
+		'/chat/email-confirm',
+		'/chat/delete-account',
+		'/chat/user',
+		'/chat/invite/'
+	].find(x => location.pathname.startsWith(x))) !== undefined;
+
+	usePageInfo({
+		title: !isPopup && currentChat ? currentChat.name : undefined,
+		discordTitle: currentChat ? (currentChat.isGroup ? 'Chatting in group' : 'Chatting with'): undefined,
+		discordDetails: currentChat?.name
+	}, [ currentChat, location ]);
+
 	/**
 	 * Match current chat to url
 	 */
 	useEffect(() => {
-		const isPopup = ([
-			'/chat/new',
-			'/chat/profile',
-			'/chat/email-confirm',
-			'/chat/delete-account',
-			'/chat/user',
-			'/chat/invite/'
-		].find(x => location.pathname.startsWith(x))) !== undefined;
-
 		const isEmailConfirmRoute = location.pathname == '/chat/email-confirm';
 		if (!user.isEmailConfirmed && !isEmailConfirmRoute) {
 			navigate('/chat/email-confirm');

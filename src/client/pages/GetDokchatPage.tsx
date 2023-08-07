@@ -6,10 +6,15 @@ import Layout from '../components/Layout/Layout';
 import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
 import { UserContext } from '../context/UserContext';
 import useBreakpoint from '../hooks/useBreakpoint';
+import { usePageInfo } from '../hooks/usePageInfo';
 
 function GetDokchatPage() {
 	const breakpoint = useBreakpoint();
 	const [ user ] = useContext(UserContext);
+
+	usePageInfo({
+		title: 'Get DokChat'
+	});
 
 	return (
 		<Layout>

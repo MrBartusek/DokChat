@@ -6,6 +6,7 @@ import Utils from '../helpers/utils';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useElectronConfig } from '../hooks/useElectronConfig';
 import InteractiveButton from '../components/InteractiveButton/InteractiveButton';
+import { usePageInfo } from '../hooks/usePageInfo';
 
 function ElectronWelcomePage() {
 	const [ user ] = useContext(UserContext);
@@ -15,6 +16,11 @@ function ElectronWelcomePage() {
 	const electronConfig = useElectronConfig();
 
 	if(!Utils.isElectron()) return ( <Navigate to='/login' /> );
+
+	usePageInfo({
+		title: 'Welcome to Desktop',
+		discordTitle: 'Logging in...'
+	});
 
 	useEffect(() => {
 		if(electronConfig == null) return;

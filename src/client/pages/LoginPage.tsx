@@ -4,8 +4,14 @@ import FormPage from '../components/FormPage/FormPage';
 import Layout from '../components/Layout/Layout';
 import LoginForm from '../components/LoginForm/LoginForm';
 import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
+import { usePageInfo } from '../hooks/usePageInfo';
 
 function LoginPage() {
+
+	usePageInfo({
+		title: 'Login'
+	});
+
 	return (
 		<Layout>
 			<ScrollToTop />

@@ -9,6 +9,7 @@ import getAxios from '../../helpers/axios';
 import { LocalChat } from '../../types/Chat';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import Popup from '../Popup/Popup';
+import { usePageInfo } from '../../hooks/usePageInfo';
 
 function ChatHidePopup() {
 	const currentChat = useOutletContext<LocalChat>();
@@ -18,6 +19,10 @@ function ChatHidePopup() {
 	const [ user ] = useContext(UserContext);
 	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
 	const navigate = useNavigate();
+
+	usePageInfo({
+		title: 'Hide chat'
+	});
 
 	async function handleHide() {
 		const axios = getAxios(user);

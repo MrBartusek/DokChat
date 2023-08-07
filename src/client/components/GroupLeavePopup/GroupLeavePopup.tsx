@@ -9,6 +9,7 @@ import getAxios from '../../helpers/axios';
 import { LocalChat } from '../../types/Chat';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import Popup from '../Popup/Popup';
+import { usePageInfo } from '../../hooks/usePageInfo';
 
 function GroupLeavePopup() {
 	const currentChat = useOutletContext<LocalChat>();

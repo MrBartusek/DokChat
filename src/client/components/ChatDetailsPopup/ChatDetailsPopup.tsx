@@ -11,6 +11,7 @@ import ChatPrivacyTab from '../ChatPrivacyTab/ChatPrivacyTab';
 import ChatSettingsTab from '../ChatSettingsTab/ChatSettingsTab';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import Popup from '../Popup/Popup';
+import { usePageInfo } from '../../hooks/usePageInfo';
 
 function ChatDetailsPopup() {
 	const currentChat = useOutletContext<LocalChat>();
@@ -38,6 +39,12 @@ function ChatDetailsPopup() {
 		setCustomFooter(null);
 		setCustomStatic(false);
 	}, [ key ]);
+
+	usePageInfo({
+		title: popupTitle,
+		discordTitle: 'Editing chat details',
+		discordDetails: currentChat && currentChat.name
+	}, [ popupTitle ]);
 
 	useEffect(() => {
 		if (!currentChat) return;

@@ -11,6 +11,7 @@ import ObjectHero from '../ObjectHero/ObjectHero';
 import OpenDMCard from '../OpenDMCard/OpenDMCard';
 import Popup from '../Popup/Popup';
 import SimpleLoading from '../SimpleLoadng/SimpleLoading';
+import { usePageInfo } from '../../hooks/usePageInfo';
 
 function UserPopup() {
 	const { userId } = useParams();
@@ -20,6 +21,14 @@ function UserPopup() {
 	const getOnlineStatus = useContext(OnlineManagerContext);
 	const [ isOnline, setOnline ] = useState(false);
 	const [ onlineStatus, setOnlineStatus ] = useState('');
+
+	const discriminator = userFetch.res && `${userFetch.res.data.username}#${userFetch.res.data.tag}`;
+
+	usePageInfo({
+		title: discriminator,
+		discordTitle: 'Viewing user profile',
+		discordDetails: discriminator
+	}, [ discriminator ]);
 
 	useEffect(() => {
 		if (userFetch.error) {

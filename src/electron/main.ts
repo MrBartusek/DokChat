@@ -18,7 +18,7 @@ class DokChatDesktop {
 		this.deepLinkManager = new DeepLinkManager();
 		this.richPresenceManager = new RichPresenceManager();
 		this.registerLifecycleEvents();
-		new IPCManager().register();
+		new IPCManager(this.richPresenceManager).register();
 	}
 
 	public start() {
@@ -43,7 +43,6 @@ class DokChatDesktop {
 		this.mainWindow.loadFile(indexLocation);
 		this.deepLinkManager.register(this.mainWindow);
 		await this.richPresenceManager.start();
-		await this.richPresenceManager.updateActivity();
 
 		if(DEBUG_ENABLED) {
 			this.mainWindow.webContents.openDevTools();

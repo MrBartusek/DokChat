@@ -1,9 +1,7 @@
 import { AxiosError } from 'axios';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Alert, Button, Form } from 'react-bootstrap';
-import InputGroup from 'react-bootstrap/InputGroup';
+import { Alert, Button } from 'react-bootstrap';
 import toast from 'react-hot-toast';
-import { BsPlus } from 'react-icons/bs';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { User } from '../../../types/common';
 import { ChatCreateResponse, EndpointResponse, UserGetResponse } from '../../../types/endpoints';
@@ -11,9 +9,8 @@ import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import Utils from '../../helpers/utils';
-import { useForm } from '../../hooks/useForm';
+import { usePageInfo } from '../../hooks/usePageInfo';
 import { LocalChat } from '../../types/Chat';
-import IconButton from '../IconButton/IconButton';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import Popup from '../Popup/Popup';
 import UserList from '../UserList/UserList';
@@ -29,6 +26,11 @@ function NewChatPopup() {
 	const [ chats, sendMessage, setChatList ] = useContext(MessageManagerContext);
 	const [ handleClose, setHandleClose ] = useState<() => void>(null);
 	const userAddRef = useRef<HTMLFormElement>(null);
+
+	usePageInfo({
+		title: 'New chat',
+		discordTitle: 'Creating new chat'
+	});
 
 	useEffect(() => {
 		const id = searchParams.get('prefill');

@@ -5,6 +5,7 @@ import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import Popup from '../Popup/Popup';
 import ProfileSettingsTab from '../ProfileSettingsTab/ProfileSettingsTab';
 import SettingsTab from '../SettingsTab/SettingsTab';
+import { usePageInfo } from '../../hooks/usePageInfo';
 
 function SettingsPopup() {
 	const [ handleClose, setHandleClose ] = useState<() => void>(null);
@@ -26,6 +27,11 @@ function SettingsPopup() {
 		setCustomFooter(null);
 		setCustomStatic(false);
 	}, [ key ]);
+
+	usePageInfo({
+		title: popupTitle,
+		discordTitle: 'Editing account details'
+	}, [ popupTitle ]);
 
 	return (
 		<Popup

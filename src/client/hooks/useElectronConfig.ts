@@ -1,10 +1,10 @@
 
 import { useEffect, useState } from 'react';
-import { ElectronAPIConfig } from '../helpers/electronTypes';
+import { ElectronStore } from '../../types/electron';
 import Utils from '../helpers/utils';
 
-export function useElectronConfig(): ElectronAPIConfig {
-	const [ config , setConfig ] = useState<ElectronAPIConfig>(null);
+export function useElectronConfig(): ElectronStore {
+	const [ config , setConfig ] = useState<ElectronStore>(null);
 
 	useEffect(() => {
 		const getConfig = async() => window.electron.getConfig();

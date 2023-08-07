@@ -2,8 +2,14 @@ import React from 'react';
 import { Container } from 'react-bootstrap';
 import Layout from '../components/Layout/Layout';
 import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
+import { usePageInfo } from '../hooks/usePageInfo';
 
 function PrivacyPolicyPage() {
+
+	usePageInfo({
+		title: 'Privacy Policy'
+	});
+
 	return (
 		<Layout>
 			<ScrollToTop />

@@ -101,4 +101,8 @@ export class LocalUser {
 		}
 		return this._avatar;
 	}
+
+	public get avatarCached(): string {
+		return this._avatar;
+	}
 }

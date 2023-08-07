@@ -7,6 +7,7 @@ import getAxios from '../../helpers/axios';
 import { useForm } from '../../hooks/useForm';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import Popup from '../Popup/Popup';
+import { usePageInfo } from '../../hooks/usePageInfo';
 
 function DeleteAccountPopup() {
 	const [ handleClose, setHandleClose ] = useState<() => void>(null);
@@ -15,6 +16,10 @@ function DeleteAccountPopup() {
 	const [ isLoading, setLoading ] = useState(false);
 	const [ error, setError ] = useState<string | null>(null);
 	const [ user, updateToken, setUser, callLogout ] = useContext(UserContext);
+
+	usePageInfo({
+		title: 'Delete Account'
+	});
 
 	/**
 	 * Handle isUnsaved hook

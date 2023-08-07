@@ -11,6 +11,7 @@ import { useFetch } from '../../hooks/useFetch';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import Popup from '../Popup/Popup';
 import SimpleLoading from '../SimpleLoadng/SimpleLoading';
+import { usePageInfo } from '../../hooks/usePageInfo';
 
 function UserBlockPopup() {
 	const { userId } = useParams();
@@ -21,6 +22,10 @@ function UserBlockPopup() {
 	const navigate = useNavigate();
 
 	const [ blocked, setBlocked ] = useState(false);
+
+	usePageInfo({
+		title: 'Block user'
+	});
 
 	useEffect(() => {
 		setLoading(true);
