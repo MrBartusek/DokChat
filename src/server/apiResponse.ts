@@ -16,7 +16,7 @@ export class ApiResponse {
 			error: error,
 			status: status,
 			message: message,
-			data: undefined
+			data: null
 		};
 		if (data) {
 			result.data = data;
