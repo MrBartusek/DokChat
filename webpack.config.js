@@ -24,7 +24,7 @@ const serverConfig = {
 		]
 	},
 	resolve: {
-		extensions: ['.ts', '.js']
+		extensions: [ '.ts', '.js' ]
 	},
 	output: {
 		filename: 'server.js',
@@ -34,7 +34,7 @@ const serverConfig = {
 	node: {
 		__dirname: false
 	},
-	externals: [nodeExternals()]
+	externals: [ nodeExternals() ]
 };
 
 const clientConfig = {
@@ -54,12 +54,12 @@ const clientConfig = {
 			},
 			{
 				test: /\.scss$/,
-				use: ['style-loader', 'css-loader', 'sass-loader']
+				use: [ 'style-loader', 'css-loader', 'sass-loader' ]
 			}
 		]
 	},
 	resolve: {
-		extensions: ['.tsx', '.ts', '.js', '.css', '.scss']
+		extensions: [ '.tsx', '.ts', '.js', '.css', '.scss' ]
 	},
 	output: {
 		filename: 'app.js',
@@ -67,4 +67,34 @@ const clientConfig = {
 	}
 };
 
-module.exports = [serverConfig, clientConfig];
+const electronConfig = {
+	mode: mode,
+	entry: {
+		main: './src/electron/main.ts',
+		preload: './src/electron/preload.ts'
+	},
+	devtool: 'inline-source-map',
+	module: {
+		rules: [
+			{
+				test: /\.ts?$/,
+				loader: 'ts-loader',
+				exclude: /node_modules/,
+				options: {
+					configFile: 'tsconfig.json',
+					context: path.resolve(__dirname, './src/server')
+				}
+			}
+		]
+	},
+	target: 'electron-main',
+	resolve: {
+		extensions: [ '.ts', '.js' ]
+	},
+	output: {
+		filename: '[name].js',
+		path: path.resolve(__dirname, 'public/js')
+	}
+};
+
+module.exports = [ serverConfig, clientConfig, electronConfig ];

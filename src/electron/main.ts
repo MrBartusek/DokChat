@@ -99,10 +99,10 @@ function createWindow() {
 		autoHideMenuBar: true
 	});
 
-	const indexLocation = path.join(__dirname, 'electron.html');
+	const indexLocation = path.join(__dirname, '../electron.html');
 	mainWindow.loadFile(indexLocation);
 
-	if(store.get('debug', false) == true && !app.isPackaged) {
+	if(store.get('debug', false) == true || !app.isPackaged) {
 		mainWindow.webContents.openDevTools();
 	}
 

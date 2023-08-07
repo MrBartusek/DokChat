@@ -1,0 +1,18 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./public/js/electron",
+        "noImplicitAny": true,
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "target": "es5",
+        "allowSyntheticDefaultImports": true,
+        "lib": [
+            "es2015",
+            "dom"
+        ],
+    },
+    "include": [
+        "."
+    ],
+}
