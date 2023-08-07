@@ -17,6 +17,10 @@ class DeepLinkManager {
 		this.registerUrlHandlers();
 	}
 
+	public updateMainWindow(mainWindow: BrowserWindow) {
+		this.mainWindow = mainWindow;
+	}
+
 	private handleDeepLink(url: string) {
 		const firstUrlPart = `${this.authProtocol}://auth/login`;
 		if(!url.startsWith(firstUrlPart)) return;
@@ -26,7 +30,7 @@ class DeepLinkManager {
 
 		SessionManager.login(urlParams.get('token'), urlParams.get('refreshToken'));
 
-		this.mainWindow.webContents.reload();
+		this.mainWindow?.webContents.reload();
 		console.log('Successfully handoff');
 	}
 
@@ -43,11 +47,6 @@ class DeepLinkManager {
 
 	private registerUrlHandlers() {
 		app.on('second-instance', (event: any, commandLine: string[]) => {
-			if (this.mainWindow) {
-				if (this.mainWindow.isMinimized()) this.mainWindow.restore();
-				this.mainWindow.focus();
-			}
-
 			const url = commandLine.pop();
 			this.handleDeepLink(url);
 		});

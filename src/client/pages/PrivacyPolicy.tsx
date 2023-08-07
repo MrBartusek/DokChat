@@ -126,7 +126,7 @@ function PrivacyPolicyPage() {
 				<p>
 					Like any other website, DokChat uses &apos;cookies&apos;. These cookies are used to store information including visitors&apos;
 					preferences, and the pages on the website that the visitor accessed or visited. The information is used to optimize
-					the users&apos; experience by customizing our web page content based on visitors&apos; browser type and/or other information.
+					the users&apos; experience by customizing our web page content based on visitors&apos;browser type and/or other information.
 					DokChat may also use cookies, web beacons and other similar technologies from third-party partners such as Google, for
 					measurement services, better targeting advertisements and for marketing purposes.
 				</p>

@@ -1,6 +1,6 @@
 {
   "name": "dok-chat",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "productName": "DokChat",
   "main": "./public/js/main.js",
@@ -18,7 +18,7 @@
     "electron:publish": "electron-forge publish"
   },
   "keywords": [],
-  "author": "",
+  "author": "MrBartusek",
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.223.0",
