@@ -24,12 +24,13 @@ function ElectronWelcomePage() {
 
 	useEffect(() => {
 		if(electronConfig == null) return;
-		if(user.isAuthenticated) navigate('/chat');
 
 		if(!electronConfig.disableAutoLogin && !browserOpened) {
 			openBrowser();
 		}
 	}, [ user, electronConfig ]);
+
+	if(user.isAuthenticated) return ( <Navigate to='/chat' />);
 
 	return (
 		<FullFocusPage>
