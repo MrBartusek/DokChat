@@ -49,11 +49,11 @@ function PrivacyPolicyPage() {
 					We do not process sensitive information within the meaning of the GDPR.
 				</p>
 
-				<h2 className='mb-3'>2. Usage of Social Login</h2>
+				<h2 className='mb-3'>2. Usage of Third-Party Login Providers</h2>
 
 				<p>
 					Our Services offer you the ability to register and log in using your third-party social
-					media account details (like your Facebook or Google logins). Where you choose to do this, we will
+					media account details (like your Facebook or Google accounts). Where you choose to do this, we will
 					receive certain profile information about you from your social media provider. The profile information
 					we receive may vary depending on the social media provider concerned, but will often include your name,
 					email address and profile picture, as well as other information you choose to make public on such a social
