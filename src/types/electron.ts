@@ -1,8 +1,11 @@
+import { Settings } from '../client/hooks/useSettings';
+
 export interface ElectronStore {
 	refreshToken?: string;
   token?: string;
   disableAutoLogin?: boolean;
-  debug?: boolean
+  debug?: boolean;
+  settings?: Settings;
 }
 
 export interface ElectronPresenceConfig {
@@ -18,5 +21,6 @@ export interface ElectronAPI {
   setToken(token: string): void;
   logout(): void;
   updatePresence(config: ElectronPresenceConfig): void;
+  updateSettings(settings: Settings): void;
   isPackaged: boolean;
 }

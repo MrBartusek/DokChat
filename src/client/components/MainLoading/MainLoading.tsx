@@ -6,15 +6,22 @@ import DokChatLogo from '../DokChatLogo/DokChatLogo';
 import Utils from '../../helpers/utils';
 import { useSettings } from '../../hooks/useSettings';
 
-export default function MainLoading() {
+export interface MainLoadingProps {
+	noLogo?: boolean;
+}
+
+export default function MainLoading({ noLogo }: MainLoadingProps) {
 	return (
 		<div className='mainLoading'>
-			<div
-				className='d-flex justify-content-center align-items-center flex-column h-100'
-			>
-				<DokChatLogo variant='auto' height={100} className='pb-3' />
-				<Spinner animation="border" variant='secondary' role="status" aria-hidden="true" />
-			</div>
+			{!noLogo ? (
+				<div
+					className='d-flex justify-content-center align-items-center flex-column h-100'
+				>
+					<DokChatLogo variant='auto' height={100} className='pb-3' />
+					<Spinner animation="border" variant='secondary' role="status" aria-hidden="true" />
+				</div>
+			): null}
+
 		</div>
 	);
 }

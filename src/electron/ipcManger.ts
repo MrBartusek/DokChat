@@ -3,6 +3,7 @@ import SessionManager from './sessionManager';
 import store from './store';
 import RichPresenceManager from './richPresenceManager';
 import { ElectronPresenceConfig } from '../types/electron';
+import { Settings } from '../client/hooks/useSettings';
 
 class IPCManager {
 	private richPresenceManager: RichPresenceManager;
@@ -30,6 +31,11 @@ class IPCManager {
 
 		ipcMain.on('update-presence', (e: any, config: ElectronPresenceConfig) => {
 			this.richPresenceManager.updatePresence(config);
+		});
+
+		ipcMain.on('update-settings', (e: any, settings: Settings) => {
+			console.log(settings);
+			store.set('settings', settings);
 		});
 	}
 

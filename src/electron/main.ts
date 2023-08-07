@@ -45,9 +45,13 @@ class DokChatDesktop {
 			webPreferences: {
 				preload: path.join(__dirname, 'preload.js')
 			},
-			icon: path.join(__dirname, 'favicon.ico'),
-			autoHideMenuBar: true
+			icon: path.join(__dirname, '../favicon.ico')
 		});
+
+		this.mainWindow.setMenu(null);
+		if(store.get('settings').theme == 'dark') {
+			this.mainWindow.setBackgroundColor('#161e27');
+		}
 
 		if(!this.tray) this.createTray();
 

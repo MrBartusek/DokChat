@@ -11,6 +11,7 @@ import { UserContext } from '../context/UserContext';
 import { LocalChat } from '../types/Chat';
 import { useFetch } from './useFetch';
 import { useWebsocketType } from './useWebsocket';
+import Utils from '../helpers/utils';
 
 /**
  * This hook is a manger for receiving, caching and sending messages
@@ -24,7 +25,7 @@ export function useMessageManager(ws: useWebsocketType): [
 ] {
 	const [ loading, setLoading ] = useState(true);
 	const [ user ] = useContext(UserContext);
-	const [ playPing ] = useSound('./sounds/new_message_ping.mp3', { volume: 0.5 });
+	const [ playPing ] = useSound(Utils.getBaseUrl() + '/sounds/new_message_ping.mp3', { volume: 0.5 });
 	const [ settings ] = useContext(SettingsContext);
 
 	const initialChatList = useFetch<EndpointResponse<ChatListResponse>>('chat/list', true);
