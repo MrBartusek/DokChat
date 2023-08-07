@@ -40,13 +40,14 @@ class DokChatDesktop {
 		});
 
 		const indexLocation = path.join(__dirname, '../electron.html');
-		this.mainWindow.loadFile(indexLocation);
-		this.deepLinkManager.register(this.mainWindow);
-		await this.richPresenceManager.start();
 
 		if(DEBUG_ENABLED) {
 			this.mainWindow.webContents.openDevTools();
 		}
+
+		this.mainWindow.loadFile(indexLocation);
+		this.deepLinkManager.register(this.mainWindow);
+		await this.richPresenceManager.start();
 
 		return this.mainWindow;
 	}
