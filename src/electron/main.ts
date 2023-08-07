@@ -3,6 +3,7 @@ import path from 'path';
 import DeepLinkManager from './deepLinkManager';
 import IPCManager from './ipcManger';
 import store from './store';
+import RichPresenceManager from './richPresenceManager';
 
 if (require('electron-squirrel-startup')) app.quit();
 
@@ -10,10 +11,12 @@ const DEBUG_ENABLED = store.get('debug', false) == true || !app.isPackaged;
 
 class DokChatDesktop {
 	private mainWindow: BrowserWindow;
-	private deepLinkHandler: DeepLinkManager;
+	private deepLinkManager: DeepLinkManager;
+	private richPresenceManager: RichPresenceManager;
 
 	constructor() {
-		this.deepLinkHandler = new DeepLinkManager();
+		this.deepLinkManager = new DeepLinkManager();
+		this.richPresenceManager = new RichPresenceManager();
 		this.registerLifecycleEvents();
 		new IPCManager().register();
 	}
@@ -22,10 +25,10 @@ class DokChatDesktop {
 		const gotLock = app.requestSingleInstanceLock();
 		if (!gotLock) app.quit();
 
-		app.whenReady().then(() => this.createWindow());
+		app.whenReady().then(async () => await this.createWindow());
 	}
 
-	private createWindow(): BrowserWindow {
+	private async createWindow(): Promise<BrowserWindow> {
 		this.mainWindow = new BrowserWindow({
 			width: 1280,
 			height: 720,
@@ -38,7 +41,9 @@ class DokChatDesktop {
 
 		const indexLocation = path.join(__dirname, '../electron.html');
 		this.mainWindow.loadFile(indexLocation);
-		this.deepLinkHandler.register(this.mainWindow);
+		this.deepLinkManager.register(this.mainWindow);
+		await this.richPresenceManager.start();
+		await this.richPresenceManager.updateActivity();
 
 		if(DEBUG_ENABLED) {
 			this.mainWindow.webContents.openDevTools();
