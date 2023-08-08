@@ -32,7 +32,7 @@ class DokChatDesktop {
 			.then(async () => {
 				const window = await this.createWindow();
 				this.deepLinkManager.register(window);
-				await this.richPresenceManager.start();
+				await this.richPresenceManager.start(this.mainWindow);
 			});
 	}
 
@@ -69,7 +69,6 @@ class DokChatDesktop {
 		}
 
 		this.mainWindow.loadFile(indexLocation);
-		this.deepLinkManager.updateMainWindow(this.mainWindow);
 
 		return this.mainWindow;
 	}

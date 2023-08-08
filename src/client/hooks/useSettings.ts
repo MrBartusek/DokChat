@@ -10,13 +10,20 @@ export enum Theme {
 	LIGHT = 'light'
 }
 
+export enum PresenceMode {
+	ENABLED = 'enabled',
+	DISABLED = 'disabled',
+	ONLY_MAXIMIZED = 'maximized'
+}
+
 export interface Settings {
 	theme: Omit<Theme, Theme.AUTO>,
 	themeRaw: Theme,
 	soundNotifications: boolean,
 	openOnStartup: boolean,
 	startMinimized: boolean,
-	minimizeToTray: boolean
+	minimizeToTray: boolean,
+	presenceMode: PresenceMode
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -25,7 +32,8 @@ export const DEFAULT_SETTINGS: Settings = {
 	themeRaw: Theme.AUTO,
 	openOnStartup: true,
 	startMinimized: false,
-	minimizeToTray: true
+	minimizeToTray: true,
+	presenceMode: PresenceMode.ENABLED
 };
 
 export function useSettings(): [Settings, (settings: Settings) => void] {
@@ -37,11 +45,13 @@ export function useSettings(): [Settings, (settings: Settings) => void] {
 		theme: praseTheme(settings.themeRaw ?? DEFAULT_SETTINGS.themeRaw),
 		openOnStartup: settings.openOnStartup ?? DEFAULT_SETTINGS.openOnStartup,
 		startMinimized: settings.startMinimized ?? DEFAULT_SETTINGS.startMinimized,
-		minimizeToTray: settings.minimizeToTray ?? DEFAULT_SETTINGS.minimizeToTray
+		minimizeToTray: settings.minimizeToTray ?? DEFAULT_SETTINGS.minimizeToTray,
+		presenceMode: settings.presenceMode ?? DEFAULT_SETTINGS.presenceMode
 	};
 
 	useEffect(() => {
 		if(Utils.isElectron()) {
+			//@ts-ignore
 			window.electron.updateSettings(settingsCopy);
 		}
 	}, [ settings ]);

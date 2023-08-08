@@ -1,6 +1,8 @@
 import DiscordRPC from 'discord-rpc';
 import { ElectronPresenceConfig } from '../types/electron';
-import { app } from 'electron';
+import { BrowserWindow, app } from 'electron';
+import store from './store';
+import { PresenceMode } from '../client/hooks/useSettings';
 
 const CLIENT_ID = '1138095200837836961';
 
@@ -8,6 +10,7 @@ class RichPresenceManager {
 	private rpc: DiscordRPC.Client;
 	private config: ElectronPresenceConfig;
 	private firstUpdate: boolean;
+	private mainWindow: BrowserWindow;
 
 	constructor() {
 		this.rpc = new DiscordRPC.Client({ transport: 'ipc'});
@@ -15,8 +18,10 @@ class RichPresenceManager {
 		this.firstUpdate = true;
 	}
 
-	public async start() {
+	public async start(mainWindow: BrowserWindow) {
+		this.mainWindow = mainWindow;
 		await this.rpc.login({ clientId: CLIENT_ID }).catch(console.error);
+
 		setInterval(() => {
 			this.setActivity();
 		}, 15e3);
@@ -33,15 +38,25 @@ class RichPresenceManager {
 	}
 
 	private async setActivity() {
-		return this.rpc.setActivity({
-			details: this.config.title,
-			state: this.config.details,
-			largeImageKey: 'dokchat-logo',
-			largeImageText: 'DokChat Desktop',
-			smallImageKey: this.getAvatar(),
-			smallImageText: this.config.discriminator,
-			instance: false
-		});
+		const settings = store.get('settings');
+		if(
+			settings.presenceMode == PresenceMode.ENABLED ||
+			(settings.presenceMode == PresenceMode.ONLY_MAXIMIZED && this.mainWindow.isVisible())
+		) {
+			return this.rpc.setActivity({
+				details: this.config.title,
+				state: this.config.details,
+				largeImageKey: 'dokchat-logo',
+				largeImageText: 'DokChat Desktop',
+				smallImageKey: this.getAvatar(),
+				smallImageText: this.config.discriminator,
+				instance: false
+			});
+		}
+		else {
+			this.rpc.clearActivity();
+		}
+
 	}
 
 	private getAvatar() {

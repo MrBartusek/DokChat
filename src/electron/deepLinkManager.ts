@@ -17,10 +17,6 @@ class DeepLinkManager {
 		this.registerUrlHandlers();
 	}
 
-	public updateMainWindow(mainWindow: BrowserWindow) {
-		this.mainWindow = mainWindow;
-	}
-
 	private handleDeepLink(url: string) {
 		const firstUrlPart = `${this.authProtocol}://auth/login`;
 		if(!url.startsWith(firstUrlPart)) return;

@@ -3,7 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 import useSound from 'use-sound';
 import { SettingsContext } from '../../context/ThemeContext';
 import Utils from '../../helpers/utils';
-import { Theme } from '../../hooks/useSettings';
+import { PresenceMode, Theme } from '../../hooks/useSettings';
 import DebugInfo from '../DebugInfo/DebugInfo';
 
 export default function SettingsTab() {
@@ -15,8 +15,8 @@ export default function SettingsTab() {
 		const checked = event.target.checked;
 		const settingsCopy = Object.assign({}, settings);
 
-		if (name == 'themeRaw') {
-			settingsCopy.themeRaw = event.target.id as Theme;
+		if (name == 'themeRaw' || name == 'presenceMode') {
+			(settingsCopy as any)[name] = event.target.id as Theme;
 		}
 		else {
 			(settingsCopy as any)[name] = checked;
@@ -106,6 +106,40 @@ export default function SettingsTab() {
 						label="Minimized to system tray after clicking X"
 						onChange={handleChange}
 						checked={settings.minimizeToTray}
+					/>
+
+					<Form.Label className='d-block pt-3'>
+						Discord Rich Presence
+					</Form.Label>
+					<Form.Check
+						type="radio"
+						name="presenceMode"
+						className='mb-2'
+						onChange={handleChange}
+						inline
+						id={PresenceMode.ENABLED}
+						label="Enabled"
+						checked={settings.presenceMode == PresenceMode.ENABLED}
+					/>
+					<Form.Check
+						type="radio"
+						name="presenceMode"
+						className='mb-2'
+						onChange={handleChange}
+						inline
+						id={PresenceMode.ONLY_MAXIMIZED}
+						label="Only when maximized"
+						checked={settings.presenceMode == PresenceMode.ONLY_MAXIMIZED}
+					/>
+					<Form.Check
+						type="radio"
+						name="presenceMode"
+						className='mb-2'
+						onChange={handleChange}
+						inline
+						id={PresenceMode.DISABLED}
+						label="Disabled"
+						checked={settings.presenceMode == PresenceMode.DISABLED}
 					/>
 				</>
 			): null}

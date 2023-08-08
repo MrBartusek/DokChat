@@ -15,8 +15,6 @@ function ElectronWelcomePage() {
 	const navigate = useNavigate();
 	const electronConfig = useElectronConfig();
 
-	if(!Utils.isElectron()) return ( <Navigate to='/login' /> );
-
 	usePageInfo({
 		title: 'Welcome to Desktop',
 		discordTitle: 'Logging in...'
@@ -30,6 +28,7 @@ function ElectronWelcomePage() {
 		}
 	}, [ user, electronConfig ]);
 
+	if(!Utils.isElectron()) return ( <Navigate to='/login' /> );
 	if(user.isAuthenticated) return ( <Navigate to='/chat' />);
 
 	return (
