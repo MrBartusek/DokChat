@@ -21,7 +21,7 @@
     "lint": "eslint src",
     "electron:start": "electron-forge start",
     "electron:package": "npm run build && electron-forge package",
-    "electron:make": "npm run build && electron-forge make",
+    "electron:make": "electron-forge make",
     "electron:publish": "npm run build && electron-forge publish"
   },
   "dependencies": {

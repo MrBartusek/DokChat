@@ -6,7 +6,8 @@ module.exports = {
 				'name': 'DokChat Desktop Auth Protocol',
 				'schemes': [ 'dokchat', 'dokchat-dev' ]
 			}
-		]
+		],
+		icon: __dirname + '/public/img/icons/icon'
 	},
 	rebuildConfig: {},
 	publishers: [
@@ -24,7 +25,9 @@ module.exports = {
 	makers: [
 		{
 			name: '@electron-forge/maker-squirrel',
-			config: {}
+			config: {
+				iconUrl: 'https://dokchat.dokurno.dev/img/icons/icon.ico'
+			}
 		},
 		{
 			name: '@electron-forge/maker-zip',
@@ -33,7 +36,10 @@ module.exports = {
 		{
 			name: '@electron-forge/maker-deb',
 			config: {
-				mimeType: [ 'x-scheme-handler/dokchat', 'x-scheme-handler/dokchat-dev' ]
+				mimeType: [ 'x-scheme-handler/dokchat', 'x-scheme-handler/dokchat-dev' ],
+				options: {
+					icon: __dirname + '/public/img/icons/512.png'
+				}
 			}
 		},
 		{

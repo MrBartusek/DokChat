@@ -56,7 +56,7 @@ class DokChatDesktop {
 			webPreferences: {
 				preload: path.join(__dirname, 'preload.js')
 			},
-			icon: path.join(__dirname, '../favicon.ico')
+			icon: path.join(__dirname, '../img/64.png')
 		});
 
 		this.mainWindow.setMenu(null);
@@ -86,10 +86,10 @@ class DokChatDesktop {
 	}
 
 	private createTray () {
-		const icon = path.join(__dirname, '../favicon.ico');
-		const trayIcon = nativeImage.createFromPath(icon);
+		const icon = path.join(__dirname, '../img/64.png');
+		const trayIcon = nativeImage.createFromPath(icon).resize({width: 16});
 
-		this.tray = new Tray(trayIcon.resize({ width: 16 }));
+		this.tray = new Tray(trayIcon);
 		this.tray.setToolTip('DokChat - Connect with anyone');
 		this.tray.setTitle('DokChat');
 		this.tray.on('click', () => this.mainWindow.show());
@@ -98,7 +98,7 @@ class DokChatDesktop {
 			{
 				label: 'DokChat Desktop',
 				enabled: false,
-				icon: trayIcon.resize({ width: 16 })
+				icon: trayIcon
 			},
 			{
 				type: 'separator'
