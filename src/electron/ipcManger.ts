@@ -34,7 +34,6 @@ class IPCManager {
 		});
 
 		ipcMain.on('update-settings', (e: any, settings: Settings) => {
-			console.log(settings);
 			store.set('settings', settings);
 		});
 	}

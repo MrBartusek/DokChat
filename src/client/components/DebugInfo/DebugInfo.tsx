@@ -15,7 +15,7 @@ export default function DebugInfo() {
 				<code className='text-muted'>
 					{Utils.isElectron() ? 'dokchat-desktop ' : 'dokchat-web'} v{version}
 				</code> {' '}
-				({Utils.isDev() ? 'development ' : 'production'})
+				({Utils.isDev() ? 'development' : 'production'})
 			</div>
 		</div>
 	);

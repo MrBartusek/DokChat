@@ -22,6 +22,7 @@ export default class Utils {
 
 	public static isDev(): boolean {
 		if(this.isElectron()) {
+			//@ts-ignore
 			return !window.electron.isPackaged;
 		}
 		return process.env.NODE_ENV != 'production';
