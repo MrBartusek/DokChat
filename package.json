@@ -20,9 +20,9 @@
     "build": "webpack",
     "lint": "eslint src",
     "electron:start": "electron-forge start",
-    "electron:package": "npm run build && electron-forge package",
+    "electron:package": "electron-forge package",
     "electron:make": "electron-forge make",
-    "electron:publish": "npm run build && electron-forge publish"
+    "electron:publish": "electron-forge publish"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.223.0",

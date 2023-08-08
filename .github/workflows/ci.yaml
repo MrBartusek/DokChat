@@ -142,3 +142,39 @@ jobs:
             ghcr.io/mrbartusek/dokchat:${{ steps.vars.outputs.sha_short}}
             ghcr.io/mrbartusek/dokchat:latest
 
+  release:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    needs: 
+      - build
+      - lint
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+    
+      - name: Set up Node 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      
+      - name: Restore cache
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      - name: Build/release Electron app
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          # GitHub token, automatically provided to the action
+          # (No need to define this secret in the repo settings)
+          github_token: ${{ secrets.github_token }}
+
+          # If the commit is tagged with a version (e.g. "v1.0.0"),
+          # release the app after building
+          release: true
+
