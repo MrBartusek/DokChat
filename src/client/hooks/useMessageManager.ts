@@ -5,13 +5,14 @@ import toast from 'react-hot-toast';
 import useSound from 'use-sound';
 import { ATTACHMENT_MAX_SIZE } from '../../types/const';
 import { ChatListResponse, EndpointResponse } from '../../types/endpoints';
-import { ClientMessage } from '../../types/websocket';
+import { ClientMessage, ServerMessage } from '../../types/websocket';
 import { SettingsContext } from '../context/ThemeContext';
 import { UserContext } from '../context/UserContext';
 import { LocalChat } from '../types/Chat';
 import { useFetch } from './useFetch';
 import { useWebsocketType } from './useWebsocket';
 import Utils from '../helpers/utils';
+import { useNavigate } from 'react-router';
 
 /**
  * This hook is a manger for receiving, caching and sending messages
@@ -27,7 +28,7 @@ export function useMessageManager(ws: useWebsocketType): [
 	const [ user ] = useContext(UserContext);
 	const [ playPing ] = useSound(Utils.getBaseUrl() + '/sounds/new_message_ping.mp3', { volume: 0.5 });
 	const [ settings ] = useContext(SettingsContext);
-
+	const navigate = useNavigate();
 	const initialChatList = useFetch<EndpointResponse<ChatListResponse>>('chat/list', true);
 	const [ chatList, setChatList ] = useState<LocalChat[]>([]);
 
@@ -49,7 +50,7 @@ export function useMessageManager(ws: useWebsocketType): [
 	 * Message receive
 	 */
 	useEffect(() => {
-		ws.socket.on('message', (msg) => {
+		ws.socket.on('message', async (msg) => {
 			const chats = [ ...chatList ];
 			const chat = chats.find((c) => c.id == msg.chat.id);
 
@@ -71,12 +72,26 @@ export function useMessageManager(ws: useWebsocketType): [
 				chat.color = msg.chat.color;
 			}
 			setChatList(chats);
-			if (settings.soundNotifications && !msg.isSystem) playPing();
+			onNewMessage(msg);
 		});
 		return () => {
 			ws.socket.off('message');
 		};
 	});
+
+	async function onNewMessage(msg: ServerMessage) {
+		if (settings.soundNotifications && !msg.isSystem) playPing();
+		if(Utils.isElectron() && settings.desktopNotifications) {
+			const isFocused = await window.electron.isFocused();
+			console.log(isFocused);
+			if(isFocused) return;
+			const notification = new Notification(msg.author.username, {
+				body: msg.content ?? 'Sent an attachment',
+				silent: true
+			});
+			notification.onclick = () => navigate(`/chat/${msg.chat.id}`);
+		}
+	}
 
 	function ackMessage(chat: LocalChat, pendingId: string, newId: string, timestamp: string) {
 		const chats = [ ...chatList ];

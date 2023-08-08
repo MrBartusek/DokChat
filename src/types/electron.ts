@@ -22,5 +22,6 @@ export interface ElectronAPI {
   logout(): void;
   updatePresence(config: ElectronPresenceConfig): void;
   updateSettings(settings: Settings): void;
+  isFocused(): Promise<boolean>;
   isPackaged: boolean;
 }

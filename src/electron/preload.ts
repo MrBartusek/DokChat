@@ -12,6 +12,7 @@ import { Settings } from '../client/hooks/useSettings';
 		logout: () => ipcRenderer.send('logout'),
 		updatePresence: ((title: string, details: string) => ipcRenderer.send('update-presence', title, details)),
 		updateSettings: ((settings: Settings) => ipcRenderer.send('update-settings', settings)),
+		isFocused: () => (ipcRenderer.invoke('is-focused')),
 		isPackaged: isPackaged
 	} as ElectronAPI);
 })();

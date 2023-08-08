@@ -29,7 +29,7 @@ export default function SettingsTab() {
 		<>
 			<Form>
 				<Form.Label className='d-block'>
-					Sound Settings
+					Notification Settings
 				</Form.Label>
 				<Form.Check
 					type="switch"
@@ -41,6 +41,21 @@ export default function SettingsTab() {
 					</>}
 					onChange={handleChange}
 					checked={settings.soundNotifications}
+				/>
+				<Form.Check
+					type="switch"
+					className='mb-2'
+					name="desktopNotifications"
+					label={<>
+						<span>Enable desktop notifications</span>
+						<Button variant='link' className='ms-1' onClick={() => {
+							new Notification('DokChat Desktop', {
+								body: 'This is how new notifications will look', silent: true
+							});
+						}}>Test</Button>
+					</>}
+					onChange={handleChange}
+					checked={settings.desktopNotifications}
 				/>
 
 				<Form.Label className='d-block pt-3'>

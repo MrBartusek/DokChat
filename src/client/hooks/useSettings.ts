@@ -23,6 +23,7 @@ export interface Settings {
 	openOnStartup: boolean,
 	startMinimized: boolean,
 	minimizeToTray: boolean,
+	desktopNotifications: boolean,
 	presenceMode: PresenceMode
 }
 
@@ -33,6 +34,7 @@ export const DEFAULT_SETTINGS: Settings = {
 	openOnStartup: true,
 	startMinimized: false,
 	minimizeToTray: true,
+	desktopNotifications: true,
 	presenceMode: PresenceMode.ENABLED
 };
 
@@ -40,13 +42,9 @@ export function useSettings(): [Settings, (settings: Settings) => void] {
 	const [ settings, setSettings ] = useLocalStorage<Settings>('settings_V3', {} as Settings);
 
 	const settingsCopy: Settings = {
-		soundNotifications: settings.soundNotifications ?? DEFAULT_SETTINGS.soundNotifications,
-		themeRaw: settings.themeRaw ?? DEFAULT_SETTINGS.themeRaw,
+		...DEFAULT_SETTINGS,
 		theme: praseTheme(settings.themeRaw ?? DEFAULT_SETTINGS.themeRaw),
-		openOnStartup: settings.openOnStartup ?? DEFAULT_SETTINGS.openOnStartup,
-		startMinimized: settings.startMinimized ?? DEFAULT_SETTINGS.startMinimized,
-		minimizeToTray: settings.minimizeToTray ?? DEFAULT_SETTINGS.minimizeToTray,
-		presenceMode: settings.presenceMode ?? DEFAULT_SETTINGS.presenceMode
+		...settings
 	};
 
 	useEffect(() => {

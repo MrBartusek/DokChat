@@ -15,13 +15,14 @@ class DokChatDesktop {
 	private deepLinkManager: DeepLinkManager;
 	private richPresenceManager: RichPresenceManager;
 	private quitting: boolean;
+	private ipcManager: IPCManager;
 
 	constructor() {
 		this.deepLinkManager = new DeepLinkManager();
 		this.richPresenceManager = new RichPresenceManager();
 		this.quitting = false;
+		this.ipcManager = new IPCManager(this.richPresenceManager).register();
 		this.registerLifecycleEvents();
-		new IPCManager(this.richPresenceManager).register();
 	}
 
 	public start() {
@@ -33,6 +34,7 @@ class DokChatDesktop {
 				const window = await this.createWindow();
 				this.deepLinkManager.register(window);
 				await this.richPresenceManager.start(this.mainWindow);
+				this.ipcManager.registerBasedOnWindow(this.mainWindow);
 			});
 	}
 
@@ -121,7 +123,7 @@ class DokChatDesktop {
 			}
 		});
 
-		app.on('second-instance', (event: any, commandLine: string[]) => {
+		app.on('second-instance', () => {
 			if (this.mainWindow) {
 				if (this.mainWindow.isMinimized()) this.mainWindow.restore();
 				this.mainWindow.focus();
