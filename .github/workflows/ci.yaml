@@ -145,6 +145,7 @@ jobs:
     name: Build & Release Electron app
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
     needs: 
