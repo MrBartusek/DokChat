@@ -101,7 +101,6 @@ jobs:
     name: 'Build and push Docker images'
     runs-on: ubuntu-latest
     needs:
-      - lint
       - build
     env:
       NODE_ENV: production
@@ -143,14 +142,13 @@ jobs:
             ghcr.io/mrbartusek/dokchat:latest
 
   release:
+    name: Build & Release Electron app
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
     needs: 
       - build
-      - lint
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
