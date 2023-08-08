@@ -25,6 +25,7 @@ function ElectronWelcomePage() {
 
 		if(!electronConfig.disableAutoLogin && !browserOpened) {
 			openBrowser();
+			new Notification('test');
 		}
 	}, [ user, electronConfig ]);
 

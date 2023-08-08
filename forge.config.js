@@ -9,6 +9,18 @@ module.exports = {
 		]
 	},
 	rebuildConfig: {},
+	publishers: [
+		{
+			name: '@electron-forge/publisher-github',
+			config: {
+				repository: {
+					owner: 'MrBartusek',
+					name: 'DokChat'
+				},
+				prerelease: true
+			}
+		}
+	],
 	makers: [
 		{
 			name: '@electron-forge/maker-squirrel',

@@ -8,7 +8,7 @@ import DebugInfo from '../DebugInfo/DebugInfo';
 
 export default function SettingsTab() {
 	const [ settings, setSettings ] = useContext(SettingsContext);
-	const [ playPing ] = useSound(Utils.getBaseUrl() + '/sounds/new_message_ping.mp3', { volume: 0.5 });
+	const [ playPing ] = useSound(Utils.getBaseUrl() + '/sounds/new_message_ping.mp3', { volume: 0.7 });
 
 	function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
 		const name = event.target.name;
@@ -42,21 +42,24 @@ export default function SettingsTab() {
 					onChange={handleChange}
 					checked={settings.soundNotifications}
 				/>
-				<Form.Check
-					type="switch"
-					className='mb-2'
-					name="desktopNotifications"
-					label={<>
-						<span>Enable desktop notifications</span>
-						<Button variant='link' className='ms-1' onClick={() => {
-							new Notification('DokChat Desktop', {
-								body: 'This is how new notifications will look', silent: true
-							});
-						}}>Test</Button>
-					</>}
-					onChange={handleChange}
-					checked={settings.desktopNotifications}
-				/>
+
+				{Utils.isElectron() ? (
+					<Form.Check
+						type="switch"
+						className='mb-2'
+						name="desktopNotifications"
+						label={<>
+							<span>Enable desktop notifications</span>
+							<Button variant='link' className='ms-1' onClick={() => {
+								new Notification('DokChat Desktop', {
+									body: 'This is how new notifications will look', silent: true
+								});
+							}}>Test</Button>
+						</>}
+						onChange={handleChange}
+						checked={settings.desktopNotifications}
+					/>
+				): null}
 
 				<Form.Label className='d-block pt-3'>
 					Theme

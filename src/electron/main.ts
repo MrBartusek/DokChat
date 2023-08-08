@@ -4,6 +4,7 @@ import DeepLinkManager from './deepLinkManager';
 import IPCManager from './ipcManger';
 import store from './store';
 import RichPresenceManager from './richPresenceManager';
+import updateElectronApp from 'update-electron-app';
 
 if (require('electron-squirrel-startup')) app.quit();
 
@@ -29,6 +30,8 @@ class DokChatDesktop {
 		const gotLock = app.requestSingleInstanceLock();
 		if (!gotLock) app.quit();
 
+		updateElectronApp();
+
 		app.whenReady()
 			.then(async () => {
 				const window = await this.createWindow();
@@ -36,6 +39,12 @@ class DokChatDesktop {
 				await this.richPresenceManager.start(this.mainWindow);
 				this.ipcManager.registerBasedOnWindow(this.mainWindow);
 			});
+
+		app.setLoginItemSettings({
+			openAtLogin: store.get('settings').openOnStartup,
+			openAsHidden: store.get('settings').startMinimized,
+			path: app.getPath('exe')
+		});
 	}
 
 	private async createWindow(): Promise<BrowserWindow> {
@@ -58,7 +67,8 @@ class DokChatDesktop {
 		if(!this.tray) this.createTray();
 
 		this.mainWindow.on('close', (event: any): void => {
-			if(!this.quitting) {
+			const minimizeToTray = store.get('settings').minimizeToTray;
+			if(!this.quitting && minimizeToTray) {
 				this.mainWindow.hide();
 				event.preventDefault();
 			}
