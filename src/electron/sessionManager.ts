@@ -1,4 +1,5 @@
 import store from './store';
+import log from 'electron-log';
 
 class SessionManager {
 	public static login(token: string, refreshToken: string): void {
@@ -13,6 +14,7 @@ class SessionManager {
 		store.set('autoLogin', false);
 		store.delete('token');
 		store.delete('refreshToken');
+		log.info('Successful logout');
 	}
 
 	public static updateToken(token: string) {

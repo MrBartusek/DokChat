@@ -21,7 +21,6 @@ class RichPresenceManager {
 
 	public async start(mainWindow: BrowserWindow) {
 		this.mainWindow = mainWindow;
-		await this.rpc.login({ clientId: CLIENT_ID }).catch(console.error);
 
 		setInterval(() => {
 			this.setActivity();

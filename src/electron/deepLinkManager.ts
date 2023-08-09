@@ -2,6 +2,7 @@ import { BrowserWindow, app } from 'electron';
 import isDev from 'electron-is-dev';
 import path from 'path';
 import SessionManager from './sessionManager';
+import log from 'electron-log';
 
 class DeepLinkManager {
 	private authProtocol: string;
@@ -27,7 +28,7 @@ class DeepLinkManager {
 		SessionManager.login(urlParams.get('token'), urlParams.get('refreshToken'));
 
 		this.mainWindow?.webContents.reload();
-		console.log('Successfully handoff');
+		log.info(`Successful handoff from ${firstUrlPart}`);
 	}
 
 	private registerAsProtocolHandler(): void {

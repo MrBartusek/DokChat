@@ -6,6 +6,7 @@ import store from './store';
 import RichPresenceManager from './richPresenceManager';
 import updateElectronApp from 'update-electron-app';
 import { DEFAULT_SETTINGS } from '../client/hooks/useSettings';
+import log from 'electron-log';
 
 if (require('electron-squirrel-startup')) app.quit();
 
@@ -31,7 +32,7 @@ class DokChatDesktop {
 		const gotLock = app.requestSingleInstanceLock();
 		if (!gotLock) app.quit();
 
-		updateElectronApp();
+		updateElectronApp({ logger: log });
 
 		app.whenReady()
 			.then(async () => {
@@ -85,6 +86,7 @@ class DokChatDesktop {
 
 		this.mainWindow.loadFile(indexLocation);
 
+		log.info(`Created mainWindow, debug: ${DEBUG_ENABLED}`);
 		return this.mainWindow;
 	}
 
