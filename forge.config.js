@@ -13,26 +13,6 @@ module.exports = {
 		],
 		icon: __dirname + '/public/img/icons/icon'
 	},
-	hooks: {
-		postMake: (config, makeResults) => {
-			for(const result in makeResults) {
-				if(!result.artifacts) continue;
-				if(result.artifacts.length == 0) continue;
-
-				const artifactFile = result.artifacts[0];
-				const artifactPath = artifactFile.substring(0, artifactFile.lastIndexOf('/'));
-				const extension = artifactFile.split('.')[artifactFile.split('.').length - 1];
-
-				if(result.platform == 'darwin') {
-					fs.renameSync(artifactFile, path.join(artifactPath, 'dokchat-desktop-darwin.zip'));
-				}
-				if(result.platform == 'linux') {
-					fs.renameSync(artifactFile,
-						path.join(artifactPath, `dokchat-desktop-linux-${result.arch}.${extension}`));
-				}
-			}
-		}
-	},
 	rebuildConfig: {},
 	publishers: [
 		{
