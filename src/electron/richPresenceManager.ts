@@ -3,6 +3,7 @@ import { ElectronPresenceConfig } from '../types/electron';
 import { BrowserWindow, app } from 'electron';
 import store from './store';
 import { DEFAULT_SETTINGS, PresenceMode } from '../client/hooks/useSettings';
+import { version } from '../../package.json';
 
 const CLIENT_ID = '1138095200837836961';
 
@@ -46,8 +47,8 @@ class RichPresenceManager {
 			return this.rpc.setActivity({
 				details: this.config.title,
 				state: this.config.details,
-				largeImageKey: 'dokchat-logo',
-				largeImageText: 'DokChat Desktop',
+				largeImageKey: app.isPackaged ? 'dokchat-logo' : 'dokchat-logo-dev',
+				largeImageText: app.isPackaged ? `DokChat Desktop • ${version}` : 'DokChat Desktop • Development',
 				smallImageKey: this.getAvatar(),
 				smallImageText: this.config.discriminator,
 				instance: false
