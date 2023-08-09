@@ -8,7 +8,7 @@ module.exports = {
 		protocols: [
 			{
 				'name': 'DokChat Desktop Auth Protocol',
-				'schemes': [ 'dokchat', 'dokchat-dev' ]
+				'schemes': ['dokchat', 'dokchat-dev']
 			}
 		],
 		icon: __dirname + '/public/img/icons/icon'
@@ -31,17 +31,17 @@ module.exports = {
 			name: '@electron-forge/maker-squirrel',
 			config: {
 				iconUrl: 'https://dokchat.dokurno.dev/img/icons/icon.ico',
-				setupExe: 'dokchat-desktop-windows-setup'
+				setupExe: 'dokchat-desktop-windows-setup.exe'
 			}
 		},
 		{
 			name: '@electron-forge/maker-zip',
-			platforms: [ 'darwin' ]
+			platforms: ['darwin']
 		},
 		{
 			name: '@electron-forge/maker-deb',
 			config: {
-				mimeType: [ 'x-scheme-handler/dokchat', 'x-scheme-handler/dokchat-dev' ],
+				mimeType: ['x-scheme-handler/dokchat', 'x-scheme-handler/dokchat-dev'],
 				options: {
 					icon: __dirname + '/public/img/icons/512.png'
 				}
