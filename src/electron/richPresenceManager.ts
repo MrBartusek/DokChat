@@ -62,7 +62,6 @@ class RichPresenceManager {
 	private getAvatar() {
 		return app.isPackaged ? this.config.avatarUrl : 'status-online';
 	}
-
 }
 
 export default RichPresenceManager;

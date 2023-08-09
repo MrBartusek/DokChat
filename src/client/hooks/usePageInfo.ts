@@ -23,8 +23,8 @@ export function usePageInfo(config: PageInfoConfig, deps: React.DependencyList =
 			window.electron.updatePresence({
 				title: config.discordTitle ?? config.title,
 				details: config.discordDetails,
-				discriminator: user.isAuthenticated && user.discriminator,
-				avatarUrl: user.isAuthenticated && user.avatarCached
+				discriminator: user.isAuthenticated ? user.discriminator : undefined,
+				avatarUrl: user.isAuthenticated ? user.avatarCached : undefined
 			});
 		}
 	}, deps);
