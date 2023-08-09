@@ -141,8 +141,8 @@ jobs:
             ghcr.io/mrbartusek/dokchat:${{ steps.vars.outputs.sha_short}}
             ghcr.io/mrbartusek/dokchat:latest
 
-  release:
-    name: Build & Release Electron app
+  electron:
+    name: Publish Electron app
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
