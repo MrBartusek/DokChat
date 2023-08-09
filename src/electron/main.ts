@@ -78,12 +78,16 @@ class DokChatDesktop {
 			}
 		});
 
-		const indexLocation = path.join(__dirname, '../electron.html');
+		this.mainWindow.webContents.setWindowOpenHandler((details) => {
+			shell.openExternal(details.url);
+			return { action: 'deny' };
+		});
 
 		if(DEBUG_ENABLED) {
 			this.mainWindow.webContents.openDevTools();
 		}
 
+		const indexLocation = path.join(__dirname, '../electron.html');
 		this.mainWindow.loadFile(indexLocation);
 
 		log.info(`Created mainWindow, debug: ${DEBUG_ENABLED}`);

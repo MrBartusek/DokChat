@@ -65,7 +65,7 @@ function ElectronWelcomePage() {
 
 	function openBrowser() {
 		setBrowserOpened(true);
-		window.electron.openBrowser(browserUrl);
+		window.open(browserUrl);
 	}
 }
 

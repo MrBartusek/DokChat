@@ -54,7 +54,7 @@ function Chat(props: ChatProps) {
 	useEffect(() => {
 		const online = props.chat.participants.some(p => {
 			if (p.userId == user.id) return false;
-			const [ online ] = getOnlineStatus(p.userId);
+			const [ online ] =getOnlineStatus(p.userId);
 			return online;
 		});
 		setOnline(online);

@@ -22,8 +22,6 @@ class IPCManager {
 			};
 		});
 
-		ipcMain.on('open-browser', (e: any, url: string) => shell.openExternal(url));
-
 		ipcMain.handle('is-packaged', () => app.isPackaged);
 
 		ipcMain.on('set-token', (e: any, token: string) => SessionManager.updateToken(token));

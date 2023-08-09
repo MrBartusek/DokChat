@@ -16,7 +16,6 @@ export interface ElectronPresenceConfig {
 }
 
 export interface ElectronAPI {
-	openBrowser(url: string): void
   getConfig(): Promise<ElectronStore>;
   setToken(token: string): void;
   logout(): void;
