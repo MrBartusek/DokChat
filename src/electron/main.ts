@@ -56,6 +56,8 @@ class DokChatDesktop {
 		this.mainWindow = new BrowserWindow({
 			width: 1280,
 			height: 720,
+			minWidth: 850,
+			minHeight: 500,
 			webPreferences: {
 				preload: path.join(__dirname, 'preload.js')
 			},
