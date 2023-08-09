@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('fs');
+
 module.exports = {
 	packagerConfig: {
 		asar: true,
@@ -9,6 +12,17 @@ module.exports = {
 			}
 		],
 		icon: __dirname + '/public/img/icons/icon'
+	},
+	hooks: {
+		postMake: (config, makeResults) => {
+			for(const result in makeResults) {
+				const artifactFile = result.artifacts[0];
+				const artifactPath = artifactFile.substring(0, artifactFile.lastIndexOf('/'));
+				if(result.platform == 'darwin') {
+					fs.renameSync(artifactFile, path.join(artifactPath, 'dokchat-desktop-darwin.zip'));
+				}
+			}
+		}
 	},
 	rebuildConfig: {},
 	publishers: [
@@ -27,7 +41,8 @@ module.exports = {
 		{
 			name: '@electron-forge/maker-squirrel',
 			config: {
-				iconUrl: 'https://dokchat.dokurno.dev/img/icons/icon.ico'
+				iconUrl: 'https://dokchat.dokurno.dev/img/icons/icon.ico',
+				setupExe: 'dokchat-desktop-windows-setup'
 			}
 		},
 		{
