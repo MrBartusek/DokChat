@@ -62,7 +62,6 @@ class DokChatDesktop {
 		});
 
 		const settings = store.get('settings', DEFAULT_SETTINGS);
-
 		if(settings.theme == 'dark') {
 			this.mainWindow.setBackgroundColor('#161e27');
 		}
@@ -71,7 +70,7 @@ class DokChatDesktop {
 		this.mainWindow.setMenu(null);
 
 		this.mainWindow.on('close', (event: any): void => {
-			const minimizeToTray = settings.minimizeToTray;
+			const minimizeToTray = store.get('settings', DEFAULT_SETTINGS).minimizeToTray;
 			if(!this.quitting && minimizeToTray) {
 				this.mainWindow.hide();
 				event.preventDefault();
