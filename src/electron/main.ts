@@ -56,7 +56,7 @@ class DokChatDesktop {
 			webPreferences: {
 				preload: path.join(__dirname, 'preload.js')
 			},
-			icon: path.join(__dirname, '../img/64.png')
+			icon: path.join(__dirname, '../img/icons/64.png')
 		});
 
 		this.mainWindow.setMenu(null);
@@ -86,7 +86,7 @@ class DokChatDesktop {
 	}
 
 	private createTray () {
-		const icon = path.join(__dirname, '../img/64.png');
+		const icon = path.join(__dirname, '../img/icons/64.png');
 		const trayIcon = nativeImage.createFromPath(icon).resize({width: 16});
 
 		this.tray = new Tray(trayIcon);
