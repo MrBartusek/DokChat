@@ -1,6 +1,7 @@
 module.exports = {
 	packagerConfig: {
 		asar: true,
+		executableName: 'dokchat',
 		protocols: [
 			{
 				'name': 'DokChat Desktop Auth Protocol',
