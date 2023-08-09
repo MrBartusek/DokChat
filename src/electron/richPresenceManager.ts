@@ -2,7 +2,7 @@ import DiscordRPC from 'discord-rpc';
 import { ElectronPresenceConfig } from '../types/electron';
 import { BrowserWindow, app } from 'electron';
 import store from './store';
-import { PresenceMode } from '../client/hooks/useSettings';
+import { DEFAULT_SETTINGS, PresenceMode } from '../client/hooks/useSettings';
 
 const CLIENT_ID = '1138095200837836961';
 
@@ -38,7 +38,7 @@ class RichPresenceManager {
 	}
 
 	private async setActivity() {
-		const settings = store.get('settings');
+		const settings = store.get('settings', DEFAULT_SETTINGS);
 		if(
 			settings.presenceMode == PresenceMode.ENABLED ||
 			(settings.presenceMode == PresenceMode.ONLY_MAXIMIZED && this.mainWindow.isVisible())

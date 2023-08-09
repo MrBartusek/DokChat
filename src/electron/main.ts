@@ -5,6 +5,7 @@ import IPCManager from './ipcManger';
 import store from './store';
 import RichPresenceManager from './richPresenceManager';
 import updateElectronApp from 'update-electron-app';
+import { DEFAULT_SETTINGS } from '../client/hooks/useSettings';
 
 if (require('electron-squirrel-startup')) app.quit();
 
@@ -40,9 +41,10 @@ class DokChatDesktop {
 				this.ipcManager.registerBasedOnWindow(this.mainWindow);
 			});
 
+		const settings = store.get('settings', DEFAULT_SETTINGS);
 		app.setLoginItemSettings({
-			openAtLogin: store.get('settings').openOnStartup,
-			openAsHidden: store.get('settings').startMinimized,
+			openAtLogin: settings.openOnStartup,
+			openAsHidden: settings.startMinimized,
 			path: app.getPath('exe')
 		});
 	}
@@ -59,15 +61,17 @@ class DokChatDesktop {
 			icon: path.join(__dirname, '../img/icons/64.png')
 		});
 
-		this.mainWindow.setMenu(null);
-		if(store.get('settings').theme == 'dark') {
+		const settings = store.get('settings', DEFAULT_SETTINGS);
+
+		if(settings.theme == 'dark') {
 			this.mainWindow.setBackgroundColor('#161e27');
 		}
 
 		if(!this.tray) this.createTray();
+		this.mainWindow.setMenu(null);
 
 		this.mainWindow.on('close', (event: any): void => {
-			const minimizeToTray = store.get('settings').minimizeToTray;
+			const minimizeToTray = settings.minimizeToTray;
 			if(!this.quitting && minimizeToTray) {
 				this.mainWindow.hide();
 				event.preventDefault();
