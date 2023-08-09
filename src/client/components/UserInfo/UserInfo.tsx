@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import IconButton from '../IconButton/IconButton';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
+import Utils from '../../helpers/utils';
 
 function UserInfo() {
 	const [ user ] = useContext(UserContext);
@@ -20,7 +21,7 @@ function UserInfo() {
 		<div className='d-flex flex-column flex-md-row px-3 py-2 border-bottom border-separator align-items-center gap-1'>
 			<div className='d-flex d-md-none'>
 				<span className='fw-bold small'>
-					DokChat
+					DokChat {Utils.isElectron() ? 'Desktop' : null}
 				</span>
 			</div>
 			<OverlayTrigger
