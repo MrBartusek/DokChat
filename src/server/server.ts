@@ -97,6 +97,9 @@ async function main() {
 			},
 			crossOriginOpenerPolicy: {
 				policy: 'same-origin-allow-popups'
+			},
+			crossOriginResourcePolicy: {
+				policy: 'cross-origin'
 			}
 		}));
 	}
