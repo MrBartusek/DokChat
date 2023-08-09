@@ -22,7 +22,7 @@ class RichPresenceManager {
 
 	public async start(mainWindow: BrowserWindow) {
 		this.mainWindow = mainWindow;
-		await this.rpc.login({ clientId: CLIENT_ID }).catch(log.warn);
+		await this.rpc.login({ clientId: CLIENT_ID }).catch(log.error);
 
 		setInterval(() => {
 			this.setActivity();
@@ -30,7 +30,6 @@ class RichPresenceManager {
 	}
 
 	public updatePresence(config: ElectronPresenceConfig) {
-		console.log('Updated Discord Rich Presence Data', config);
 		this.config = config;
 
 		if(this.firstUpdate) {
@@ -53,10 +52,10 @@ class RichPresenceManager {
 				smallImageKey: this.getAvatar(),
 				smallImageText: this.config.discriminator,
 				instance: false
-			});
+			}).catch(log.error);
 		}
 		else {
-			this.rpc.clearActivity();
+			this.rpc.clearActivity().catch(log.error);
 		}
 
 	}
