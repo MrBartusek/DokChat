@@ -21,11 +21,14 @@ function ElectronWelcomePage() {
 	});
 
 	useEffect(() => {
+		new Notification('DokChat Desktop', { body: 'Welcome To DokChat Desktop Early Access' });
+	}, []);
+
+	useEffect(() => {
 		if(electronConfig == null) return;
 
-		if(!electronConfig.disableAutoLogin && !browserOpened) {
+		if(electronConfig.autoLogin && !browserOpened) {
 			openBrowser();
-			new Notification('test');
 		}
 	}, [ user, electronConfig ]);
 

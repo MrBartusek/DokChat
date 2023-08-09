@@ -3,7 +3,7 @@ import { Settings } from '../client/hooks/useSettings';
 export interface ElectronStore {
 	refreshToken?: string;
   token?: string;
-  disableAutoLogin?: boolean;
+  autoLogin?: boolean;
   debug?: boolean;
   settings?: Settings;
 }

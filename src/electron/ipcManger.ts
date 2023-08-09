@@ -18,7 +18,7 @@ class IPCManager {
 			return {
 				refreshToken: store.get('refreshToken'),
 				token: store.get('token'),
-				disableAutoLogin: store.get('disableAutoLogin', false)
+				autoLogin: store.get('autoLogin', false)
 			};
 		});
 

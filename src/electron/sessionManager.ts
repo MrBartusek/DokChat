@@ -6,11 +6,11 @@ class SessionManager {
 		store.set('refreshToken', refreshToken);
 
 		// Auto login user on next auth expire or fail
-		store.set('disableAutoLogin', false);
+		store.set('autoLogin', true);
 	}
 
 	public static logout() {
-		store.set('disableAutoLogin', true);
+		store.set('autoLogin', false);
 		store.delete('token');
 		store.delete('refreshToken');
 	}
