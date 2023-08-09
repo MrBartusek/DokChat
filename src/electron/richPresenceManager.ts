@@ -48,7 +48,7 @@ class RichPresenceManager {
 				details: this.config.title,
 				state: this.config.details,
 				largeImageKey: app.isPackaged ? 'dokchat-logo' : 'dokchat-logo-dev',
-				largeImageText: app.isPackaged ? `DokChat Desktop • ${version}` : 'DokChat Desktop • DEV',
+				largeImageText: app.isPackaged ? `DokChat Desktop • v${version}` : 'DokChat Desktop • DEV',
 				smallImageKey: this.getAvatar(),
 				smallImageText: this.config.discriminator,
 				instance: false
