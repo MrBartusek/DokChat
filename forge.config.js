@@ -16,9 +16,10 @@ module.exports = {
 	hooks: {
 		postMake: (config, makeResults) => {
 			for(const result in makeResults) {
-				const artifactFile = result.artifacts[0];
-				const artifactPath = artifactFile.substring(0, artifactFile.lastIndexOf('/'));
+				if(result.artifacts.length == 0) continue;
 				if(result.platform == 'darwin') {
+					const artifactFile = result.artifacts[0];
+					const artifactPath = artifactFile.substring(0, artifactFile.lastIndexOf('/'));
 					fs.renameSync(artifactFile, path.join(artifactPath, 'dokchat-desktop-darwin.zip'));
 				}
 			}
