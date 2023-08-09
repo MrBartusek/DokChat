@@ -21,10 +21,6 @@ function ElectronWelcomePage() {
 	});
 
 	useEffect(() => {
-		new Notification('DokChat Desktop', { body: 'Welcome To DokChat Desktop Early Access' });
-	}, []);
-
-	useEffect(() => {
 		if(electronConfig == null) return;
 
 		if(electronConfig.autoLogin && !browserOpened) {
