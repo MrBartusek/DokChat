@@ -63,7 +63,7 @@ function Chat(props: ChatProps) {
 	return (
 		<div
 			className={`d-flex px-2 chat flex-row rounded-3 flex-nowrap ${props.isCurrent ? 'current' : ''}`}
-			style={{ height: 65 }}
+			style={{ minHeight: 65 }}
 			onClick={props.onClick}
 		>
 			<div className="d-flex align-items-center pe-md-3">

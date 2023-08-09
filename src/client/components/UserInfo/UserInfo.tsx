@@ -6,10 +6,12 @@ import { UserContext } from '../../context/UserContext';
 import IconButton from '../IconButton/IconButton';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 import Utils from '../../helpers/utils';
+import useBreakpoint from '../../hooks/useBreakpoint';
 
 function UserInfo() {
 	const [ user ] = useContext(UserContext);
 	const navigate = useNavigate();
+	const breakpoint = useBreakpoint();
 
 	const usernameTooltip = (props: TooltipProps) => (
 		<Tooltip {...props}>
@@ -21,7 +23,8 @@ function UserInfo() {
 		<div className='d-flex flex-column flex-md-row px-3 py-2 border-bottom border-separator align-items-center gap-1'>
 			<div className='d-flex d-md-none'>
 				<span className='fw-bold small'>
-					DokChat {Utils.isElectron() ? 'Desktop' : null}
+					DokChat {Utils.isElectron() && ![ 'xs', 'sm', 'md' ].includes(breakpoint)
+						? 'Desktop' : null}
 				</span>
 			</div>
 			<OverlayTrigger
