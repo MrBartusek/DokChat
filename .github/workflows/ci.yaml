@@ -143,6 +143,7 @@ jobs:
 
   electron:
     name: Publish Electron app
+    # if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -150,7 +151,6 @@ jobs:
         os: [macos-latest, ubuntu-latest, windows-latest]
     needs: 
       - build
-    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
