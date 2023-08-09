@@ -43,7 +43,7 @@ class DokChatDesktop {
 
 		const settings = store.get('settings', DEFAULT_SETTINGS);
 		app.setLoginItemSettings({
-			openAtLogin: settings.openOnStartup,
+			openAtLogin: app.isPackaged ? settings.openOnStartup : false,
 			openAsHidden: settings.startMinimized,
 			path: app.getPath('exe')
 		});
