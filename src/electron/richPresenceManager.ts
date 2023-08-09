@@ -4,6 +4,7 @@ import { BrowserWindow, app } from 'electron';
 import store from './store';
 import { DEFAULT_SETTINGS, PresenceMode } from '../client/hooks/useSettings';
 import { version } from '../../package.json';
+import log from 'electron-log';
 
 const CLIENT_ID = '1138095200837836961';
 
@@ -21,6 +22,7 @@ class RichPresenceManager {
 
 	public async start(mainWindow: BrowserWindow) {
 		this.mainWindow = mainWindow;
+		await this.rpc.login({ clientId: CLIENT_ID }).catch(log.warn);
 
 		setInterval(() => {
 			this.setActivity();
@@ -47,7 +49,7 @@ class RichPresenceManager {
 				details: this.config.title,
 				state: this.config.details,
 				largeImageKey: app.isPackaged ? 'dokchat-logo' : 'dokchat-logo-dev',
-				largeImageText: app.isPackaged ? `DokChat Desktop • ${version}` : 'DokChat Desktop • Development',
+				largeImageText: app.isPackaged ? `DokChat Desktop • ${version}` : 'DokChat Desktop • DEV',
 				smallImageKey: this.getAvatar(),
 				smallImageText: this.config.discriminator,
 				instance: false
