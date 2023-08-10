@@ -16,8 +16,8 @@ function ElectronWelcomePage() {
 	const electronConfig = useElectronConfig();
 
 	usePageInfo({
-		title: 'Welcome to Desktop',
-		discordTitle: 'Logging in...'
+		title: !user.isAuthenticated ? 'Welcome to Desktop' : undefined,
+		discordTitle: !user.isAuthenticated ? 'Logging in...': undefined
 	});
 
 	useEffect(() => {
