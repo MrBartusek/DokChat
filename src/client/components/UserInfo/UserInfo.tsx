@@ -23,8 +23,7 @@ function UserInfo() {
 		<div className='d-flex flex-column flex-md-row px-3 py-2 border-bottom border-separator align-items-center gap-1'>
 			<div className='d-flex d-md-none'>
 				<span className='fw-bold small'>
-					DokChat {Utils.isElectron() && ![ 'xs', 'sm', 'md' ].includes(breakpoint)
-						? 'Desktop' : null}
+					DokChat
 				</span>
 			</div>
 			<OverlayTrigger
@@ -37,7 +36,7 @@ function UserInfo() {
 			</OverlayTrigger>
 			<div className='d-none d-md-flex flex-fill justify-content-center align-items-center'>
 				<span className='fw-bold'>
-					DokChat
+					DokChat {Utils.isElectron() ? 'Desktop' : null}
 				</span>
 			</div>
 			<div className='d-flex align-items-center'>
