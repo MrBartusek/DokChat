@@ -90,7 +90,8 @@ async function main() {
 						'https://*.google-analytics.com', // Google Analytics
 						'https://*.googletagmanager.com', // Google Analytics
 						'https://media.tenor.com',
-						'https://twemoji.maxcdn.com'
+						'https://twemoji.maxcdn.com',
+						'https://cdn.jsdelivr.net/npm/emoji-datasource-twitter/'
 					]
 				}
 			},
