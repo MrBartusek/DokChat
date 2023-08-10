@@ -40,11 +40,7 @@ function ElectronWelcomePage() {
 						<span className='lead'>
 							Please login using a web browser
 						</span>
-						<a
-							className='link-primary'
-							onClick={openBrowser}
-							href="#"
-						>
+						<a className='link-primary'target='_blank' href={browserUrl} rel="noreferrer">
 							Browser didn&apos;t open? Click here!
 						</a>
 					</>
@@ -65,7 +61,7 @@ function ElectronWelcomePage() {
 
 	function openBrowser() {
 		setBrowserOpened(true);
-		window.open(browserUrl);
+		window.open(browserUrl, '_blank');
 	}
 }
 

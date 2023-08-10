@@ -80,8 +80,8 @@ class DokChatDesktop {
 			}
 		});
 
-		this.mainWindow.webContents.setWindowOpenHandler((details) => {
-			shell.openExternal(details.url);
+		this.mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+			shell.openExternal(url).catch((e) => log.error('Failed to open url', e));
 			return { action: 'deny' };
 		});
 
