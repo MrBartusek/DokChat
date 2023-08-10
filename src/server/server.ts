@@ -88,7 +88,9 @@ async function main() {
 						'data:', // In-line base 64 SVGs
 						`https://${s3Client.bucketName}.s3.eu-central-1.amazonaws.com`, // S3 Bucket
 						'https://*.google-analytics.com', // Google Analytics
-						'https://*.googletagmanager.com' // Google Analytics
+						'https://*.googletagmanager.com', // Google Analytics
+						'https://media.tenor.com',
+						'https://twemoji.maxcdn.com'
 					]
 				}
 			},
