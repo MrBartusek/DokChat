@@ -24,6 +24,7 @@ function ElectronHandoffPage() {
 			const authUrl = `${protocol}://auth/login?refreshToken=` +
 				`${tokenFetch.res.data.refreshToken}&token=${tokenFetch.res.data.token}`;
 			setAuthUrl(authUrl);
+			window.location.href = authUrl;
 			setStatus('Redirecting you to DokChat Desktop...');
 		}
 
@@ -39,9 +40,6 @@ function ElectronHandoffPage() {
 				</span>
 				{authUrl ? ( <>
 					<a className='link-primary' href={authUrl}>Open DokChat Desktop</a>
-					<div className='d-none'>
-						<iframe src={authUrl}></iframe>
-					</div>
 				</> ): null}
 			</div>
 		</FullFocusPage>

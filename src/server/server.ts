@@ -66,7 +66,6 @@ async function main() {
 					],
 					'frame-src': [
 						'\'self\'',
-						'dokchat://auth/login',
 						'https://www.google.com/recaptcha/', // reCAPTCHA
 						'https://recaptcha.google.com/recaptcha/', // reCAPTCHA
 						'https://accounts.google.com/gsi/' // Google Sign-In
