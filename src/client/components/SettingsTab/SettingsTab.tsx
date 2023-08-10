@@ -136,7 +136,7 @@ export default function SettingsTab() {
 						onChange={handleChange}
 						inline
 						id={PresenceMode.ALWAYS}
-						label="Enabled"
+						label="Always"
 						checked={settings.presenceMode == PresenceMode.ALWAYS}
 					/>
 					<Form.Check
