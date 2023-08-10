@@ -135,9 +135,9 @@ export default function SettingsTab() {
 						className='mb-2'
 						onChange={handleChange}
 						inline
-						id={PresenceMode.ENABLED}
+						id={PresenceMode.ALWAYS}
 						label="Enabled"
-						checked={settings.presenceMode == PresenceMode.ENABLED}
+						checked={settings.presenceMode == PresenceMode.ALWAYS}
 					/>
 					<Form.Check
 						type="radio"

@@ -41,7 +41,7 @@ class RichPresenceManager {
 	private async setActivity() {
 		const settings = store.get('settings', DEFAULT_SETTINGS);
 		if(
-			settings.presenceMode == PresenceMode.ENABLED ||
+			settings.presenceMode == PresenceMode.ALWAYS ||
 			(settings.presenceMode == PresenceMode.ONLY_MAXIMIZED && this.mainWindow.isVisible())
 		) {
 			return this.rpc.setActivity({

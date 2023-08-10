@@ -11,9 +11,9 @@ export enum Theme {
 }
 
 export enum PresenceMode {
-	ENABLED = 'enabled',
-	DISABLED = 'disabled',
-	ONLY_MAXIMIZED = 'maximized'
+	ALWAYS = 'always',
+	ONLY_MAXIMIZED = 'maximized',
+	DISABLED = 'disabled'
 }
 
 export interface Settings {
@@ -35,7 +35,7 @@ export const DEFAULT_SETTINGS: Settings = {
 	startMinimized: false,
 	minimizeToTray: true,
 	desktopNotifications: true,
-	presenceMode: PresenceMode.ENABLED
+	presenceMode: PresenceMode.ONLY_MAXIMIZED
 };
 
 export function useSettings(): [Settings, (settings: Settings) => void] {
