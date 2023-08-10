@@ -8,7 +8,7 @@ import DebugInfo from '../DebugInfo/DebugInfo';
 
 export default function SettingsTab() {
 	const [ settings, setSettings ] = useContext(SettingsContext);
-	const [ playPing ] = useSound(Utils.getBaseUrl() + '/sounds/new_message_ping.mp3', { volume: 0.7 });
+	const [ playPing ] = useSound(Utils.getBaseUrl() + '/sounds/new_message_ping.mp3', { volume: 0.5 });
 
 	function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
 		const name = event.target.name;

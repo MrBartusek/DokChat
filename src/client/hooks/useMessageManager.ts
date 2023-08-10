@@ -26,7 +26,7 @@ export function useMessageManager(ws: useWebsocketType): [
 ] {
 	const [ loading, setLoading ] = useState(true);
 	const [ user ] = useContext(UserContext);
-	const [ playPing ] = useSound(Utils.getBaseUrl() + '/sounds/new_message_ping.mp3', { volume: 0.7 });
+	const [ playPing ] = useSound(Utils.getBaseUrl() + '/sounds/new_message_ping.mp3', { volume: 0.5 });
 	const [ settings ] = useContext(SettingsContext);
 	const navigate = useNavigate();
 	const initialChatList = useFetch<EndpointResponse<ChatListResponse>>('chat/list', true);
@@ -85,7 +85,7 @@ export function useMessageManager(ws: useWebsocketType): [
 			const isFocused = await window.electron.isFocused();
 			console.log(isFocused);
 			if(isFocused) return;
-			const notification = new Notification(msg.author.username, {
+			const notification = new Notification(msg.author?.username ?? msg.chat.name, {
 				body: msg.content ?? 'Sent an attachment',
 				silent: true
 			});
