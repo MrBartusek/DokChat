@@ -76,12 +76,13 @@ async function main() {
 						'https://*.google-analytics.com', // Google Analytics
 						'https://*.analytics.google.com', // Google Analytics
 						'https://*.googletagmanager.com', // Google Analytics
-						'https://tenor.googleapis.com/' // Tenor
+						'https://tenor.googleapis.com/', // Tenor
+						'https://media.tenor.com/' // Tenor
 					],
 					'media-src': [
 						'\'self\'',
 						`https://${s3Client.bucketName}.s3.eu-central-1.amazonaws.com`,
-						'https://media.tenor.com/'
+						'https://media.tenor.com/' // Tenor
 					],
 					'img-src': [
 						'\'self\'',
