@@ -10,7 +10,7 @@ import log from 'electron-log';
 
 if (require('electron-squirrel-startup')) app.quit();
 
-const DEBUG_ENABLED = store.get('debug', false) == true || !app.isPackaged;
+const DEBUG_ENABLED = true; //store.get('debug', false) == true || !app.isPackaged;
 
 class DokChatDesktop {
 	private mainWindow: BrowserWindow;
