@@ -15,8 +15,8 @@ class InviteManager {
 		let tooOld = false;
 		if (invite) {
 			const createdAt = DateFns.fromUnixTime(Number(invite.createdAt));
-			const createdAgo = DateFns.differenceInHours(new Date(), createdAt);
-			tooOld = createdAgo >= 5;
+			const createdAgoHours = DateFns.differenceInHours(new Date(), createdAt);
+			tooOld = createdAgoHours >= 12;
 		}
 		if (invite && !tooOld) return invite;
 		await this.pruneOldInvites();
