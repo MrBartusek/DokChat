@@ -43,8 +43,8 @@ export function useSettings(): [Settings, (settings: Settings) => void] {
 
 	const settingsCopy: Settings = {
 		...DEFAULT_SETTINGS,
-		theme: praseTheme(settings.themeRaw ?? DEFAULT_SETTINGS.themeRaw),
-		...settings
+		...settings,
+		theme: praseTheme(settings.themeRaw ?? DEFAULT_SETTINGS.themeRaw)
 	};
 
 	useEffect(() => {
