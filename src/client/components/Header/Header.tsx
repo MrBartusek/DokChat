@@ -15,8 +15,8 @@ function Header() {
 			<Container
 				className='text-center text-white'
 				style={{
-					'paddingTop': 'calc(70px + 4rem)',
-					'paddingBottom': '6rem',
+					'paddingTop': 'calc(70px + 5rem)',
+					'paddingBottom': '7.5rem',
 					'maxWidth': 700
 				}}
 			>
@@ -34,7 +34,7 @@ function Header() {
 					</Link>
 					<Link to='/download' className='text-decoration-none'>
 						<Button variant='dark' size='lg' className='d-flex justify-content-center align-items-center w-100'>
-							<BsCloudArrowDown className='me-2' /> Download
+							<BsCloudArrowDown className='me-2' /> Download Desktop
 						</Button>
 					</Link>
 				</div>
