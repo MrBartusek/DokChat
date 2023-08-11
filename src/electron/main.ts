@@ -1,4 +1,4 @@
-import { BrowserWindow, Menu, Tray, app, nativeImage, shell } from 'electron';
+import { BrowserWindow, Menu, Tray, app, nativeImage, session, shell } from 'electron';
 import path from 'path';
 import DeepLinkManager from './deepLinkManager';
 import IPCManager from './ipcManger';
@@ -7,6 +7,7 @@ import RichPresenceManager from './richPresenceManager';
 import updateElectronApp from 'update-electron-app';
 import { DEFAULT_SETTINGS } from '../client/hooks/useSettings';
 import log from 'electron-log';
+import { praseDirectivesForElectron } from '../contentSecurityPolicy';
 
 if (require('electron-squirrel-startup')) app.quit();
 
@@ -36,6 +37,7 @@ class DokChatDesktop {
 
 		app.whenReady()
 			.then(async () => {
+				if(app.isPackaged) this.enableCSP();
 				const window = await this.createWindow();
 				this.deepLinkManager.register(window);
 				await this.richPresenceManager.start(this.mainWindow);
@@ -153,6 +155,18 @@ class DokChatDesktop {
 
 		app.on('activate', () => { this.mainWindow.show(); });
 		app.on('before-quit', () => this.quitting = true);
+	}
+
+	private enableCSP() {
+		const directives = praseDirectivesForElectron();
+		session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+			callback({
+				responseHeaders: {
+					...details.responseHeaders,
+					'Content-Security-Policy': [ directives ]
+				}
+			});
+		});
 	}
 
 }

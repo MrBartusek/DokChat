@@ -7,7 +7,6 @@ import * as http from 'http';
 import * as morgan from 'morgan';
 import * as schedule from 'node-schedule';
 import * as path from 'path';
-import * as s3Client from './aws/s3';
 import { Server } from 'socket.io';
 import { ATTACHMENT_MAX_SIZE } from '../types/const';
 import { createDatabaseStructure } from './db/structure';
@@ -19,6 +18,7 @@ import apiRouter from './routes';
 import registerOnlineStatusHandler from './handlers/onlineStatusHandler';
 import { systemMessageHandler } from './handlers/systemMessageHandler';
 import helmet from 'helmet';
+import { directives } from '../contentSecurityPolicy';
 
 const isProduction = (process.env['NODE' + '_ENV'] || 'development') == 'production';
 
@@ -55,46 +55,7 @@ async function main() {
 		app.use(helmet({
 			contentSecurityPolicy: {
 				useDefaults: true,
-				directives: {
-					'script-src': [
-						'\'self\'',
-						'https://www.google.com/recaptcha/', // reCAPTCHA
-						'https://www.gstatic.com/recaptcha/', // reCAPTCHA
-						'https://accounts.google.com/gsi/', // Google Sign-In
-						'https://connect.facebook.net/', // Facebook SDK
-						'https://*.googletagmanager.com' // Google Analytics
-					],
-					'frame-src': [
-						'\'self\'',
-						'https://www.google.com/recaptcha/', // reCAPTCHA
-						'https://recaptcha.google.com/recaptcha/', // reCAPTCHA
-						'https://accounts.google.com/gsi/' // Google Sign-In
-					],
-					'connect-src': [
-						'\'self\'',
-						'https://www.facebook.com/', // Facebook SDK
-						'https://*.google-analytics.com', // Google Analytics
-						'https://*.analytics.google.com', // Google Analytics
-						'https://*.googletagmanager.com', // Google Analytics
-						'https://tenor.googleapis.com/', // Tenor
-						'https://media.tenor.com/' // Tenor
-					],
-					'media-src': [
-						'\'self\'',
-						`https://${s3Client.bucketName}.s3.eu-central-1.amazonaws.com`,
-						'https://media.tenor.com/' // Tenor
-					],
-					'img-src': [
-						'\'self\'',
-						'data:', // In-line base 64 SVGs
-						`https://${s3Client.bucketName}.s3.eu-central-1.amazonaws.com`, // S3 Bucket
-						'https://*.google-analytics.com', // Google Analytics
-						'https://*.googletagmanager.com', // Google Analytics
-						'https://media.tenor.com',
-						'https://twemoji.maxcdn.com',
-						'https://cdn.jsdelivr.net/npm/emoji-datasource-twitter/'
-					]
-				}
+				directives: directives
 			},
 			referrerPolicy: {
 				policy: 'strict-origin-when-cross-origin' //  Google Sign-In - https://stackoverflow.com/a/70739451
