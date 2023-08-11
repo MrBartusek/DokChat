@@ -20,6 +20,7 @@ import Utils from '../../helpers/utils';
 import ElectronLoginPage from '../../pages/ElectronLoginPage';
 import ElectronHandoffPage from '../../pages/ElectronHandoffPage';
 import ElectronWelcomePage from '../../pages/ElectronWelcomePage';
+import DownloadPage from '../../pages/DownloadPage';
 
 const ChatDetailsPopupLazy = React.lazy(() => import('../ChatDetailsPopup/ChatDetailsPopup'));
 const NewChatPopupLazy = React.lazy(() => import('../NewChatPopup/NewChatPopup'));
@@ -103,6 +104,7 @@ function Router() {
 				<Route path="about" element={<HomePage scrollToAbout />} />
 				<Route path="privacy-policy" element={<PrivacyPolicyPage />} />
 				<Route path="get" element={<GetDokchatPage />} />
+				<Route path="download" element={<DownloadPage />} />
 				<Route path="i/:key" element={
 					<PrivateRoute>
 						<InvitePage />

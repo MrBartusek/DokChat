@@ -83,7 +83,6 @@ export function useMessageManager(ws: useWebsocketType): [
 		if (settings.soundNotifications && !msg.isSystem) playPing();
 		if(Utils.isElectron() && settings.desktopNotifications) {
 			const isFocused = await window.electron.isFocused();
-			console.log(isFocused);
 			if(isFocused) return;
 			const notification = new Notification(msg.author?.username ?? msg.chat.name, {
 				body: msg.content ?? 'Sent an attachment',

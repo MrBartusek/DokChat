@@ -79,9 +79,11 @@ function GetDokchatPage() {
 								Works on Windows and Mac
 							</p>
 							<div className='d-flex justify-content-center mb-4 mt-5'>
-								<Button variant='secondary' size='lg'>
+								<Link to='/download'>
+									<Button variant='primary' size='lg'>
 									Download DokChat
-								</Button>
+									</Button>
+								</Link>
 							</div>
 						</div>
 					</Col>
