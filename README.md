@@ -20,7 +20,8 @@ DokChat is complete, fully fledged instant messaging application. It supports al
 - Blocking or hiding other users
 - GIFs ([gif-picker-react](https://github.com/MrBartusek/gif-picker-react)), Emojis ([Twemoji](https://twemoji.twitter.com)), videos, images and Markdown support for messages
 - Current online status with green dots
-- reCAPTCHA and ratelimit protections against bots.
+- reCAPTCHA and ratelimit protections against bots
+- Fully functional [Electron Desktop App](https://dokchat.dokurno.dev/download) with browser login handoff
 
 ## Deploy own DokChat instance
 
