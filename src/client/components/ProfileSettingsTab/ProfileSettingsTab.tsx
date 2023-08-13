@@ -207,7 +207,7 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 
 			<DemoInfo message={
 				'This is a temporary demo account that will be removed in the next 24 hours. ' +
-				'You can\'t modify details of this account. Please create a regular demo account ' +
+				'You can\'t modify details of this account. Please create a regular user account ' +
 				'to access all features.'
 			} />
 		</>
