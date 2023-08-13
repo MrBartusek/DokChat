@@ -72,7 +72,7 @@ function GetDokchatPage() {
 							</p>
 							<p className='d-flex align-items-center'>
 								<BsCheck size="1.8em" className='me-1' color='var(--bs-success)' />
-								Better performance and Desktop Notification
+								Better performance and Desktop Notifications
 							</p>
 							<p className='d-flex align-items-center'>
 								<BsCheck size="1.8em" className='me-1' color='var(--bs-success)' />
