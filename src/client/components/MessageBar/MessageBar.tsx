@@ -99,6 +99,7 @@ function MessageBar({ currentChat }: MessageBarProps) {
 							className='border-0 p-0 h-100 shadow-none'
 							style={{ 'height': 34 }}
 							autoComplete='off'
+							maxLength={4000}
 							ref={inputRef}
 							value={values.content}
 							onChange={handleChange}
