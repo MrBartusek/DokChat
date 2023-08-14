@@ -88,7 +88,10 @@ export function useMessageManager(ws: useWebsocketType): [
 				body: msg.content ?? 'Sent an attachment',
 				silent: true
 			});
-			notification.onclick = () => navigate(`/chat/${msg.chat.id}`);
+			notification.onclick = () => {
+				navigate(`/chat/${msg.chat.id}`);
+				window.electron.focus();
+			};
 		}
 	}
 
