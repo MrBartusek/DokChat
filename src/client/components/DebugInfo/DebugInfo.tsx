@@ -11,6 +11,9 @@ export default function DebugInfo() {
 			<div>
 				User ID: <code className='text-muted'>{user.id}</code> ({user.discriminator})
 			</div>
+			{user.isDemo ? (
+				<div> TEMPORARY DEMONSTRATION ACCOUNT </div>
+			): null}
 			<div>
 				<code className='text-muted'>
 					{Utils.isElectron() ? 'dokchat-desktop ' : 'dokchat-web'} v{version}
