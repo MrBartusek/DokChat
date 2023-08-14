@@ -16,3 +16,4 @@ override.tf.json
 *_override.tf.json
 infra/*.pem
 out
+.infracost
