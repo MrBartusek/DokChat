@@ -45,7 +45,6 @@ class IPCManager {
 		ipcMain.handle('is-focused', () => this.mainWindow.isFocused());
 
 		ipcMain.on('focus', () => {
-			console.log('call');
 			this.mainWindow.show();
 			this.mainWindow.focus();
 		});
