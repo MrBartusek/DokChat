@@ -6,6 +6,7 @@ import LogoutButton from '../LogoutButton/LogoutButton';
 import './AccountTab.scss';
 import { UserContext } from '../../context/UserContext';
 import DemoInfo from '../DemoInfo/DemoInfo';
+import SecurityOptions from '../SecurityOptions/SecurityOptions';
 
 export default function AccountTab() {
 	const [ user ] = useContext(UserContext);
@@ -15,29 +16,7 @@ export default function AccountTab() {
 			<SettingsRow
 				title="Password and Authentication"
 			>
-				<>
-					<div className='text-muted pb-3'>
-						Security options are not yet implemented. See {' '}
-						<a href="https://github.com/MrBartusek/DokChat/issues/10">#10</a> and {' '}
-						<a href="https://github.com/MrBartusek/DokChat/issues/29">#29</a>
-					</div>
-					<div className='opacity-25 pointer-event'>
-						<InteractiveButton variant='primary' size='sm' icon={BsShieldLock}>
-							Change Password
-						</InteractiveButton>
-						<p className='small fw-bold text-danger mt-4 mb-2'>
-							<BsUnlockFill className='me-1' />
-							Two-factor authentication disabled
-						</p>
-						<p className='small text-muted mb-2'>
-							Two-factor authentication (2FA for short) is added security layer for your DokChat account.
-							When 2FA is enabled you need to confirm every login attempt.
-						</p>
-						<InteractiveButton variant='primary' size='sm' icon={BsShieldLock}>
-							Enable 2FA
-						</InteractiveButton>
-					</div>
-				</>
+				{!user.isDemo ? <SecurityOptions /> : <DemoInfo />}
 			</SettingsRow>
 			<SettingsRow
 				title="Log Out"
