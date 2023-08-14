@@ -14,7 +14,7 @@ export interface UserTagInputProps {
 }
 
 const UserTagInput = React.forwardRef(({ onAdd }: UserTagInputProps, ref: Ref<HTMLFormElement>) => {
-	const [ values, handleChange, clearValues ] = useForm({ username: '', tag: '' });
+	const [ values, handleChange, setValues ] = useForm({ username: '', tag: '' });
 	const [ isLoading, setLoading ] = useState(false);
 	const [ error, setError ] = useState(null);
 	const [ user ] = useContext(UserContext);
@@ -39,7 +39,7 @@ const UserTagInput = React.forwardRef(({ onAdd }: UserTagInputProps, ref: Ref<HT
 			.then((r) => {
 				const resp: EndpointResponse<UserGetResponse> = r.data;
 				onAdd(resp.data);
-				clearValues();
+				setValues();
 			})
 			.catch((error) => {
 				if (error.response.status == 404) {
@@ -66,6 +66,24 @@ const UserTagInput = React.forwardRef(({ onAdd }: UserTagInputProps, ref: Ref<HT
 		handleChange(event);
 	}
 
+	function handlePaste(event: React.ClipboardEvent<HTMLInputElement>) {
+		const clipboardData = event.clipboardData || (window as any).clipboardData as DataTransfer;
+		const pastedTag = clipboardData.getData('Text');
+		const splittedTag = pastedTag.split('#');
+		if(splittedTag.length == 0) return;
+
+		event.stopPropagation();
+		event.preventDefault();
+
+		const newValues = {...values};
+		newValues.username = newValues.username + splittedTag[0];
+		if(splittedTag.length > 1) {
+			newValues.tag = splittedTag[1];
+			tagRef.current.focus();
+		}
+		setValues(newValues);
+	}
+
 	return (
 		<Form className="mt-2" onSubmit={onSubmit} ref={ref}>
 			<Form.Group className='d-flex flex-row'>
@@ -77,6 +95,7 @@ const UserTagInput = React.forwardRef(({ onAdd }: UserTagInputProps, ref: Ref<HT
 						placeholder={'DokChat User'}
 						value={values.username}
 						onChange={handleChangeWrapper}
+						onPaste={handlePaste}
 						maxLength={32}
 						minLength={2}
 						required
