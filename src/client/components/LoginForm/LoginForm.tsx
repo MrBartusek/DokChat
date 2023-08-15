@@ -7,6 +7,7 @@ import getAxios from '../../helpers/axios';
 import { useForm } from '../../hooks/useForm';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 import SocialLogin from '../SocialLogin/SocialLogin';
+import TwoFactorLoginPopup from '../TwoFactorLoginPopup/TwoFactorLoginPopup';
 
 const axios = getAxios();
 
@@ -15,18 +16,26 @@ export interface LoginFormProps {
 }
 
 function LoginForm(props: LoginFormProps) {
+	const [ user, updateToken, setUser ] = useContext(UserContext);
 	const [ loading, setLoading ] = useState(false);
 	const [ values, handleChange ] = useForm({ email: '', password: '', rememberMe: false });
 	const [ error, setError ] = useState<string | null>(null);
+	const [ showTwoFactorPopup, setShowTwoFactorPopup ] = useState(false);
+	const [ twoFactorCode, setTwoFactorCode ] = useState<string>(undefined);
 	const navigate = useNavigate();
-	const [ user, updateToken, setUser ] = useContext(UserContext);
 	const [ searchParams ] = useSearchParams({ redirectUrl: '/chat' });
 
 	const redirectUrl = props.redirectUrl ?? searchParams.get('redirectUrl');
 
 	return (
 		<>
-			{error && <Alert variant='danger'>{error}</Alert>}
+			{error && !showTwoFactorPopup && <Alert variant='danger'>{error}</Alert>}
+			{showTwoFactorPopup && <TwoFactorLoginPopup
+				setCode={setTwoFactorCode}
+				isLoading={loading}
+				handleSubmit={onSubmit}
+				error={error}
+			/> }
 			<Form onSubmit={onSubmit}>
 				<Form.Group className="mb-3">
 					<Form.Label>Email address</Form.Label>
@@ -108,7 +117,7 @@ function LoginForm(props: LoginFormProps) {
 	async function onSubmit(event: React.FormEvent) {
 		event.preventDefault();
 		setLoading(true);
-		await axios.post('/auth/login', values) // Backend request body should exactly match this hook
+		await axios.post('/auth/login', {...values, twoFactorCode})
 			.then((r: any) => {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
 				setTimeout(() => {
@@ -118,8 +127,19 @@ function LoginForm(props: LoginFormProps) {
 			})
 			.catch((e) => {
 				const resp: EndpointResponse<null> = e.response?.data;
-				setError(resp?.message || 'Failed to log you in you at this time. Please try again later.');
-				setLoading(false);
+				if(resp?.message == '2FA_CODE_MISSING') {
+					if(showTwoFactorPopup) {
+						setError('Missing 2FA code');
+					}
+					else {
+						setShowTwoFactorPopup(true);
+					}
+					setLoading(false);
+				}
+				else {
+					setError(resp?.message || 'Failed to log you in you at this time. Please try again later.');
+					setLoading(false);
+				}
 			});
 	}
 

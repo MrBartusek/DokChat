@@ -1,22 +1,19 @@
 import React, { useContext, useState } from 'react';
-import { Form, InputGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { EndpointResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
-import { useForm } from '../../hooks/useForm';
-import InteractiveButton from '../InteractiveButton/InteractiveButton';
-import TwoFactorCodeInput from '../TwoFactorCodeInputProps/TwoFactorCodeInputProps';
+import TwoFactorCodeInput from '../TwoFactorCodeInput/TwoFactorCodeInput';
 
 export interface InteractiveTwoFactorCodeInputProps {
 	action: 'enable' | 'disable';
-    setCode?: React.Dispatch<React.SetStateAction<string>>;
+    setCode?: React.Dispatch<React.SetStateAction<number>>;
 	redirectTo?: string
 }
 
 function InteractiveTwoFactorCodeInput({action, redirectTo = '/chat/profile?tab=account'}: InteractiveTwoFactorCodeInputProps) {
 	const [ user, refreshUser ] = useContext(UserContext);
-	const [ code, setCode ] = useState('');
+	const [ code, setCode ] = useState(undefined);
 	const navigate = useNavigate();
 	const axios = getAxios(user);
 	const [ isLoading, setLoading ] = useState(false);

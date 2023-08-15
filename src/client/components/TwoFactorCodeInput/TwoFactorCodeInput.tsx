@@ -10,12 +10,12 @@ import InteractiveButton from '../InteractiveButton/InteractiveButton';
 export interface InteractiveTwoFactorCodeInputProps {
     setCode: React.Dispatch<React.SetStateAction<string>>;
     isLoading: boolean;
-    buttonText: string;
+    buttonText?: string;
     handleSubmit?: React.FormEventHandler<HTMLFormElement>
 }
 
-function TwoFactorCodeInput({setCode, isLoading, buttonText, handleSubmit}: InteractiveTwoFactorCodeInputProps) {
-	const [ values, handleChange ] = useForm({ code: '' });
+function TwoFactorCodeInput({setCode, isLoading, buttonText = 'Submit', handleSubmit}: InteractiveTwoFactorCodeInputProps) {
+	const [ values, handleChange ] = useForm({ code: undefined });
 
 	useEffect(() => {
 		setCode(values.code);
@@ -28,9 +28,12 @@ function TwoFactorCodeInput({setCode, isLoading, buttonText, handleSubmit}: Inte
 					className='d-flex flex-fill'
 					type="numeric"
 					maxLength={6}
+					minLength={6}
 					name="code"
 					value={values.code}
 					onChange={handleChange}
+					placeholder='000 000'
+					required
 				/>
 				<InteractiveButton
 					variant='primary'

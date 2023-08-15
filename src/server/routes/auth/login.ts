@@ -14,7 +14,7 @@ router.all('/login',
 	body('email').isEmail().normalizeEmail(),
 	body('password').custom(isValidPassword),
 	body('rememberMe').isBoolean().optional(),
-	body('twoFactorCode').optional().isNumeric().isLength({ min: 6, max: 6}),
+	body('twoFactorCode').optional().isString().isLength({ min: 6, max: 6}),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);

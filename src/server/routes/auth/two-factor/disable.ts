@@ -16,7 +16,7 @@ router.all('/disable',
 	allowedMethods('POST'),
 	ensureAuthenticated(true),
 	ensureRatelimit(5),
-	body('code').isNumeric().isLength({min: 6, max: 6}),
+	body('code').isString().isLength({min: 6, max: 6}),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
