@@ -32,6 +32,7 @@ const ChatHidePopupLazy = React.lazy(() => import('../ChatHidePopup/ChatHidePopu
 const UserPopupLazy = React.lazy(() => import('../UserPopup/UserPopup'));
 const UserBlockPopupLazy = React.lazy(() => import('../UserBlockPopup/UserBlockPopup'));
 const InvitePopupLazy = React.lazy(() => import('../InvitePopup/InvitePopup'));
+const TwoFactorAuthenticationPopupLazy = React.lazy(() => import('../TwoFactorAuthenticationPopup/TwoFactorAuthenticationPopup'));
 
 function Router() {
 	const ConditionalRouter = Utils.isElectron() ? HashRouter : BrowserRouter;
@@ -78,6 +79,11 @@ function Router() {
 					<Route path="profile" element={
 						<React.Suspense fallback={null}>
 							<SettingsPopupLazy />
+						</React.Suspense>
+					} />
+					<Route path="profile/2fa" element={
+						<React.Suspense fallback={null}>
+							<TwoFactorAuthenticationPopupLazy />
 						</React.Suspense>
 					} />
 					<Route path="email-confirm" element={

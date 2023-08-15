@@ -10,6 +10,7 @@ import Utils from '../utils/utils';
 import s3Client from './../aws/s3';
 import emailClient from './../aws/ses';
 import EmailBlacklistManager from './emailBlacklistManager';
+import * as twoFactor from 'node-2fa';
 
 export default class UserManager {
 	public static async createUser(username: string, email: string, password?: string, socialLogin = false): Promise<[UserJWTData, string]> {
@@ -63,7 +64,8 @@ export default class UserManager {
 			avatar: Utils.avatarUrl(userId),
 			isBanned: false,
 			isEmailConfirmed: socialLogin || !emailServiceEnabled,
-			isDemo: false
+			isDemo: false,
+			is2FAEnabled: false
 		};
 		return [ jwtData, passwordHash ];
 	}
@@ -111,7 +113,8 @@ export default class UserManager {
 			avatar: Utils.avatarUrl(userId),
 			isBanned: false,
 			isEmailConfirmed: true,
-			isDemo: true
+			isDemo: true,
+			is2FAEnabled: false
 		};
 		return [ jwtData, '' ];
 	}
@@ -198,7 +201,8 @@ export default class UserManager {
 				password_hash as "passwordHash",
 				is_banned as "isBanned",
 				is_email_confirmed as "isEmailConfirmed",
-				is_demo as "isDemo"
+				is_demo as "isDemo",
+				is_two_factor_enabled as "isTwoFactorEnabled"
 			FROM users WHERE id = $1;
 		`, [ id ]);
 
@@ -212,7 +216,8 @@ export default class UserManager {
 			avatar: Utils.avatarUrl(user.id),
 			isBanned: user.isBanned,
 			isEmailConfirmed: user.isEmailConfirmed,
-			isDemo: user.isDemo
+			isDemo: user.isDemo,
+			is2FAEnabled: user.isTwoFactorEnabled
 		};
 	}
 
@@ -226,7 +231,8 @@ export default class UserManager {
 				password_hash as "passwordHash",
 				is_banned as "isBanned",
 				is_email_confirmed as "isEmailConfirmed",
-				is_demo as "isDemo"
+				is_demo as "isDemo",
+				is_two_factor_enabled as "isTwoFactorEnabled"
 			FROM users WHERE email = $1;
 		`, [ email ]);
 
@@ -240,7 +246,8 @@ export default class UserManager {
 			avatar: Utils.avatarUrl(user.id),
 			isBanned: user.isBanned,
 			isEmailConfirmed: user.isEmailConfirmed,
-			isDemo: user.isDemo
+			isDemo: user.isDemo,
+			is2FAEnabled: user.isTwoFactorEnabled
 		};
 	}
 
@@ -270,5 +277,23 @@ export default class UserManager {
 	public static async bumpLastSeen(userId: string): Promise<void> {
 		const timestamp = DateFns.getUnixTime(new Date());
 		await db.query(sql`UPDATE users SET last_seen=$1 WHERE id=$2`, [ timestamp, userId ]);
+	}
+
+	public static async validate2FA(userId: string, code: string, skipEnabledCheck = false): Promise<boolean> {
+		const query = await db.query(sql`
+			SELECT
+				two_factor_secret as "twoFactorSecret",
+				is_two_factor_enabled as "isTwoFactorEnabled"
+			FROM users WHERE id = $1;
+		`, [ userId ]);
+
+		if (query.rowCount == 0) throw new Error('User not found');
+		const data = query.rows[0];
+		if(!data.isTwoFactorEnabled && !skipEnabledCheck) {
+			throw new Error('2FA is not enabled for this user');
+		}
+
+		const result = twoFactor.verifyToken(data.twoFactorSecret, code);
+		return result?.delta == 0;
 	}
 }

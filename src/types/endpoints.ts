@@ -51,3 +51,8 @@ export type ClientConfigResponse = {
     tenorApiKey?: string;
     gaMeasurementId?: string;
 }
+
+export type TwoFactorCodeResponse = {
+    qr: string;
+    uri: string;
+}

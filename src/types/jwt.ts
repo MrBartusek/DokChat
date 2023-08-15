@@ -8,5 +8,6 @@ export interface UserJWTData extends JWTPayload {
     avatar: string,
     isBanned: boolean,
     isEmailConfirmed: boolean,
-    isDemo: boolean
+    isDemo: boolean,
+    is2FAEnabled: boolean
 }

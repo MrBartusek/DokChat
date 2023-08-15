@@ -25,7 +25,8 @@
     "electron:publish": "electron-forge publish"
   },
   "dependencies": {
-    "electron-log": "^4.4.8"
+    "electron-log": "^4.4.8",
+    "node-2fa": "^2.0.3"
   },
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.223.0",

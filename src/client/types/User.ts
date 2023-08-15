@@ -22,6 +22,7 @@ export class LocalUser {
 	public username: string;
 	public tag: string;
 	public email: string;
+	public is2FAEnabled: boolean;
 	private _avatar: string;
 	public expiryDate: Date;
 
@@ -52,6 +53,7 @@ export class LocalUser {
 		user.isDemo = data.isDemo;
 		user._avatar = data.avatar;
 		user.isEmailConfirmed = data.isEmailConfirmed;
+		user.is2FAEnabled = data.is2FAEnabled;
 		user.expiryDate = DateFns.fromUnixTime(data.exp);
 
 		return user;

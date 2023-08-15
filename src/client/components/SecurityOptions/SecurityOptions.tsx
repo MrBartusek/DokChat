@@ -1,8 +1,11 @@
 import React, { useContext } from 'react';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
-import { BsShieldLock, BsUnlockFill } from 'react-icons/bs';
+import { BsLockFill, BsShieldLock, BsUnlockFill } from 'react-icons/bs';
+import { UserContext } from '../../context/UserContext';
+import { Link } from 'react-router-dom';
 
 export default function SecurityOptions() {
+	const [ user ] = useContext(UserContext);
 
 	return (
 		<>
@@ -11,22 +14,22 @@ export default function SecurityOptions() {
 				<a href="https://github.com/MrBartusek/DokChat/issues/10">#10</a> and {' '}
 				<a href="https://github.com/MrBartusek/DokChat/issues/29">#29</a>
 			</div>
-			<div className='opacity-25 pointer-event'>
-				<InteractiveButton variant='primary' size='sm' icon={BsShieldLock}>
-					Change Password
+			<InteractiveButton variant='primary' size='sm' icon={BsShieldLock}>
+				Change Password
+			</InteractiveButton>
+			<p className={`small fw-bold mt-4 mb-2 ${user.is2FAEnabled ? 'text-success' : 'text-danger'}`}>
+				{user.is2FAEnabled ? <BsLockFill className='me-1' /> : <BsUnlockFill className='me-1' />}
+				Two-factor authentication {user.is2FAEnabled ? 'enabled' : 'disabled'}
+			</p>
+			<p className='small text-muted mb-2'>
+				Two-factor authentication (2FA for short) is added security layer for your DokChat account.
+				When 2FA is enabled you need to confirm every login attempt.
+			</p>
+			<Link to='2fa'>
+				<InteractiveButton icon={BsShieldLock} size='sm'>
+					{user.is2FAEnabled ? 'Disable' : 'Enable'} 2FA
 				</InteractiveButton>
-				<p className='small fw-bold text-danger mt-4 mb-2'>
-					<BsUnlockFill className='me-1' />
-					Two-factor authentication disabled
-				</p>
-				<p className='small text-muted mb-2'>
-					Two-factor authentication (2FA for short) is added security layer for your DokChat account.
-					When 2FA is enabled you need to confirm every login attempt.
-				</p>
-				<InteractiveButton variant='primary' size='sm' icon={BsShieldLock}>
-					Enable 2FA
-				</InteractiveButton>
-			</div>
+			</Link>
 		</>
 	);
 }

@@ -13,12 +13,14 @@ export async function createDatabaseStructure() {
             avatar varchar(64),
             last_seen bigint NOT NULL,
             created_at bigint NOT NULL,
+            two_factor_secret varchar(64),
 
             is_system boolean NOT NULL DEFAULT FALSE,
             is_admin boolean NOT NULL DEFAULT FALSE,
             is_banned boolean NOT NULL DEFAULT FALSE,
             is_email_confirmed boolean NOT NULL DEFAULT FALSE,
             is_demo boolean NOT NULL DEFAULT FALSE,
+            is_two_factor_enabled boolean NOT NULL DEFAULT FALSE,
             
             last_email_confirm_attempt bigint,
             last_pass_reset_attempt bigint,
@@ -81,6 +83,11 @@ export async function createDatabaseStructure() {
             created_at bigint NOT NULL,
             PRIMARY KEY (id)
         );
+
+        -- MIGRATIONS
+
+        ALTER TABLE users ADD COLUMN IF NOT EXISTS two_factor_secret varchar(64);
+        ALTER TABLE users ADD COLUMN IF NOT EXISTS is_two_factor_enabled boolean NOT NULL DEFAULT FALSE;
     `);
 	await removeDemoAccounts();
 }

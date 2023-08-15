@@ -8,6 +8,7 @@ import registerRouter from './register';
 import socialLoginRouter from './social-login';
 import demoRouter from './demo';
 import desktopLoginRouter from './dekstop-login';
+import twoFactorRouter from './two-factor';
 
 const router = express.Router();
 
@@ -20,5 +21,6 @@ router.use(desktopLoginRouter);
 router.use('/password-reset', passwordResetRouter);
 router.use('/email-confirm', emailConfirmRouter);
 router.use('/social-login', socialLoginRouter);
+router.use('/two-factor', twoFactorRouter);
 
 export default router;
