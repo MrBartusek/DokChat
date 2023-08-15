@@ -9,11 +9,6 @@ export default function SecurityOptions() {
 
 	return (
 		<>
-			<div className='text-muted pb-3'>
-				Security options are not yet implemented. See {' '}
-				<a href="https://github.com/MrBartusek/DokChat/issues/10">#10</a> and {' '}
-				<a href="https://github.com/MrBartusek/DokChat/issues/29">#29</a>
-			</div>
 			<InteractiveButton variant='primary' size='sm' icon={BsShieldLock}>
 				Change Password
 			</InteractiveButton>

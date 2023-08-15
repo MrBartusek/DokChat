@@ -11,11 +11,11 @@ import { useForm } from '../../hooks/useForm';
 import getAxios from '../../helpers/axios';
 import { UserContext } from '../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import InteractiveTwoFactorCodeInput from '../InteractiveTwoFactorCodeInput/InteractiveTwoFactorCodeInput';
 
 function TwoFactorAuthenticationPopup() {
 	const [ user, refreshUser ] = useContext(UserContext);
 	const [ handleClose, setHandleClose ] = useState<() => void>(null);
-	const [ error, setError ] = useState<string | null>(null);
 	const codeFetch = useFetch<EndpointResponse<TwoFactorCodeResponse>>('/auth/two-factor/get-code', true);
 
 	usePageInfo({
@@ -32,7 +32,6 @@ function TwoFactorAuthenticationPopup() {
 			)}
 			setHandleClose={setHandleClose}
 		>
-			{error && <Alert variant='danger'>{error}</Alert>}
 			{!user.is2FAEnabled ? (
 				<>
 					<div className='lead text-center'>
@@ -66,9 +65,9 @@ function TwoFactorAuthenticationPopup() {
 							title='Login with your code'
 						>
 							<div className='text-muted'>
-							Enter the generated 6-digit code below
+								Enter the generated 6-digit code below
 							</div>
-							<TwoFactorCodeInput action='enable' setError={setError} />
+							<InteractiveTwoFactorCodeInput action='enable' />
 
 						</TwoFactorStep>
 					</Stack>
@@ -83,7 +82,7 @@ function TwoFactorAuthenticationPopup() {
 					<div className='text-muted'>
 						Enter the 6-digit authentication code to proceed
 					</div>
-					<TwoFactorCodeInput action='disable' setError={setError} />
+					<InteractiveTwoFactorCodeInput action='disable' />
 				</>
 			)}
 		</Popup>
@@ -115,58 +114,6 @@ function TwoFactorStep({ image, title, imageAlt, fullSize, children }: TwoFactor
 			</Col>
 		</Row>
 	);
-}
-
-interface TwoFactorCodeInputProps {
-	action: 'enable' | 'disable';
-	setError: React.Dispatch<React.SetStateAction<string>>;
-}
-
-function TwoFactorCodeInput({action, setError}: TwoFactorCodeInputProps) {
-	const [ user, refreshUser ] = useContext(UserContext);
-	const [ values, handleChange ] = useForm({ code: '' });
-	const navigate = useNavigate();
-	const axios = getAxios(user);
-	const [ isLoading, setLoading ] = useState(false);
-
-	return (
-		<Form onSubmit={handleSubmit}>
-			<InputGroup className='mt-3'>
-				<Form.Control
-					className='d-flex flex-fill'
-					type="numeric"
-					maxLength={6}
-					name="code"
-					value={values.code}
-					onChange={handleChange}
-				/>
-				<InteractiveButton
-					variant='primary'
-					className='d-flex'
-					loading={isLoading}
-					type="submit"
-				>
-					{action == 'enable' ? 'Activate' : 'Disable'}
-				</InteractiveButton>
-			</InputGroup>
-		</Form>
-	);
-
-	async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-		event.preventDefault();
-		setLoading(true);
-		await axios.post(`/auth/two-factor/${action}`, values) // Backend request body should exactly match this hook
-			.then((r: any) => {
-				refreshUser().then(() => {
-					navigate('/chat/profile/');
-				});
-			})
-			.catch((e: any) => {
-				const resp: EndpointResponse<null> = e.response?.data;
-				setError(resp?.message || `Failed to ${action} 2FA this time. Please try again later.`);
-				setLoading(false);
-			});
-	}
 }
 
 export default TwoFactorAuthenticationPopup;
