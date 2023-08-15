@@ -14,6 +14,7 @@ router.all('/login',
 	body('email').isEmail().normalizeEmail(),
 	body('password').custom(isValidPassword),
 	body('rememberMe').isBoolean().optional(),
+	body('twoFactorCode').optional().isNumeric().isLength({ min: 6, max: 6}),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
@@ -24,8 +25,15 @@ router.all('/login',
 
 		const audience = jwtManager.getAudienceFromRequest(req);
 
-		AuthManager.authenticateUser(email, password)
+		return AuthManager.authenticateUser(email, password)
 			.then(async ([ jwtData, passwordHash ]) => {
+				if(jwtData.is2FAEnabled && !req.body.twoFactorCode) {
+					return new ApiResponse(res).badRequest('2FA_CODE_MISSING');
+				}
+				if(jwtData.is2FAEnabled && req.body.twoFactorCode) {
+					const result = await UserManager.validate2FA(jwtData.id, req.body.twoFactorCode);
+					if(!result) return new ApiResponse(res).badRequest('Invalid 2FA Code');
+				}
 				await UserManager.bumpLastSeen(jwtData.id);
 				AuthManager.sendAuthResponse(res, jwtData, audience, passwordHash, rememberMe);
 			})
