@@ -6,13 +6,15 @@ import Popup from '../Popup/Popup';
 import ProfileSettingsTab from '../ProfileSettingsTab/ProfileSettingsTab';
 import SettingsTab from '../SettingsTab/SettingsTab';
 import { usePageInfo } from '../../hooks/usePageInfo';
+import { useSearchParams } from 'react-router-dom';
 
 function SettingsPopup() {
 	const [ handleClose, setHandleClose ] = useState<() => void>(null);
 	const [ customFooter, setCustomFooter ] = useState<JSX.Element>(null);
 	const [ customStatic, setCustomStatic ] = useState<boolean>(null);
 	const [ popupTitle, setPopupTitle ] = useState('');
-	const [ key, setKey ] = useState('profile');
+	const [ searchParams ] = useSearchParams({ tab: 'profile' });
+	const [ key, setKey ] = useState(searchParams.get('tab'));
 
 	useEffect(() => {
 		if (key == 'profile') {
