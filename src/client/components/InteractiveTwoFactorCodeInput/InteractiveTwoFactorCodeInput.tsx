@@ -10,10 +10,11 @@ import TwoFactorCodeInput from '../TwoFactorCodeInputProps/TwoFactorCodeInputPro
 
 export interface InteractiveTwoFactorCodeInputProps {
 	action: 'enable' | 'disable';
-    setCode?: React.Dispatch<React.SetStateAction<string>>
+    setCode?: React.Dispatch<React.SetStateAction<string>>;
+	redirectTo?: string
 }
 
-function InteractiveTwoFactorCodeInput({action}: InteractiveTwoFactorCodeInputProps) {
+function InteractiveTwoFactorCodeInput({action, redirectTo = '/chat/profile?tab=account'}: InteractiveTwoFactorCodeInputProps) {
 	const [ user, refreshUser ] = useContext(UserContext);
 	const [ code, setCode ] = useState('');
 	const navigate = useNavigate();
@@ -39,7 +40,7 @@ function InteractiveTwoFactorCodeInput({action}: InteractiveTwoFactorCodeInputPr
 		await axios.post(`/auth/two-factor/${action}`, { code })
 			.then((r: any) => {
 				refreshUser().then(() => {
-					navigate('/chat/profile/');
+					navigate(redirectTo);
 				});
 			})
 			.catch((e: any) => {
