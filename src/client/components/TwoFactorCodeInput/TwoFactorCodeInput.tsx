@@ -1,9 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import { EndpointResponse } from '../../../types/endpoints';
-import { UserContext } from '../../context/UserContext';
-import getAxios from '../../helpers/axios';
 import { useForm } from '../../hooks/useForm';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
 
