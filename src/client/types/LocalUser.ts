@@ -25,6 +25,7 @@ export class LocalUser {
 	public is2FAEnabled: boolean;
 	private _avatar: string;
 	public expiryDate: Date;
+	public hasPassword: boolean;
 
 	/**
 	 * This is used for refreshing user avatar
@@ -55,6 +56,7 @@ export class LocalUser {
 		user.isEmailConfirmed = data.isEmailConfirmed;
 		user.is2FAEnabled = data.is2FAEnabled;
 		user.expiryDate = DateFns.fromUnixTime(data.exp);
+		user.hasPassword = data.hasPassword;
 
 		return user;
 	}

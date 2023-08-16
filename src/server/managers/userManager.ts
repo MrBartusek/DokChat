@@ -241,6 +241,7 @@ export default class UserManager {
 
 		if (query.rowCount == 0) return null;
 		const user = query.rows[0];
+		console.log( user.passwordHas);
 		return {
 			id: user.id,
 			username: user.username,
