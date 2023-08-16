@@ -65,7 +65,8 @@ export default class UserManager {
 			isBanned: false,
 			isEmailConfirmed: socialLogin || !emailServiceEnabled,
 			isDemo: false,
-			is2FAEnabled: false
+			is2FAEnabled: false,
+			hasPassword: !socialLogin
 		};
 		return [ jwtData, passwordHash ];
 	}
@@ -114,7 +115,8 @@ export default class UserManager {
 			isBanned: false,
 			isEmailConfirmed: true,
 			isDemo: true,
-			is2FAEnabled: false
+			is2FAEnabled: false,
+			hasPassword: false
 		};
 		return [ jwtData, '' ];
 	}
@@ -217,7 +219,8 @@ export default class UserManager {
 			isBanned: user.isBanned,
 			isEmailConfirmed: user.isEmailConfirmed,
 			isDemo: user.isDemo,
-			is2FAEnabled: user.isTwoFactorEnabled
+			is2FAEnabled: user.isTwoFactorEnabled,
+			hasPassword: user.passwordHash != ''
 		};
 	}
 
@@ -247,7 +250,8 @@ export default class UserManager {
 			isBanned: user.isBanned,
 			isEmailConfirmed: user.isEmailConfirmed,
 			isDemo: user.isDemo,
-			is2FAEnabled: user.isTwoFactorEnabled
+			is2FAEnabled: user.isTwoFactorEnabled,
+			hasPassword: user.passwordHash != ''
 		};
 	}
 
