@@ -1,11 +1,9 @@
 import * as DateFns from 'date-fns';
 import React, { useContext } from 'react';
-import { Container } from 'react-bootstrap';
-import { BsDashCircle } from 'react-icons/bs';
-import DokChatLogo from '../components/DokChatLogo/DokChatLogo';
+import { BsPersonX } from 'react-icons/bs';
+import FullFocusPage from '../components/FullFocusPage/FullFocusPage';
 import LogoutButton from '../components/LogoutButton/LogoutButton';
 import { UserContext } from '../context/UserContext';
-import FullFocusPage from '../components/FullFocusPage/FullFocusPage';
 
 function AccountBannedPage() {
 	const [ user ] = useContext(UserContext);
@@ -13,8 +11,8 @@ function AccountBannedPage() {
 	return (
 		<FullFocusPage>
 			<div className='d-flex justify-content-center align-items-center flex-column'>
-				<BsDashCircle size={80} color='var(--bs-danger)' className='mb-3' />
-				<h1 className='text-center'>
+				<BsPersonX size={80} color='var(--bs-danger)' className='mb-3' />
+				<h1 className='text-center text-danger'>
 					Account suspended
 				</h1>
 				<p className='py-4 text-center'>
@@ -25,7 +23,7 @@ function AccountBannedPage() {
 				</p>
 				<LogoutButton />
 
-				<p className='text-center text-secondary opacity-50 mt-4'>
+				<p className='text-center opacity-50 mt-5'>
 					id: {user.id}, user: {user.discriminator}, timestamp: {DateFns.getUnixTime(new Date())}
 				</p>
 			</div>

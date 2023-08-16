@@ -12,6 +12,7 @@ import OpenDMCard from '../OpenDMCard/OpenDMCard';
 import Popup from '../Popup/Popup';
 import SimpleLoading from '../SimpleLoadng/SimpleLoading';
 import { usePageInfo } from '../../hooks/usePageInfo';
+import AdminActionCard, { AdminAction } from '../AdminActionCard/AdminActionCard';
 
 function UserPopup() {
 	const { userId } = useParams();
@@ -72,6 +73,8 @@ function UserPopup() {
 				<Stack gap={3}>
 					<OpenDMCard userId={userId} />
 					<BlockUserCard userId={userId} />
+					<AdminActionCard action={AdminAction.SUSPEND_ACCOUNT} targetId={userId} />
+					<AdminActionCard action={AdminAction.REMOVE_SUSPENSION} targetId={userId} />
 				</Stack>
 			</>
 		</Popup>

@@ -49,11 +49,10 @@ router.all('/:id.png', param('id').isString(), allowedMethods('GET'), async (req
 
 async function userAvatar(id: string): Promise<string | null> {
 	const query = await db.query(sql`
-		SELECT
-			avatar
-		FROM
-			users
+		SELECT avatar
+		FROM users
 		WHERE id = $1
+		AND is_banned = FALSE -- don't show avatar of banned users
 		LIMIT 1;
 	`, [ id ]);
 	if (query.rowCount == 0) return null;

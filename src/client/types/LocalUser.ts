@@ -16,6 +16,7 @@ export class LocalUser {
 	public isAuthenticated: boolean;
 	public isBanned: boolean;
 	public isDemo: boolean;
+	public isAdmin: boolean;
 	public isEmailConfirmed: boolean;
 	public token: string;
 	public id: string;
@@ -51,6 +52,7 @@ export class LocalUser {
 		user.tag = data.tag,
 		user.email = data.email;
 		user.isBanned = data.isBanned;
+		user.isAdmin = data.isAdmin;
 		user.isDemo = data.isDemo;
 		user._avatar = data.avatar;
 		user.isEmailConfirmed = data.isEmailConfirmed;

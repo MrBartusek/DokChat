@@ -63,6 +63,7 @@ export default class UserManager {
 			email: email,
 			avatar: Utils.avatarUrl(userId),
 			isBanned: false,
+			isAdmin: false,
 			isEmailConfirmed: socialLogin || !emailServiceEnabled,
 			isDemo: false,
 			is2FAEnabled: false,
@@ -113,6 +114,7 @@ export default class UserManager {
 			email: email,
 			avatar: Utils.avatarUrl(userId),
 			isBanned: false,
+			isAdmin: false,
 			isEmailConfirmed: true,
 			isDemo: true,
 			is2FAEnabled: false,
@@ -204,6 +206,7 @@ export default class UserManager {
 				is_banned as "isBanned",
 				is_email_confirmed as "isEmailConfirmed",
 				is_demo as "isDemo",
+				is_admin as "isAdmin",
 				is_two_factor_enabled as "isTwoFactorEnabled"
 			FROM users WHERE id = $1;
 		`, [ id ]);
@@ -217,6 +220,7 @@ export default class UserManager {
 			email: user.email,
 			avatar: Utils.avatarUrl(user.id),
 			isBanned: user.isBanned,
+			isAdmin: user.isAdmin,
 			isEmailConfirmed: user.isEmailConfirmed,
 			isDemo: user.isDemo,
 			is2FAEnabled: user.isTwoFactorEnabled,
@@ -233,6 +237,7 @@ export default class UserManager {
 				email,
 				password_hash as "passwordHash",
 				is_banned as "isBanned",
+				is_admin as "isAdmin",
 				is_email_confirmed as "isEmailConfirmed",
 				is_demo as "isDemo",
 				is_two_factor_enabled as "isTwoFactorEnabled"
@@ -249,6 +254,7 @@ export default class UserManager {
 			email: user.email,
 			avatar: Utils.avatarUrl(user.id),
 			isBanned: user.isBanned,
+			isAdmin: user.isAdmin,
 			isEmailConfirmed: user.isEmailConfirmed,
 			isDemo: user.isDemo,
 			is2FAEnabled: user.isTwoFactorEnabled,
