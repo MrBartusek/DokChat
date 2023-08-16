@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { EndpointResponse, UserLoginResponse } from '../../types/endpoints';
 import getAxios from '../helpers/axios';
-import { LocalUser } from '../types/User';
+import { LocalUser } from '../types/LocalUser';
 import { useUser } from './useUser';
 import Utils from '../helpers/utils';
 import { useElectronConfig } from './useElectronConfig';

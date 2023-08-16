@@ -1,6 +1,6 @@
 import * as axios from 'axios';
 import { Axios } from 'axios';
-import { LocalUser } from '../types/User';
+import { LocalUser } from '../types/LocalUser';
 import Utils from './utils';
 
 function getAxios(user?: LocalUser, config?: axios.AxiosRequestConfig<any>): Axios {

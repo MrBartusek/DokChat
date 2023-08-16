@@ -104,7 +104,7 @@ async function main() {
 
 	// Start the server
 	const port = process.env.PORT || 3000;
-	server.listen(port, () => console.log(`\r\nDokChat Server is listening on http://localhost:${port}/`));
+	server.listen(port, () => console.log(`[READY] DokChat Server is listening on http://localhost:${port}/\r\n`));
 }
 
 main();

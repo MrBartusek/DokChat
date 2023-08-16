@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { LocalUser } from '../types/User';
+import { LocalUser } from '../types/LocalUser';
 import Utils from '../helpers/utils';
 
 /**
