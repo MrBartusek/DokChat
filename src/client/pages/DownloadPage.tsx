@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Alert, Button, Col, Container, Row } from 'react-bootstrap';
-import { BsApple, BsCheck, BsDownload, BsGlobe, BsWindows } from 'react-icons/bs';
+import { BsApple, BsChatSquareTextFill, BsCheck, BsDownload, BsGlobe, BsWindows } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
@@ -9,6 +9,7 @@ import useBreakpoint from '../hooks/useBreakpoint';
 import { usePageInfo } from '../hooks/usePageInfo';
 import Section from '../components/Section/Section';
 import { version } from '../../../package.json';
+import InteractiveButton from '../components/InteractiveButton/InteractiveButton';
 
 function DownloadPage() {
 	usePageInfo({
@@ -27,12 +28,7 @@ function DownloadPage() {
 				</p>
 			</Section>
 			<Section>
-				<Alert variant='warning'>
-					DokChat Desktop will be available publicly at 17/08/2023
-				</Alert>
-			</Section>
-			{/* <Section>
-				<Row className='py-5 gx-5'>
+				<Row className='py-4 gx-5' id='select'>
 					<Col lg={6}>
 						<div className='border border-grey-600 rounded-3 p-4 h-100'>
 							<h2 className='text-center pb-2'>
@@ -87,10 +83,27 @@ function DownloadPage() {
 				</div>
 			</Section>
 			<Section variantBackground>
-				<div className='d-flex justify-content-center align-items-center'>
+				<h1 className='text-center'>Why DokChat Desktop?</h1>
+				<div className='d-flex justify-content-center align-items-center my-4'>
 					<img src="./img/desktop-promo.png" className='w-100' style={{maxWidth: 800}} alt="DokChat Desktop" />
 				</div>
-			</Section> */}
+				<p className='lead m-auto text-center' style={{maxWidth: 800}}>
+					DokChat Desktop is fully-fledged desktop client for DokChat. We support Windows, MacOS and
+					Linux. Desktop provided you with various improvements like Desktop Notifications, Discord
+					Rich Presence and Automatic Login! App has auto-updater built in so you won&apos;t miss out on
+					new releases.
+				</p>
+			</Section>
+			<Section>
+				<div className='d-flex flex-column align-items-center py-5 mb-5'>
+					<h2 className='fs-1 mb-5 text-center'>Ready to start using Desktop?</h2>
+					<Link to='#' reloadDocument>
+						<InteractiveButton size='lg' icon={BsChatSquareTextFill}>
+							Download Desktop Today
+						</InteractiveButton>
+					</Link>
+				</div>
+			</Section>
 		</Layout>
 	);
 }
