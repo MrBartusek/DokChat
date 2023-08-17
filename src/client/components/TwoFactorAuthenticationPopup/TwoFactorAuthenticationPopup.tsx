@@ -44,8 +44,8 @@ function TwoFactorAuthenticationPopup() {
 						>
 							<div className='text-muted'>
 								Download and install {' '}
-								<a href="https://play.google.com/store/apps/details?id=com.authy.authy">Authy</a> or {' '}
-								<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google&nbsp;Authenticator</a> {' '}
+								<a href="https://play.google.com/store/apps/details?id=com.authy.authy" target='blank'>Authy</a> or {' '}
+								<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target='blank'>Google&nbsp;Authenticator</a> {' '}
 								for your phone or tablet.
 							</div>
 						</TwoFactorStep>
