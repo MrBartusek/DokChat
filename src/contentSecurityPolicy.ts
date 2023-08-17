@@ -37,7 +37,8 @@ export const directives: Record<string, Array<string>> = {
 		'https://*.googletagmanager.com', // Google Analytics
 		'https://media.tenor.com',
 		'https://twemoji.maxcdn.com',
-		'https://cdn.jsdelivr.net/npm/emoji-datasource-twitter/'
+		'https://cdn.jsdelivr.net/npm/emoji-datasource-twitter',
+		'https://chart.googleapis.com'
 	]
 };
 
