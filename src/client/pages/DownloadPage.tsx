@@ -16,7 +16,8 @@ function DownloadPage() {
 		title: 'Get DokChat'
 	});
 
-	const downloadLink = `https://github.com/MrBartusek/DokChat/releases/download/v${version}`;
+	const downloadLink = `https://github.com/MrBartusek/DokChat/releases/download/${version}`;
+	const releasesLink = `https://github.com/MrBartusek/DokChat/releases/tag/${version}`;
 
 	return (
 		<Layout>
@@ -75,7 +76,7 @@ function DownloadPage() {
 				<div className='d-flex justify-content-center'>
 					<a
 						className='text-center lead pb-3 mt-2'
-						href={`https://github.com/MrBartusek/DokChat/releases/tag/v${version}`}
+						href={releasesLink}
 						target='_blank' rel='noreferrer'
 					>
 						See other installation options
