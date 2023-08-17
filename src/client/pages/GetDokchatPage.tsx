@@ -7,6 +7,7 @@ import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
 import { UserContext } from '../context/UserContext';
 import useBreakpoint from '../hooks/useBreakpoint';
 import { usePageInfo } from '../hooks/usePageInfo';
+import Section from '../components/Section/Section';
 
 function GetDokchatPage() {
 	const breakpoint = useBreakpoint();
@@ -19,12 +20,14 @@ function GetDokchatPage() {
 	return (
 		<Layout>
 			<ScrollToTop />
-			<Container>
+			<Section variantBackground>
 				<h1 className='text-center pt-5 pb-2'>Start using DokChat</h1>
 				<p className='lead m-auto text-center pb-4'>
 					Select your desired platform
 				</p>
-				<Row className='py-5 gx-5'>
+			</Section>
+			<Section>
+				<Row className='pb-5'>
 					<Col lg={6}>
 						<div className='border border-grey-600 rounded-3 p-4 h-100'>
 							<h2 className='text-center pb-4'>
@@ -88,7 +91,7 @@ function GetDokchatPage() {
 						</div>
 					</Col>
 				</Row>
-			</Container>
+			</Section>
 		</Layout>
 	);
 }

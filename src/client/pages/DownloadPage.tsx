@@ -39,7 +39,7 @@ function DownloadPage() {
 								Windows 7 or newer
 							</p>
 							<div className='text-center text-muted my-3'>
-								DokChat Windows v{version}
+								DokChat Desktop - Windows v{version}
 							</div>
 							<div className='d-flex justify-content-center'>
 								<a href={downloadLink + '/dokchat-desktop-windows-setup.exe'}>
@@ -60,7 +60,7 @@ function DownloadPage() {
 								OS X 10.9 or newer
 							</p>
 							<div className='text-center text-muted my-3'>
-								DokChat MacOS v{version}
+								DokChat Desktop - MacOS v{version}
 							</div>
 							<div className='d-flex justify-content-center'>
 								<a href={downloadLink + `/DokChat-darwin-x64-${version}.zip`}>
