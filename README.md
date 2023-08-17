@@ -1,7 +1,7 @@
 # DokChat | [Website](https://dokchat.dokurno.dev)
 
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/MrBartusek/DokChat/ci.yaml) [![Website](https://img.shields.io/website?url=https%3A%2F%2Fdokchat.dokurno.dev&link=https%3A%2F%2Fdokchat.dokurno.dev)](https://dokchat.dokurno.dev)
- [![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/mrbartusek/dokchat/latest?label=docker%20version&link=https%3A%2F%2Fhub.docker.com%2Frepository%2Fdocker%2Fmrbartusek%2Fdokchat)](https://hub.docker.com/repository/docker/mrbartusek/dokchat/general) 
+[![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/mrbartusek/dokchat/latest?label=docker%20version&link=https%3A%2F%2Fhub.docker.com%2Frepository%2Fdocker%2Fmrbartusek%2Fdokchat)](https://hub.docker.com/repository/docker/mrbartusek/dokchat/general) ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fupdate.electronjs.org%2FMrBartusek%2FDokChat%2Fwin32-x64%2F0.0.0&query=%24.name&label=electron&color=blue)
 
 
 [![hero](https://i.imgur.com/ZapD7Mn.png)](https://dokchat.dokurno.dev)
@@ -41,7 +41,7 @@ See [`SETUP.MD`](SETUP.md) for setup guide.
 - **Socket.io** - Websockets are used for instant communication
 - **Amazon AWS**- AWS is used as primary hosting provider that handles server and attachments hosting as well as emails.
 - **Terraform** - Whole infrastructure is provisioned using Terraform
-  
+
 ### Hosting
 
 This project is designed to run on AWS using following services:
