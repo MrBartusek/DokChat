@@ -11,9 +11,9 @@ DokChat is complete, fully fledged instant messaging application. It supports al
 ## Features
 
 - Groups for multiple participants as well as private conversations between two people
-- Custom authentication system based on [JWT Token](https://jwt.io) and discord-like user tags `MrBartusek#0001`
+- Custom authentication system based on [JWT Tokens](https://jwt.io) and discord-like user tags `MrBartusek#0001`
 - Social authentication with Google and Facebook
-- Two-Factor Authentication with QR codes with all major Authenticator apps.
+- Two-Factor Authentication with QR codes that works with all major Authenticator apps.
 - Instant messaging with [socket.io](https://socket.io)
 - Username, tag and avatar customization as well as user preferences
 - Chat color, name and avatar customization
