@@ -43,10 +43,10 @@ function TwoFactorAuthenticationPopup() {
 							title='Download Authenticator App'
 						>
 							<div className='text-muted'>
-						Download and install {' '}
+								Download and install {' '}
 								<a href="https://play.google.com/store/apps/details?id=com.authy.authy">Authy</a> or {' '}
 								<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google&nbsp;Authenticator</a> {' '}
-						for your phone or tablet.
+								for your phone or tablet.
 							</div>
 						</TwoFactorStep>
 						<TwoFactorStep
@@ -56,8 +56,8 @@ function TwoFactorAuthenticationPopup() {
 							fullSize
 						>
 							<div className='text-muted'>
-						Open the authenticator app and scan the image to the left using your
-						phone camera.
+								Open the authenticator app and scan the image to the left using your
+								phone camera.
 							</div>
 						</TwoFactorStep>
 						<TwoFactorStep
@@ -75,8 +75,8 @@ function TwoFactorAuthenticationPopup() {
 			): (
 				<>
 					<Alert variant='warning'>
-					You are about to disable Two-factor authentication (2FA for short). This action
-					is going to reduce your account security.
+						You are about to disable Two-factor authentication (2FA for short). This action
+						is going to reduce your account security.
 					</Alert>
 
 					<div className='text-muted'>

@@ -132,6 +132,7 @@ function LoginForm(props: LoginFormProps) {
 						setError('Missing 2FA code');
 					}
 					else {
+						setError(null);
 						setShowTwoFactorPopup(true);
 					}
 					setLoading(false);

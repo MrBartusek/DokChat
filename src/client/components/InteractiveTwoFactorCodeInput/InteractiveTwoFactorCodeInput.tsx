@@ -4,6 +4,7 @@ import { EndpointResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import TwoFactorCodeInput from '../TwoFactorCodeInput/TwoFactorCodeInput';
+import toast from 'react-hot-toast';
 
 export interface InteractiveTwoFactorCodeInputProps {
 	action: 'enable' | 'disable';
@@ -37,6 +38,7 @@ function InteractiveTwoFactorCodeInput({action, redirectTo = '/chat/profile?tab=
 		await axios.post(`/auth/two-factor/${action}`, { code })
 			.then((r: any) => {
 				refreshUser().then(() => {
+					toast.success(`Two-Factor Authentication ${action}d`);
 					navigate(redirectTo);
 				});
 			})

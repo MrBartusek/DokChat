@@ -15,9 +15,11 @@ export default function SecurityOptions() {
 					a password for this account.
 				</p>
 			)}
-			<InteractiveButton variant='primary' size='sm' icon={BsShieldLock}>
-				{user.hasPassword ? 'Change' : 'Set'} Password
-			</InteractiveButton>
+			<Link to='password'>
+				<InteractiveButton variant='primary' size='sm' icon={BsShieldLock}>
+					{user.hasPassword ? 'Change' : 'Set'} Password
+				</InteractiveButton>
+			</Link>
 			<p className={`small fw-bold mt-4 mb-2 ${user.is2FAEnabled ? 'text-success' : 'text-danger'}`}>
 				{user.is2FAEnabled ? <BsLockFill className='me-1' /> : <BsUnlockFill className='me-1' />}
 				Two-factor authentication {user.is2FAEnabled ? 'enabled' : 'disabled'}
