@@ -1,6 +1,6 @@
 {
   "name": "dokchat",
-  "version": "1.1.0-rc.2",
+  "version": "1.1.0",
   "description": "Fully fledged instant web messaging application",
   "productName": "DokChat",
   "author": "MrBartusek",
