@@ -24,9 +24,11 @@ const isProduction = (process.env['NODE' + '_ENV'] || 'development') == 'product
 
 async function initializeDatabase() {
 	let retries = 5;
+	let connected = false;
 	while (retries) {
 		try {
 			await createDatabaseStructure();
+			connected = true;
 			break;
 		}
 		catch (error) {
@@ -36,7 +38,13 @@ async function initializeDatabase() {
 			await new Promise(res => setTimeout(res, 5000));
 		}
 	}
-	console.log('[OK] Database connected!');
+	if(connected) {
+		console.log('[OK] Database connected!');
+	}
+	else {
+		console.log('[!] Failed to initialize database, exiting server!');
+		process.exit(1);
+	}
 }
 
 async function main() {
