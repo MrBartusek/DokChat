@@ -8,13 +8,16 @@ import useBreakpoint from '../../hooks/useBreakpoint';
 import { LocalChat } from '../../types/Chat';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
 import './ChatList.scss';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import SimpleLoading from '../SimpleLoadng/SimpleLoading';
 
 export interface ChatListProps {
 	currentChat?: LocalChat
 }
 
 function ChatList({ currentChat }: ChatListProps) {
-	const [ chats ] = useContext(MessageManagerContext);
+	const [ chats, sendMessage, setChatList, fetchMoreChats, hasMoreChats ] = useContext(MessageManagerContext);
+	const [ isLoading, setLoading ] = useState(false);
 	const navigate = useNavigate();
 	const breakpoint = useBreakpoint();
 
@@ -25,17 +28,34 @@ function ChatList({ currentChat }: ChatListProps) {
 		</span>
 	);
 
+	console.log(hasMoreChats);
+
 	return (
-		<div className='d-flex py-3 px-2 align-items-center flex-column' style={{ overflowY: 'scroll', flex: '1 0 0' }}>
-			{chats.map((chat) => (
-				<Chat
-					key={chat.id}
-					chat={chat}
-					isCurrent={chat.id == currentChat?.id}
-					onClick={() => navigate(`/chat/${chat.id}`)}
-				/>
-			))}
-			{chats.length == 0 && noChatsInfo}
+		<div
+			className='d-flex py-3 px-2 align-items-center flex-column'
+			style={{ overflowY: 'scroll', flex: '1 0 0' }}
+			id='scrollableTarget'
+		>
+			<InfiniteScroll
+				dataLength={chats.length}
+				className='d-flex flex-column'
+				next={fetchMoreChats}
+				hasMore={hasMoreChats}
+				loader={null}
+				inverse={false}
+				scrollableTarget='scrollableTarget'
+			>
+				{chats.map((chat) => (
+					<Chat
+						key={chat.id}
+						chat={chat}
+						isCurrent={chat.id == currentChat?.id}
+						onClick={() => navigate(`/chat/${chat.id}`)}
+					/>
+				))}
+				{chats.length == 0 && noChatsInfo}
+				{isLoading ? <SimpleLoading /> : null}
+			</InfiniteScroll>
 		</div>
 	);
 }

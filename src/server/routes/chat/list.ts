@@ -16,14 +16,17 @@ const router = express.Router();
 router.all('/list',
 	allowedMethods('GET'),
 	ensureAuthenticated(true),
-	query('page').optional().isNumeric(),
+	query('lastCoalesceTimestamp').optional().isInt(),
+	query('count').optional().isInt({ max: 25, min: 1 }),
 	ensureRatelimit(5),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
-		const page = req.query.page as any as number || 0;
 
-		const chatsQuery = await queryChats(req, page);
+		const count = req.query.count as any as number || 10;
+		const lastCoalesceTimestamp = req.query.lastCoalesceTimestamp || Number.MAX_SAFE_INTEGER;
+
+		const chatsQuery = await queryChats(req, count, lastCoalesceTimestamp);
 		const chats = await Promise.all(chatsQuery.rows.map(async (chat) => {
 			const participant = await ChatManager.listParticipants(chat.chatId);
 			const [ name, avatar ] = await ChatManager.generateChatNameAndAvatar(chat.chatId, chat.name, participant, chat.isGroup, req.auth.id);
@@ -62,7 +65,7 @@ type ChatsQuery = QueryResult<{
 	createdAt: string,
 	color: number
 }>
-async function queryChats(req: express.Request, page: number): Promise<ChatsQuery> {
+async function queryChats(req: express.Request, count: number, lastCoalesceTimestamp: number): Promise<ChatsQuery> {
 	return db.query(sql`
         SELECT
             chat.name,
@@ -112,10 +115,11 @@ async function queryChats(req: express.Request, page: number): Promise<ChatsQuer
         ) AS last_message_author ON true
         WHERE
             participants.user_id = $1 AND participants.is_hidden = false
+			AND COALESCE(last_message.created_at, chat.created_at) < $3
 		ORDER BY
 			COALESCE(last_message.created_at, chat.created_at) DESC
-        LIMIT 25 OFFSET $2;
-    `, [ req.auth.id, page ]);
+        LIMIT $2;
+    `, [ req.auth.id, count, lastCoalesceTimestamp ]);
 }
 
 export default router;

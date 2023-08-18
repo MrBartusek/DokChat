@@ -16,7 +16,7 @@ const ChatWindowLazy = React.lazy(() => import('../components/ChatWindow/ChatWin
 function ChatPage() {
 	const { chatId } = useParams();
 	const ws = useWebsocket();
-	const [ isLoadingMessagesManager, chats, sendMessage, setChatList ] = useMessageManager(ws);
+	const [ isLoadingMessagesManager, chats, sendMessage, setChatList, fetchMoreChats, hasMoreChats ] = useMessageManager(ws);
 	const getOnlineStatus = useOnlineManager(ws);
 	const [ currentChat, setCurrentChat ] = useState<LocalChat>(null);
 	const [ user ] = useContext(UserContext);
@@ -78,7 +78,7 @@ function ChatPage() {
 	return (
 		<React.Suspense fallback={<MainLoading />}>
 			<OnlineManagerContext.Provider value={getOnlineStatus}>
-				<MessageManagerContext.Provider value={[ chats, sendMessage, setChatList ]}>
+				<MessageManagerContext.Provider value={[ chats, sendMessage, setChatList, fetchMoreChats, hasMoreChats ]}>
 					<ChatWindowLazy currentChat={currentChat} />
 					<Outlet context={currentChat} />
 				</MessageManagerContext.Provider>

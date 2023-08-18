@@ -13,6 +13,7 @@ import { useFetch } from './useFetch';
 import { useWebsocketType } from './useWebsocket';
 import Utils from '../helpers/utils';
 import { useNavigate } from 'react-router';
+import getAxios from '../helpers/axios';
 
 /**
  * This hook is a manger for receiving, caching and sending messages
@@ -22,29 +23,50 @@ export function useMessageManager(ws: useWebsocketType): [
 	boolean, // loading
 	LocalChat[], // chats
 	(chat: LocalChat, content?: string, attachment?: File) => Promise<void>, // sendMessage
-	React.Dispatch<LocalChat[]> // setChatList
+	React.Dispatch<LocalChat[]>, // setChatList
+	(count?: number) => void, // fetchMoreChats
+	boolean // hasMore
 ] {
 	const [ loading, setLoading ] = useState(true);
 	const [ user ] = useContext(UserContext);
 	const [ playPing ] = useSound(Utils.getBaseUrl() + '/sounds/new_message_ping.mp3', { volume: 0.5 });
 	const [ settings ] = useContext(SettingsContext);
 	const navigate = useNavigate();
-	const initialChatList = useFetch<EndpointResponse<ChatListResponse>>('chat/list', true);
 	const [ chatList, setChatList ] = useState<LocalChat[]>([]);
+	const [ hasMore, setHasMore ] = useState(true);
 
 	/**
 	 * Load initial chat list and cache it
 	 */
 	useEffect(() => {
-		if (initialChatList.loading) return;
-		const rawChats = initialChatList.res.data;
-		setChatList(
-			rawChats.map((chat) => (
-				new LocalChat(chat)
-			))
-		);
-		setLoading(false);
-	}, [ initialChatList ]);
+		setLoading(true);
+		fetchMoreChats(25);
+	}, []);
+
+	async function fetchMoreChats(count = 10) {
+		const axios = getAxios(user);
+		let url = `/chat/list?count=${count}`;
+		if (chatList.length > 0) {
+			const lastChat = chatList[chatList.length -1];
+			url += `&lastCoalesceTimestamp=${lastChat.lastMessage?.timestamp || lastChat.createdAt}`;
+		}
+		await axios.get(url)
+			.then((r) => {
+				const resp: EndpointResponse<ChatListResponse> = r.data;
+				const rawChats = resp.data;
+				const newChats = rawChats.map((chat) => new LocalChat(chat));
+				console.log(newChats);
+				setChatList([ ...chatList, ...newChats ]);
+				if (rawChats.length < count) {
+					setHasMore(false);
+					console.log('no more chats');
+				}
+			}).catch((error) => {
+				console.error('Failed to load more chats', error);
+			}).finally(() => {
+				setTimeout(() => setLoading(false), 300);
+			});
+	}
 
 	/**
 	 * Message receive
@@ -173,6 +195,8 @@ export function useMessageManager(ws: useWebsocketType): [
 		loading,
 		sortedChatList(),
 		sendMessage,
-		setChatList
+		setChatList,
+		fetchMoreChats,
+		hasMore
 	];
 }
