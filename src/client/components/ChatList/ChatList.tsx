@@ -28,8 +28,6 @@ function ChatList({ currentChat }: ChatListProps) {
 		</span>
 	);
 
-	console.log(hasMoreChats);
-
 	return (
 		<div
 			className='d-flex py-3 px-2 align-items-center flex-column'
