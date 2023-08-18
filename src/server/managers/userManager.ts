@@ -4,7 +4,7 @@ import * as DateFns from 'date-fns';
 import sql from 'sql-template-strings';
 import { User } from '../../types/common';
 import { UserJWTData } from '../../types/jwt';
-import db from '../db';
+import db, { user } from '../db';
 import { snowflakeGenerator } from '../utils/snowflakeGenerator';
 import Utils from '../utils/utils';
 import s3Client from './../aws/s3';
@@ -124,19 +124,63 @@ export default class UserManager {
 	}
 
 	public static async deleteUser(userData: UserJWTData): Promise<void> {
-		// Delete all attachments from S3
-		const attachmentsQuery = await db.query(sql`
-			SELECT attachment FROM messages WHERE author_id=$1 AND attachment IS NOT NULL
-		`, [ userData.id ]);
-		for await (const row of attachmentsQuery.rows) {
-			await s3Client.deleteFile(row.attachment);
-		}
+		console.log(`Removing account: ${userData.username}#${userData.tag} (${userData.email})`);
+		await this.purgeUserAttachments(userData.id);
 
-		// Delete user
 		await db.query('DELETE FROM users WHERE id=$1', [ userData.id ]);
 		if (!userData.isDemo) {
 			await emailClient.sendAccountDeletedEmail(userData);
 		}
+	}
+
+	/**
+	 * Remove avatar, all sent attachments and attachments in chats created by user,
+	 * this is called right before deleting user data from database. Keep bucket from
+	 * storing unused files.
+	 */
+	private static async purgeUserAttachments(userId: string) {
+		const filesToDelete = [];
+
+		console.log(`Purning S3 Files of ${userId}`);
+
+		// Delete avatar
+		const query = await db.query(sql`SELECT avatar FROM users WHERE id = $1;`, [ userId ]);
+		if (query.rowCount > 0) {
+			const avatarHash = query.rows[0].avatar;
+			if(avatarHash) {
+				console.log(`- Avatar (${avatarHash})`);
+				filesToDelete.push(avatarHash);
+			}
+		}
+
+		// Delete Attachments
+		const attachmentsQuery = await db.query(sql`
+			SELECT attachment FROM messages WHERE author_id=$1 AND attachment IS NOT NULL
+		`, [ userId ]);
+		attachmentsQuery.rows.forEach((r) => {
+			console.log(`- Sent attachment: (${r.attachment})`);
+			filesToDelete.push(r.attachment);
+		});
+
+		// Delete attachments from chats
+		const chatsQuery = await db.query(sql`
+			SELECT id FROM chats WHERE creator_id=$1
+		`, [ userId ]);
+		for await(const chat of chatsQuery.rows) {
+			const attachmentsQuery = await db.query(sql`
+				SELECT attachment FROM messages WHERE chat_id=$1 AND attachment IS NOT NULL
+			`, [ chat.id ]);
+			attachmentsQuery.rows.forEach((r) => {
+				console.log(`- Attachment from created chat: (${r.attachment})`);
+				filesToDelete.push(r.attachment);
+			});
+		}
+
+		// Delete from bucket
+		for await (const file of new Set(filesToDelete)) {
+			await s3Client.deleteFile(file);
+		}
+		console.log(`Deleted ${filesToDelete.length} files from S3!`);
 	}
 
 	private static async usersWithUsernameCount(username: string): Promise<number> {

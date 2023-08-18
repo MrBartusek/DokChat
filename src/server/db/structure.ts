@@ -1,6 +1,7 @@
 import sql from 'sql-template-strings';
 import db from './index';
 import * as DateFns from 'date-fns';
+import UserManager from '../managers/userManager';
 
 export async function createDatabaseStructure() {
 	await db.query(sql`
@@ -94,10 +95,12 @@ export async function createDatabaseStructure() {
 
 async function removeDemoAccounts() {
 	const timestampToRemove = DateFns.getUnixTime(DateFns.subHours(new Date(), 24));
-	const query = await db.query(sql`
-        DELETE FROM users WHERE is_demo IS TRUE AND created_at <= $1`,
+	const usersQuery = await db.query(sql`
+        SELECT id FROM users WHERE is_demo IS TRUE AND created_at <= $1`,
 	[ timestampToRemove ]);
-	if (query.rowCount > 0) {
-		console.log(`Postgres: Removed ${query.rowCount} old demo account(s)`);
+	for(const user of usersQuery.rows) {
+		const userData = await UserManager.getUserJwtDataById(user.id);
+		await UserManager.deleteUser(userData);
+		console.log(`Removed old demo account - ${userData.username}#${userData.tag}`);
 	}
 }
