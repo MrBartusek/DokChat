@@ -118,8 +118,8 @@ export default function ProfileSettings(props: ProfileSettingsProps) {
 				</>)}
 				subTitle="Online"
 				currentAvatar={user.avatar}
-				avatarUploader={avatarUploader}
-				setAvatarUploader={setAvatarUploader}
+				avatarUploader={!user.isDemo ? avatarUploader : null}
+				setAvatarUploader={!user.isDemo ? setAvatarUploader : null}
 				copyText={user.discriminator}
 			/>
 
