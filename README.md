@@ -58,7 +58,7 @@ Database design is loosely based on [yoosuf/Messenger](https://github.com/yoosuf
 visualization on [DB Desinger](https://dbdesigner.page.link/8WTzU9jzrGC1imjK8) or directly in
 [server/db/initalize.ts](./src/server/db/initalize.ts).
 
-[![db desing](https://i.imgur.com/psinkRD.png)](https://dbdesigner.page.link/8WTzU9jzrGC1imjK8)
+[![db desing](https://i.imgur.com/UP4E7Hl.png)](https://dbdesigner.page.link/8WTzU9jzrGC1imjK8)
 
 ## API
 
