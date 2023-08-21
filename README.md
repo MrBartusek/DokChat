@@ -36,7 +36,7 @@ See [`SETUP.MD`](SETUP.md) for setup guide.
 
 - **PostgreSQL** - Postgress is used as database without any ORM. You can see database visualization in [Database Design](#database-design) section.
 - **Express** - Node.js express is used as primary backend framework
-- **React** - React.js alongside with react-bootstrap and other client-side libraries is used as frontend libiary.
+- **React** - React.js alongside with react-bootstrap and other client-side libraries is used as frontend library.
 - **Typescript** - Typescript is used both on backend and frontend code to ensure type safety in whole project.
 - **Socket.io** - Websockets are used for instant communication
 - **Amazon AWS**- AWS is used as primary hosting provider that handles server and attachments hosting as well as emails.
