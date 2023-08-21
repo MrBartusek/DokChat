@@ -55,11 +55,9 @@ export function useMessageManager(ws: useWebsocketType): [
 				const resp: EndpointResponse<ChatListResponse> = r.data;
 				const rawChats = resp.data;
 				const newChats = rawChats.map((chat) => new LocalChat(chat, user));
-				console.log(newChats);
 				setChatList([ ...chatList, ...newChats ]);
 				if (rawChats.length < count) {
 					setHasMore(false);
-					console.log('no more chats');
 				}
 			}).catch((error) => {
 				console.error('Failed to load more chats', error);
