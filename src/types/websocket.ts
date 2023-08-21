@@ -12,6 +12,7 @@ export interface ServerToClientEvents {
 export interface ClientToServerEvents {
     message: (message: ClientMessage, callback: (response: EventAcknowledgement<{ id: string, timestamp: string }>) => void) => void;
     onlineStatus: (callback: (response: EventAcknowledgement<OnlineStatusResponse>) => void) => void;
+    messageRead: (chatId: string, messageId: string, callback: (response: EventAcknowledgement<{ id: string }>) => void) => void;
 }
 
 export type ClientAttachment = {

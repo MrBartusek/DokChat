@@ -12,7 +12,8 @@ export interface SimpleChatParticipant {
     userId: string,
     avatar: string,
     username: string,
-    tag: string
+    tag: string,
+    lastRead: string | null
 }
 
 export interface Chat {
@@ -35,6 +36,7 @@ export interface User {
 }
 
 export interface LastMessage {
+    id: string,
     author: string,
     content: string,
     timestamp: string,

@@ -65,6 +65,16 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 		const sender = `${socket.auth.id} (${socket.auth.username}#${socket.auth.tag})`;
 		console.log(`WS message ${sender}=>${msg.chatId}(chat)`);
 	});
+
+	socket.on('messageRead', async (chatId, messageId, callback) => {
+		ChatManager.updateLastRead(socket.auth, chatId, messageId)
+			.then(() => {
+				new ApiResponse({} as any, callback).success({ id: messageId });
+			})
+			.catch((error) => {
+				new ApiResponse({} as any, callback).badRequest(error.message);
+			});
+	});
 }
 
 /**

@@ -7,6 +7,8 @@ import db from '../db';
 import { InternalChatParticipant } from '../types/common';
 import { snowflakeGenerator } from '../utils/snowflakeGenerator';
 import Utils from '../utils/utils';
+import { check } from 'express-validator';
+import { Snowflake } from 'nodejs-snowflake';
 
 export default class ChatManager {
 
@@ -53,6 +55,7 @@ export default class ChatManager {
 				participants.id,
 				participants.user_id as "userId",
 				participants.is_hidden as "isHidden",
+				participants.last_read as "lastRead",
 				users.username,
 				users.tag
 			FROM
@@ -70,6 +73,7 @@ export default class ChatManager {
 			username: part.username,
 			tag: part.tag,
 			avatar: Utils.avatarUrl(part.userId),
+			lastRead: part.lastRead,
 			isHidden: part.isHidden
 		};
 		return result;
@@ -81,6 +85,7 @@ export default class ChatManager {
 				participants.id,
 				participants.user_id as "userId",
 				participants.is_hidden as "isHidden",
+				participants.last_read as "lastRead",
 				users.username,
 				users.tag
 			FROM
@@ -96,6 +101,7 @@ export default class ChatManager {
 				username: part.username,
 				tag: part.tag,
 				avatar: Utils.avatarUrl(part.userId),
+				lastRead: part.lastRead,
 				isHidden: part.isHidden
 			});
 		}
@@ -195,5 +201,25 @@ export default class ChatManager {
 		`, [ id, chatId, senderId, content, timestamp, sender == 'SYSTEM', attachmentKey,
 			attachment?.mimeType, attachment?.height, attachment?.width ]);
 		return [ id, timestamp ];
+	}
+
+	public static async updateLastRead(sender: UserJWTData, chatId: string, messageId: string): Promise<void> {
+		const checkQuery = await db.query(sql`
+			SELECT last_read FROM participants WHERE chat_id = $1 AND user_id = $2;
+		`, [ chatId, sender.id ]);
+
+		if(checkQuery.rowCount == 0) throw new Error('Invalid IDs provided (1)');
+
+		// custom epoch doesn't matter here, it's just difference between two snowflakes
+		const previousMessageTimestamp = Snowflake.timestampFromID(BigInt(checkQuery.rows[0].last_read || 0), 0);
+		const newMessageTimestamp = Snowflake.timestampFromID(BigInt(messageId), 0);
+		if(newMessageTimestamp < previousMessageTimestamp) throw new Error('Newer message is already read');
+
+		const query = await db.query(sql`
+			UPDATE participants SET last_read = $1 WHERE chat_id = $2 AND user_id = $3;
+		`, [ messageId, chatId, sender.id ]);
+		if(query.rowCount == 0) {
+			throw new Error('Invalid IDs provided (2)');
+		}
 	}
 }

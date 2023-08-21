@@ -36,6 +36,7 @@ export class LocalChat implements Chat {
 	public creatorId: string;
 	public color: ChatColor;
 	public participants: SimpleChatParticipant[];
+	private _lastRead: string;
 
 	constructor(chat: Chat, user: LocalUser) {
 		this.isInitialized = false;
@@ -49,6 +50,9 @@ export class LocalChat implements Chat {
 		this.creatorId = chat.creatorId;
 		this._messages = chat.lastMessage || [];
 		this.participants = chat.participants;
+
+		const me = this.participants.find(p => p.userId == this._user.id);
+		this._lastRead = me.lastRead;
 	}
 
 	/**
@@ -85,6 +89,16 @@ export class LocalChat implements Chat {
 		this._avatar = avatar;
 	}
 
+	get hasUnread(): boolean {
+		if(!this.lastMessage) return false;
+		return this._lastRead == null || this._lastRead != this.lastMessage?.id;
+	}
+
+	set hasUnread(status: boolean) {
+		if(status == true) throw new Error('Cannot set hasUnread to true');
+		this._lastRead = this.lastMessage?.id;
+	}
+
 	/**
 	 * Load messages list from API
 	 */
@@ -118,6 +132,7 @@ export class LocalChat implements Chat {
 		}
 		else {
 			this._messages = {
+				id: msg.id,
 				author: msg.author.username,
 				content: msg.content,
 				timestamp: DateFns.getUnixTime(new Date()).toString()
@@ -157,7 +172,7 @@ export class LocalChat implements Chat {
 	}
 
 	get messages(): LocalMessage[] {
-		if (!this.isInitialized) throw new Error('Cannot read messages of uninitialized chat');
+		if (!this.isInitialized) return [];
 		const msgs = this._messages as LocalMessage[];
 		return msgs.sort((a, b) => Number(b.timestamp) - Number(a.timestamp));
 	}
@@ -170,10 +185,10 @@ export class LocalChat implements Chat {
 			return this._messages as LastMessage;
 		}
 		else {
-			const msgs = (this._messages as Message[]);
-			const lastMsg = msgs[0];
+			const lastMsg = this.messages[0];
 			if (!lastMsg) return null;
 			return {
+				id: lastMsg.id,
 				author: lastMsg.author.username,
 				content: lastMsg.content,
 				timestamp: lastMsg.timestamp

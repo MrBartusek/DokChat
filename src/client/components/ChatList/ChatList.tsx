@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Twemoji } from 'react-emoji-render';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { Link, useNavigate } from 'react-router-dom';
 import { MessageManagerContext } from '../../context/MessageManagerContext';
 import { OnlineManagerContext } from '../../context/OnlineManagerContext';
@@ -7,9 +8,8 @@ import { UserContext } from '../../context/UserContext';
 import useBreakpoint from '../../hooks/useBreakpoint';
 import { LocalChat } from '../../types/Chat';
 import ProfilePicture from '../ProfilePicture/ProfilePicture';
-import './ChatList.scss';
-import InfiniteScroll from 'react-infinite-scroll-component';
 import SimpleLoading from '../SimpleLoadng/SimpleLoading';
+import './ChatList.scss';
 
 export interface ChatListProps {
 	currentChat?: LocalChat
@@ -60,7 +60,7 @@ function ChatList({ currentChat }: ChatListProps) {
 
 interface ChatProps {
 	chat: LocalChat,
-	isCurrent?: boolean
+	isCurrent?: boolean,
 	onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
@@ -78,9 +78,14 @@ function Chat(props: ChatProps) {
 		setOnline(online);
 	}, [ getOnlineStatus ]);
 
+	const hasUnread = props.chat.hasUnread && !props.isCurrent;
+
 	return (
 		<div
-			className={`d-flex px-2 chat flex-row rounded-3 flex-nowrap ${props.isCurrent ? 'current' : ''}`}
+			className={
+				'd-flex px-2 chat flex-row rounded-3 flex-nowrap ' +
+				`${props.isCurrent ? 'current' : ''} ` +
+				`${hasUnread ? 'fw-bold' : ''}`}
 			style={{ minHeight: 65 }}
 			onClick={props.onClick}
 		>
@@ -92,7 +97,9 @@ function Chat(props: ChatProps) {
 				style={{ width: 240 }}
 			>
 				<Twemoji className='text-truncate text-nowrap' text={props.chat.name} />
-				<div className='text-muted text-truncate' style={{ fontSize: '0.85em' }}>
+				<div
+					className={`text-muted text-truncate fw-light ${hasUnread ? 'fw-bold' : 'fw-light'}`}
+					style={{ fontSize: '0.85em' }}>
 					{props.chat.lastMessage ? (
 						<Twemoji
 							text={`

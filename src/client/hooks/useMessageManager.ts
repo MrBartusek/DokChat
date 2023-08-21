@@ -25,7 +25,8 @@ export function useMessageManager(ws: useWebsocketType): [
 	(chat: LocalChat, content?: string, attachment?: File) => Promise<void>, // sendMessage
 	React.Dispatch<LocalChat[]>, // setChatList
 	(count?: number) => void, // fetchMoreChats
-	boolean // hasMore
+	boolean, // hasMore
+	(chat: LocalChat) => void, // markChatAsRead
 ] {
 	const [ loading, setLoading ] = useState(true);
 	const [ user ] = useContext(UserContext);
@@ -78,6 +79,7 @@ export function useMessageManager(ws: useWebsocketType): [
 				// If chat does not exist, add one to cache
 				const newChat = msg.chat;
 				newChat.lastMessage = {
+					id: msg.id,
 					author: msg.author.username,
 					content: msg.content,
 					timestamp: msg.timestamp
@@ -189,12 +191,26 @@ export function useMessageManager(ws: useWebsocketType): [
 		});
 	}
 
+	function markChatAsRead(chat: LocalChat) {
+		const lastMessage = chat.messages.filter(m => !m.isPending)[0];
+		if(!lastMessage) return;
+		ws.socket.emit('messageRead', chat.id, lastMessage.id, (response) => {
+			if (response.error) {
+				console.error('Failed to mark message as read', response);
+			}
+			else {
+				chat.hasUnread = false;
+			}
+		});
+	}
+
 	return [
 		loading,
 		sortedChatList(),
 		sendMessage,
 		setChatList,
 		fetchMoreChats,
-		hasMore
+		hasMore,
+		markChatAsRead
 	];
 }

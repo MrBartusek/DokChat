@@ -4,5 +4,6 @@ export interface InternalChatParticipant {
     username: string,
     tag: string,
     avatar: string,
+    lastRead: string | null,
     isHidden: boolean
 }

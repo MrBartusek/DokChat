@@ -53,7 +53,8 @@ export default class Utils {
 			userId: p.userId,
 			avatar: p.avatar,
 			username: p.username,
-			tag: p.tag
+			tag: p.tag,
+			lastRead: p.lastRead
 		}));
 	}
 }
