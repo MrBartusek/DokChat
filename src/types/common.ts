@@ -9,13 +9,16 @@ export interface ChatColor {
 
 export interface SimpleChatParticipant {
     id: string,
-    userId: string
+    userId: string,
+    avatar: string,
+    username: string,
+    tag: string
 }
 
 export interface Chat {
     id: string,
-    name: string,
-    avatar: string,
+    name: string | null,
+    avatar: string | null,
     isGroup: boolean,
     creatorId: string,
     createdAt: string,

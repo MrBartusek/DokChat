@@ -10,6 +10,7 @@ import ChatManager from '../../managers/chatManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import ensureAuthenticated from '../../middlewares/ensureAuthenticated';
 import ensureRatelimit from '../../middlewares/ensureRatelimit';
+import Utils from '../../utils/utils';
 
 const router = express.Router();
 
@@ -28,13 +29,12 @@ router.all('/list',
 
 		const chatsQuery = await queryChats(req, count, lastCoalesceTimestamp);
 		const chats = await Promise.all(chatsQuery.rows.map(async (chat) => {
-			const participant = await ChatManager.listParticipants(chat.chatId);
-			const [ name, avatar ] = await ChatManager.generateChatNameAndAvatar(chat.chatId, chat.name, participant, chat.isGroup, req.auth.id);
+			const participants = await ChatManager.listParticipants(chat.chatId);
 
 			return {
 				id: chat.chatId,
-				name,
-				avatar,
+				name: chat.name,
+				avatar: chat.isGroup ? Utils.avatarUrl(chat.chatId) : null,
 				color: CHAT_COLORS[chat.color] || CHAT_COLORS[0],
 				isGroup: chat.isGroup,
 				createdAt: chat.createdAt,
@@ -44,10 +44,7 @@ router.all('/list',
 					author: chat.messageAuthor,
 					timestamp: chat.messageCreatedAt
 				} : null,
-				participants: participant.map(p => ({
-					id: p.id,
-					userId: p.userId
-				}))
+				participants: Utils.convertParticipantsToSimple(participants)
 			};
 		}));
 		const result: ChatListResponse = chats;

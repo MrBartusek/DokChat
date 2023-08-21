@@ -1,7 +1,8 @@
 import validator from 'validator';
-import { User } from '../../types/common';
+import { SimpleChatParticipant, User } from '../../types/common';
 import { UserJWTData } from '../../types/jwt';
 import { IncomingMessage } from 'http';
+import { InternalChatParticipant } from '../types/common';
 
 export default class Utils {
 	public static apiUrl() {
@@ -44,5 +45,15 @@ export default class Utils {
 
 	public static isDev(): boolean {
 		return process.env.NODE_ENV != 'production';
+	}
+
+	public static convertParticipantsToSimple(participants: InternalChatParticipant[]): SimpleChatParticipant[] {
+		return participants.map(p => ({
+			id: p.id,
+			userId: p.userId,
+			avatar: p.avatar,
+			username: p.username,
+			tag: p.tag
+		}));
 	}
 }

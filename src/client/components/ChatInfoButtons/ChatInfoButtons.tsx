@@ -12,7 +12,7 @@ export interface ChatInfoButtonsProps {
 function ChatInfoButtons({ currentChat }: ChatInfoButtonsProps) {
 	const [ user ] = useContext(UserContext);
 
-	const otherParticipantId = currentChat.participants.find(p => p.userId != user.id).userId;
+	const otherParticipantId = currentChat.participants.find(p => p.userId != user.id)?.userId;
 
 	return (
 		<div className='d-flex align-items-center'>

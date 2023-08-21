@@ -38,7 +38,7 @@ router.all('/create',
 		if (isDm) {
 			const dmId = await ChatManager.dmExist(participantIds[0], req.auth.id);
 			if (dmId !== false) {
-				const chat = await ChatManager.getChat(dmId, req.auth.id);
+				const chat = await ChatManager.getChat(dmId);
 				return new ApiResponse(res).respond(true, 409, 'This DM already exist', chat);
 			}
 		}
@@ -88,7 +88,7 @@ async function createChat(req: Request, creatorId: string, participants: User[])
 		await ChatManager.addUserToChat(part.id, chatId, hide);
 	}
 
-	return ChatManager.getChat(chatId, req.auth.id);
+	return ChatManager.getChat(chatId);
 }
 
 async function convertIdsToUsers(ids: string[]): Promise<(User | null)[]> {

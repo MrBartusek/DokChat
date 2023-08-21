@@ -27,7 +27,7 @@ router.all('/',
 			return new ApiResponse(res).badRequest('This invite is invalid or has expired');
 		}
 
-		const chat = await ChatManager.getChat(invite.chatId, req.auth.id);
+		const chat = await ChatManager.getChat(invite.chatId);
 
 		const result: InviteResponse = { invite, chat };
 		new ApiResponse(res).success(result);

@@ -22,25 +22,24 @@ class SystemMessageHandler {
 		}
 		const [ id, timestamp ] = await ChatManager.saveMessage('SYSTEM', chatId, content);
 
-		const participants = await ChatManager.listParticipants(chatId);
-		for await (const part of participants) {
-			const chat = await ChatManager.getChat(chatId, part.userId, participants);
-			const systemMessage: ServerMessage = {
-				id: id,
-				content: content,
-				isSystem: true,
-				chat: chat,
-				timestamp: timestamp.toString(),
-				attachment: { hasAttachment: false },
-				author: {
-					id: 'SYSTEM',
-					username: null,
-					avatar: Utils.avatarUrl('1'),
-					tag: '0001'
-				}
-			};
-			this.io.to(part.userId).emit('message', systemMessage);
-		}
+		const chat = await ChatManager.getChat(chatId);
+
+		const systemMessage: ServerMessage = {
+			id: id,
+			content: content,
+			isSystem: true,
+			chat: chat,
+			timestamp: timestamp.toString(),
+			attachment: { hasAttachment: false },
+			author: {
+				id: '0',
+				username: 'SYSTEM',
+				avatar: '',
+				tag: '0000'
+			}
+		};
+		this.io.to(chat.participants.map(p => p.userId)).emit('message', systemMessage);
+
 	}
 
 	public sendChatUpdated(chatId: string, user: UserJWTData, name: boolean, avatar: boolean, color: boolean) {

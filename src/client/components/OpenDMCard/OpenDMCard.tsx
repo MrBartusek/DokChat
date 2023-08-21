@@ -33,7 +33,7 @@ export default function OpenDMCard({ userId }: OpenDMCardProps) {
 				const chatsCopy = [ ...chats ];
 				const chatExist = chatsCopy.find(c => c.id == resp.data.id);
 				if (!chatExist) {
-					chatsCopy.push(new LocalChat(resp.data));
+					chatsCopy.push(new LocalChat(resp.data, user));
 					setChatList(chatsCopy);
 				}
 				toast(`You are now chatting with ${resp.data.name}`);

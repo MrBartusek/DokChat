@@ -54,7 +54,7 @@ export function useMessageManager(ws: useWebsocketType): [
 			.then((r) => {
 				const resp: EndpointResponse<ChatListResponse> = r.data;
 				const rawChats = resp.data;
-				const newChats = rawChats.map((chat) => new LocalChat(chat));
+				const newChats = rawChats.map((chat) => new LocalChat(chat, user));
 				console.log(newChats);
 				setChatList([ ...chatList, ...newChats ]);
 				if (rawChats.length < count) {
@@ -84,7 +84,7 @@ export function useMessageManager(ws: useWebsocketType): [
 					content: msg.content,
 					timestamp: msg.timestamp
 				};
-				chats.push(new LocalChat(newChat));
+				chats.push(new LocalChat(newChat, user));
 			}
 			else {
 				// Receive message

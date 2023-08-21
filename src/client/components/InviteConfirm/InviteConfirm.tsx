@@ -33,7 +33,7 @@ function InviteConfirm({ inviteKey, handleClose }: InviteConfirmProps) {
 				const chatsCopy = [ ...chats ];
 				const chatExist = chatsCopy.find(c => c.id == resp.data.id);
 				if (!chatExist) {
-					chatsCopy.push(new LocalChat(resp.data));
+					chatsCopy.push(new LocalChat(resp.data, user));
 					setChatList(chatsCopy);
 				}
 				navigate(`/chat/${resp.data.id}`);

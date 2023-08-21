@@ -29,7 +29,7 @@ router.all('/join',
 			return new ApiResponse(res).badRequest('This invite is invalid or has expired');
 		}
 
-		const chat = await ChatManager.getChat(invite.chatId, req.auth.id);
+		const chat = await ChatManager.getChat(invite.chatId);
 
 		if (chat.participants.find(x => x.userId == req.auth.id)) {
 			return new ApiResponse(res).badRequest('You are already a part of this chat');

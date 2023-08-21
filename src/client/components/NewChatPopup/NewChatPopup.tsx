@@ -74,7 +74,7 @@ function NewChatPopup() {
 				const chatsCopy = [ ...chats ];
 				const chatExist = chatsCopy.find(c => c.id == resp.data.id);
 				if (!chatExist) {
-					chatsCopy.push(new LocalChat(resp.data));
+					chatsCopy.push(new LocalChat(resp.data, user));
 					setChatList(chatsCopy);
 				}
 				resp.status == 409 ?? toast('This chat already exist');

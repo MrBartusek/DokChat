@@ -1,5 +1,8 @@
 import * as DateFns from 'date-fns';
 import { Chat, ChatColor, LastMessage, Message, SimpleChatParticipant } from '../../types/common';
+import { UserJWTData } from '../../types/jwt';
+import Utils from '../helpers/utils';
+import { LocalUser } from './LocalUser';
 
 /**
  * Local client version of message with additional properties
@@ -22,28 +25,64 @@ export class LocalChat implements Chat {
 	 * relay on last message and don't have a message list
 	 */
 	public isInitialized: boolean;
+	private _user: LocalUser;
 	private _messages: LocalMessage[] | LastMessage;
 	private lastPendingIndex = 0;
 	public id: string;
-	public name: string;
-	public avatar: string;
+	private _name: string | null;
+	private _avatar: string | null;
 	public isGroup: boolean;
 	public createdAt: string;
 	public creatorId: string;
 	public color: ChatColor;
 	public participants: SimpleChatParticipant[];
 
-	constructor(chat: Chat) {
+	constructor(chat: Chat, user: LocalUser) {
 		this.isInitialized = false;
+		this._user = user;
 		this.id = chat.id;
-		this.name = chat.name;
-		this.avatar = chat.avatar;
+		this._name = chat.name;
+		this._avatar = chat.avatar;
 		this.color = chat.color;
 		this.isGroup = chat.isGroup;
 		this.createdAt = chat.createdAt;
 		this.creatorId = chat.creatorId;
 		this._messages = chat.lastMessage || [];
 		this.participants = chat.participants;
+	}
+
+	/**
+	 * Name and avatar for DMs are different for each user and are
+	 * generated on frontend
+	 */
+
+	get name(): string {
+		if(this._name) return this._name;
+		if(this.isGroup) {
+			return this.participants.map(p => p.username).join(', ');
+		}
+		else {
+			const otherParticipant = this.participants.find(p => p.userId != this._user.id);
+			return otherParticipant?.username ?? this._user.username;
+		}
+	}
+
+	set name(name: string | null) {
+		this._name = name;
+	}
+
+	get avatar(): string {
+		if(this.isGroup) {
+			return this._avatar;
+		}
+		else {
+			const otherParticipant = this.participants.find(p => p.userId != this._user.id);
+			return otherParticipant?.avatar ?? this._user.avatar;
+		}
+	}
+
+	set avatar(avatar: string | null) {
+		this._avatar = avatar;
 	}
 
 	/**
