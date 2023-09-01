@@ -41,7 +41,12 @@ function Footer() {
 				<Row className='pt-5 text-center text-lg-start'>
 					<Col className='text-secondary'>
 						&copy; DokChat {new Date().getFullYear()} - Made with <BsHeartFill /> & <BiCoffeeTogo /> by {' '}
-						<a href="https://dokurno.dev/" className='link-secondary'>MrBartusek</a>!
+						<a
+							href="https://dokurno.dev/?utm_source=dokchat&utm_medium=footer&utm_campaign=dokchat_footer"
+							className='link-secondary'
+						>
+							MrBartusek
+						</a>!
 					</Col>
 				</Row>
 			</Container>
