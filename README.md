@@ -4,7 +4,7 @@
 [![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/mrbartusek/dokchat/latest?label=docker%20version&link=https%3A%2F%2Fhub.docker.com%2Frepository%2Fdocker%2Fmrbartusek%2Fdokchat)](https://hub.docker.com/repository/docker/mrbartusek/dokchat/general) ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fupdate.electronjs.org%2FMrBartusek%2FDokChat%2Fwin32-x64%2F0.0.0&query=%24.name&label=electron&color=blue)
 
 
-[![hero](https://i.imgur.com/ZapD7Mn.png)](https://dokchat.dokurno.dev)
+[![hero](https://i.imgur.com/FUHitdG.png)](https://dokchat.dokurno.dev)
 
 DokChat is complete, fully fledged instant messaging application. It supports all of the common chatting features like groups, attachment, GIFs and emojis.
 
