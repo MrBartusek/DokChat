@@ -35,10 +35,10 @@ export const directives: Record<string, Array<string>> = {
 		'https://*.s3.eu-central-1.amazonaws.com', // S3 Bucket
 		'https://*.google-analytics.com', // Google Analytics
 		'https://*.googletagmanager.com', // Google Analytics
-		'https://media.tenor.com',
-		'https://twemoji.maxcdn.com',
-		'https://cdn.jsdelivr.net/npm/emoji-datasource-twitter',
-		'https://chart.googleapis.com'
+		'https://media.tenor.com/',
+		'https://twemoji.maxcdn.com/',
+		'https://cdn.jsdelivr.net/npm/emoji-datasource-twitter/',
+		'https://chart.googleapis.com/'
 	]
 };
 
