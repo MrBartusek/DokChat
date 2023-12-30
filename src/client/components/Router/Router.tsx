@@ -2,10 +2,16 @@ import React, { useContext } from 'react';
 import { Alert } from 'react-bootstrap';
 import { BrowserRouter, HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
+import Utils from '../../helpers/utils';
 import AccountBannedPage from '../../pages/AccountBannedPage';
 import ChatPage from '../../pages/ChatPage';
-import GetDokchatPage from '../../pages/GetDokchatPage';
+import DemoPage from '../../pages/DemoPage';
+import DownloadPage from '../../pages/DownloadPage';
+import ElectronHandoffPage from '../../pages/ElectronHandoffPage';
+import ElectronLoginPage from '../../pages/ElectronLoginPage';
+import ElectronWelcomePage from '../../pages/ElectronWelcomePage';
 import EmailConfirmPage from '../../pages/EmailConfirmPage';
+import GetDokchatPage from '../../pages/GetDokchatPage';
 import HomePage from '../../pages/HomePage';
 import InvitePage from '../../pages/InvitePage';
 import LoginPage from '../../pages/LoginPage';
@@ -16,11 +22,6 @@ import EmailConfirmer from '../EmailConfirmer/EmailConfirmer';
 import ErrorPage from '../ErrorPage/ErrorPage';
 import NewPasswordDialog from '../NewPasswordDialog/NewPasswordDialog';
 import PasswordResetForm from '../PasswordResetForm/PasswordResetForm';
-import Utils from '../../helpers/utils';
-import ElectronLoginPage from '../../pages/ElectronLoginPage';
-import ElectronHandoffPage from '../../pages/ElectronHandoffPage';
-import ElectronWelcomePage from '../../pages/ElectronWelcomePage';
-import DownloadPage from '../../pages/DownloadPage';
 
 const ChatDetailsPopupLazy = React.lazy(() => import('../ChatDetailsPopup/ChatDetailsPopup'));
 const NewChatPopupLazy = React.lazy(() => import('../NewChatPopup/NewChatPopup'));
@@ -126,6 +127,12 @@ function Router() {
 				<Route path="login" element={
 					<PublicOnlyRoute>
 						<LoginPage />
+					</PublicOnlyRoute>
+				} />
+
+				<Route path="demo" element={
+					<PublicOnlyRoute>
+						<DemoPage />
 					</PublicOnlyRoute>
 				} />
 

@@ -99,9 +99,9 @@ function LoginForm(props: LoginFormProps) {
 							Sign up
 						</Link>
 						{' '} | {' '}
-						<a onClick={useDemoAccount} className='link-secondary' href="#">
-							Create demo account
-						</a>
+						<Link to='/demo' className='link-secondary'>
+                            Create demo account
+						</Link>
 					</Form.Text>
 				</div>
 			</Form>
@@ -141,24 +141,6 @@ function LoginForm(props: LoginFormProps) {
 					setError(resp?.message || 'Failed to log you in you at this time. Please try again later.');
 					setLoading(false);
 				}
-			});
-	}
-
-	async function useDemoAccount(event: React.FormEvent) {
-		event.preventDefault();
-		setLoading(true);
-		await axios.post('/auth/demo')
-			.then((r: any) => {
-				const resp: EndpointResponse<UserLoginResponse> = r.data;
-				setTimeout(() => {
-					setUser(resp.data.token);
-					navigate('/chat');
-				}, 1000);
-			})
-			.catch((e) => {
-				const resp: EndpointResponse<null> = e.response?.data;
-				setError(resp?.message || 'Failed to create a demo account at this time. Please try again later.');
-				setLoading(false);
 			});
 	}
 }
