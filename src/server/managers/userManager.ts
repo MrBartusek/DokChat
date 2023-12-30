@@ -220,6 +220,53 @@ export default class UserManager {
 		};
 	}
 
+	public static async createSystemUserIfNotExist(): Promise<void> {
+		const systemAccount = await this.getSystemUser();
+		if(systemAccount != null) return;
+
+		const userId = snowflakeGenerator.getUniqueID().toString();
+		const timestamp = DateFns.getUnixTime(new Date());
+
+		await db.query(sql`
+            INSERT INTO users 
+                (id, username, tag, email, password_hash, created_at, last_seen, is_email_confirmed, is_system)
+            VALUES (
+                $1, $2, $3, $4, $5, $6, $7, $8, $9
+            );
+		`, [
+			userId,
+			'DokChat',
+			'0001',
+			'system@dokurno.dev',
+			'',
+			timestamp,
+			timestamp,
+			false,
+			true
+		]);
+
+		console.log(`Created system account DokChat#0001 with id: ${userId}`);
+	}
+
+	public static async getSystemUser(): Promise<User | null> {
+		const query = await db.query(sql`
+			SELECT
+				id, username, tag, avatar
+			FROM
+				users
+			WHERE is_system = TRUE
+			LIMIT 1;
+		`);
+		if (query.rowCount == 0) return null;
+		const user = query.rows[0];
+		return {
+			id: user.id,
+			username: user.username,
+			tag: user.tag,
+			avatar: Utils.avatarUrl(user.id)
+		};
+	}
+
 	public static async getUserByUsername(username: string, tag: string): Promise<User | null> {
 		const query = await db.query(sql`
 			SELECT

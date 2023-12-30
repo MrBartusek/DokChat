@@ -19,6 +19,7 @@ import registerOnlineStatusHandler from './handlers/onlineStatusHandler';
 import { systemMessageHandler } from './handlers/systemMessageHandler';
 import helmet from 'helmet';
 import { directives } from '../contentSecurityPolicy';
+import UserManager from './managers/userManager';
 
 const isProduction = (process.env['NODE' + '_ENV'] || 'development') == 'production';
 
@@ -45,6 +46,7 @@ async function initializeDatabase() {
 		console.log('[!] Failed to initialize database, exiting server!');
 		process.exit(1);
 	}
+	await UserManager.createSystemUserIfNotExist();
 }
 
 async function main() {
