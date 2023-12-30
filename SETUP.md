@@ -5,6 +5,7 @@ function hence, it is not trivial to set up. Fortunately, we have configured [Te
 so this process is highly automated.
 
 You can divide this process into three main steps:
+
 - **Infrastructure Prerequisites** - Create AWS account and Google Cloud project
 - **Tools Prerequisites** - Install required tools on Your PC
 - **Infrastructure Deploy** - Deploy required AWS Services using Terraform
@@ -23,12 +24,11 @@ Before going forward, you need to set up our two cloud providers AWS and Google 
    You can do it through [IAM Dashboard](https://aws.amazon.com/iam/).
 4. Create account on [Google Cloud](https://cloud.google.com). You don't need to set up a
    billing account here.
-5. [Create new Google Cloud project](https://console.cloud.google.com/projectcreate). You 
-   can choose  any project name. Note the Project ID that you have been assigned, you will
+5. [Create new Google Cloud project](https://console.cloud.google.com/projectcreate). You
+   can choose any project name. Note the Project ID that you have been assigned, you will
    need it for later.
-5. Enable [Cloud Resource Manager API](https://console.cloud.google.com/marketplace/product/google/cloudresourcemanager.googleapis.com) on Google Cloud Project. It is required in order for
+6. Enable [Cloud Resource Manager API](https://console.cloud.google.com/marketplace/product/google/cloudresourcemanager.googleapis.com) on Google Cloud Project. It is required in order for
    Terraform to menage Google Cloud.
-
 
 You are now ready to install the required tools!
 
@@ -63,10 +63,10 @@ Terraform.
    cd DokChat/infra
    ```
 3. Create `terraform.tfvars` in the infra folder, it should look something like this:
-    ```conf
-    key_name       = "YOUR_SSH_KEY_NAME_HERE"
-    google_project = "YOUR_GOOGLE_PROJECT_ID_HERE"
-    ```
+   ```conf
+   key_name       = "YOUR_SSH_KEY_NAME_HERE"
+   google_project = "YOUR_GOOGLE_PROJECT_ID_HERE"
+   ```
 4. Run Terraform
    ```sh
    terraform apply
@@ -87,9 +87,9 @@ manual labor. Before we begin, you need to connect to your instancies to edit co
 file. There are multiple ways to do it:
 
 - **SSH** You can SSH to your instancies using key that you've created:
-   ```sh
-   ssh ec2-user@PUBLIC_IP -i PATH_TO_PEM_FILE
-   ```
+  ```sh
+  ssh ec2-user@PUBLIC_IP -i PATH_TO_PEM_FILE
+  ```
 - **SFTP** You can SFTP protocol and login using user: `ec-user` and key that you've created
 - **EC2 Instance Connect** - Navigate to EC2, select your instance and click connect.
 
@@ -140,6 +140,7 @@ and Complaints to maintain good sender reputation. You can read more about that 
 
 If you want to enable this module just change `ENABLE_SNS_BOUNCES_HANDLING` to `true`. Everything
 else should be setup by Terraform:
+
 ```conf
 ENABLE_SNS_BOUNCES_HANDLING = true
 ```
@@ -150,7 +151,7 @@ Default DokChat Terraform setup have partially configured NGINX and certbot for 
 this step you need to have a domain name registered.
 
 1. Connect to your instancies - [See this section introduction](#step-4---optional-modules-and-configuration)
-2. Rename `/etc/nginx/dokchat.dokurno.dev.conf` to match your domain name like: 
+2. Rename `/etc/nginx/dokchat.dokurno.dev.conf` to match your domain name like:
    `/etc/nginx/example.com.conf`
 3. In this file change this line:
    ```conf
@@ -170,8 +171,8 @@ this step you need to have a domain name registered.
    `/etc/nginx/example.com.conf` file have been modified.
 7. To enable automatic renew, you need to add new crontab entry, type following command:
    ```sh
-   crontab -e
-   ``
+   sudo crontab -e
+   ```
 8. Add certbot to run daily
    ```conf
    0 12 * * * /usr/bin/certbot renew --quiet
@@ -179,12 +180,13 @@ this step you need to have a domain name registered.
 9. Save and close the file. All installed certificates will be automatically renewed and reloaded.
 10. Now you have TLS working, can enable additional security measures, edit `~/DokChat/.env` file
 11. Change `ENABLE_HELMET = false` to `ENABLE_HELMET = true`
-11. Also don't forget to change the base url `SERVER_BASE_URL` to your server URL like
+12. Also don't forget to change the base url `SERVER_BASE_URL` to your server URL like
     `SERVER_BASE_URL = "https://example.com/`
-12. Restart DokChat - In `~/DokChat` directory run
-   ```sh
-   docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
-   ```
+13. Restart DokChat - In `~/DokChat` directory run
+
+```sh
+docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
+```
 
 ## Common instancies management
 
@@ -194,6 +196,7 @@ administrative actions that you can do!
 ### Start up the instancies
 
 Run this from `~/DokChat` directory:
+
 ```sh
 docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
 ```
@@ -201,6 +204,7 @@ docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
 ### Stop the instancies
 
 Run this from `~/DokChat` directory:
+
 ```sh
 docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml stop
 ```
