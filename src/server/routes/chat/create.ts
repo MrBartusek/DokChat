@@ -61,35 +61,9 @@ router.all('/create',
 			return new ApiResponse(res).badRequest('Invalid participants list');
 		}
 
-		const chat = await createChat(req, req.auth.id, participants);
+		const chat = await ChatManager.createChat(req.auth.id, participants);
 		new ApiResponse(res).success(chat);
 	});
-
-async function createChat(req: Request, creatorId: string, participants: User[]): Promise<Chat> {
-	// Create chat
-	const chatId = snowflakeGenerator.getUniqueID().toString();
-	const isGroup = participants.length > 2;
-	await db.query(sql`
-		INSERT INTO chats
-			(id, is_group, creator_id, created_at)
-		VALUES
-			($1, $2, $3, $4)
-	`, [
-		chatId,
-		isGroup,
-		creatorId,
-		DateFns.getUnixTime(new Date())
-	]);
-
-	for await (const part of participants) {
-		// If this is a DM, hide a chat from other user
-		// It will be shown again on first message
-		const hide = (part.id != creatorId) && !isGroup;
-		await ChatManager.addUserToChat(part.id, chatId, hide);
-	}
-
-	return ChatManager.getChat(chatId);
-}
 
 async function convertIdsToUsers(ids: string[]): Promise<(User | null)[]> {
 	return Promise.all(ids.map((id) => UserManager.getUserById(id)));

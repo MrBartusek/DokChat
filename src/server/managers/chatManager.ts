@@ -1,16 +1,39 @@
 import * as DateFns from 'date-fns';
+import { Snowflake } from 'nodejs-snowflake';
 import sql from 'sql-template-strings';
 import { CHAT_COLORS } from '../../types/colors';
-import { Chat, MessageAttachment } from '../../types/common';
+import { Chat, MessageAttachment, User } from '../../types/common';
 import { UserJWTData } from '../../types/jwt';
 import db from '../db';
 import { InternalChatParticipant } from '../types/common';
 import { snowflakeGenerator } from '../utils/snowflakeGenerator';
 import Utils from '../utils/utils';
-import { check } from 'express-validator';
-import { Snowflake } from 'nodejs-snowflake';
 
 export default class ChatManager {
+	public static async createChat(creatorId: string, participants: User[]): Promise<Chat> {
+		const chatId = snowflakeGenerator.getUniqueID().toString();
+		const isGroup = participants.length > 2;
+		await db.query(sql`
+            INSERT INTO chats
+                (id, is_group, creator_id, created_at)
+            VALUES
+                ($1, $2, $3, $4)
+        `, [
+			chatId,
+			isGroup,
+			creatorId,
+			DateFns.getUnixTime(new Date())
+		]);
+
+		for await (const part of participants) {
+			// If this is a DM, hide a chat from other user
+			// It will be shown again on first message
+			const hide = (part.id != creatorId) && !isGroup;
+			await ChatManager.addUserToChat(part.id, chatId, hide);
+		}
+
+		return ChatManager.getChat(chatId);
+	}
 
 	/**
 	 * This function fetches Chat object from database
