@@ -34,7 +34,15 @@ function Navbar({ zeroHeight }: Props) {
 						<Nav.Link as={Link} to='/get'>Get DokChat</Nav.Link>
 						<Nav.Link href='https://github.com/MrBartusek/DokChat' target='_blank'>Contribute</Nav.Link>
 					</Nav>
-					<BsNavbar.Text style={{ 'flex': '0 0 140px' }} className='d-flex justify-content-md-end'>
+					<BsNavbar.Text className='d-flex justify-content-md-end gap-2'>
+						{!user.isAuthenticated && (
+							<Link to='/demo'>
+								<Button variant="outline-light" >
+									Try demo
+								</Button>
+							</Link>
+						)}
+
 						<Link to={user.isAuthenticated ? '/chat' : '/login'}>
 							<Button variant="light" >
 								{user.isAuthenticated ? 'Open DokChat' : 'Log in'}
