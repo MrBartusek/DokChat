@@ -9,17 +9,22 @@ export default function SecurityOptions() {
 
 	return (
 		<>
-			{!user.hasPassword && (
-				<p className='small text-danger mb-2'>
-					<BsUnlockFill className='me-1' /> This account has been created using 3rd-party Login Provider. Please create
+			{!user.isDemo && (
+				<>
+					{!user.hasPassword && (
+						<p className='small text-danger mb-2'>
+							<BsUnlockFill className='me-1' /> This account has been created using 3rd-party Login Provider. Please create
 					a password for this account.
-				</p>
+						</p>
+					)}
+					<Link to='password'>
+						<InteractiveButton variant='primary' size='sm' icon={BsShieldLock}>
+							{user.hasPassword ? 'Change' : 'Set'} Password
+						</InteractiveButton>
+					</Link>
+				</>
 			)}
-			<Link to='password'>
-				<InteractiveButton variant='primary' size='sm' icon={BsShieldLock}>
-					{user.hasPassword ? 'Change' : 'Set'} Password
-				</InteractiveButton>
-			</Link>
+
 			<p className={`small fw-bold mt-4 mb-2 ${user.is2FAEnabled ? 'text-success' : 'text-danger'}`}>
 				{user.is2FAEnabled ? <BsLockFill className='me-1' /> : <BsUnlockFill className='me-1' />}
 				Two-factor authentication {user.is2FAEnabled ? 'enabled' : 'disabled'}

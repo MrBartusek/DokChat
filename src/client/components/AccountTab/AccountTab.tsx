@@ -9,14 +9,12 @@ import DemoInfo from '../DemoInfo/DemoInfo';
 import SecurityOptions from '../SecurityOptions/SecurityOptions';
 
 export default function AccountTab() {
-	const [ user ] = useContext(UserContext);
-
 	return (
 		<div className='d-flex flex-column'>
 			<SettingsRow
 				title="Password and Authentication"
 			>
-				{!user.isDemo ? <SecurityOptions /> : <DemoInfo />}
+				<SecurityOptions />
 			</SettingsRow>
 			<SettingsRow
 				title="Log Out"
@@ -28,9 +26,7 @@ export default function AccountTab() {
 				title="Account Removal"
 				description="Permanently delete this DokChat account. This action is not reversible."
 			>
-				{!user.isDemo
-					? <DeleteAccountButton size='sm' />
-					: <DemoInfo />}
+				<DeleteAccountButton size='sm' />
 			</SettingsRow>
 		</div>
 	);
