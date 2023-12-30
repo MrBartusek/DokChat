@@ -38,6 +38,7 @@ export const directives: Record<string, Array<string>> = {
 		'https://media.tenor.com/',
 		'https://twemoji.maxcdn.com/',
 		'https://cdn.jsdelivr.net/npm/emoji-datasource-twitter/',
+		'https://cdnjs.cloudflare.com/ajax/libs/twemoji/',
 		'https://chart.googleapis.com/'
 	]
 };
