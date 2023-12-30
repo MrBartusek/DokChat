@@ -205,12 +205,12 @@ export default class ChatManager {
 	 * @returns [ id, timestamp]
 	 */
 	public static async saveMessage(
-		sender: UserJWTData | 'SYSTEM',
+		sender: string | 'SYSTEM',
 		chatId: string, content?: string,
 		attachmentKey?: string,
 		attachment?: MessageAttachment
 	): Promise<[string, string]> {
-		const senderId = sender == 'SYSTEM' ? null : sender.id;
+		const senderId = sender == 'SYSTEM' ? null : sender;
 		const id = snowflakeGenerator.getUniqueID().toString();
 		const timestamp = DateFns.getUnixTime(new Date()).toString();
 

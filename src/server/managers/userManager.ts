@@ -11,6 +11,7 @@ import s3Client from './../aws/s3';
 import emailClient from './../aws/ses';
 import EmailBlacklistManager from './emailBlacklistManager';
 import * as twoFactor from 'node-2fa';
+import ChatManager from './chatManager';
 
 export default class UserManager {
 	public static async createUser(username: string, email: string, password?: string, socialLogin = false): Promise<[UserJWTData, string]> {
@@ -107,6 +108,23 @@ export default class UserManager {
 			true
 		]);
 
+		const systemUser = await this.getSystemUser();
+		const createdUser = await this.getUserById(userId);
+		const chat = await ChatManager.createChat(systemUser.id, [ systemUser, createdUser ]);
+		const participant = chat.participants[1];
+		await ChatManager.setChatHideForParticipant(participant.id, false);
+
+		const INITIAL_MESSAGES = [
+			'Hey 👋 Welcome to DokChat!',
+			'You can use this chat to test DokChat features',
+			'Try sending emojis 😀 or GIFs ',
+			'Have fun!'
+		];
+
+		for await(const message of INITIAL_MESSAGES) {
+			await ChatManager.saveMessage(systemUser.id, chat.id, message);
+		}
+
 		const jwtData: UserJWTData = {
 			id: userId,
 			username: demoIdentifier,
@@ -120,6 +138,7 @@ export default class UserManager {
 			is2FAEnabled: false,
 			hasPassword: false
 		};
+
 		return [ jwtData, '' ];
 	}
 

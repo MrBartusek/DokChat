@@ -87,7 +87,7 @@ export default function registerMessageHandler(io: DokChatServer, socket: DokCha
 async function saveMessageToDatabase(auth: UserJWTData, msg: ClientMessage): Promise<[string, string, MessageAttachment]> {
 	const [ attachmentKey, attachment ] = await uploadAttachment(msg.attachment);
 	const [ id, timestamp ] = await ChatManager.saveMessage(
-		auth,
+		auth.id,
 		msg.chatId,
 		msg.content,
 		attachmentKey,
