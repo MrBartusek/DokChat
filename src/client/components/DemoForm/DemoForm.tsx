@@ -21,15 +21,15 @@ function DemoForm() {
 		>
 			{error && <Alert variant='danger'>{error}</Alert>}
 			<p className='text-center lead'>
-				Welcome to DokChat! If you want to test the DokChat service without creating account
-				we can create demo account for you!
+                Welcome to DokChat! If you want to test the DokChat service without creating an
+                account we can create a demo account for you!
 			</p>
 
 			<div>
 				<p className='lead w-100 mb-2 d-flex align-items-center'>
 					<BsStopwatchFill color={'var(--bs-primary'} className='me-3' />
 					<span className='text-muted'>
-						This wil take only couple of seconds
+                        This will take only a couple of seconds
 					</span>
 				</p>
 
@@ -43,14 +43,14 @@ function DemoForm() {
 				<p className='lead w-100 mb-2 d-flex align-items-center'>
 					<BsPersonFillSlash color={'var(--bs-primary'} className='me-3' />
 					<span className='text-muted'>
-						You won&apos;t have access to all features
+                        You won&apos;t have access to all the features
 					</span>
 				</p>
 
 				<p className='lead w-100 mb-2 d-flex align-items-center'>
 					<BsTrashFill color={'var(--bs-primary'} className='me-3' />
 					<span className='text-muted'>
-						This is one-time account that will be deleted in 24 hours
+						This is a one-time account that will be deleted in 24 hours
 					</span>
 				</p>
 			</div>
