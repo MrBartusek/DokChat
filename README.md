@@ -56,7 +56,7 @@ This project is designed to run on AWS using following services:
 
 Database design is loosely based on [yoosuf/Messenger](https://github.com/yoosuf/Messenger). It features full user authentication and support for group chats. You can see the
 visualization on [DB Desinger](https://dbdesigner.page.link/8WTzU9jzrGC1imjK8) or directly in
-[server/db/initalize.ts](./src/server/db/initalize.ts).
+[server/db/initalize.ts](./src/server/db/structure.ts).
 
 [![db desing](https://i.imgur.com/UP4E7Hl.png)](https://dbdesigner.page.link/8WTzU9jzrGC1imjK8)
 
