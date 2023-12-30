@@ -17,11 +17,11 @@ function DemoForm() {
 
 	return (
 		<div
-			className='d-flex flex-column align-items-center justify-content-center gap-4'
+			className='d-flex flex-column align-items-center justify-content-center gap-3'
 		>
 			{error && <Alert variant='danger'>{error}</Alert>}
 			<p className='text-center lead'>
-                Welcome to DokChat! If you want to test the DokChat service without creating an
+                If you want to test the DokChat service without creating an
                 account we can create a demo account for you!
 			</p>
 
@@ -55,7 +55,7 @@ function DemoForm() {
 				</p>
 			</div>
 
-			<div className='d-grid w-100'>
+			<div className='d-grid w-100 mt-4'>
 				<InteractiveButton
 					variant="primary"
 					onClick={useDemoAccount}
