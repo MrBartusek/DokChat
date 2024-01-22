@@ -1,11 +1,13 @@
-import React, { useContext, useState } from 'react';
-import { Alert, Button } from 'react-bootstrap';
+import React, { useContext, useRef, useState } from 'react';
+import { Alert } from 'react-bootstrap';
+import { BsChatSquareTextFill, BsPersonFillSlash, BsStopwatchFill, BsTrashFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { EndpointResponse, UserLoginResponse } from '../../../types/endpoints';
 import { UserContext } from '../../context/UserContext';
 import getAxios from '../../helpers/axios';
 import InteractiveButton from '../InteractiveButton/InteractiveButton';
-import { BsChatSquareTextFill, BsPersonFillSlash, BsStopwatchFill, BsTrashFill } from 'react-icons/bs';
+import DokChatCaptcha from '../DokChatCaptcha/DokChatCaptcha';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const axios = getAxios();
 
@@ -13,6 +15,7 @@ function DemoForm() {
 	const [ user, updateToken, setUser ] = useContext(UserContext);
 	const [ loading, setLoading ] = useState(false);
 	const [ error, setError ] = useState<string | null>(null);
+	const captchaRef = useRef<ReCAPTCHA>(null!);
 	const navigate = useNavigate();
 
 	return (
@@ -65,13 +68,20 @@ function DemoForm() {
 					Create demo account
 				</InteractiveButton>
 			</div>
+
+			<DokChatCaptcha ref={captchaRef} />
 		</div>
 	);
 
 	async function useDemoAccount(event: React.FormEvent) {
 		event.preventDefault();
 		setLoading(true);
-		await axios.post('/auth/demo')
+
+		// Allow for empty response, if server don't send site keys
+		// It means reCAPTCHA is disabled
+		const reCaptchaResponse = captchaRef.current ? await captchaRef.current.executeAsync() : null;
+
+		await axios.post('/auth/demo', { reCaptchaResponse })
 			.then((r: any) => {
 				const resp: EndpointResponse<UserLoginResponse> = r.data;
 				setTimeout(() => {

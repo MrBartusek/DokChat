@@ -5,11 +5,13 @@ import AuthManager from '../../managers/authManager';
 import UserManager from '../../managers/userManager';
 import allowedMethods from '../../middlewares/allowedMethods';
 import jwtManager from '../../managers/jwtManager';
+import ensureCaptcha from '../../middlewares/ensureCaptcha';
 
 const router = express.Router();
 
 router.all('/demo',
 	allowedMethods('POST'),
+	ensureCaptcha(),
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return new ApiResponse(res).validationError(errors);
