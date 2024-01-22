@@ -90,7 +90,7 @@ async function queryMessages(chatId: string, lastMessageTimestamp: number, count
 		WHERE
 			chat_id = $1 AND messages.created_at < $2
 		ORDER BY 
-			messages.created_at DESC
+			messages.created_at DESC, messages.id DESC
 		LIMIT $3;
 	`, [ chatId, lastMessageTimestamp, count ]);
 }
