@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import { BsBugFill, BsChatSquareTextFill, BsEmojiSmileFill, BsPeopleFill, BsStarFill } from 'react-icons/bs';
+import { BsBugFill, BsChatSquareTextFill, BsEmojiSmileFill, BsPeopleFill, BsRobot, BsStarFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 
 function WelcomePage() {
@@ -23,15 +23,6 @@ function WelcomePage() {
 				</p>
 
 				<p className='lead w-100 mb-2 d-flex align-items-center'>
-					<BsStarFill color={'var(--bs-secondary'} className='me-3' />
-					<span>
-						Star{' '}
-						<a href="https://github.com/MrBartusek/DokChat" target="_blank" rel="noopener noreferrer">MrBartusek/DokChat</a>{' '}
-						on GitHub
-					</span>
-				</p>
-
-				<p className='lead w-100 mb-2 d-flex align-items-center'>
 					<BsPeopleFill color={'var(--bs-secondary'} className='me-3' />
 					<span>
 						Tell your friends about DokChat and ask them about their user tag
@@ -46,9 +37,10 @@ function WelcomePage() {
 				</p>
 
 				<p className='lead w-100 mb-2 d-flex align-items-center'>
-					<BsEmojiSmileFill color={'var(--bs-secondary'} className='me-3' />
+					<BsRobot color={'var(--bs-secondary'} className='me-3' />
 					<span>
-						If you can&apos;t find anybody, you can message me. My user tag is <code>MrBartusek#0001</code>. <Link to='/chat/new'>Open chat creation window</Link>.
+						If you can&apos;t find anybody, message our bot - {' '}
+						<Link to='/chat/new?username=DokChat&tag=0001'>Start new chat with bot</Link>.
 					</span>
 				</p>
 

@@ -33,11 +33,13 @@ function NewChatPopup() {
 	});
 
 	useEffect(() => {
-		const id = searchParams.get('prefill');
-		if (!id) return;
+		const url = getPrefillUrl(searchParams);
+		if (!url) return;
+
 		setLoading(true);
+
 		const axios = getAxios(user);
-		axios.get(`/user/get?id=${id}`)
+		axios.get(url)
 			.then((r) => {
 				const resp: EndpointResponse<UserGetResponse> = r.data;
 				const participantsCopy = [ ...participants ];
@@ -47,6 +49,16 @@ function NewChatPopup() {
 			.catch(() => setError('Failed to load pre-filled user'))
 			.finally(() => setLoading(false));
 	}, [ searchParams ]);
+
+	function getPrefillUrl(searchParams: URLSearchParams) {
+		const prefill = searchParams.get('prefill');
+		const username = searchParams.get('username');
+		const tag = searchParams.get('tag');
+
+		if(prefill == null && (username == null || tag == null)) return null;
+
+		return prefill ? `/user/get?id=${prefill}` : `/user/get?username=${username}&tag=${tag}`;
+	}
 
 	async function handleSubmit() {
 		// If user just typed the discriminator and didn't
