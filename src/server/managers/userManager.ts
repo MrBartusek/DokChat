@@ -110,9 +110,7 @@ export default class UserManager {
 
 		const systemUser = await this.getSystemUser();
 		const createdUser = await this.getUserById(userId);
-		const chat = await ChatManager.createChat(systemUser.id, [ systemUser, createdUser ]);
-		const participant = chat.participants[1];
-		await ChatManager.setChatHideForParticipant(participant.id, false);
+		const chat = await ChatManager.createChat(createdUser.id, [ systemUser, createdUser ]);
 
 		const INITIAL_MESSAGES = [
 			'Hey 👋 Welcome to DokChat!',
