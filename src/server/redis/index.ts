@@ -5,6 +5,7 @@ const password = process.env.REDIS_PASS;
 const port = process.env.REDIS_PORT as unknown as number;
 
 const client = new Redis({
+	keyPrefix: 'dokchat:',
 	password: password,
 	port: port,
 	host: host
