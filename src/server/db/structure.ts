@@ -65,7 +65,7 @@ export async function createDatabaseStructure() {
             id varchar NOT NULL,
             user_id varchar REFERENCES users ON DELETE CASCADE,
             chat_id varchar REFERENCES chats ON DELETE CASCADE,
-            last_read varchar REFERENCES messages,
+            last_read varchar REFERENCES messages ON DELETE CASCADE,
             created_at bigint NOT NULL,
             is_hidden boolean NOT NULL DEFAULT FALSE,
             PRIMARY KEY (id)
@@ -90,7 +90,7 @@ export async function createDatabaseStructure() {
 
         ALTER TABLE users ADD COLUMN IF NOT EXISTS two_factor_secret varchar(64);
         ALTER TABLE users ADD COLUMN IF NOT EXISTS is_two_factor_enabled boolean NOT NULL DEFAULT FALSE;
-        ALTER TABLE participants ADD COLUMN IF NOT EXISTS last_read varchar REFERENCES messages;
+        ALTER TABLE participants ADD COLUMN IF NOT EXISTS last_read varchar REFERENCES messages ON DELETE CASCADE;
     `);
 	await removeDemoAccounts();
 }
