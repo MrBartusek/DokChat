@@ -1,4 +1,5 @@
 $primary: #0061f2;
+
 $spacer: 1rem !default;
 $spacers: (
   0: 0,
@@ -97,4 +98,8 @@ input[type=number] {
 
 p {
 	max-width: 1000px;
+}
+
+.text-muted {
+  color: $secondary !important;
 }
