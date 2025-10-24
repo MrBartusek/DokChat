@@ -19,12 +19,15 @@ router.all('/:id.png', param('id').isString(), allowedMethods('GET'), async (req
 	let avatar = null;
 	const user = await UserManager.getUserById(id);
 
-	res.header('Cache-Control', s3Client.cacheControlHeader);
+	res.header('Cache-Control', 'public, max-age=3600');
+	res.set('Content-Type', 'image/png');
+
 	if (user) {
 		avatar = await userAvatar(id);
+
 		if (avatar) {
-			const avatarUrl = await s3Client.getSingedUrl(avatar);
-			res.redirect(302, avatarUrl);
+			const avatarBuffer = await s3Client.fetchBuffer(avatar);
+			res.send(avatarBuffer);
 		}
 		else {
 			// Default avatar based on user tag
@@ -34,10 +37,12 @@ router.all('/:id.png', param('id').isString(), allowedMethods('GET'), async (req
 	else {
 		const chat = await ChatManager.getChat(id);
 		if (!chat) return new ApiResponse(res).notFound('User or chat not found');
+
 		avatar = await chatAvatar(id);
+
 		if (avatar) {
-			const avatarUrl = await s3Client.getSingedUrl(avatar);
-			res.redirect(302, avatarUrl);
+			const avatarBuffer = await s3Client.fetchBuffer(avatar);
+			res.send(avatarBuffer);
 		}
 		else {
 			// Default avatar based on chat creator tag

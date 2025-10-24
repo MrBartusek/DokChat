@@ -1,12 +1,12 @@
 import { DeleteObjectCommand, DeleteObjectCommandInput, GetObjectCommand, GetObjectCommandInput, PutObjectCommand, PutObjectCommandInput, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import axios from 'axios';
 import * as crypto from 'crypto';
 import * as sharp from 'sharp';
 
 export const bucketName = process.env.AWS_BUCKET_NAME;
 const region = process.env.AWS_REGION;
-const CACHE_TIME = 2 * 60 * 60;
-const SINGED_URL_EXPIRE = 12 * 60 * 60;
+const SINGED_URL_EXPIRE = 60 * 60;
 
 class DokChatS3Client {
 	private client: S3Client;
@@ -25,8 +25,7 @@ class DokChatS3Client {
 	public async getSingedUrl(key: string): Promise<string> {
 		const getParams: GetObjectCommandInput = {
 			Bucket: bucketName,
-			Key: key,
-			ResponseCacheControl: this.cacheControlHeader
+			Key: key
 		};
 		const getCommand = new GetObjectCommand(getParams);
 		return await getSignedUrl(
@@ -34,8 +33,19 @@ class DokChatS3Client {
 		);
 	}
 
-	public get cacheControlHeader() {
-		return `public, max-age=${CACHE_TIME}, immutable`;
+	/**
+	 * Fetch and get buffer of s3 object content
+	 * @param key Resource key
+	 * @returns Buffer
+	 */
+	public async fetchBuffer(key: string) {
+		const avatarUrl = await this.getSingedUrl(key);
+
+		const response = await axios.get(avatarUrl, {
+			responseType: 'arraybuffer'
+		});
+
+		return Buffer.from(response.data);
 	}
 
 	/**

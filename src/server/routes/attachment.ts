@@ -16,12 +16,20 @@ router.all('/', query('id').isString(), allowedMethods('GET'), async (req, res) 
 	const query = await db.query(sql`
 		SELECT attachment FROM messages WHERE id = $1 LIMIT 1;
 	`, [ id ]);
-	if (query.rowCount == 0) return new ApiResponse(res).notFound('Message does not exist');
+	if (query.rowCount == 0) {
+		return new ApiResponse(res).notFound('Message does not exist');
+	}
+
 	const attachment = query.rows[0].attachment;
-	if (!attachment) return new ApiResponse(res).badRequest('This message doesn\'t have an attachment');
-	const url = await s3Client.getSingedUrl(attachment);
-	res.header('Cache-Control', s3Client.cacheControlHeader);
-	res.redirect(302, url);
+	if (!attachment) {
+		return new ApiResponse(res).badRequest('This message doesn\'t have an attachment');
+	}
+
+	const avatarBuffer = await s3Client.fetchBuffer(attachment);
+
+	res.header('Cache-Control', 'public, max-age=86400');
+	res.set('Content-Type', 'image/png');
+	res.send(avatarBuffer);
 });
 
 export default router;
