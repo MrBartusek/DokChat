@@ -1,15 +1,13 @@
-import React, { useContext } from 'react';
-import { Alert, Button, Col, Container, Row } from 'react-bootstrap';
-import { BsApple, BsChatSquareTextFill, BsCheck, BsDownload, BsGlobe, BsWindows } from 'react-icons/bs';
+import React from 'react';
+import { Button, Col, Row } from 'react-bootstrap';
+import { BsApple, BsChatSquareTextFill, BsWindows } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
-import Layout from '../components/Layout/Layout';
-import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
-import { UserContext } from '../context/UserContext';
-import useBreakpoint from '../hooks/useBreakpoint';
-import { usePageInfo } from '../hooks/usePageInfo';
-import Section from '../components/Section/Section';
 import { version } from '../../../package.json';
 import InteractiveButton from '../components/InteractiveButton/InteractiveButton';
+import Layout from '../components/Layout/Layout';
+import ScrollToTop from '../components/ScrollToTop/ScrollToTop';
+import Section from '../components/Section/Section';
+import { usePageInfo } from '../hooks/usePageInfo';
 
 function DownloadPage() {
 	usePageInfo({
@@ -64,7 +62,7 @@ function DownloadPage() {
 								DokChat Desktop - MacOS v{version}
 							</div>
 							<div className='d-flex justify-content-center'>
-								<a href={downloadLink + `/DokChat-darwin-x64-${version}.zip`}>
+								<a href={downloadLink + `/DokChat-darwin-arm64-${version}.zip`}>
 									<Button variant='primary' size='lg'>
 										Download
 									</Button>
