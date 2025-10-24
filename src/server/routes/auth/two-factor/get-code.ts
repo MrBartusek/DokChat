@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as twoFactor from 'node-2fa';
 import sql from 'sql-template-strings';
+import * as QRCode from 'qrcode';
 import { TwoFactorCodeResponse } from '../../../../types/endpoints';
 import { ApiResponse } from '../../../apiResponse';
 import db from '../../../db';
@@ -33,7 +34,9 @@ router.all('/get-code',
 		    UPDATE users SET two_factor_secret = $1 WHERE id = $2;`,
 		[ newSecret.secret, req.auth.id ]);
 
-		const response: TwoFactorCodeResponse = { qr: newSecret.qr, uri: newSecret.uri};
+		const qr =await QRCode.toDataURL(newSecret.uri);
+
+		const response: TwoFactorCodeResponse = { qr, uri: newSecret.uri};
 		return new ApiResponse(res).success(response);
 	});
 

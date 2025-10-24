@@ -24,12 +24,7 @@
     "electron:make": "electron-forge make",
     "electron:publish": "electron-forge publish"
   },
-  "dependencies": {
-    "electron-log": "^4.4.8",
-    "node-2fa": "^2.0.3"
-  },
   "devDependencies": {
-    "gif-picker-react": "^1.4.0",
     "@aws-sdk/client-s3": "^3.916.0",
     "@aws-sdk/s3-request-presigner": "^3.916.0",
     "@electron-forge/cli": "^6.2.1",
@@ -51,6 +46,7 @@
     "@types/multer": "^1.4.7",
     "@types/node-schedule": "^2.1.8",
     "@types/pg": "^8.15.5",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^17.0.22",
     "@types/react-color": "^3.0.6",
     "@types/react-dom": "^17.0.18",
@@ -73,6 +69,7 @@
     "dotenv": "^16.0.3",
     "electron": "25.4.0",
     "electron-is-dev": "^2.0.0",
+    "electron-log": "^4.4.8",
     "electron-squirrel-startup": "^1.0.1",
     "electron-store": "^8.1.0",
     "electron-updater": "^6.6.2",
@@ -83,12 +80,14 @@
     "express-recaptcha": "^5.1.0",
     "express-validator": "^6.14.2",
     "fslightbox-react": "^1.6.2-2",
+    "gif-picker-react": "^1.4.0",
     "google-auth-library": "^8.7.0",
     "helmet": "^7.0.0",
     "ioredis": "^5.8.2",
     "jose": "^4.11.1",
     "morgan": "^1.10.1",
     "multer": "^1.4.5-lts.1",
+    "node-2fa": "^2.0.3",
     "node-schedule": "^2.1.1",
     "nodejs-snowflake": "^2.0.1",
     "nodemon": "^3.1.10",
@@ -125,5 +124,8 @@
     "webpack": "^5.102.1",
     "webpack-cli": "^4.8.0",
     "webpack-node-externals": "^3.0.0"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
   }
 }
